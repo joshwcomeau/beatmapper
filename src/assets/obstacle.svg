@@ -1,0 +1,25 @@
+<svg width="43" height="31" viewBox="0 0 43 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="path-1-inside-1" fill="white">
+<rect x="1" y="1" width="36" height="24" rx="1"/>
+</mask>
+<rect x="1" y="1" width="36" height="24" rx="1" fill="#910900" fill-opacity="0.62" stroke="#F18881" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" mask="url(#path-1-inside-1)"/>
+<g filter="url(#filter0_f)">
+<path d="M28.5 2L26.5 4.5L18 6L25.5 10L33 11.5L30.5 20.5L34.5 17L39 18.5" stroke="#F18781"/>
+</g>
+<path d="M8 30H42L36.5 24.5H1.5L8 30Z" fill="#910900" fill-opacity="0.62" stroke="#F18881" stroke-width="2" stroke-linejoin="round"/>
+<path d="M8 30V8L1.5 1.5V24.5L8 30Z" fill="#910900" fill-opacity="0.62" stroke="#F18881" stroke-width="2" stroke-linejoin="round"/>
+<path d="M42 30V8L36.5 1.5V24.5L42 30Z" fill="#910900" fill-opacity="0.62" stroke="#F18881" stroke-width="2" stroke-linejoin="round"/>
+<path d="M42 8L36.5 1.5H1.5L8 8H42Z" fill="#910900" fill-opacity="0.62" stroke="#F18881" stroke-width="2" stroke-linejoin="round"/>
+<mask id="path-7-inside-2" fill="white">
+<rect x="7" y="7" width="36" height="24" rx="1"/>
+</mask>
+<rect x="7" y="7" width="36" height="24" rx="1" fill="#910900" fill-opacity="0.62" stroke="#F18881" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" mask="url(#path-7-inside-2)"/>
+<path d="M13.5 8L15 11.5H19L20 15L23.5 14.5M28 17.5L24.5 19.5L25.5 13.5L23.5 14.5M23.5 14.5L19 18.5M16.5 24.5L12 21L12.5 26.5L8 24.5L5 17.5L3 16" stroke="#F18781"/>
+<defs>
+<filter id="filter0_f" x="15.4864" y="0.687622" width="24.6718" height="22.2899" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="0.5" result="effect1_foregroundBlur"/>
+</filter>
+</defs>
+</svg>
