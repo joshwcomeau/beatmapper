@@ -45,3 +45,33 @@ There's still a lot to do!
 - BPM changes
 - Improved selection controls
 - Time signature customizations
+
+### How to use
+
+_Full, proper guide coming soon_
+
+Visit https://beatmapper.app/ to use the application.
+
+You'll be prompted to either create a new song, import an existing map, or experiment with the demo track. The easiest way to get started poking around is to try the demo track, but we'll assume in this README that you're creating a song from scratch
+
+##### Song prep
+
+Before you can start mapping, you need to prepare your assets and make sure you have all the info you need.
+
+You'll likely want to download and install [Audacity](https://www.audacityteam.org/), a free open-source cross-platform audio editor. You need to make sure you have a song file in `.ogg` format, since this is the only format Beat Saber understands.
+
+You can also search the internet for a suitable cover image, and make sure it's at least 250x250px and in `.jpg` format.
+
+Next, we need a few pieces of additional information: **BPM** and **offset**.
+
+BPM (Beats Per Minute) is the tempo of the song. You can sometimes find this information by googling, or by using an [online tool](http://www.beatsperminuteonline.com/) to tap out the beats as you listen to the song.
+
+Offset is the amount of time, in milliseconds, between the start of the song file, and the very first beat. Most songs will have a small natural delay in them, while others might have 10 seconds of ambient intro. If the song _does_ start immediately, it's generally advisable to generate some silence using Audacity to make sure the player isn't overwhelmed with blocks right off the bat.
+
+Once you have your prepared assets and are armed with all the info you need, click the "Create new song" button and fill in the form. You'll also need to select a difficulty, but don't worry too much about this. You can add additional difficulties later on.
+
+##### Basic editor controls
+
+The primary view in the editor displays all the notes, mines, and obstacles in your track in a 3D perspective view. Near the front, you'll see a 3x4 grid. This grid is known as the _placement grid_, and clicking on it will place items.
+
+The right-hand panel is your _tool menu_ and it lets you select the "cut direction" you want blocks to face, as well as the type of item to place (red block, blue block, mine, or obstacle). You can also use keyboard shortcuts to access these items: use `WASD` to select block cut direction, and the numbers `1-4` to select specific items. You can also press `Tab` to tab between item types.

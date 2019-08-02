@@ -85,4 +85,8 @@ function events(state = initialState.events, action) {
   return state;
 }
 
+export const getSelectedNoteTool = state => state.editor.notes.selectedTool;
+export const getSelectedCutDirection = state =>
+  state.editor.notes.selectedDirection;
+
 export default combineReducers({ notes, events });
