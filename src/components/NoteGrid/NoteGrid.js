@@ -11,14 +11,27 @@ import { arrowDown } from 'react-icons-kit/feather/arrowDown';
 import { arrowDownRight } from 'react-icons-kit/feather/arrowDownRight';
 import { circle } from 'react-icons-kit/feather/circle';
 
-import { UNIT } from '../../constants';
 import * as actions from '../../actions';
+import { UNIT } from '../../constants';
+import {
+  getSelectedNoteTool,
+  getSelectedCutDirection,
+} from '../../reducers/editor.reducer';
 
 import IconButton from '../IconButton';
 import Spacer from '../Spacer';
 import Heading from '../Heading';
 
-const NoteGrid = ({ selectedDirection, selectNoteDirection }) => {
+const NoteGrid = ({
+  selectedDirection,
+  selectedNoteTool,
+  selectNoteDirection,
+}) => {
+  const isDisabled =
+    selectedNoteTool !== 'red-block' && selectedNoteTool !== 'blue-block';
+
+  console.log({ isDisabled });
+
   return (
     <Wrapper>
       <Heading size={3}>Notes</Heading>
@@ -28,18 +41,21 @@ const NoteGrid = ({ selectedDirection, selectNoteDirection }) => {
       <Grid>
         <Row>
           <IconButton
+            disabled={isDisabled}
             icon={arrowUpLeft}
             isToggled={selectedDirection === 4}
             onClick={() => selectNoteDirection(4)}
           />
           <Spacer size={1} />
           <IconButton
+            disabled={isDisabled}
             icon={arrowUp}
             isToggled={selectedDirection === 0}
             onClick={() => selectNoteDirection(0)}
           />
           <Spacer size={1} />
           <IconButton
+            disabled={isDisabled}
             icon={arrowUpRight}
             isToggled={selectedDirection === 5}
             onClick={() => selectNoteDirection(5)}
@@ -48,18 +64,21 @@ const NoteGrid = ({ selectedDirection, selectNoteDirection }) => {
         <Spacer size={1} />
         <Row>
           <IconButton
+            disabled={isDisabled}
             icon={arrowLeft}
             isToggled={selectedDirection === 2}
             onClick={() => selectNoteDirection(2)}
           />
           <Spacer size={1} />
           <IconButton
+            disabled={isDisabled}
             icon={circle}
             isToggled={selectedDirection === 8}
             onClick={() => selectNoteDirection(8)}
           />
           <Spacer size={1} />
           <IconButton
+            disabled={isDisabled}
             icon={arrowRight}
             isToggled={selectedDirection === 3}
             onClick={() => selectNoteDirection(3)}
@@ -69,18 +88,21 @@ const NoteGrid = ({ selectedDirection, selectNoteDirection }) => {
         <Spacer size={1} />
         <Row>
           <IconButton
+            disabled={isDisabled}
             icon={arrowDownLeft}
             isToggled={selectedDirection === 6}
             onClick={() => selectNoteDirection(6)}
           />
           <Spacer size={1} />
           <IconButton
+            disabled={isDisabled}
             icon={arrowDown}
             isToggled={selectedDirection === 1}
             onClick={() => selectNoteDirection(1)}
           />
           <Spacer size={1} />
           <IconButton
+            disabled={isDisabled}
             icon={arrowDownRight}
             isToggled={selectedDirection === 7}
             onClick={() => selectNoteDirection(7)}
@@ -105,7 +127,8 @@ const Row = styled.div`
 `;
 
 const mapStateToProps = state => ({
-  selectedDirection: state.editor.notes.selectedDirection,
+  selectedNoteTool: getSelectedNoteTool(state),
+  selectedDirection: getSelectedCutDirection(state),
 });
 
 const mapDispatchToProps = { selectNoteDirection: actions.selectNoteDirection };
