@@ -18,6 +18,7 @@ import Spacer from '../Spacer';
 import Spinner from '../Spinner';
 import DifficultyTag from '../DifficultyTag';
 import Button from '../Button';
+import QuestionTooltip from '../QuestionTooltip';
 
 import CoverArtPicker from './CoverArtPicker';
 import SongPicker from './SongPicker';
@@ -182,6 +183,7 @@ const AddSongForm = ({ createNewSong, currentSongIds, history }) => {
                   <Cell>
                     <TextInput
                       label="Offset"
+                      moreInfo="This is the number of milliseconds between the start of the audio file and the first beat of the map."
                       type="number"
                       value={offset}
                       placeholder="0"
@@ -208,7 +210,13 @@ const AddSongForm = ({ createNewSong, currentSongIds, history }) => {
           </Center>
           <Spacer size={UNIT * 8} />
           <Row>
-            <Label>Difficulty</Label>
+            <Label>
+              Difficulty{' '}
+              <QuestionTooltip>
+                Select the first difficulty you'd like to work on. You can
+                create additional difficulties later on.
+              </QuestionTooltip>
+            </Label>
             <Difficulties>
               {DIFFICULTIES.map(difficulty => (
                 <React.Fragment key={difficulty}>

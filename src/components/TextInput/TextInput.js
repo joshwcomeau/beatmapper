@@ -3,11 +3,19 @@ import styled from 'styled-components';
 
 import { COLORS } from '../../constants';
 
-const TextInput = ({ label, ...delegated }) => {
+import QuestionTooltip from '../QuestionTooltip';
+
+const TextInput = ({ label, required, moreInfo, ...delegated }) => {
   return (
     <Label>
-      <LabelText>{label}</LabelText>
-      <Input {...delegated} />
+      <LabelText>
+        <span>
+          {label}
+          {required && <Asterisk />}
+        </span>
+        {moreInfo && <QuestionTooltip>{moreInfo}</QuestionTooltip>}
+      </LabelText>
+      <Input required={required} {...delegated} />
     </Label>
   );
 };
@@ -38,10 +46,22 @@ const Label = styled.label`
 `;
 
 const LabelText = styled.div`
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 300;
   color: ${COLORS.gray[100]};
   margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+`;
+
+const Asterisk = styled.span`
+  display: inline-block;
+  color: ${COLORS.red[300]};
+  padding-left: 4px;
+
+  &:before {
+    content: '*';
+  }
 `;
 
 export default TextInput;
