@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 import { Tooltip } from 'react-tippy';
 
+import * as actions from '../../actions';
 import { UNIT, COLORS, DIFFICULTIES, DIFFICULTY_COLORS } from '../../constants';
 
 import CoverArtImage from '../CoverArtImage';
@@ -15,9 +17,9 @@ const SQUARE_SIZE = 12;
 const SQUARE_PADDING = 4;
 const CELL_HEIGHT = 40;
 
-const SongsTableRow = ({ song, location }) => {
-  // TODO: Support auto-loading the last difficulty edited!
-  const difficultyToLoad = Object.keys(song.difficultiesById)[0];
+const SongsTableRow = ({ song, location, changeSelectedDifficulty }) => {
+  const difficultyToLoad =
+    song.selectedDifficulty || Object.keys(song.difficultiesById)[0];
 
   return (
     <tr>
@@ -37,6 +39,16 @@ const SongsTableRow = ({ song, location }) => {
                 <DifficultySquare
                   color={DIFFICULTY_COLORS[difficulty]}
                   isOn={!!song.difficultiesById[difficulty]}
+                  isSelected={difficultyToLoad === difficulty}
+                  onClick={() => {
+                    const difficultyExists = !!song.difficultiesById[
+                      difficulty
+                    ];
+
+                    if (difficultyExists) {
+                      changeSelectedDifficulty(song.id, difficulty);
+                    }
+                  }}
                 />
               </DificultySquareWrapper>
             </Tooltip>
@@ -106,10 +118,24 @@ const DificultySquareWrapper = styled(UnstyledButton)`
 `;
 
 const DifficultySquare = styled.div`
+  position: relative;
   width: ${SQUARE_SIZE}px;
   height: ${SQUARE_SIZE}px;
   border-radius: 3px;
   background-color: ${props => (props.isOn ? props.color : COLORS.gray[700])};
+  cursor: ${props => (props.isOn ? 'pointer' : 'not-allowed')};
+
+  &:after {
+    content: ${props => (props.isSelected ? '""' : undefined)};
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border: 2px solid ${COLORS.white};
+    border-radius: 8px;
+    opacity: 0.5;
+  }
 `;
 
 const Title = styled.div`
@@ -124,4 +150,11 @@ const Artist = styled.div`
   color: ${COLORS.gray[300]};
 `;
 
-export default SongsTableRow;
+const mapDispatchToProps = {
+  changeSelectedDifficulty: actions.changeSelectedDifficulty,
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(SongsTableRow);

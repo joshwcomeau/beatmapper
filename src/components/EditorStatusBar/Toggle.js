@@ -8,6 +8,8 @@ import UnstyledButton from '../UnstyledButton';
 import StatusIcon from './StatusIcon';
 
 const Toggle = ({ size, onIcon, offIcon, value, onChange }) => {
+  const toggleWrapperRef = React.useRef(null);
+
   const padding = 2;
   const borderWidth = 1;
 
@@ -24,6 +26,7 @@ const Toggle = ({ size, onIcon, offIcon, value, onChange }) => {
       <Spacer size={UNIT} />
 
       <ToggleWrapper
+        ref={toggleWrapperRef}
         style={{
           width: size * 2 + padding * 2 + borderWidth * 2,
           height: size + padding * 2 + borderWidth * 2,
@@ -32,7 +35,7 @@ const Toggle = ({ size, onIcon, offIcon, value, onChange }) => {
         }}
         onClick={ev => {
           onChange(!value);
-          ev.target.blur();
+          toggleWrapperRef.current.blur();
         }}
       >
         <Ball style={{ [side]: padding, width: size, height: size }} />

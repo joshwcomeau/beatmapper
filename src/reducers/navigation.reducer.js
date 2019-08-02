@@ -179,6 +179,7 @@ export default function navigationReducer(state = initialState, action) {
 }
 
 export const getIsPlaying = state => state.navigation.isPlaying;
+export const getIsLoading = state => state.navigation.isLoading;
 export const getSnapTo = state => state.navigation.snapTo;
 
 export const getCursorPositionInBeats = state => {

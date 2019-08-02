@@ -4,11 +4,18 @@ import styled from 'styled-components';
 
 import UnstyledButton from '../UnstyledButton';
 
-const StatusIcon = ({ icon, onClick, size = 16, opacity }) => (
-  <Wrapper onClick={onClick} style={{ opacity }}>
-    <Icon icon={icon} size={size} style={{ transform: 'translateY(-2px)' }} />
-  </Wrapper>
-);
+const StatusIcon = ({ icon, onClick, size = 16, opacity = 1, disabled }) =>
+  console.log(opacity, disabled) || (
+    <Wrapper
+      onClick={disabled ? undefined : onClick}
+      style={{
+        opacity: disabled ? 0.4 : opacity,
+        cursor: disabled ? 'not-allowed' : 'pointer',
+      }}
+    >
+      <Icon icon={icon} size={size} style={{ transform: 'translateY(-2px)' }} />
+    </Wrapper>
+  );
 
 const Wrapper = styled(UnstyledButton)`
   color: inherit;

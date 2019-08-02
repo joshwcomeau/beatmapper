@@ -30,8 +30,6 @@ const NoteGrid = ({
   const isDisabled =
     selectedNoteTool !== 'red-block' && selectedNoteTool !== 'blue-block';
 
-  console.log({ isDisabled });
-
   return (
     <Wrapper>
       <Heading size={3}>Notes</Heading>

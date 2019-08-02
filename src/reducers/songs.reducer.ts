@@ -48,12 +48,12 @@ const initialState = {
 export default function songsReducer(state: State = initialState, action: any) {
   switch (action.type) {
     case 'START_LOADING_SONG': {
-      const { songId } = action;
+      const { songId, difficulty } = action;
 
-      return {
-        ...state,
-        selectedId: songId,
-      };
+      return produce(state, (draftState: State) => {
+        draftState.selectedId = songId;
+        draftState.byId[songId].selectedDifficulty = difficulty;
+      });
     }
 
     case 'FINISH_LOADING_SONG': {
@@ -101,6 +101,7 @@ export default function songsReducer(state: State = initialState, action: any) {
           environment: 'DefaultEnvironment',
           createdAt,
           lastOpenedAt,
+          selectedDifficulty,
           difficultiesById: {
             [selectedDifficulty]: {
               id: selectedDifficulty,
@@ -135,6 +136,9 @@ export default function songsReducer(state: State = initialState, action: any) {
         },
       } = action;
 
+      // @ts-ignore
+      const selectedDifficulty: Difficulty = Object.keys(difficultiesById)[0];
+
       return produce(state, (draftState: State) => {
         draftState.processingImport = false;
         draftState.byId[songId] = {
@@ -152,6 +156,7 @@ export default function songsReducer(state: State = initialState, action: any) {
           songFilename,
           coverArtFilename,
           environment,
+          selectedDifficulty,
           difficultiesById,
           createdAt,
           lastOpenedAt,
@@ -180,11 +185,24 @@ export default function songsReducer(state: State = initialState, action: any) {
           return state;
         }
 
-        draftState.byId[selectedSongId].difficultiesById[difficulty] = {
+        const song = draftState.byId[selectedSongId];
+
+        song.selectedDifficulty = difficulty;
+        song.difficultiesById[difficulty] = {
           id: difficulty,
           noteJumpSpeed: 10,
           startBeatOffset: 0,
         };
+      });
+    }
+
+    case 'CHANGE_SELECTED_DIFFICULTY': {
+      const { songId, difficulty } = action;
+
+      return produce(state, (draftState: State) => {
+        const song = draftState.byId[songId];
+
+        song.selectedDifficulty = difficulty;
       });
     }
 

@@ -18,9 +18,15 @@ const SliderGroup = ({
   step,
   value,
   onChange,
+  disabled,
+  ...delegated
 }) => (
   <Wrapper>
-    <StatusIcon icon={minIcon} onClick={() => onChange(min)} />
+    <StatusIcon
+      disabled={disabled}
+      icon={minIcon}
+      onClick={() => onChange(min)}
+    />
     <Spacer size={UNIT} />
     <MiniSlider
       width={width}
@@ -30,9 +36,15 @@ const SliderGroup = ({
       step={typeof step === 'number' ? step : 1 / width}
       value={value}
       onChange={ev => onChange(ev.target.value)}
+      disabled={disabled}
+      {...delegated}
     />
     <Spacer size={UNIT} />
-    <StatusIcon icon={maxIcon} onClick={() => onChange(max)} />
+    <StatusIcon
+      disabled={disabled}
+      icon={maxIcon}
+      onClick={() => onChange(max)}
+    />
   </Wrapper>
 );
 

@@ -17,6 +17,7 @@ import {
   getNumOfObstacles,
 } from '../../reducers/editor-entities.reducer';
 import {
+  getIsLoading,
   getPlaybackRate,
   getVolume,
   getPlayNoteTick,
@@ -30,6 +31,7 @@ import Toggle from './Toggle';
 
 const EditorStatusBar = ({
   height,
+  isLoading,
   numOfNotes,
   numOfObstacles,
   playbackRate,
@@ -56,6 +58,8 @@ const EditorStatusBar = ({
         />
         <Spacer size={UNIT * 6} />
         <SliderGroup
+          includeMidpointTick
+          disabled={isLoading}
           width={UNIT * 10}
           height={height}
           minIcon={playbackSpeedMinIcon}
@@ -102,6 +106,7 @@ const Right = styled.div`
 
 const mapStateToProps = state => {
   return {
+    isLoading: getIsLoading(state),
     playbackRate: getPlaybackRate(state),
     volume: getVolume(state),
     playNoteTick: getPlayNoteTick(state),
