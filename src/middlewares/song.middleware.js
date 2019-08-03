@@ -105,6 +105,7 @@ export default function createSongMiddleware() {
         audioElem = createHtmlAudioElement(fileBlobUrl);
         audioElem.volume = volume;
         audioElem.playbackRate = playbackRate;
+        audioElem.currentTime = song.offset / 1000;
 
         // Loading an array buffer consumes it, weirdly. I don't believe that
         // this is a mistake I'm making, it appears to be a part of the Web
@@ -310,10 +311,9 @@ export default function createSongMiddleware() {
           convertMillisecondsToBeats(state.navigation.duration, song.bpm)
         );
 
-        const newCursorPosition = convertBeatsToMilliseconds(
-          lastBeatInSong - 8,
-          song.bpm
-        );
+        const newCursorPosition =
+          convertBeatsToMilliseconds(lastBeatInSong - 8, song.bpm) +
+          song.offset;
 
         next(adjustCursorPosition(newCursorPosition));
         audioElem.currentTime = newCursorPosition / 1000;

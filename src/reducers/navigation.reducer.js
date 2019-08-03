@@ -24,10 +24,11 @@ export default function navigationReducer(state = initialState, action) {
     }
 
     case 'FINISH_LOADING_SONG': {
-      const { duration } = action;
+      const { duration, song } = action;
 
       return {
         ...state,
+        cursorPosition: song.offset,
         isLoading: false,
         duration: duration,
       };
