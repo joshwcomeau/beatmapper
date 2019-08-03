@@ -5,6 +5,7 @@ import { Tooltip } from 'react-tippy';
 
 import * as actions from '../../actions';
 import { UNIT, COLORS, DIFFICULTIES, DIFFICULTY_COLORS } from '../../constants';
+import { getLabelForDifficulty } from '../../helpers/song.helpers';
 
 import CoverArtImage from '../CoverArtImage';
 import Spacer from '../Spacer';
@@ -34,7 +35,11 @@ const SongsTableRow = ({ song, location, changeSelectedDifficulty }) => {
       <DifficultySquaresCell>
         <DifficultySquaresWrapper>
           {DIFFICULTIES.map(difficulty => (
-            <Tooltip key={difficulty} title={difficulty}>
+            <Tooltip
+              key={difficulty}
+              delay={[500, 0]}
+              title={getLabelForDifficulty(difficulty)}
+            >
               <DificultySquareWrapper>
                 <DifficultySquare
                   color={DIFFICULTY_COLORS[difficulty]}

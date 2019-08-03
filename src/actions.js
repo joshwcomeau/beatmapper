@@ -5,6 +5,7 @@ import {
   getObstacles,
   getSelectedNotes,
 } from './reducers/editor-entities.reducer';
+import { getSelectedSong } from './reducers/songs.reducer';
 import { getCopiedNotes } from './reducers/clipboard.reducer';
 import { getCursorPositionInBeats } from './reducers/navigation.reducer';
 
@@ -202,9 +203,16 @@ export const scrollThroughSong = direction => ({
   direction,
 });
 
-export const skipToStart = () => ({
-  type: 'SKIP_TO_START',
-});
+export const skipToStart = () => (dispatch, getState) => {
+  const state = getState();
+  const song = getSelectedSong(state);
+  const offset = song.offset || 0;
+
+  dispatch({
+    type: 'SKIP_TO_START',
+    offset,
+  });
+};
 export const skipToEnd = () => ({
   type: 'SKIP_TO_END',
 });
@@ -363,6 +371,13 @@ export const createNewObstacle = (
   mouseOverAt,
   cursorPositionInBeats
 ) => {
+  if (!mouseDownAt) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('No mouseDownAt?!');
+    }
+
+    return;
+  }
   if (!mouseOverAt) {
     mouseOverAt = mouseDownAt;
   }

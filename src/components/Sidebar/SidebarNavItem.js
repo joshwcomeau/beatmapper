@@ -12,8 +12,7 @@ const SidebarNavItem = ({ isActive, title, icon, to, onClick }) => {
       disabled={!title}
       title={title}
       position="right"
-      delay={500}
-      hideDelay={40000}
+      delay={[500, 0]}
       distance={UNIT * 2}
       animateFill={false}
     >

@@ -194,7 +194,8 @@ export default function createSongMiddleware() {
 
         const roundedCursorPosition = snapToNearestBeat(
           action.newOffset,
-          song.bpm
+          song.bpm,
+          song.offset
         );
 
         // Dispatch this new cursor position, but also seek to this place
@@ -210,10 +211,8 @@ export default function createSongMiddleware() {
 
         const state = store.getState();
         const song = getSelectedSong(state);
-        const newCursorPosition = convertBeatsToMilliseconds(
-          action.barNum * 4,
-          song.bpm
-        );
+        const newCursorPosition =
+          convertBeatsToMilliseconds(action.barNum * 4, song.bpm) + song.offset;
 
         next(adjustCursorPosition(newCursorPosition));
         audioElem.currentTime = newCursorPosition / 1000;
@@ -280,7 +279,8 @@ export default function createSongMiddleware() {
 
         const roundedCursorPosition = snapToNearestBeat(
           state.navigation.cursorPosition,
-          song.bpm
+          song.bpm,
+          song.offset
         );
 
         // Dispatch this new cursor position, but also seek to this place
@@ -293,7 +293,7 @@ export default function createSongMiddleware() {
 
       case 'SKIP_TO_START': {
         next(action);
-        audioElem.currentTime = 0;
+        audioElem.currentTime = action.offset / 1000;
         break;
       }
 

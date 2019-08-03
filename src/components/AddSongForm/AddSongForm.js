@@ -36,7 +36,7 @@ const AddSongForm = ({ createNewSong, currentSongIds, history }) => {
   const [subName, setSongSubName] = React.useState('');
   const [artistName, setArtistName] = React.useState('');
   const [bpm, setBpm] = React.useState('');
-  const [offset, setOffset] = React.useState('');
+  const [offset, setOffset] = React.useState(0);
   const [selectedDifficulty, setSelectedDifficulty] = React.useState('');
 
   const [hasSubmitted, setHasSubmitted] = React.useState(false);
@@ -176,7 +176,7 @@ const AddSongForm = ({ createNewSong, currentSongIds, history }) => {
                       label="BPM (Beats per Minute)"
                       value={bpm}
                       placeholder="140"
-                      onChange={ev => setBpm(ev.target.value)}
+                      onChange={ev => setBpm(Number(ev.target.value))}
                     />
                   </Cell>
                   <Spacer size={UNIT * 4} />
@@ -187,7 +187,7 @@ const AddSongForm = ({ createNewSong, currentSongIds, history }) => {
                       type="number"
                       value={offset}
                       placeholder="0"
-                      onChange={ev => setOffset(ev.target.value)}
+                      onChange={ev => setOffset(Number(ev.target.value))}
                     />
                   </Cell>
                 </Row>

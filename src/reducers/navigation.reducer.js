@@ -91,7 +91,7 @@ export default function navigationReducer(state = initialState, action) {
       return {
         ...state,
         animateBlockMotion: false,
-        cursorPosition: 0,
+        cursorPosition: action.offset,
       };
     }
     case 'SKIP_TO_END': {
@@ -184,7 +184,10 @@ export const getSnapTo = state => state.navigation.snapTo;
 
 export const getCursorPositionInBeats = state => {
   const song = getSelectedSong(state);
-  return convertMillisecondsToBeats(state.navigation.cursorPosition, song.bpm);
+  return convertMillisecondsToBeats(
+    state.navigation.cursorPosition - song.offset,
+    song.bpm
+  );
 };
 
 export const getPlaybackRate = state => state.navigation.playbackRate;

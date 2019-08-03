@@ -73,9 +73,9 @@ export const ScrubbableWaveform = ({
 
     if (!contextRef.current) {
       contextRef.current = canvasRef.current.getContext('2d');
-      const devicePixelRatio = getDevicePixelRatio();
-      contextRef.current.scale(devicePixelRatio, devicePixelRatio);
     }
+    const devicePixelRatio = getDevicePixelRatio();
+    contextRef.current.scale(devicePixelRatio, devicePixelRatio);
 
     const ctx = contextRef.current;
 
@@ -92,6 +92,12 @@ export const ScrubbableWaveform = ({
 
     ctx.stroke();
   }, [width, height, waveformData]);
+
+  React.useEffect(() => {
+    if (!waveformData && contextRef.current) {
+      contextRef.current.clearRect(0, 0, width, height);
+    }
+  }, [waveformData, width, height]);
 
   const ratioPlayed = cursorPosition / duration;
 

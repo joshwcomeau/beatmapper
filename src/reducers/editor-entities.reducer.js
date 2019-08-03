@@ -56,7 +56,7 @@ const notes = (state = initialState.notesView.notes, action) => {
     case 'CREATE_NEW_SONG':
     case 'CLEAR_ENTITIES': {
       // Reset the notes array when creating a new song
-      return initialState.notes;
+      return [];
     }
 
     case 'LOAD_BEATMAP_ENTITIES': {
@@ -260,8 +260,7 @@ const events = (state = initialState.eventsView, action) => {
   switch (action.type) {
     case 'CREATE_NEW_SONG':
     case 'CLEAR_ENTITIES': {
-      // Reset the notes array when creating a new song
-      return initialState.events;
+      return [];
     }
 
     case 'LOAD_BEATMAP_ENTITIES': {
@@ -277,8 +276,7 @@ const obstacles = (state = initialState.notesView.obstacles, action) => {
   switch (action.type) {
     case 'CREATE_NEW_SONG':
     case 'CLEAR_ENTITIES': {
-      // Reset the notes array when creating a new song
-      return initialState.obstacles;
+      return [];
     }
 
     case 'LOAD_BEATMAP_ENTITIES': {

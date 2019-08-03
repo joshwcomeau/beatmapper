@@ -15,6 +15,10 @@ const SongRowActions = ({ songId, size, deleteSong }) => {
     }
   };
 
+  const handleCopy = () => {
+    window.alert('This feature does not exist yet. Sorry! Coming soon.');
+  };
+
   return (
     <MiniButton as="div" style={{ height: size, width: size }}>
       <Icon icon={chevronDown} />
@@ -23,6 +27,7 @@ const SongRowActions = ({ songId, size, deleteSong }) => {
         value=""
         onChange={ev => {
           if (ev.target.value === 'copy') {
+            handleCopy();
           } else if (ev.target.value === 'delete') {
             handleDelete();
           }

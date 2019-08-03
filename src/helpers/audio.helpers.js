@@ -43,16 +43,21 @@ export const getWaveformDataForFile = file => {
   });
 };
 
-export const snapToNearestBeat = (cursorPosition, bpm) => {
+export const snapToNearestBeat = (cursorPosition, bpm, offset) => {
   // cursorPosition will be a fluid value in ms, like 65.29.
   // I need to snap to the nearest bar.
   // So if my BPM is 60, there is a bar every 4 seconds, so I'd round to
   // 64ms.
   // Note that BPMs can be any value, even fractions, so I can't rely on
   // a decimal rounding solution :/
-  const cursorPositionInBeats = convertMillisecondsToBeats(cursorPosition, bpm);
+  const cursorPositionInBeats = convertMillisecondsToBeats(
+    cursorPosition - offset,
+    bpm
+  );
 
-  return convertBeatsToMilliseconds(Math.round(cursorPositionInBeats), bpm);
+  return (
+    convertBeatsToMilliseconds(Math.round(cursorPositionInBeats), bpm) + offset
+  );
 };
 
 export const getFormattedTimestamp = cursorPosition => {
