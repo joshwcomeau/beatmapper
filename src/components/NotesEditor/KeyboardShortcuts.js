@@ -26,6 +26,8 @@ const KeyboardShortcuts = ({
   swapSelectedNotes,
   toggleSelectAll,
   jumpToBar,
+  skipToStart,
+  skipToEnd,
 }) => {
   let keysDepressed = React.useRef({
     space: false,
@@ -92,12 +94,19 @@ const KeyboardShortcuts = ({
       case 'Digit4':
         return selectPlacementTool('obstacle');
 
-      case 'ArrowUp': {
+      case 'ArrowUp':
+      case 'PageUp': {
         return throttledScroller('forwards');
       }
-
-      case 'ArrowDown': {
+      case 'ArrowDown':
+      case 'PageDown': {
         return throttledScroller('backwards');
+      }
+      case 'Home': {
+        return skipToStart();
+      }
+      case 'End': {
+        return skipToEnd();
       }
 
       case 'Delete': {
@@ -325,6 +334,8 @@ const mapDispatchToProps = {
   swapSelectedNotes: actions.swapSelectedNotes,
   toggleSelectAll: actions.toggleSelectAll,
   jumpToBar: actions.jumpToBar,
+  skipToStart: actions.skipToStart,
+  skipToEnd: actions.skipToEnd,
 };
 
 export default connect(
