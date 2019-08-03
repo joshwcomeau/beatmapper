@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import * as actions from '../../actions';
 import { UNIT } from '../../constants';
 import {
+  getIsNewUser,
   getAllSongsChronologically,
   getProcessingImport,
 } from '../../reducers/songs.reducer';
@@ -21,10 +22,10 @@ import MaxWidthWrapper from '../MaxWidthWrapper';
 import SongsTable from './SongsTable';
 import Heading from '../Heading';
 
-const Home = ({ songs, processingImport }) => {
+const Home = ({ isNewUser, songs, processingImport }) => {
   const [newSongFormVisible, setNewSongFormVisible] = React.useState(false);
 
-  if (songs.length === 0) {
+  if (isNewUser) {
     return <FirstTimeHome />;
   }
 
@@ -87,6 +88,7 @@ const SideColumn = styled(Column)`
 
 const mapStateToProps = state => {
   return {
+    isNewUser: getIsNewUser(state),
     songs: getAllSongsChronologically(state),
     processingImport: getProcessingImport(state),
   };

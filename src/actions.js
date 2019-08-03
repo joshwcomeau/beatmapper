@@ -9,6 +9,10 @@ import { getSelectedSong } from './reducers/songs.reducer';
 import { getCopiedNotes } from './reducers/clipboard.reducer';
 import { getCursorPositionInBeats } from './reducers/navigation.reducer';
 
+export const loadDemoSong = () => ({
+  type: 'LOAD_DEMO_SONG',
+});
+
 export const createNewSong = (
   coverArtFilename,
   coverArtFile,

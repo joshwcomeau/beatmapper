@@ -8,6 +8,7 @@ import createSongMiddleware from '../middlewares/song.middleware';
 import createSelectionMiddleware from '../middlewares/selection.middleware';
 import createPackagingMiddleware from '../middlewares/packaging.middleware';
 import createBackupMiddleware from '../middlewares/backup.middleware';
+import createDemoMiddleware from '../middlewares/demo.middleware';
 import DevTools from '../components/DevTools';
 import createEngine from './persistence-engine';
 
@@ -18,6 +19,7 @@ export default function configureStore(initialState) {
   const selectionMiddleware = createSelectionMiddleware();
   const downloadMiddleware = createPackagingMiddleware();
   const backupMiddleware = createBackupMiddleware();
+  const demoMiddleware = createDemoMiddleware();
   const storageMiddleware = storage.createMiddleware(persistenceEngine);
 
   const wrappedReducer = storage.reducer(rootReducer);
@@ -29,6 +31,7 @@ export default function configureStore(initialState) {
     selectionMiddleware,
     downloadMiddleware,
     backupMiddleware,
+    demoMiddleware,
   ];
 
   let enhancers;

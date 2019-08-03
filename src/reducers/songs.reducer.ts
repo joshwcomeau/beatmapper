@@ -31,6 +31,7 @@ interface Song {
   selectedDifficulty?: Difficulty;
   createdAt: number;
   lastOpenedAt: number;
+  demo?: boolean;
 }
 
 interface State {
@@ -133,6 +134,7 @@ export default function songsReducer(state: State = initialState, action: any) {
           previewDuration,
           environment,
           difficultiesById,
+          demo,
         },
       } = action;
 
@@ -160,6 +162,7 @@ export default function songsReducer(state: State = initialState, action: any) {
           difficultiesById,
           createdAt,
           lastOpenedAt,
+          demo,
         };
       });
     }
@@ -240,11 +243,13 @@ export default function songsReducer(state: State = initialState, action: any) {
   }
 }
 
+const getById = (state: any) => state.songs.byId;
+
 export const getAllSongs = (state: any): Array<Song> => {
-  return Object.values(state.songs.byId);
+  return Object.values(getById(state));
 };
 export const getAllSongIds = (state: any) => {
-  return Object.keys(state.songs.byId);
+  return Object.keys(getById(state));
 };
 export const getAllSongsChronologically = (state: any) => {
   return getAllSongs(state).sort((a: Song, b: Song) => {
@@ -254,15 +259,18 @@ export const getAllSongsChronologically = (state: any) => {
 
 export const getProcessingImport = (state: any) => state.songs.processingImport;
 
-export const getSongById = (state: any, songId: string) =>
-  state.songs.byId[songId];
+export const getSongById = (state: any, songId: string) => {
+  const byId = getById(state);
+  return byId[songId];
+};
 
 export const getSelectedSongId = (state: any) => {
   return state.songs.selectedId;
 };
 
 export const getSelectedSong = (state: any) => {
-  return state.songs.byId[getSelectedSongId(state)];
+  const byId = getById(state);
+  return byId[getSelectedSongId(state)];
 };
 
 export const getSelectedSongDifficultyIds = (state: any) => {
@@ -274,4 +282,10 @@ export const getSelectedSongDifficultyIds = (state: any) => {
 
   // @ts-ignore
   return sortDifficultyIds(ids);
+};
+
+export const getIsNewUser = (state: any) => {
+  const allSongs = getAllSongs(state);
+
+  return allSongs.every(song => song.demo);
 };
