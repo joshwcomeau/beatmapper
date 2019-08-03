@@ -371,13 +371,6 @@ export const createNewObstacle = (
   mouseOverAt,
   cursorPositionInBeats
 ) => {
-  if (!mouseDownAt) {
-    if (process.env.NODE_ENV === 'development') {
-      console.error('No mouseDownAt?!');
-    }
-
-    return;
-  }
   if (!mouseOverAt) {
     mouseOverAt = mouseDownAt;
   }
@@ -396,8 +389,8 @@ export const createNewObstacle = (
     colspan,
   };
 
-  // // Clamp our colspan to a max of 2
-  if (obstacle.colspan > 2) {
+  // Clamp our wall colspan to a max of 2
+  if (obstacle.type === 'wall' && obstacle.colspan > 2) {
     const overBy = obstacle.colspan - 2;
     obstacle.colspan = 2;
 

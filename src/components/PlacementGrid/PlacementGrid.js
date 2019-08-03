@@ -158,7 +158,11 @@ const PlacementGrid = ({
                 });
               }}
               onPointerUp={ev => {
-                if (selectedTool === 'obstacle' && ev.button === 0) {
+                if (
+                  selectedTool === 'obstacle' &&
+                  ev.button === 0 &&
+                  mouseDownAt
+                ) {
                   ev.stopPropagation();
 
                   createNewObstacle(

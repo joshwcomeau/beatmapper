@@ -22,8 +22,8 @@ const TentativeObstacle = props => {
     tentative: true,
   };
 
-  // // Clamp our colspan to a max of 2
-  if (tentativeObstacle.colspan > 2) {
+  // // Clamp our wall colspan to a max of 2
+  if (tentativeObstacle.type === 'wall' && tentativeObstacle.colspan > 2) {
     const overBy = tentativeObstacle.colspan - 2;
     tentativeObstacle.colspan = 2;
 
