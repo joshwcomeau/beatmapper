@@ -12,7 +12,7 @@ import BloomEffect from '../BloomEffect';
 
 const noop = () => {};
 
-const Logo = () => {
+const Logo = ({ size = 'full' }) => {
   const [isHovering, setIsHovering] = React.useState(false);
 
   const spring = useSpring({
@@ -28,7 +28,10 @@ const Logo = () => {
     >
       <Canvas
         pixelRatio={window.devicePixelRatio || 1}
-        style={{ width: 50, height: 50 }}
+        style={{
+          width: size === 'full' ? 50 : 30,
+          height: size === 'full' ? 50 : 30,
+        }}
       >
         <a.group rotation={spring.rotation}>
           <Block
@@ -64,7 +67,7 @@ const Logo = () => {
         />
       </Canvas>
       <Spacer size={UNIT} />
-      <Text>BeatMapper</Text>
+      <Text style={{ fontSize: size === 'full' ? 24 : 18 }}>BeatMapper</Text>
     </Wrapper>
   );
 };
@@ -72,7 +75,6 @@ const Logo = () => {
 const Wrapper = styled(Link)`
   display: flex;
   align-items: center;
-  margin-left: -4px;
   text-decoration: none;
 `;
 

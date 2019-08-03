@@ -54,6 +54,8 @@ export const SURFACE_WIDTH = 6;
 export const UNIT = 8;
 
 export const HEADER_HEIGHT = 75;
+export const FOOTER_HEIGHT = 100;
+
 export const SIDEBAR_WIDTH = 55;
 
 export const DIFFICULTIES = ['Easy', 'Normal', 'Hard', 'Expert', 'ExpertPlus'];

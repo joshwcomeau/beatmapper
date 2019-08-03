@@ -60,7 +60,7 @@ const FirstTimeHome = ({ demoSong, history }) => {
             );
           }}
         />
-        <Spacer size={UNIT * 6} />
+        <Divider />
         <OptionColumn
           icon={filePlus}
           title="Create new song"
@@ -68,7 +68,7 @@ const FirstTimeHome = ({ demoSong, history }) => {
           buttonText="Create from scratch"
           handleClick={() => setModal('new-song')}
         />
-        <Spacer size={UNIT * 6} />
+        <Divider />
         <OptionColumn
           icon={download}
           title="Import existing map"
@@ -116,6 +116,13 @@ const Title = styled.h1`
 
 const Row = styled.div`
   display: flex;
+`;
+
+const Divider = styled.div`
+  margin-left: ${UNIT * 4}px;
+  margin-right: ${UNIT * 4}px;
+  width: 0px;
+  border-left: 1px dotted ${COLORS.blueGray[500]};
 `;
 
 const mapStateToProps = state => ({
