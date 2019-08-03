@@ -10,7 +10,7 @@ import {
   getProcessingImport,
 } from '../../reducers/songs.reducer';
 
-import Header from '../Header';
+import BasicLayout from '../BasicLayout';
 import Button from '../Button';
 import Spacer from '../Spacer';
 import AddSongForm from '../AddSongForm';
@@ -25,41 +25,42 @@ import Heading from '../Heading';
 const Home = ({ isNewUser, songs, processingImport }) => {
   const [newSongFormVisible, setNewSongFormVisible] = React.useState(false);
 
-  if (isNewUser) {
-    return <FirstTimeHome />;
-  }
-
   return (
-    <>
-      <Header />
-      <MaxWidthWrapper>
-        <Spacer size={UNIT * 8} />
-        <Heading size={1}>Select map to edit</Heading>
-        <Spacer size={UNIT * 2} />
-        <Row>
-          <MainColumn flex={4}>
-            <SongsTable songs={songs} isLoading={processingImport} />
-          </MainColumn>
-          <Spacer size={UNIT * 2} />
+    <BasicLayout>
+      {isNewUser ? (
+        <FirstTimeHome />
+      ) : (
+        <>
+          <MaxWidthWrapper>
+            <Spacer size={UNIT * 8} />
+            <Heading size={1}>Select map to edit</Heading>
+            <Spacer size={UNIT * 2} />
+            <Row>
+              <MainColumn flex={4}>
+                <SongsTable songs={songs} isLoading={processingImport} />
+              </MainColumn>
+              <Spacer size={UNIT * 2} />
 
-          <SideColumn flex={2}>
-            <Button onClick={() => setNewSongFormVisible(true)}>
-              Create new song
-            </Button>
-            <Spacer size={UNIT * 4} />
-            <ImportMap height={140} />
-          </SideColumn>
-        </Row>
-      </MaxWidthWrapper>
+              <SideColumn flex={2}>
+                <Button onClick={() => setNewSongFormVisible(true)}>
+                  Create new song
+                </Button>
+                <Spacer size={UNIT * 4} />
+                <ImportMap height={140} />
+              </SideColumn>
+            </Row>
+          </MaxWidthWrapper>
 
-      <Modal
-        isVisible={newSongFormVisible}
-        clickBackdropToDismiss={false}
-        onDismiss={() => setNewSongFormVisible(false)}
-      >
-        <AddSongForm />
-      </Modal>
-    </>
+          <Modal
+            isVisible={newSongFormVisible}
+            clickBackdropToDismiss={false}
+            onDismiss={() => setNewSongFormVisible(false)}
+          >
+            <AddSongForm />
+          </Modal>
+        </>
+      )}
+    </BasicLayout>
   );
 };
 

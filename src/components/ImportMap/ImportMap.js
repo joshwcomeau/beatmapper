@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { filePlus as fileIcon } from 'react-icons-kit/feather/filePlus';
+import { download as fileIcon } from 'react-icons-kit/feather/download';
 
 import * as actions from '../../actions';
 import { getAllSongs } from '../../reducers/songs.reducer';

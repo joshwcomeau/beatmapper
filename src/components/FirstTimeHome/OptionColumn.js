@@ -19,7 +19,7 @@ const OptionColumn = ({
   return (
     <Wrapper>
       <Icon icon={icon} size={24} />
-      <Spacer size={UNIT * 2} />
+      <Spacer size={UNIT * 4} />
       <Title size={3}>{title}</Title>
       <Spacer size={UNIT * 2} />
       <Description>{description}</Description>
