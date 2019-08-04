@@ -167,8 +167,6 @@ export function createBeatmapContentsFromState(state) {
     song.bpm
   );
 
-  console.log(obstacles, shiftedObstacles);
-
   return createBeatmapContents(shiftedNotes, shiftedEvents, shiftedObstacles, {
     version: 2,
   });

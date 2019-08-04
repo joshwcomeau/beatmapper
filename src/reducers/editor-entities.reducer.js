@@ -8,6 +8,7 @@
  */
 import { combineReducers } from 'redux';
 import undoable, { includeAction, groupByActionTypes } from 'redux-undo';
+import { createSelector } from 'reselect';
 import produce from 'immer';
 
 import { findNoteIndexByProperties, swapNotes } from '../helpers/notes.helpers';
@@ -376,7 +377,18 @@ export const getSelectedObstacles = state => {
   return getObstacles(state).filter(obstacle => obstacle.selected);
 };
 
-export const getNumOfNotes = state => getNotes(state).length;
+export const getNumOfBlocks = createSelector(
+  getNotes,
+  notes => {
+    return notes.filter(note => note._type === 0 || note._type === 1).length;
+  }
+);
+export const getNumOfMines = createSelector(
+  getNotes,
+  notes => {
+    return notes.filter(note => note._type === 3).length;
+  }
+);
 export const getNumOfObstacles = state => getObstacles(state).length;
 
 export const getNumOfSelectedNotes = state => {

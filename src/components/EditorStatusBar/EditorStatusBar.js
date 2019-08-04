@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { box } from 'react-icons-kit/feather/box';
 import { codepen } from 'react-icons-kit/feather/codepen';
+import { globe } from 'react-icons-kit/feather/globe';
 import { volumeX as volumeMinIcon } from 'react-icons-kit/feather/volumeX';
 import { volume2 as volumeMaxIcon } from 'react-icons-kit/feather/volume2';
 import { fastForward as playbackSpeedMaxIcon } from 'react-icons-kit/feather/fastForward';
@@ -13,7 +14,8 @@ import { bellOff as tickOffIcon } from 'react-icons-kit/feather/bellOff';
 import * as actions from '../../actions';
 import { COLORS, UNIT } from '../../constants';
 import {
-  getNumOfNotes,
+  getNumOfBlocks,
+  getNumOfMines,
   getNumOfObstacles,
 } from '../../reducers/editor-entities.reducer';
 import {
@@ -32,7 +34,8 @@ import Toggle from './Toggle';
 const EditorStatusBar = ({
   height,
   isLoading,
-  numOfNotes,
+  numOfBlocks,
+  numOfMines,
   numOfObstacles,
   playbackRate,
   volume,
@@ -44,7 +47,9 @@ const EditorStatusBar = ({
   return (
     <Wrapper style={{ height, lineHeight: `${height}px` }}>
       <Left>
-        <CountIndicator num={numOfNotes} type="note" icon={box} />
+        <CountIndicator num={numOfBlocks} type="block" icon={box} />
+        <Spacer size={UNIT * 2} />
+        <CountIndicator num={numOfMines} type="mine" icon={globe} />
         <Spacer size={UNIT * 2} />
         <CountIndicator num={numOfObstacles} type="obstacle" icon={codepen} />
       </Left>
@@ -110,7 +115,8 @@ const mapStateToProps = state => {
     playbackRate: getPlaybackRate(state),
     volume: getVolume(state),
     playNoteTick: getPlayNoteTick(state),
-    numOfNotes: getNumOfNotes(state),
+    numOfBlocks: getNumOfBlocks(state),
+    numOfMines: getNumOfMines(state),
     numOfObstacles: getNumOfObstacles(state),
   };
 };
