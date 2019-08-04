@@ -9,6 +9,7 @@ import { processImportedMap } from '../../services/packaging.service';
 import FileUploader from '../FileUploader';
 
 const ImportMap = ({
+  onImport,
   height,
   songs,
   startImportingSong,
@@ -22,6 +23,7 @@ const ImportMap = ({
       const songData = await processImportedMap(file, songIds);
 
       importExistingSong(songData);
+      onImport();
     } catch (err) {
       console.error('Could not import map:', err);
     }

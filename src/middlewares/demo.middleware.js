@@ -5,25 +5,27 @@
 import demoFileUrl from '../assets/demo/only-now.zip';
 import { importExistingSong } from '../actions';
 import { processImportedMap } from '../services/packaging.service';
-import { getIsNewUser } from '../reducers/songs.reducer';
+import { getIsNewUser } from '../reducers/user.reducer';
 
 export default () => store => next => {
-  // If this is a brand-new user, they won't have the demo song at all
-  const state = store.getState();
-  const isNewUser = getIsNewUser(state);
-
-  if (isNewUser) {
-    fetch(demoFileUrl)
-      .then(res => res.blob())
-      .then(blob => processImportedMap(blob, []))
-      .then(songData => {
-        songData.demo = true;
-        next(importExistingSong(songData));
-      });
-  }
-
-  // We don't actually need to do middleware things
   return action => {
     next(action);
+
+    if (action.type === 'REDUX_STORAGE_LOAD') {
+      // If this is a brand-new user, they won't have the demo song at all
+      const state = store.getState();
+      const isNewUser = getIsNewUser(state);
+
+      if (isNewUser) {
+        console.log('Fetching demo!');
+        fetch(demoFileUrl)
+          .then(res => res.blob())
+          .then(blob => processImportedMap(blob, []))
+          .then(songData => {
+            songData.demo = true;
+            next(importExistingSong(songData));
+          });
+      }
+    }
   };
 };

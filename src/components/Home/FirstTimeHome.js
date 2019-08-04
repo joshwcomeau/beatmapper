@@ -4,25 +4,18 @@ import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 import { filePlus } from 'react-icons-kit/feather/filePlus';
 import { download } from 'react-icons-kit/feather/download';
-import { tv } from 'react-icons-kit/feather/tv';
+import { box } from 'react-icons-kit/feather/box';
 
 import { COLORS, UNIT } from '../../constants';
 import { getDemoSong } from '../../reducers/songs.reducer';
 
-import Header from '../Header';
 import Spacer from '../Spacer';
-import AddSongForm from '../AddSongForm';
-import Modal from '../Modal';
-import Paragraph from '../Paragraph';
 import Heading from '../Heading';
 import Center from '../Center';
-import ImportMapForm from '../ImportMapForm';
 
 import OptionColumn from './OptionColumn';
 
-const FirstTimeHome = ({ demoSong, history }) => {
-  const [modal, setModal] = React.useState(false);
-
+const FirstTimeHome = ({ setModal, demoSong, history }) => {
   return (
     <MainContent>
       <Center>
@@ -45,7 +38,7 @@ const FirstTimeHome = ({ demoSong, history }) => {
       <Spacer size={UNIT * 6} />
       <Row>
         <OptionColumn
-          icon={tv}
+          icon={box}
           title="Try a demo map"
           description="Take the editor for a test-drive with some surprisingly good public-domain dubstep"
           buttonText="Start editing"
@@ -66,7 +59,7 @@ const FirstTimeHome = ({ demoSong, history }) => {
           title="Create new song"
           description="Build a new map from scratch, using music from your computer"
           buttonText="Create from scratch"
-          handleClick={() => setModal('new-song')}
+          handleClick={() => setModal('create-new-song')}
         />
         <Divider />
         <OptionColumn
@@ -79,21 +72,6 @@ const FirstTimeHome = ({ demoSong, history }) => {
       </Row>
 
       <Spacer size={UNIT * 10} />
-
-      <Modal
-        isVisible={modal === 'new-song'}
-        clickBackdropToDismiss={false}
-        onDismiss={() => setModal(null)}
-      >
-        <AddSongForm />
-      </Modal>
-
-      <Modal
-        isVisible={modal === 'import-map'}
-        onDismiss={() => setModal(null)}
-      >
-        <ImportMapForm />
-      </Modal>
     </MainContent>
   );
 };

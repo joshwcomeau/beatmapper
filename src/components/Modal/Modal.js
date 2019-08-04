@@ -164,7 +164,7 @@ const PaneWrapper = styled.div.attrs(props => ({
   max-width: 100%;
   max-height: 95%;
   border-radius: 16px;
-  background: ${COLORS.gray[900]};
+  background: ${COLORS.blueGray[900]};
   will-change: transform;
 `;
 

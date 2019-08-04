@@ -7,6 +7,7 @@ import waveform from './waveform.reducer';
 import navigation from './navigation.reducer';
 import editor from './editor.reducer';
 import global from './global.reducer';
+import user from './user.reducer';
 
 export default combineReducers({
   songs,
@@ -16,4 +17,5 @@ export default combineReducers({
   navigation,
   editor,
   global,
+  user,
 });

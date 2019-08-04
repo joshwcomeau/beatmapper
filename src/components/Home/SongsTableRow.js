@@ -28,7 +28,10 @@ const SongsTableRow = ({ song, location, changeSelectedDifficulty }) => {
         <CoverArtImage filename={song.coverArtFilename} size={CELL_HEIGHT} />
       </CoverArtCell>
       <DescriptionCell>
-        <Title>{song.name}</Title>
+        <Title>
+          {song.name}
+          {song.demo && <Demo>(Demo song)</Demo>}
+        </Title>
         <Spacer size={6} />
         <Artist>{song.artistName}</Artist>
       </DescriptionCell>
@@ -102,6 +105,12 @@ const ActionsCell = styled(Cell)`
 
 const Actions = styled.div`
   display: flex;
+`;
+
+const Demo = styled.span`
+  color: ${COLORS.yellow[500]};
+  margin-left: 8px;
+  font-size: 0.8em;
 `;
 
 const DifficultySquaresCell = styled(Cell)`

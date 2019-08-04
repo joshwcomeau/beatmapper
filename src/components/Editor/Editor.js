@@ -18,6 +18,7 @@ const Editor = ({
   difficulty,
   isCorrectSongSelected,
   startLoadingSong,
+  unloadSong,
 }) => {
   // HACK: We're duplicating the state between the URL (/edit/:songId) and Redux
   // (state.songs.selectedId). This is because having the URL as the sole
@@ -29,6 +30,12 @@ const Editor = ({
   React.useEffect(() => {
     startLoadingSong(songId, difficulty);
   }, [startLoadingSong, songId, difficulty]);
+
+  React.useEffect(() => {
+    return () => {
+      unloadSong();
+    };
+  }, [unloadSong]);
 
   if (!isCorrectSongSelected) {
     return <LoadingScreen />;
@@ -85,6 +92,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = {
   startLoadingSong: actions.startLoadingSong,
+  unloadSong: actions.unloadSong,
 };
 
 export default connect(

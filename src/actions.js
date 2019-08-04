@@ -453,3 +453,7 @@ export const jumpToBar = barNum => ({
   type: 'JUMP_TO_BAR',
   barNum,
 });
+
+export const unloadSong = () => ({
+  type: 'UNLOAD_SONG',
+});

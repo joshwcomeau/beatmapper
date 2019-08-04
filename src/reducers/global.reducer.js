@@ -4,7 +4,6 @@
  * persistence system (indexeddb).
  */
 
-// This reducer is split into sub-reducers for each page (notes, events, etc).
 const initialState = {
   hasInitialized: false,
 };

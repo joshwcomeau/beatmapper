@@ -27,14 +27,14 @@ const BeatmapSettings = ({
         type="number"
         label="Note jump speed"
         value={noteJumpSpeed}
-        onChange={ev => handleChangeNoteJumpSpeed(ev.target.value)}
+        onChange={ev => handleChangeNoteJumpSpeed(Number(ev.target.value))}
       />
       <Spacer size={UNIT * 3} />
       <TextInput
         type="number"
         label="Start beat offset"
         value={startBeatOffset}
-        onChange={ev => handleChangeStartBeatOffset(ev.target.value)}
+        onChange={ev => handleChangeStartBeatOffset(Number(ev.target.value))}
       />
       <Spacer size={UNIT * 3} />
       <Row>

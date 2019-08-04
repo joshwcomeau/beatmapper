@@ -48,9 +48,9 @@ export default function createSongMiddleware() {
   return store => next => async action => {
     switch (action.type) {
       case 'START_LOADING_SONG': {
-        const { songId, difficulty } = action;
-
         next(action);
+
+        const { songId, difficulty } = action;
 
         const state = store.getState();
         const song = getSongById(state, songId);
@@ -58,6 +58,7 @@ export default function createSongMiddleware() {
         const playbackRate = getPlaybackRate(state);
 
         if (!song) {
+          console.log('no song');
           console.error(`Song "${songId}" not found. Current state:`, state);
           return;
         }
@@ -67,6 +68,7 @@ export default function createSongMiddleware() {
         try {
           beatmapJson = await getBeatmap(songId, difficulty);
         } catch (err) {
+          console.log('no beatmap');
           console.error(err);
         }
 
@@ -97,10 +99,6 @@ export default function createSongMiddleware() {
         // Create an <audio> element, which is the mechanism we use for
         // playing the track when the user is editing it, keeping the time,
         // etc.
-        if (currentLoadedSongId === song.id) {
-          return;
-        }
-
         const fileBlobUrl = URL.createObjectURL(file);
         audioElem = createHtmlAudioElement(fileBlobUrl);
         audioElem.volume = volume;

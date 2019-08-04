@@ -284,12 +284,6 @@ export const getSelectedSongDifficultyIds = (state: any) => {
   return sortDifficultyIds(ids);
 };
 
-export const getIsNewUser = (state: any) => {
-  const allSongs = getAllSongs(state);
-
-  return allSongs.every(song => song.demo);
-};
-
 export const getDemoSong = (state: any) => {
   return getAllSongs(state).find(song => song.demo);
 };

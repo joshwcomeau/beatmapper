@@ -39,6 +39,10 @@ const Input = styled.input`
   ::placeholder {
     color: rgba(255, 255, 255, 0.2);
   }
+
+  &:disabled {
+    color: ${COLORS.blueGray[500]};
+  }
 `;
 
 const Label = styled.label`

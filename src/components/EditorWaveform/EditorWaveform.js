@@ -2,8 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import { UNIT } from '../../constants';
 import * as actions from '../../actions';
+import { UNIT } from '../../constants';
+import { getSelectedSong } from '../../reducers/songs.reducer';
 import useBoundingBox from '../../hooks/use-bounding-box.hook';
 
 import ScrubbableWaveform from '../ScrubbableWaveform';
@@ -11,6 +12,7 @@ import CenteredSpinner from '../CenteredSpinner';
 
 const EditorWaveform = ({
   height,
+  song,
   waveformData,
   isLoadingSong,
   duration,
@@ -19,6 +21,8 @@ const EditorWaveform = ({
 }) => {
   const [ref, boundingBox] = useBoundingBox();
 
+  console.log('key', song.id + '-' + song.selectedDifficulty);
+
   return (
     <div ref={ref}>
       {isLoadingSong && (
@@ -26,8 +30,9 @@ const EditorWaveform = ({
           <CenteredSpinner />
         </SpinnerWrapper>
       )}
-      {boundingBox && (
+      {boundingBox && song && (
         <ScrubbableWaveform
+          key={song.id + '-' + song.selectedDifficulty}
           width={boundingBox.width}
           height={height - UNIT * 2}
           waveformData={waveformData}
@@ -52,6 +57,7 @@ const SpinnerWrapper = styled.div`
 
 const mapStateToProps = state => {
   return {
+    song: getSelectedSong(state),
     waveformData: state.waveform.data,
     isLoadingSong: state.navigation.isLoading,
     duration: state.navigation.duration,

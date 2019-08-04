@@ -6,7 +6,7 @@ const initialState = {
 
 export default function songReducer(state = initialState, action) {
   switch (action.type) {
-    case 'START_LOADING_SONG': {
+    case 'UNLOAD_SONG': {
       return {
         ...state,
         // Don't show stale data from previously-loaded songs

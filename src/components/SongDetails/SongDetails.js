@@ -300,6 +300,13 @@ const SongDetails = ({
             const { noteJumpSpeed, startBeatOffset } = difficultiesById[id];
             const savedVersion = song.difficultiesById[id];
 
+            console.log(
+              typeof noteJumpSpeed,
+              typeof savedVersion.noteJumpSpeed,
+              typeof startBeatOffset,
+              savedVersion.startBeatOffset
+            );
+
             return (
               <BeatmapSettings
                 id={id}
