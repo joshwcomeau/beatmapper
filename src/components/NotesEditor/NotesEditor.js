@@ -15,8 +15,15 @@ import HelpButton from '../HelpButton';
 import SongInfo from './SongInfo';
 import KeyboardShortcuts from './KeyboardShortcuts';
 
-const NotesEditor = ({ isPlaying, startPlaying, scrollThroughSong, match }) => {
+const NotesEditor = ({ isPlaying, pausePlaying, scrollThroughSong }) => {
   const canvasRef = React.useRef(null);
+
+  React.useEffect(() => {
+    return () => {
+      // On unmount, pause the track
+      pausePlaying();
+    };
+  }, [pausePlaying]);
 
   useMousewheel(canvasRef, true, ev => {
     // Ignore mousewheels when the ctrl key is held.
@@ -64,7 +71,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  startPlaying: actions.startPlaying,
+  pausePlaying: actions.pausePlaying,
   scrollThroughSong: actions.scrollThroughSong,
 };
 
