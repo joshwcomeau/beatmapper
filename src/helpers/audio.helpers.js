@@ -74,8 +74,10 @@ export const getFormattedTimestamp = cursorPosition => {
 
 export const getFormattedBarsAndBeats = cursorPositionInBeats => {
   const barNum = Math.floor(cursorPositionInBeats / 4);
-  const beatNum = Math.floor(cursorPositionInBeats % 4);
-  const remainder = String(roundToNearest(cursorPositionInBeats % 1, 1 / 32))
+  const beatNum = Math.abs(Math.floor(cursorPositionInBeats % 4));
+  const remainder = String(
+    roundToNearest(Math.abs(cursorPositionInBeats) % 1, 1 / 32)
+  )
     .replace('0.', '')
     .slice(0, 3)
     .padEnd(3, '0');
