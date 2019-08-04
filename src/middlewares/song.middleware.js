@@ -34,6 +34,7 @@ import {
   getPlayNoteTick,
   getCursorPositionInBeats,
 } from '../reducers/navigation.reducer';
+import { unshiftEntitiesByOffset } from '../services/packaging.service.nitty-gritty';
 
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 
@@ -43,7 +44,6 @@ export default function createSongMiddleware() {
   const ticker = new Sfx();
 
   let audioElem;
-  let currentLoadedSongId;
 
   return store => next => async action => {
     switch (action.type) {
@@ -58,7 +58,6 @@ export default function createSongMiddleware() {
         const playbackRate = getPlaybackRate(state);
 
         if (!song) {
-          console.log('no song');
           console.error(`Song "${songId}" not found. Current state:`, state);
           return;
         }
@@ -68,7 +67,6 @@ export default function createSongMiddleware() {
         try {
           beatmapJson = await getBeatmap(songId, difficulty);
         } catch (err) {
-          console.log('no beatmap');
           console.error(err);
         }
 
@@ -78,16 +76,37 @@ export default function createSongMiddleware() {
         // notes as well maybe?)
         // Convert the .dat fields to redux-friendly ones.
         let obstacles = beatmapJson && beatmapJson._obstacles;
-        const convertedObstacles = convertObstaclesToRedux(obstacles || []);
+        let convertedObstacles = convertObstaclesToRedux(obstacles || []);
 
         // we may not have any beatmap entities, if this is a new song
         // or new difficulty.
         if (beatmapJson) {
+          // If we do, we need to manage a little dance related to offsets.
+          // See offsets.md for more context, but essentially we need to
+          // transform our timing to match the beat, by undoing a
+          // transformation previously applied.
+          const unshiftedNotes = unshiftEntitiesByOffset(
+            beatmapJson._notes || [],
+            song.offset,
+            song.bpm
+          );
+
+          const unshiftedEvents = unshiftEntitiesByOffset(
+            beatmapJson._events || [],
+            song.offset,
+            song.bpm
+          );
+          const unshiftedObstacles = unshiftEntitiesByOffset(
+            convertedObstacles || [],
+            song.offset,
+            song.bpm
+          );
+
           next(
             loadBeatmapEntities(
-              beatmapJson._notes,
-              beatmapJson._events,
-              convertedObstacles
+              unshiftedNotes,
+              unshiftedEvents,
+              unshiftedObstacles
             )
           );
 
@@ -118,8 +137,6 @@ export default function createSongMiddleware() {
           }
 
           const durationInMs = waveform.duration * 1000;
-
-          currentLoadedSongId = song.id;
 
           next(finishLoadingSong(song, durationInMs, waveform));
         });

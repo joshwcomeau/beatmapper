@@ -2,7 +2,7 @@
  * This middleware exists only to load (and possibly manage) the demo song
  * that comes with this app.
  */
-import demoFileUrl from '../assets/demo/only-now.zip';
+import demoFileUrl from '../assets/demo/demo-map.zip';
 import { importExistingSong } from '../actions';
 import { processImportedMap } from '../services/packaging.service';
 import { getIsNewUser } from '../reducers/user.reducer';
@@ -17,7 +17,6 @@ export default () => store => next => {
       const isNewUser = getIsNewUser(state);
 
       if (isNewUser) {
-        console.log('Fetching demo!');
         fetch(demoFileUrl)
           .then(res => res.blob())
           .then(blob => processImportedMap(blob, []))

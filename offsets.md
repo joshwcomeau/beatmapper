@@ -29,3 +29,5 @@ This hack is ideal for getting the song to play well, since it means Beat Saber 
 I kinda have to deal with this; otherwise, songs that users inport will have all their notes at weird offsets.
 
 This is annoying because I need to decode this x_x
+
+First, I should do a similar conversion myself, when exporting, so that songs with offsets are actually playable.

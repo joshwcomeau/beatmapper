@@ -60,7 +60,7 @@ const notes = (state = initialState.notesView.notes, action) => {
     }
 
     case 'LOAD_BEATMAP_ENTITIES': {
-      return action.notes;
+      return action.notes || [];
     }
 
     case 'CLICK_PLACEMENT_GRID': {
@@ -264,7 +264,7 @@ const events = (state = initialState.eventsView, action) => {
     }
 
     case 'LOAD_BEATMAP_ENTITIES': {
-      return action.events;
+      return action.events || [];
     }
 
     default:
@@ -280,7 +280,7 @@ const obstacles = (state = initialState.notesView.obstacles, action) => {
     }
 
     case 'LOAD_BEATMAP_ENTITIES': {
-      return action.obstacles;
+      return action.obstacles || [];
     }
 
     case 'CREATE_NEW_OBSTACLE': {

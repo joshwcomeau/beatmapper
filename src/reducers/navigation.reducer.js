@@ -23,6 +23,13 @@ export default function navigationReducer(state = initialState, action) {
       };
     }
 
+    case 'UNLOAD_SONG': {
+      return {
+        ...state,
+        cursorPosition: 0,
+      };
+    }
+
     case 'FINISH_LOADING_SONG': {
       const { duration, song } = action;
 

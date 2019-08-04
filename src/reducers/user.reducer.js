@@ -22,6 +22,7 @@ export default function user(state = initialState, action) {
         isNewUser: false,
       };
     }
+
     case 'CREATE_NEW_SONG':
     case 'FINISH_LOADING_SONG': {
       return {

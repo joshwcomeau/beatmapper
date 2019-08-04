@@ -21,8 +21,6 @@ const EditorWaveform = ({
 }) => {
   const [ref, boundingBox] = useBoundingBox();
 
-  console.log('key', song.id + '-' + song.selectedDifficulty);
-
   return (
     <div ref={ref}>
       {isLoadingSong && (

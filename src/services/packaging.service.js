@@ -19,18 +19,12 @@ import {
   getEvents,
   getObstacles,
 } from '../reducers/editor-entities.reducer';
-
-const getDifficultyRankForDifficulty = difficulty => {
-  // prettier-ignore
-  switch (difficulty.id) {
-    case 'Easy': return 1;
-    case 'Normal': return 3;
-    case 'Hard': return 5;
-    case 'Expert': return 7;
-    case 'ExpertPlus': return 9;
-    default: throw new Error('Unrecognized difficulty')
-  }
-};
+import { getSelectedSong } from '../reducers/songs.reducer';
+import {
+  getDifficultyRankForDifficulty,
+  getArchiveVersion,
+  shiftEntitiesByOffset,
+} from './packaging.service.nitty-gritty';
 
 export function createInfoContent(song, meta = { version: 2 }) {
   const difficultyIds = sortDifficultyIds(Object.keys(song.difficultiesById));
@@ -69,7 +63,7 @@ export function createInfoContent(song, meta = { version: 2 }) {
       _songAuthorName: song.artistName,
       _levelAuthorName: song.mapAuthorName || '',
       _beatsPerMinute: bpm,
-      _songTimeOffset: offset,
+      _songTimeOffset: 0,
       _shuffle: 0,
       _shufflePeriod: 0.5,
       _previewStartTime: song.previewStartTime,
@@ -92,6 +86,7 @@ export function createInfoContent(song, meta = { version: 2 }) {
             _noteJumpMovementSpeed: difficulty.noteJumpSpeed,
             _noteJumpStartBeatOffset: difficulty.startBeatOffset,
             _customData: {
+              _editorOffset: offset,
               _difficultyLabel: '',
               _warnings: [],
               _information: [],
@@ -110,26 +105,32 @@ export function createInfoContent(song, meta = { version: 2 }) {
 }
 
 export function createBeatmapContents(
+  { bpm, offset },
   notes,
   events = [],
   obstacles = [],
   meta = { version: 2 },
   // The following fields are only necessary for v1.
-  bpm,
   noteJumpSpeed,
   swing,
   swingPeriod
 ) {
   let contents;
 
+  // If the `offset` is non-zero, we need to do some maths to shift all the
+  // notes by that amount.
+  const shiftedNotes = shiftEntitiesByOffset(notes, offset, bpm);
+  const shiftedEvents = shiftEntitiesByOffset(events, offset, bpm);
+  const shiftedObstacles = shiftEntitiesByOffset(obstacles, offset, bpm);
+
   if (meta.version === 2) {
     contents = {
       _version: '2.0.0',
       // BPM changes not yet supported.
       _BPMChanges: [],
-      _events: events,
-      _notes: notes,
-      _obstacles: obstacles,
+      _events: shiftedEvents,
+      _notes: shiftedNotes,
+      _obstacles: shiftedObstacles,
       // Bookmarks not yet supported.
       _bookmarks: [],
     };
@@ -141,22 +142,24 @@ export function createBeatmapContents(
       _noteJumpSpeed: Number(noteJumpSpeed),
       _shuffle: Number(swing || 0),
       _shufflePeriod: Number(swingPeriod || 0.5),
-      _events: events,
-      _notes: notes,
-      _obstacles: obstacles,
+      _events: shiftedEvents,
+      _notes: shiftedNotes,
+      _obstacles: shiftedObstacles,
     };
   } else {
     throw new Error('unrecognized version: ' + meta.version);
   }
+
   return JSON.stringify(contents, null, 2);
 }
 
 export function createBeatmapContentsFromState(state) {
+  const song = getSelectedSong(state);
   const notes = getNotes(state);
   const events = getEvents(state);
   const obstacles = convertObstaclesFromRedux(getObstacles(state));
 
-  return createBeatmapContents(notes, events, obstacles, { version: 2 });
+  return createBeatmapContents(song, notes, events, obstacles, { version: 2 });
 }
 
 export const zipFiles = (song, songFile, coverArtFile, version) => {
@@ -199,11 +202,11 @@ export const zipFiles = (song, songFile, coverArtFile, version) => {
         const beatmapData = JSON.parse(fileContents);
 
         const legacyFileContents = createBeatmapContents(
+          song,
           beatmapData._notes,
           beatmapData._events,
           beatmapData._obstacles,
           { version: 1 },
-          song.bpm,
           song.difficultiesById[difficulty].noteJumpSpeed,
           song.swingAmount,
           song.swingPeriod
@@ -220,14 +223,6 @@ export const zipFiles = (song, songFile, coverArtFile, version) => {
       resolve();
     });
   });
-};
-
-const getArchiveVersion = archive => {
-  // We could be importing a v1 or v2 song, we don't know which.
-  // For now, I'm going to do the very lazy thing of just assuming based on
-  // the file type; v1 has `info.json` while v2 has `info.dat`
-  // TODO: More reliable version checking
-  return archive.files['info.dat'] ? 2 : 1;
 };
 
 // If the user uploads a legacy song, we first need to convert it to our
@@ -256,6 +251,8 @@ export const convertLegacyArchive = async archive => {
   const songFile = await archive.files[audioPath].async('blob');
   zip.file('song.egg', songFile, { binary: true });
 
+  const bpm = infoDatJson.beatsPerMinute;
+
   // Create new difficulty files (eg. Expert.dat)
   const loadedDifficultyFiles = await Promise.all(
     infoDatJson.difficultyLevels.map(async level => {
@@ -263,6 +260,7 @@ export const convertLegacyArchive = async archive => {
       const fileJson = JSON.parse(fileContents);
 
       const newFileContents = createBeatmapContents(
+        { bpm, offset },
         fileJson._notes,
         fileJson._events,
         fileJson._obstacles,
@@ -291,7 +289,7 @@ export const convertLegacyArchive = async archive => {
     name: infoDatJson.songName,
     subName: infoDatJson.songSubName,
     artistName: infoDatJson.authorName,
-    bpm: infoDatJson.beatsPerMinute,
+    bpm,
     offset,
     previewStartTime: infoDatJson.previewStartTime,
     previewDuration: infoDatJson.previewDuration,
@@ -405,6 +403,15 @@ export const processImportedMap = async (zipFile, currentSongIds) => {
     {}
   );
 
+  let realOffset = 0;
+  try {
+    realOffset =
+      infoDatJson._difficultyBeatmapSets[0]._difficultyBeatmaps[0]._customData
+        ._editorOffset;
+  } catch (e) {}
+
+  console.log({ realOffset }, infoDatJson);
+
   return {
     songId,
     songFile,
@@ -416,7 +423,7 @@ export const processImportedMap = async (zipFile, currentSongIds) => {
     artistName: infoDatJson._songAuthorName,
     mapAuthorName: infoDatJson._levelAuthorName,
     bpm: infoDatJson._beatsPerMinute,
-    offset: infoDatJson._songTimeOffset,
+    offset: realOffset,
     swingAmount: infoDatJson._shuffle,
     swingPeriod: infoDatJson._shufflePeriod,
     previewStartTime: infoDatJson._previewStartTime,
