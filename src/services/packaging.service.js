@@ -104,13 +104,13 @@ export function createInfoContent(song, meta = { version: 2 }) {
   return JSON.stringify(contents, null, 2);
 }
 
-export function createBeatmapContents(
-  { bpm, offset },
+function createBeatmapContents(
   notes,
   events = [],
   obstacles = [],
   meta = { version: 2 },
   // The following fields are only necessary for v1.
+  bpm,
   noteJumpSpeed,
   swing,
   swingPeriod
@@ -119,18 +119,18 @@ export function createBeatmapContents(
 
   // If the `offset` is non-zero, we need to do some maths to shift all the
   // notes by that amount.
-  const shiftedNotes = shiftEntitiesByOffset(notes, offset, bpm);
-  const shiftedEvents = shiftEntitiesByOffset(events, offset, bpm);
-  const shiftedObstacles = shiftEntitiesByOffset(obstacles, offset, bpm);
+  // NOTE: We don't need to do this for version 1. This is because version 1
+  // is pulled straight from localStorage, where this offset has already been
+  // applied
 
   if (meta.version === 2) {
     contents = {
       _version: '2.0.0',
       // BPM changes not yet supported.
       _BPMChanges: [],
-      _events: shiftedEvents,
-      _notes: shiftedNotes,
-      _obstacles: shiftedObstacles,
+      _events: events,
+      _notes: notes,
+      _obstacles: obstacles,
       // Bookmarks not yet supported.
       _bookmarks: [],
     };
@@ -142,9 +142,9 @@ export function createBeatmapContents(
       _noteJumpSpeed: Number(noteJumpSpeed),
       _shuffle: Number(swing || 0),
       _shufflePeriod: Number(swingPeriod || 0.5),
-      _events: shiftedEvents,
-      _notes: shiftedNotes,
-      _obstacles: shiftedObstacles,
+      _events: events,
+      _notes: notes,
+      _obstacles: obstacles,
     };
   } else {
     throw new Error('unrecognized version: ' + meta.version);
@@ -159,7 +159,19 @@ export function createBeatmapContentsFromState(state) {
   const events = getEvents(state);
   const obstacles = convertObstaclesFromRedux(getObstacles(state));
 
-  return createBeatmapContents(song, notes, events, obstacles, { version: 2 });
+  const shiftedNotes = shiftEntitiesByOffset(notes, song.offset, song.bpm);
+  const shiftedEvents = shiftEntitiesByOffset(events, song.offset, song.bpm);
+  const shiftedObstacles = shiftEntitiesByOffset(
+    obstacles,
+    song.offset,
+    song.bpm
+  );
+
+  console.log(obstacles, shiftedObstacles);
+
+  return createBeatmapContents(shiftedNotes, shiftedEvents, shiftedObstacles, {
+    version: 2,
+  });
 }
 
 export const zipFiles = (song, songFile, coverArtFile, version) => {
@@ -202,11 +214,11 @@ export const zipFiles = (song, songFile, coverArtFile, version) => {
         const beatmapData = JSON.parse(fileContents);
 
         const legacyFileContents = createBeatmapContents(
-          song,
           beatmapData._notes,
           beatmapData._events,
           beatmapData._obstacles,
           { version: 1 },
+          song.bpm,
           song.difficultiesById[difficulty].noteJumpSpeed,
           song.swingAmount,
           song.swingPeriod
@@ -260,7 +272,6 @@ export const convertLegacyArchive = async archive => {
       const fileJson = JSON.parse(fileContents);
 
       const newFileContents = createBeatmapContents(
-        { bpm, offset },
         fileJson._notes,
         fileJson._events,
         fileJson._obstacles,
@@ -409,8 +420,6 @@ export const processImportedMap = async (zipFile, currentSongIds) => {
       infoDatJson._difficultyBeatmapSets[0]._difficultyBeatmaps[0]._customData
         ._editorOffset;
   } catch (e) {}
-
-  console.log({ realOffset }, infoDatJson);
 
   return {
     songId,

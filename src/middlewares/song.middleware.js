@@ -70,14 +70,6 @@ export default function createSongMiddleware() {
           console.error(err);
         }
 
-        // our beatmap comes in a "raw" form, using proprietary fields.
-        // At present, I'm using that proprietary structure for notes/mines,
-        // but I have my own structure for obstacles (and I hope to update
-        // notes as well maybe?)
-        // Convert the .dat fields to redux-friendly ones.
-        let obstacles = beatmapJson && beatmapJson._obstacles;
-        let convertedObstacles = convertObstaclesToRedux(obstacles || []);
-
         // we may not have any beatmap entities, if this is a new song
         // or new difficulty.
         if (beatmapJson) {
@@ -97,16 +89,23 @@ export default function createSongMiddleware() {
             song.bpm
           );
           const unshiftedObstacles = unshiftEntitiesByOffset(
-            convertedObstacles || [],
+            beatmapJson._obstacles || [],
             song.offset,
             song.bpm
           );
+
+          // our beatmap comes in a "raw" form, using proprietary fields.
+          // At present, I'm using that proprietary structure for notes/mines,
+          // but I have my own structure for obstacles (and I hope to update
+          // notes as well maybe?)
+          // Convert the .dat fields to redux-friendly ones.
+          let convertedObstacles = convertObstaclesToRedux(unshiftedObstacles);
 
           next(
             loadBeatmapEntities(
               unshiftedNotes,
               unshiftedEvents,
-              unshiftedObstacles
+              convertedObstacles
             )
           );
 
