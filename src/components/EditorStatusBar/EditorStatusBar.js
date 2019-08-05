@@ -1,3 +1,8 @@
+/**
+ * TODO: This status bar is reused across two views, but the views don't
+ * need the same info :/ I should create a shared "root" component with slots
+ * for the stuff that is variant.
+ */
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';

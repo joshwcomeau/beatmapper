@@ -102,10 +102,6 @@ const NotesEditorSongInfo = ({
 };
 
 const Wrapper = styled.div`
-  position: absolute;
-  z-index: 10;
-  top: ${UNIT * 2}px;
-  left: ${UNIT * 2}px;
   display: flex;
   align-items: center;
 `;
@@ -115,7 +111,7 @@ const Text = styled.div`
 `;
 
 const Description = styled.div`
-  width: 200px;
+  width: 150px;
   padding-left: ${UNIT}px;
 `;
 

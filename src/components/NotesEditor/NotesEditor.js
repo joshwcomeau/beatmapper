@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import * as actions from '../../actions';
+import { UNIT } from '../../constants';
 import { isMetaKeyPressed } from '../../utils';
 import useMousewheel from '../../hooks/use-mousewheel.hook';
 
@@ -11,8 +12,8 @@ import MapVisualization from '../MapVisualization';
 import EditorBottomPanel from '../EditorBottomPanel';
 import EditorRightPanel from '../EditorRightPanel';
 import HelpButton from '../HelpButton';
+import SongInfo from '../SongInfo';
 
-import SongInfo from './SongInfo';
 import KeyboardShortcuts from './KeyboardShortcuts';
 
 const NotesEditor = ({ isPlaying, pausePlaying, scrollThroughSong }) => {
@@ -44,7 +45,9 @@ const NotesEditor = ({ isPlaying, pausePlaying, scrollThroughSong }) => {
 
   return (
     <Wrapper>
-      <SongInfo />
+      <SongInfoWrapper>
+        <SongInfo />
+      </SongInfoWrapper>
 
       <ReduxForwardingCanvas ref={canvasRef}>
         <MapVisualization />
@@ -64,6 +67,15 @@ const Wrapper = styled.div`
   background: #000;
   width: 100%;
   height: 100%;
+`;
+
+const SongInfoWrapper = styled.div`
+  position: absolute;
+  z-index: 10;
+  top: ${UNIT * 2}px;
+  left: ${UNIT * 2}px;
+  display: flex;
+  align-items: center;
 `;
 
 const mapStateToProps = state => ({

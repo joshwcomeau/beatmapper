@@ -1,6 +1,21 @@
-// TODO: Flow-type this file
+export function range(start, stop, step = 1) {
+  if (typeof stop == 'undefined') {
+    // one param defined
+    stop = start;
+    start = 0;
+  }
 
-export const range = n => Array.from(Array(n).keys());
+  if ((step > 0 && start >= stop) || (step < 0 && start <= stop)) {
+    return [];
+  }
+
+  var result = [];
+  for (var i = start; step > 0 ? i < stop : i > stop; i += step) {
+    result.push(i);
+  }
+
+  return result;
+}
 
 export const sample = arr => arr[Math.floor(Math.random() * arr.length)];
 
@@ -26,6 +41,8 @@ export const roundTo = (number, places = 0) =>
 
 export const roundToNearest = (number, nearest) =>
   Math.round(number / nearest) * nearest;
+export const floorToNearest = (number, nearest) =>
+  Math.floor(number / nearest) * nearest;
 
 /**
  * I often find myself needing to normalize values.

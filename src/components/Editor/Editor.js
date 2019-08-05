@@ -7,10 +7,11 @@ import * as actions from '../../actions';
 import { SIDEBAR_WIDTH, COLORS } from '../../constants';
 import { getSelectedSong } from '../../reducers/songs.reducer';
 
-import NotesEditor from '../NotesEditor';
 import Sidebar from '../Sidebar';
-import Download from '../Download';
+import NotesEditor from '../NotesEditor';
+import Events from '../Events';
 import SongDetails from '../SongDetails';
+import Download from '../Download';
 import LoadingScreen from '../LoadingScreen';
 
 const Editor = ({
@@ -51,6 +52,7 @@ const Editor = ({
             path="/edit/:songId/:difficulty/notes"
             component={NotesEditor}
           />
+          <Route path="/edit/:songId/:difficulty/events" component={Events} />
           <Route
             path="/edit/:songId/:difficulty/details"
             component={SongDetails}
