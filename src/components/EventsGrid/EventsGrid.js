@@ -62,10 +62,10 @@ const EventsGrid = ({
   const prefixWidth = 170;
   const innerGridWidth = contentWidth - prefixWidth;
   // TODO: Dynamic height?
-  const height = 500;
+  const maxHeight = 500;
   const headerHeight = 32;
-  const innerGridHeight = height - headerHeight;
-  const rowHeight = Math.floor(innerGridHeight / TRACKS.length);
+  const rowHeight = Math.floor((maxHeight - headerHeight) / TRACKS.length);
+  const innerGridHeight = rowHeight * TRACKS.length;
 
   const barNums = range(Math.floor(startBeat), Math.ceil(endBeat));
 
@@ -78,7 +78,7 @@ const EventsGrid = ({
           <TrackPrefix key={id} style={{ height: rowHeight }} />
         ))}
       </PrefixColumn>
-      <Grid style={{ height }}>
+      <Grid>
         <Header style={{ height: headerHeight }}>
           {barNums.map(num => (
             <HeaderCell>

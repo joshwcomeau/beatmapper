@@ -117,11 +117,12 @@ export default function createSongMiddleware() {
         // Create an <audio> element, which is the mechanism we use for
         // playing the track when the user is editing it, keeping the time,
         // etc.
+        console.log(song);
         const fileBlobUrl = URL.createObjectURL(file);
         audioElem = createHtmlAudioElement(fileBlobUrl);
         audioElem.volume = volume;
         audioElem.playbackRate = playbackRate;
-        audioElem.currentTime = song.offset / 1000;
+        audioElem.currentTime = (song.offset || 0) / 1000;
 
         // Loading an array buffer consumes it, weirdly. I don't believe that
         // this is a mistake I'm making, it appears to be a part of the Web

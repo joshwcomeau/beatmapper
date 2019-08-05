@@ -416,7 +416,7 @@ export const processImportedMap = async (zipFile, currentSongIds) => {
   try {
     realOffset =
       infoDatJson._difficultyBeatmapSets[0]._difficultyBeatmaps[0]._customData
-        ._editorOffset;
+        ._editorOffset || 0;
   } catch (e) {}
 
   return {
