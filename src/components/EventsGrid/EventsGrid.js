@@ -13,6 +13,44 @@ import Cursor from './Cursor';
 
 const WINDOW_SIZES_FOR_ZOOM_LEVEL = [null, 32, 16, 8, 4];
 
+const TRACKS = [
+  {
+    id: 'laser-l',
+    label: 'Left laser',
+    type: 'side-laser',
+  },
+  {
+    id: 'laser-r',
+    label: 'Right laser',
+    type: 'side-laser',
+  },
+  {
+    id: 'laser-b',
+    label: 'Back laser',
+    type: 'center-laser',
+  },
+  {
+    id: 'primary-light',
+    label: 'Primary light',
+    type: 'center-laser',
+  },
+  {
+    id: 'track-neons',
+    label: 'Track neons',
+    type: 'track-neons',
+  },
+  {
+    id: 'large-ring',
+    label: 'Large ring',
+    type: 'ring',
+  },
+  {
+    id: 'small-ring',
+    label: 'Small ring',
+    type: 'ring',
+  },
+];
+
 const EventsGrid = ({
   contentWidth,
   zoomLevel = 3,
@@ -27,12 +65,19 @@ const EventsGrid = ({
   const height = 500;
   const headerHeight = 32;
   const innerGridHeight = height - headerHeight;
+  const rowHeight = Math.floor(innerGridHeight / TRACKS.length);
 
   const barNums = range(Math.floor(startBeat), Math.ceil(endBeat));
 
   return (
     <Wrapper style={{ width: contentWidth }}>
-      <PrefixColumn style={{ width: prefixWidth }} />
+      <PrefixColumn style={{ width: prefixWidth }}>
+        <Header style={{ height: headerHeight }} />
+
+        {TRACKS.map(({ id }) => (
+          <TrackPrefix key={id} style={{ height: rowHeight }} />
+        ))}
+      </PrefixColumn>
       <Grid style={{ height }}>
         <Header style={{ height: headerHeight }}>
           {barNums.map(num => (
@@ -53,6 +98,12 @@ const EventsGrid = ({
               secondaryDivisions={0}
             />
           </BackgroundLinesWrapper>
+
+          <Tracks>
+            {TRACKS.map(({ id }) => (
+              <Track key={id} style={{ height: rowHeight }} />
+            ))}
+          </Tracks>
 
           <Cursor
             gridWidth={innerGridWidth}
@@ -128,6 +179,19 @@ const BackgroundLinesWrapper = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
+`;
+
+const TrackPrefix = styled.div`
+  border-bottom: 1px solid ${COLORS.blueGray[400]};
+`;
+
+const Tracks = styled.div`
+  position: relative;
+  z-index: 2;
+`;
+// TEMP:
+const Track = styled.div`
+  border-bottom: 1px solid ${COLORS.blueGray[400]};
 `;
 
 const mapStateToProps = (state, ownProps) => {
