@@ -3,11 +3,13 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 
 import { UNIT, COLORS } from '../../constants';
-import { range, floorToNearest } from '../../utils';
+import { range, floorToNearest, normalize } from '../../utils';
 import { getEvents } from '../../reducers/editor-entities.reducer';
 import { getCursorPositionInBeats } from '../../reducers/navigation.reducer';
 import useBoundingBox from '../../hooks/use-bounding-box.hook';
+
 import BackgroundLines from './BackgroundLines';
+import Cursor from './Cursor';
 
 const WINDOW_SIZES_FOR_ZOOM_LEVEL = [null, 32, 16, 8, 4];
 
@@ -15,8 +17,9 @@ const EventsGrid = ({
   contentWidth,
   zoomLevel = 3,
   events,
-  cursorPositionInBeats,
-  durationInBeats,
+  startBeat,
+  endBeat,
+  numOfBeatsToShow,
 }) => {
   const prefixWidth = 170;
   const innerGridWidth = contentWidth - prefixWidth;
@@ -24,11 +27,6 @@ const EventsGrid = ({
   const height = 500;
   const headerHeight = 32;
   const innerGridHeight = height - headerHeight;
-
-  const numOfBeatsToShow = WINDOW_SIZES_FOR_ZOOM_LEVEL[zoomLevel];
-
-  const startBeat = floorToNearest(cursorPositionInBeats, numOfBeatsToShow);
-  const endBeat = startBeat + numOfBeatsToShow;
 
   const barNums = range(Math.floor(startBeat), Math.ceil(endBeat));
 
@@ -55,6 +53,12 @@ const EventsGrid = ({
               secondaryDivisions={0}
             />
           </BackgroundLinesWrapper>
+
+          <Cursor
+            gridWidth={innerGridWidth}
+            startBeat={startBeat}
+            endBeat={endBeat}
+          />
         </MainGridContent>
       </Grid>
     </Wrapper>
@@ -126,9 +130,19 @@ const BackgroundLinesWrapper = styled.div`
   bottom: 0;
 `;
 
-const mapStateToProps = state => ({
-  events: getEvents(state),
-  cursorPositionInBeats: getCursorPositionInBeats(state),
-});
+const mapStateToProps = (state, ownProps) => {
+  const cursorPositionInBeats = getCursorPositionInBeats(state);
 
-export default connect(mapStateToProps)(EventsGrid);
+  const numOfBeatsToShow = WINDOW_SIZES_FOR_ZOOM_LEVEL[ownProps.zoomLevel];
+
+  const startBeat = floorToNearest(cursorPositionInBeats, numOfBeatsToShow);
+  const endBeat = startBeat + numOfBeatsToShow;
+
+  return {
+    startBeat,
+    endBeat,
+    numOfBeatsToShow,
+  };
+};
+
+export default connect(mapStateToProps)(React.memo(EventsGrid));

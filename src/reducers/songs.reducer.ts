@@ -1,6 +1,7 @@
 import produce from 'immer';
 
 import { sortDifficultyIds } from '../helpers/song.helpers';
+import { createSelector } from 'reselect';
 
 interface Difficulty {
   id: string;
@@ -273,16 +274,19 @@ export const getSelectedSong = (state: any) => {
   return byId[getSelectedSongId(state)];
 };
 
-export const getSelectedSongDifficultyIds = (state: any) => {
-  /**
-   * This selector comes with the added bonus that difficulties are sorted
-   * (easy to expert+)
-   */
-  const ids = Object.keys(getSelectedSong(state).difficultiesById);
+export const getSelectedSongDifficultyIds = createSelector(
+  getSelectedSong,
+  (selectedSong: any) => {
+    /**
+     * This selector comes with the added bonus that difficulties are sorted
+     * (easy to expert+)
+     */
+    const ids = Object.keys(selectedSong.difficultiesById);
 
-  // @ts-ignore
-  return sortDifficultyIds(ids);
-};
+    // @ts-ignore
+    return sortDifficultyIds(ids);
+  }
+);
 
 export const getDemoSong = (state: any) => {
   return getAllSongs(state).find(song => song.demo);

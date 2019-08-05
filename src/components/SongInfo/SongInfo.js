@@ -140,5 +140,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(NotesEditorSongInfo)
+  )(React.memo(NotesEditorSongInfo))
 );
