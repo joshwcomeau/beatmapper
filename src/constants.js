@@ -126,3 +126,6 @@ export const SNAPPING_INCREMENTS = [
     shortcutLabel: `${metaKeyLabel}+9`,
   },
 ];
+
+export const NOTES_VIEW = 'notes';
+export const EVENTS_VIEW = 'events';

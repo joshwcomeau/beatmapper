@@ -43,7 +43,7 @@ function notes(state = initialState.notes, action) {
       const { view } = action;
 
       if (view !== 'notes') {
-        return;
+        return state;
       }
 
       const currentlySelectedTool = state.selectedTool;

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { maximize2 } from 'react-icons-kit/feather/maximize2';
 
 import * as actions from '../../actions';
-import { COLORS, UNIT } from '../../constants';
+import { COLORS, UNIT, NOTES_VIEW } from '../../constants';
 import { getNumOfSelectedNotes } from '../../reducers/editor-entities.reducer';
 
 import MiniButton from '../MiniButton';
@@ -64,7 +64,9 @@ const SelectionInfo = ({
             />
           </Row>
           <Spacer size={UNIT * 2} />
-          <MiniButton onClick={deselectAll}>Deselect</MiniButton>
+          <MiniButton onClick={() => deselectAll(NOTES_VIEW)}>
+            Deselect
+          </MiniButton>
         </>
       )}
     </Wrapper>

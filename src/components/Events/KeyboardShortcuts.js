@@ -7,14 +7,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import * as actions from '../../actions';
-import { SNAPPING_INCREMENTS, NOTES_VIEW } from '../../constants';
+import { SNAPPING_INCREMENTS, EVENTS_VIEW } from '../../constants';
 import { throttle, isMetaKeyPressed } from '../../utils';
 import useMousewheel from '../../hooks/use-mousewheel.hook';
 
 const KeyboardShortcuts = ({
   togglePlaying,
   scrollThroughSong,
-  deleteSelectedNotes,
   changeSnapping,
   incrementSnapping,
   decrementSnapping,
@@ -22,13 +21,6 @@ const KeyboardShortcuts = ({
   selectPreviousTool,
   selectPlacementTool,
   deselectAll,
-  selectNoteDirection,
-  copySelectedNotes,
-  cutSelectedNotes,
-  pasteSelectedNotes,
-  undoNotes,
-  redoNotes,
-  swapSelectedNotes,
   toggleSelectAll,
   jumpToBar,
   skipToStart,
@@ -36,10 +28,6 @@ const KeyboardShortcuts = ({
 }) => {
   let keysDepressed = React.useRef({
     space: false,
-    w: false,
-    a: false,
-    s: false,
-    d: false,
   });
 
   const throttledScroller = throttle(scrollThroughSong, 50);
@@ -75,29 +63,21 @@ const KeyboardShortcuts = ({
       }
 
       case 'Escape': {
-        return deselectAll(NOTES_VIEW);
+        // TODO: Implement this
+        return deselectAll(EVENTS_VIEW);
       }
 
       case 'Tab': {
         ev.preventDefault();
 
         if (ev.shiftKey) {
-          selectPreviousTool(NOTES_VIEW);
+          selectPreviousTool(EVENTS_VIEW);
         } else {
-          selectNextTool(NOTES_VIEW);
+          selectNextTool(EVENTS_VIEW);
         }
 
         return;
       }
-
-      case 'Digit1':
-        return selectPlacementTool('red-block');
-      case 'Digit2':
-        return selectPlacementTool('blue-block');
-      case 'Digit3':
-        return selectPlacementTool('mine');
-      case 'Digit4':
-        return selectPlacementTool('obstacle');
 
       case 'ArrowUp':
       case 'PageUp': {
@@ -115,31 +95,32 @@ const KeyboardShortcuts = ({
       }
 
       case 'Delete': {
-        return deleteSelectedNotes();
+        // TODO
+        break;
       }
 
       case 'KeyX': {
+        // TODO
         if (!isMetaKeyPressed(ev)) {
           return;
         }
-        return cutSelectedNotes();
+        break;
       }
       case 'KeyC': {
+        // TODO
         if (!isMetaKeyPressed(ev)) {
           return;
         }
-        return copySelectedNotes();
+        break;
       }
       case 'KeyV': {
+        // TODO
         if (!isMetaKeyPressed(ev)) {
-          return swapSelectedNotes('vertical');
+          return;
         }
-        return pasteSelectedNotes();
+        break;
       }
 
-      case 'KeyH': {
-        return swapSelectedNotes('horizontal');
-      }
       case 'KeyJ': {
         const bar = window.prompt(
           'Enter bar number (eg. 1.25 for the 5th beat)'
@@ -154,109 +135,22 @@ const KeyboardShortcuts = ({
         return jumpToBar(barNum);
       }
 
-      case 'KeyW': {
-        if (ev.shiftKey) {
-          return;
-        }
-        keysDepressed.current.w = true;
-
-        if (keysDepressed.current.a) {
-          return selectNoteDirection(4);
-        } else if (keysDepressed.current.d) {
-          return selectNoteDirection(5);
-        } else {
-          return selectNoteDirection(0);
-        }
-      }
       case 'KeyA': {
-        if (ev.shiftKey) {
-          return;
-        }
-        if (isMetaKeyPressed(ev)) {
-          ev.preventDefault();
-          return toggleSelectAll(NOTES_VIEW);
-        }
-
-        keysDepressed.current.a = true;
-
-        if (keysDepressed.current.w) {
-          return selectNoteDirection(4);
-        } else if (keysDepressed.current.s) {
-          return selectNoteDirection(6);
-        } else {
-          return selectNoteDirection(2);
-        }
-      }
-      case 'KeyS': {
-        if (ev.shiftKey) {
-          return;
-        }
-        keysDepressed.current.s = true;
-
-        if (keysDepressed.current.a) {
-          return selectNoteDirection(6);
-        } else if (keysDepressed.current.d) {
-          return selectNoteDirection(7);
-        } else {
-          return selectNoteDirection(1);
-        }
-      }
-      case 'KeyD': {
-        if (ev.shiftKey) {
-          return;
-        }
-        keysDepressed.current.d = true;
-
-        if (keysDepressed.current.w) {
-          return selectNoteDirection(5);
-        } else if (keysDepressed.current.s) {
-          return selectNoteDirection(7);
-        } else {
-          return selectNoteDirection(3);
-        }
-      }
-      case 'KeyF': {
-        if (ev.shiftKey) {
-          return;
-        }
-
-        return selectNoteDirection(8);
-      }
-
-      case 'KeyZ': {
         if (!isMetaKeyPressed(ev)) {
           return;
         }
 
-        return ev.shiftKey ? redoNotes() : undoNotes();
+        ev.preventDefault();
+        return toggleSelectAll(EVENTS_VIEW);
       }
 
-      case 'Numpad1': {
-        return selectNoteDirection(6);
-      }
-      case 'Numpad2': {
-        return selectNoteDirection(1);
-      }
-      case 'Numpad3': {
-        return selectNoteDirection(7);
-      }
-      case 'Numpad4': {
-        return selectNoteDirection(2);
-      }
-      case 'Numpad5': {
-        return selectNoteDirection(8);
-      }
-      case 'Numpad6': {
-        return selectNoteDirection(3);
-      }
-      case 'Numpad7': {
-        return selectNoteDirection(4);
-      }
-      case 'Numpad8': {
-        return selectNoteDirection(0);
-      }
-      case 'Numpad9': {
-        return selectNoteDirection(5);
+      case 'KeyZ': {
+        // TODO
+        if (!isMetaKeyPressed(ev)) {
+          return;
+        }
+
+        return ev.shiftKey ? null : null;
       }
 
       default:

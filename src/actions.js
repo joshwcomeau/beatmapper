@@ -1,5 +1,6 @@
 import uuid from 'uuid/v1';
 
+import { NOTES_VIEW, EVENTS_VIEW } from './constants';
 import {
   getNotes,
   getObstacles,
@@ -291,25 +292,35 @@ export const deselectObstacle = id => ({
   id,
 });
 
-export const deselectAll = () => ({
+export const deselectAll = view => ({
   type: 'DESELECT_ALL',
+  view,
 });
-export const selectAll = () => ({
+export const selectAll = view => ({
   type: 'SELECT_ALL',
+  view,
 });
-export const toggleSelectAll = () => (dispatch, getState) => {
+export const toggleSelectAll = view => (dispatch, getState) => {
   const state = getState();
 
-  const notes = getNotes(state);
-  const obstacles = getObstacles(state);
+  let anythingSelected;
 
-  const anyNotesSelected = notes.some(n => n.selected);
-  const anyObstaclesSelected = obstacles.some(s => s.selected);
+  if (view === NOTES_VIEW) {
+    const notes = getNotes(state);
+    const obstacles = getObstacles(state);
 
-  if (anyNotesSelected || anyObstaclesSelected) {
-    dispatch(deselectAll());
+    const anyNotesSelected = notes.some(n => n.selected);
+    const anyObstaclesSelected = obstacles.some(s => s.selected);
+
+    anythingSelected = anyNotesSelected || anyObstaclesSelected;
+  } else if (view === EVENTS_VIEW) {
+    // TODO
+  }
+
+  if (anythingSelected) {
+    dispatch(deselectAll(view));
   } else {
-    dispatch(selectAll());
+    dispatch(selectAll(view));
   }
 };
 

@@ -10,6 +10,7 @@ import Spacer from '../Spacer';
 
 import BottomPanel from './BottomPanel';
 import TopPanel from './TopPanel';
+import KeyboardShortcuts from './KeyboardShortcuts';
 
 const Events = ({}) => {
   const { width: windowWidth } = useWindowDimensions();
@@ -33,6 +34,8 @@ const Events = ({}) => {
         durationInBeats={100}
       />
       <BottomPanel />
+
+      <KeyboardShortcuts />
     </Wrapper>
   );
 };
