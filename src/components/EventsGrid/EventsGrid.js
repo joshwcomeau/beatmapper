@@ -3,13 +3,14 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 
 import { UNIT, COLORS } from '../../constants';
-import { range, floorToNearest, normalize } from '../../utils';
+import { range, floorToNearest, normalize, roundToNearest } from '../../utils';
 import { getEvents } from '../../reducers/editor-entities.reducer';
 import { getCursorPositionInBeats } from '../../reducers/navigation.reducer';
 import useBoundingBox from '../../hooks/use-bounding-box.hook';
 
 import BackgroundLines from './BackgroundLines';
 import Cursor from './Cursor';
+import Track from './Track';
 
 const WINDOW_SIZES_FOR_ZOOM_LEVEL = [null, 32, 16, 8, 4];
 
@@ -59,30 +60,61 @@ const EventsGrid = ({
   endBeat,
   numOfBeatsToShow,
 }) => {
+  const [tracksRef, tracksBoundingBox] = useBoundingBox();
+  const [mouseCursorPosition, setMouseCursorPosition] = React.useState(null);
+
   const prefixWidth = 170;
   const innerGridWidth = contentWidth - prefixWidth;
   // TODO: Dynamic height?
-  const maxHeight = 500;
+  const trackHeight = 40;
   const headerHeight = 32;
-  const rowHeight = Math.floor((maxHeight - headerHeight) / TRACKS.length);
-  const innerGridHeight = rowHeight * TRACKS.length;
+  const innerGridHeight = trackHeight * TRACKS.length;
 
-  const barNums = range(Math.floor(startBeat), Math.ceil(endBeat));
+  const beatNums = range(Math.floor(startBeat), Math.ceil(endBeat));
+
+  const updateMouseCursorPosition = ev => {
+    if (!tracksBoundingBox) {
+      return;
+    }
+
+    const xPosition = ev.pageX - tracksBoundingBox.left;
+
+    const positionInBeats = normalize(
+      xPosition,
+      0,
+      innerGridWidth,
+      0,
+      beatNums.length
+    );
+    const roundedPositionInBeats = roundToNearest(positionInBeats, 0.25);
+
+    const roundedPositionInPx = normalize(
+      roundedPositionInBeats,
+      0,
+      beatNums.length,
+      0,
+      innerGridWidth
+    );
+
+    setMouseCursorPosition(roundedPositionInPx);
+  };
 
   return (
     <Wrapper style={{ width: contentWidth }}>
       <PrefixColumn style={{ width: prefixWidth }}>
         <Header style={{ height: headerHeight }} />
 
-        {TRACKS.map(({ id }) => (
-          <TrackPrefix key={id} style={{ height: rowHeight }} />
+        {TRACKS.map(({ id, label }) => (
+          <TrackPrefix key={id} style={{ height: trackHeight }}>
+            {label}
+          </TrackPrefix>
         ))}
       </PrefixColumn>
       <Grid>
         <Header style={{ height: headerHeight }}>
-          {barNums.map(num => (
+          {beatNums.map(num => (
             <HeaderCell>
-              <BarNum>{num}</BarNum>
+              <BeatNums>{num}</BeatNums>
               <Nub />
             </HeaderCell>
           ))}
@@ -99,9 +131,13 @@ const EventsGrid = ({
             />
           </BackgroundLinesWrapper>
 
-          <Tracks>
+          <Tracks
+            ref={tracksRef}
+            onMouseMove={updateMouseCursorPosition}
+            onMouseLeave={() => setMouseCursorPosition(null)}
+          >
             {TRACKS.map(({ id }) => (
-              <Track key={id} style={{ height: rowHeight }} />
+              <Track key={id} height={trackHeight} />
             ))}
           </Tracks>
 
@@ -110,6 +146,10 @@ const EventsGrid = ({
             startBeat={startBeat}
             endBeat={endBeat}
           />
+
+          {mouseCursorPosition && (
+            <MouseCursor style={{ left: mouseCursorPosition }} />
+          )}
         </MainGridContent>
       </Grid>
     </Wrapper>
@@ -144,7 +184,7 @@ const HeaderCell = styled.div`
   align-items: flex-end;
 `;
 
-const BarNum = styled.span`
+const BeatNums = styled.span`
   display: inline-block;
   transform: translateX(-50%);
   padding-bottom: 8px;
@@ -182,6 +222,14 @@ const BackgroundLinesWrapper = styled.div`
 `;
 
 const TrackPrefix = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 400;
+  color: ${COLORS.white};
+  padding: 0 ${UNIT}px;
   border-bottom: 1px solid ${COLORS.blueGray[400]};
 `;
 
@@ -189,9 +237,16 @@ const Tracks = styled.div`
   position: relative;
   z-index: 2;
 `;
-// TEMP:
-const Track = styled.div`
-  border-bottom: 1px solid ${COLORS.blueGray[400]};
+
+const MouseCursor = styled.div`
+  position: absolute;
+  top: 0;
+  z-index: 4;
+  width: 1px;
+  height: 100%;
+  background: ${COLORS.blueGray[100]};
+  border-radius: 2px;
+  pointer-events: none;
 `;
 
 const mapStateToProps = (state, ownProps) => {

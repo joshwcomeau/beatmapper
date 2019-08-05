@@ -20,7 +20,7 @@ const Toggle = ({ size, onIcon, offIcon, value, onChange }) => {
         opacity={value ? 0.5 : 1}
         icon={offIcon}
         onClick={ev => {
-          document.activeElement.blur();
+          ev.currentTarget.blur();
           onChange(false);
         }}
       />
@@ -34,8 +34,8 @@ const Toggle = ({ size, onIcon, offIcon, value, onChange }) => {
           borderWidth,
         }}
         onClick={ev => {
+          ev.currentTarget.blur();
           onChange(!value);
-          document.activeElement.blur();
         }}
       >
         <Ball style={{ [side]: padding, width: size, height: size }} />
@@ -46,7 +46,7 @@ const Toggle = ({ size, onIcon, offIcon, value, onChange }) => {
         opacity={value ? 1 : 0.5}
         icon={onIcon}
         onClick={ev => {
-          document.activeElement.blur();
+          ev.currentTarget.blur();
           onChange(true);
         }}
       />
