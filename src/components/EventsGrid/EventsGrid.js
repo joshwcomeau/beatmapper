@@ -6,7 +6,7 @@ import { UNIT, COLORS } from '../../constants';
 import { range, normalize, roundToNearest } from '../../utils';
 import { getSnapTo } from '../../reducers/navigation.reducer';
 import { getStartAndEndBeat } from '../../reducers/editor.reducer';
-import useBoundingBox from '../../hooks/use-bounding-box.hook';
+import useMousePositionOverElement from '../../hooks/use-mouse-position-over-element.hook';
 
 import BackgroundLines from './BackgroundLines';
 import CursorPositionIndicator from './CursorPositionIndicator';
@@ -59,7 +59,6 @@ const EventsGrid = ({
   numOfBeatsToShow,
   snapTo,
 }) => {
-  const [tracksRef, tracksBoundingBox] = useBoundingBox();
   const [mouseCursorPosition, setMouseCursorPosition] = React.useState(null);
 
   const prefixWidth = 170;
@@ -71,20 +70,12 @@ const EventsGrid = ({
 
   const beatNums = range(Math.floor(startBeat), Math.ceil(endBeat));
 
-  const updateMouseCursorPosition = ev => {
-    if (!tracksBoundingBox) {
-      return;
-    }
+  const updateMouseCursorPosition = ev => {};
 
-    const xPosition = ev.pageX - tracksBoundingBox.left;
+  const placeEvent = ev => {};
 
-    const positionInBeats = normalize(
-      xPosition,
-      0,
-      innerGridWidth,
-      0,
-      beatNums.length
-    );
+  const tracksRef = useMousePositionOverElement((x, y) => {
+    const positionInBeats = normalize(x, 0, innerGridWidth, 0, beatNums.length);
     const roundedPositionInBeats = roundToNearest(positionInBeats, snapTo);
 
     const roundedPositionInPx = normalize(
@@ -96,7 +87,7 @@ const EventsGrid = ({
     );
 
     setMouseCursorPosition(roundedPositionInPx);
-  };
+  });
 
   return (
     <Wrapper style={{ width: contentWidth }}>
@@ -130,13 +121,9 @@ const EventsGrid = ({
             />
           </BackgroundLinesWrapper>
 
-          <Tracks
-            ref={tracksRef}
-            onMouseMove={updateMouseCursorPosition}
-            onMouseLeave={() => setMouseCursorPosition(null)}
-          >
+          <Tracks ref={tracksRef}>
             {TRACKS.map(({ id }) => (
-              <Track key={id} height={trackHeight} />
+              <Track key={id} height={trackHeight} onClick={placeEvent} />
             ))}
           </Tracks>
 

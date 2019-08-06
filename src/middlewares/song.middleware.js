@@ -117,7 +117,6 @@ export default function createSongMiddleware() {
         // Create an <audio> element, which is the mechanism we use for
         // playing the track when the user is editing it, keeping the time,
         // etc.
-        console.log(song);
         const fileBlobUrl = URL.createObjectURL(file);
         audioElem = createHtmlAudioElement(fileBlobUrl);
         audioElem.volume = volume;

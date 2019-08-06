@@ -10,7 +10,6 @@ const EventsGridTrack = ({
   handleClick,
   handleMouseMove,
 }) => {
-  console.log('track');
   return <Wrapper style={{ height }} />;
 };
 
