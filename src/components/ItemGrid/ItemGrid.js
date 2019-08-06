@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import { COLORS, UNIT } from '../../constants';
+import { COLORS, UNIT, NOTES_VIEW } from '../../constants';
 import * as actions from '../../actions';
 
 import IconButton from '../IconButton';
@@ -13,7 +13,7 @@ import BlockIcon from './BlockIcon';
 import MineIcon from './MineIcon';
 import ObstacleIcon from './ObstacleIcon';
 
-const ItemGrid = ({ selectedTool, selectPlacementTool }) => {
+const ItemGrid = ({ selectedTool, selectTool }) => {
   const buttonSize = 36;
   return (
     <Wrapper>
@@ -26,7 +26,7 @@ const ItemGrid = ({ selectedTool, selectPlacementTool }) => {
           <IconButton
             size={buttonSize}
             isToggled={selectedTool === 'red-block'}
-            onClick={() => selectPlacementTool('red-block')}
+            onClick={() => selectTool(NOTES_VIEW, 'red-block')}
           >
             <BlockIcon color={COLORS.red[500]} />
           </IconButton>
@@ -34,7 +34,7 @@ const ItemGrid = ({ selectedTool, selectPlacementTool }) => {
           <IconButton
             size={buttonSize}
             isToggled={selectedTool === 'blue-block'}
-            onClick={() => selectPlacementTool('blue-block')}
+            onClick={() => selectTool(NOTES_VIEW, 'blue-block')}
           >
             <BlockIcon color={COLORS.blue[500]} />
           </IconButton>
@@ -45,7 +45,7 @@ const ItemGrid = ({ selectedTool, selectPlacementTool }) => {
           <IconButton
             size={buttonSize}
             isToggled={selectedTool === 'mine'}
-            onClick={() => selectPlacementTool('mine')}
+            onClick={() => selectTool(NOTES_VIEW, 'mine')}
           >
             <MineIcon size={20} />
           </IconButton>
@@ -53,7 +53,7 @@ const ItemGrid = ({ selectedTool, selectPlacementTool }) => {
           <IconButton
             size={buttonSize}
             isToggled={selectedTool === 'obstacle'}
-            onClick={() => selectPlacementTool('obstacle')}
+            onClick={() => selectTool(NOTES_VIEW, 'obstacle')}
           >
             <ObstacleIcon size={20} />
           </IconButton>
@@ -79,7 +79,7 @@ const mapStateToProps = state => ({
   selectedTool: state.editor.notes.selectedTool,
 });
 
-const mapDispatchToProps = { selectPlacementTool: actions.selectPlacementTool };
+const mapDispatchToProps = { selectTool: actions.selectTool };
 
 export default connect(
   mapStateToProps,

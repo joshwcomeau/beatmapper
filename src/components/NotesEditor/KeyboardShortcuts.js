@@ -20,7 +20,7 @@ const KeyboardShortcuts = ({
   decrementSnapping,
   selectNextTool,
   selectPreviousTool,
-  selectPlacementTool,
+  selectTool,
   deselectAll,
   selectNoteDirection,
   copySelectedNotes,
@@ -91,13 +91,13 @@ const KeyboardShortcuts = ({
       }
 
       case 'Digit1':
-        return selectPlacementTool('red-block');
+        return selectTool(NOTES_VIEW, 'red-block');
       case 'Digit2':
-        return selectPlacementTool('blue-block');
+        return selectTool(NOTES_VIEW, 'blue-block');
       case 'Digit3':
-        return selectPlacementTool('mine');
+        return selectTool(NOTES_VIEW, 'mine');
       case 'Digit4':
-        return selectPlacementTool('obstacle');
+        return selectTool(NOTES_VIEW, 'obstacle');
 
       case 'ArrowUp':
       case 'PageUp': {
@@ -326,7 +326,7 @@ const mapDispatchToProps = {
   decrementSnapping: actions.decrementSnapping,
   selectNextTool: actions.selectNextTool,
   selectPreviousTool: actions.selectPreviousTool,
-  selectPlacementTool: actions.selectPlacementTool,
+  selectTool: actions.selectTool,
   deselectAll: actions.deselectAll,
   selectNoteDirection: actions.selectNoteDirection,
   copySelectedNotes: actions.copySelectedNotes,

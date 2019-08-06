@@ -3,30 +3,28 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 
 import { UNIT, COLORS } from '../../constants';
-import { range, floorToNearest, normalize, roundToNearest } from '../../utils';
-import { getEvents } from '../../reducers/editor-entities.reducer';
-import { getCursorPositionInBeats } from '../../reducers/navigation.reducer';
+import { range, normalize, roundToNearest } from '../../utils';
+import { getSnapTo } from '../../reducers/navigation.reducer';
+import { getStartAndEndBeat } from '../../reducers/editor.reducer';
 import useBoundingBox from '../../hooks/use-bounding-box.hook';
 
 import BackgroundLines from './BackgroundLines';
-import Cursor from './Cursor';
+import CursorPositionIndicator from './CursorPositionIndicator';
 import Track from './Track';
-
-const WINDOW_SIZES_FOR_ZOOM_LEVEL = [null, 32, 16, 8, 4];
 
 const TRACKS = [
   {
-    id: 'laser-l',
+    id: 'laser-left',
     label: 'Left laser',
     type: 'side-laser',
   },
   {
-    id: 'laser-r',
+    id: 'laser-right',
     label: 'Right laser',
     type: 'side-laser',
   },
   {
-    id: 'laser-b',
+    id: 'laser-back',
     label: 'Back laser',
     type: 'center-laser',
   },
@@ -59,6 +57,7 @@ const EventsGrid = ({
   startBeat,
   endBeat,
   numOfBeatsToShow,
+  snapTo,
 }) => {
   const [tracksRef, tracksBoundingBox] = useBoundingBox();
   const [mouseCursorPosition, setMouseCursorPosition] = React.useState(null);
@@ -86,7 +85,7 @@ const EventsGrid = ({
       0,
       beatNums.length
     );
-    const roundedPositionInBeats = roundToNearest(positionInBeats, 0.25);
+    const roundedPositionInBeats = roundToNearest(positionInBeats, snapTo);
 
     const roundedPositionInPx = normalize(
       roundedPositionInBeats,
@@ -113,7 +112,7 @@ const EventsGrid = ({
       <Grid>
         <Header style={{ height: headerHeight }}>
           {beatNums.map(num => (
-            <HeaderCell>
+            <HeaderCell key={num}>
               <BeatNums>{num}</BeatNums>
               <Nub />
             </HeaderCell>
@@ -141,13 +140,13 @@ const EventsGrid = ({
             ))}
           </Tracks>
 
-          <Cursor
+          <CursorPositionIndicator
             gridWidth={innerGridWidth}
             startBeat={startBeat}
             endBeat={endBeat}
           />
 
-          {mouseCursorPosition && (
+          {typeof mouseCursorPosition === 'number' && (
             <MouseCursor style={{ left: mouseCursorPosition }} />
           )}
         </MainGridContent>
@@ -226,9 +225,9 @@ const TrackPrefix = styled.div`
   flex-direction: column;
   align-items: flex-end;
   justify-content: center;
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 400;
-  color: ${COLORS.white};
+  color: ${COLORS.blueGray[100]};
   padding: 0 ${UNIT}px;
   border-bottom: 1px solid ${COLORS.blueGray[400]};
 `;
@@ -241,26 +240,25 @@ const Tracks = styled.div`
 const MouseCursor = styled.div`
   position: absolute;
   top: 0;
-  z-index: 4;
-  width: 1px;
+  z-index: 6;
+  width: 3px;
   height: 100%;
   background: ${COLORS.blueGray[100]};
+  border: 1px solid ${COLORS.blueGray[900]};
   border-radius: 2px;
   pointer-events: none;
+  transform: translateX(-1px);
 `;
 
 const mapStateToProps = (state, ownProps) => {
-  const cursorPositionInBeats = getCursorPositionInBeats(state);
-
-  const numOfBeatsToShow = WINDOW_SIZES_FOR_ZOOM_LEVEL[ownProps.zoomLevel];
-
-  const startBeat = floorToNearest(cursorPositionInBeats, numOfBeatsToShow);
-  const endBeat = startBeat + numOfBeatsToShow;
+  const { startBeat, endBeat } = getStartAndEndBeat(state);
+  const numOfBeatsToShow = endBeat - startBeat;
 
   return {
     startBeat,
     endBeat,
     numOfBeatsToShow,
+    snapTo: getSnapTo(state),
   };
 };
 

@@ -27,3 +27,27 @@ export type Obstacle = {
   tentative?: boolean;
   selected?: boolean;
 };
+
+export type TrackId =
+  | 'laser-left'
+  | 'laser-right'
+  | 'laser-back'
+  | 'primary-light'
+  | 'track-neons'
+  | 'large-ring'
+  | 'small-ring';
+
+export type EventType =
+  | 'light-on'
+  | 'light-off'
+  | 'light-on-off'
+  | 'light-flash'
+  | 'light-fade'
+  | 'custom-pattern';
+
+export type LightEvent = {
+  id: string;
+  trackId: TrackId;
+  startBeat: number;
+  endBeat?: number; // Only certain types of blocks specify an end.
+};

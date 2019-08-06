@@ -237,8 +237,9 @@ export const selectNoteDirection = direction => ({
   type: 'SELECT_NOTE_DIRECTION',
   direction,
 });
-export const selectPlacementTool = tool => ({
-  type: 'SELECT_PLACEMENT_TOOL',
+export const selectTool = (view, tool) => ({
+  type: 'SELECT_TOOL',
+  view,
   tool,
 });
 export const selectNextTool = view => ({

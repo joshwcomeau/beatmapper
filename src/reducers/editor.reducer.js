@@ -4,10 +4,22 @@
  */
 import { combineReducers } from 'redux';
 
+import { NOTES_VIEW, EVENTS_VIEW } from '../constants';
+import { floorToNearest } from '../utils';
+import { getCursorPositionInBeats } from './navigation.reducer';
+
 const NOTE_TOOLS = ['red-block', 'blue-block', 'mine', 'obstacle'];
 
-// eslint-disable-next-line no-unused-vars
-const EVENT_TOOLS = [];
+const EVENT_TOOLS = [
+  'light-on',
+  'light-off',
+  'light-on-off',
+  'light-flash',
+  'light-fade',
+  'pattern',
+];
+
+const BEATS_PER_ZOOM_LEVEL = [null, 32, 16, 8, 4];
 
 const initialState = {
   // `notes` covers everything in the /notes editor view:
@@ -17,7 +29,11 @@ const initialState = {
     selectedDirection: 8,
     selectionMode: null, // null | 'select' | 'deselect' | 'delete'.
   },
-  events: {},
+  events: {
+    zoomLevel: 3,
+    selectedTool: EVENT_TOOLS[0],
+    selectedLaserSpeed: 0,
+  },
 };
 
 function notes(state = initialState.notes, action) {
@@ -30,8 +46,13 @@ function notes(state = initialState.notes, action) {
       };
     }
 
-    case 'SELECT_PLACEMENT_TOOL': {
-      const { tool } = action;
+    case 'SELECT_TOOL': {
+      const { view, tool } = action;
+
+      if (view !== NOTES_VIEW) {
+        return state;
+      }
+
       return {
         ...state,
         selectedTool: tool,
@@ -42,7 +63,7 @@ function notes(state = initialState.notes, action) {
     case 'SELECT_PREVIOUS_TOOL': {
       const { view } = action;
 
-      if (view !== 'notes') {
+      if (view !== NOTES_VIEW) {
         return state;
       }
 
@@ -82,11 +103,71 @@ function notes(state = initialState.notes, action) {
 }
 
 function events(state = initialState.events, action) {
-  return state;
+  switch (action.type) {
+    case 'SELECT_TOOL': {
+      const { view, tool } = action;
+
+      if (view !== EVENTS_VIEW) {
+        return state;
+      }
+
+      return {
+        ...state,
+        selectedTool: tool,
+      };
+    }
+
+    case 'SELECT_NEXT_TOOL':
+    case 'SELECT_PREVIOUS_TOOL': {
+      const { view } = action;
+
+      if (view !== EVENTS_VIEW) {
+        return state;
+      }
+
+      const currentlySelectedTool = state.selectedTool;
+
+      const incrementBy = action.type === 'SELECT_NEXT_TOOL' ? +1 : -1;
+
+      const currentToolIndex = EVENT_TOOLS.indexOf(currentlySelectedTool);
+      const nextTool =
+        EVENT_TOOLS[
+          (currentToolIndex + EVENT_TOOLS.length + incrementBy) %
+            EVENT_TOOLS.length
+        ];
+
+      return {
+        ...state,
+        selectedTool: nextTool,
+      };
+    }
+
+    default:
+      return state;
+  }
 }
 
 export const getSelectedNoteTool = state => state.editor.notes.selectedTool;
 export const getSelectedCutDirection = state =>
   state.editor.notes.selectedDirection;
+
+export const getSelectedEventTool = state => state.editor.events.selectedTool;
+export const getZoomLevel = state => state.editor.events.zoomLevel;
+
+export const getBeatsPerZoomLevel = state => {
+  const zoomLevel = getZoomLevel(state);
+  return BEATS_PER_ZOOM_LEVEL[zoomLevel];
+};
+export const getStartAndEndBeat = state => {
+  const cursorPositionInBeats = getCursorPositionInBeats(state);
+  const numOfBeatsToShow = getBeatsPerZoomLevel(state);
+
+  const startBeat = floorToNearest(cursorPositionInBeats, numOfBeatsToShow);
+  const endBeat = startBeat + numOfBeatsToShow;
+
+  return { startBeat, endBeat };
+};
+
+export const getRelevantEvents = state => {};
 
 export default combineReducers({ notes, events });
