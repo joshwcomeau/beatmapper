@@ -469,3 +469,11 @@ export const jumpToBar = barNum => ({
 export const unloadSong = () => ({
   type: 'UNLOAD_SONG',
 });
+
+export const placeEvent = (trackId, beatNum) => {
+  return {
+    type: 'PLACE_EVENT',
+    trackId,
+    beatNum,
+  };
+};

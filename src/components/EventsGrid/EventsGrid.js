@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 
+import * as actions from '../../actions';
 import { UNIT, COLORS } from '../../constants';
 import { range, normalize, roundToNearest } from '../../utils';
 import { getSnapTo } from '../../reducers/navigation.reducer';
@@ -58,6 +59,7 @@ const EventsGrid = ({
   endBeat,
   numOfBeatsToShow,
   snapTo,
+  placeEvent,
 }) => {
   const [mouseCursorPosition, setMouseCursorPosition] = React.useState(null);
 
@@ -70,9 +72,17 @@ const EventsGrid = ({
 
   const beatNums = range(Math.floor(startBeat), Math.ceil(endBeat));
 
-  const updateMouseCursorPosition = ev => {};
+  const handleClickTrack = trackId => {
+    const beatNum = normalize(
+      mouseCursorPosition,
+      0,
+      innerGridWidth,
+      0,
+      beatNums.length
+    );
 
-  const placeEvent = ev => {};
+    placeEvent(trackId, beatNum);
+  };
 
   const tracksRef = useMousePositionOverElement((x, y) => {
     const positionInBeats = normalize(x, 0, innerGridWidth, 0, beatNums.length);
@@ -123,7 +133,11 @@ const EventsGrid = ({
 
           <Tracks ref={tracksRef}>
             {TRACKS.map(({ id }) => (
-              <Track key={id} height={trackHeight} onClick={placeEvent} />
+              <Track
+                key={id}
+                height={trackHeight}
+                onMouseUp={() => handleClickTrack(id)}
+              />
             ))}
           </Tracks>
 
@@ -247,6 +261,10 @@ const mapStateToProps = (state, ownProps) => {
     numOfBeatsToShow,
     snapTo: getSnapTo(state),
   };
+};
+
+const mapDispatchToProps = {
+  placeEvent: actions.placeEvent,
 };
 
 export default connect(mapStateToProps)(React.memo(EventsGrid));
