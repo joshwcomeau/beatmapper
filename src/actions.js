@@ -6,6 +6,7 @@ import {
   getObstacles,
   getSelectedNotes,
 } from './reducers/editor-entities.reducer';
+import { getSelectedEventTool } from './reducers/editor.reducer';
 import { getSelectedSong } from './reducers/songs.reducer';
 import { getCopiedNotes } from './reducers/clipboard.reducer';
 import { getCursorPositionInBeats } from './reducers/navigation.reducer';
@@ -470,10 +471,13 @@ export const unloadSong = () => ({
   type: 'UNLOAD_SONG',
 });
 
-export const placeEvent = (trackId, beatNum) => {
+export const placeEvent = (trackId, beatNum) => (dispatch, getState) => {
+  const selectedTool = getSelectedEventTool(getState());
+
   return {
     type: 'PLACE_EVENT',
     trackId,
     beatNum,
+    selectedTool,
   };
 };

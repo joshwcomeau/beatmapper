@@ -1,26 +1,16 @@
-/**
- * This reducer manages all "live-editable" entities - notes, events, obstacles.
- *
- * It also dictates the metadata about what's being edited, like which
- * difficulty. This is important because when the user goes to download this
- * map (or, perhaps periodically in the future), I'll want to save this data to
- * indexeddb as a text file, and I need to know which difficulty we're editing.
- */
 import { combineReducers } from 'redux';
 import undoable, { includeAction, groupByActionTypes } from 'redux-undo';
-import { createSelector } from 'reselect';
 import produce from 'immer';
 
-import { findNoteIndexByProperties, swapNotes } from '../helpers/notes.helpers';
-import { swapObstacles } from '../helpers/obstacles.helpers';
+import {
+  findNoteIndexByProperties,
+  swapNotes,
+} from '../../helpers/notes.helpers';
+import { swapObstacles } from '../../helpers/obstacles.helpers';
 
 const initialState = {
-  difficulty: null,
-  notesView: {
-    notes: [],
-    obstacles: [],
-  },
-  eventsView: {},
+  notes: [],
+  obstacles: [],
 };
 
 const getItemType = item => {
@@ -37,22 +27,7 @@ const getItemType = item => {
   }
 };
 
-const difficulty = (state = initialState.difficulty, action) => {
-  switch (action.type) {
-    case 'CREATE_NEW_SONG': {
-      return action.selectedDifficulty;
-    }
-
-    case 'START_LOADING_SONG': {
-      return action.difficulty;
-    }
-
-    default:
-      return state;
-  }
-};
-
-const notes = (state = initialState.notesView.notes, action) => {
+const notes = (state = initialState.notes, action) => {
   switch (action.type) {
     case 'CREATE_NEW_SONG':
     case 'CLEAR_ENTITIES': {
@@ -256,24 +231,8 @@ const notes = (state = initialState.notesView.notes, action) => {
       return state;
   }
 };
-// TODO: Events
-const events = (state = initialState.eventsView, action) => {
-  switch (action.type) {
-    case 'CREATE_NEW_SONG':
-    case 'CLEAR_ENTITIES': {
-      return [];
-    }
 
-    case 'LOAD_BEATMAP_ENTITIES': {
-      return action.events || [];
-    }
-
-    default:
-      return state;
-  }
-};
-
-const obstacles = (state = initialState.notesView.obstacles, action) => {
+const obstacles = (state = initialState.obstacles, action) => {
   switch (action.type) {
     case 'CREATE_NEW_SONG':
     case 'CLEAR_ENTITIES': {
@@ -358,39 +317,4 @@ const notesView = undoable(combineReducers({ notes, obstacles }), {
   groupBy: groupByActionTypes(['SET_BLOCK_BY_DRAGGING', 'BULK_DELETE_NOTE']),
 });
 
-export default combineReducers({ difficulty, notesView, events });
-
-//
-//
-// Selectors
-//
-export const getDifficulty = state => state.editorEntities.difficulty;
-export const getNotes = state => state.editorEntities.notesView.present.notes;
-export const getEvents = state => state.editorEntities.events;
-export const getObstacles = state =>
-  state.editorEntities.notesView.present.obstacles;
-
-export const getSelectedNotes = state => {
-  return getNotes(state).filter(note => note.selected);
-};
-export const getSelectedObstacles = state => {
-  return getObstacles(state).filter(obstacle => obstacle.selected);
-};
-
-export const getNumOfBlocks = createSelector(
-  getNotes,
-  notes => {
-    return notes.filter(note => note._type === 0 || note._type === 1).length;
-  }
-);
-export const getNumOfMines = createSelector(
-  getNotes,
-  notes => {
-    return notes.filter(note => note._type === 3).length;
-  }
-);
-export const getNumOfObstacles = state => getObstacles(state).length;
-
-export const getNumOfSelectedNotes = state => {
-  return getSelectedNotes(state).length + getSelectedObstacles(state).length;
-};
+export default notesView;

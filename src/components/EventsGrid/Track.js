@@ -3,14 +3,8 @@ import styled from 'styled-components';
 
 import { COLORS } from '../../constants';
 
-const EventsGridTrack = ({
-  type,
-  events,
-  height,
-  handleClick,
-  handleMouseMove,
-}) => {
-  return <Wrapper style={{ height }} />;
+const EventsGridTrack = ({ type, events, height, ...delegated }) => {
+  return <Wrapper style={{ height }} {...delegated} />;
 };
 
 const Wrapper = styled.div`

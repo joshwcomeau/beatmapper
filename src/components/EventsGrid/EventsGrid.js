@@ -73,13 +73,9 @@ const EventsGrid = ({
   const beatNums = range(Math.floor(startBeat), Math.ceil(endBeat));
 
   const handleClickTrack = trackId => {
-    const beatNum = normalize(
-      mouseCursorPosition,
-      0,
-      innerGridWidth,
-      0,
-      beatNums.length
-    );
+    const beatNum =
+      startBeat +
+      normalize(mouseCursorPosition, 0, innerGridWidth, 0, beatNums.length);
 
     placeEvent(trackId, beatNum);
   };
@@ -267,4 +263,7 @@ const mapDispatchToProps = {
   placeEvent: actions.placeEvent,
 };
 
-export default connect(mapStateToProps)(React.memo(EventsGrid));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(React.memo(EventsGrid));

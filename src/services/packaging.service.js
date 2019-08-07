@@ -159,6 +159,8 @@ export function createBeatmapContentsFromState(state) {
   const events = getEvents(state);
   const obstacles = convertObstaclesFromRedux(getObstacles(state));
 
+  console.log(state, song, notes, events, obstacles);
+
   const shiftedNotes = shiftEntitiesByOffset(notes, song.offset, song.bpm);
   const shiftedEvents = shiftEntitiesByOffset(events, song.offset, song.bpm);
   const shiftedObstacles = shiftEntitiesByOffset(
