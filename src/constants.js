@@ -79,16 +79,28 @@ export const SNAPPING_INCREMENTS = [
     shortcutLabel: `${metaKeyLabel}+1`,
   },
   {
+    value: 1 / 12,
+    label: '1/12 Beat',
+  },
+  {
     value: 1 / 8,
     label: '1/8 Beat',
     shortcutKey: 2,
     shortcutLabel: `${metaKeyLabel}+2`,
   },
   {
+    value: 1 / 6,
+    label: '1/6 Beat',
+  },
+  {
     value: 1 / 4,
     label: '1/4 Beat',
     shortcutKey: 3,
     shortcutLabel: `${metaKeyLabel}+3`,
+  },
+  {
+    value: 1 / 3,
+    label: '1/3 Beat',
   },
   {
     value: 1 / 2,
