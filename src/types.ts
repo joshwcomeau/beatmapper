@@ -28,26 +28,48 @@ export type Obstacle = {
   selected?: boolean;
 };
 
-export type TrackId =
-  | 'laser-left'
-  | 'laser-right'
-  | 'laser-back'
-  | 'primary-light'
-  | 'track-neons'
-  | 'large-ring'
-  | 'small-ring';
+export type LightingTrackId =
+  | 'laserLeft'
+  | 'laserRight'
+  | 'laserBack'
+  | 'primaryLight'
+  | 'trackNeons';
+export type RingTrackId = 'largeRing' | 'smallRing';
+export type LaserSpeedTrackId = 'laserSpeedLeft' | 'laserSpeedRight';
+
+export type TrackId = LightingTrackId | RingTrackId | LaserSpeedTrackId;
 
 export type EventType =
-  | 'light-on'
-  | 'light-off'
-  | 'light-on-off'
-  | 'light-flash'
-  | 'light-fade'
+  | 'on'
+  | 'off'
+  | 'on-off'
+  | 'flash'
+  | 'fade'
+  | 'rotate'
+  | 'change-speed'
   | 'custom-pattern';
 
-export type LightEvent = {
-  id: string;
+export type EventColor = 'red' | 'blue';
+
+export interface BaseEvent {
   trackId: TrackId;
-  startBeat: number;
-  endBeat?: number; // Only certain types of blocks specify an end.
-};
+  beatNum: number;
+  type: EventType;
+}
+
+export interface LightingEvent extends BaseEvent {
+  id: LightingTrackId;
+  color: EventColor;
+  duration?: number;
+}
+
+export interface RingEvent extends BaseEvent {
+  id: RingTrackId;
+}
+
+export interface LaserSpeedEvent extends BaseEvent {
+  id: LaserSpeedTrackId;
+  laserSpeed: number;
+}
+
+export type Event = LightingEvent | RingEvent | LaserSpeedEvent;

@@ -12,16 +12,20 @@ const PADDING = UNIT * 2;
 
 const LIGHT_TOOLS = [
   {
-    id: 'light-on',
+    id: 'on',
     label: 'On',
   },
   {
-    id: 'light-off',
+    id: 'off',
     label: 'Off',
   },
   {
-    id: 'light-on-off',
-    label: 'On/off',
+    id: 'flash',
+    label: 'Flash',
+  },
+  {
+    id: 'fade',
+    label: 'Fade',
   },
 ];
 

@@ -6,7 +6,12 @@ import * as actions from '../../actions';
 import { UNIT, COLORS } from '../../constants';
 import { range, normalize, roundToNearest } from '../../utils';
 import { getSnapTo } from '../../reducers/navigation.reducer';
-import { getStartAndEndBeat } from '../../reducers/editor.reducer';
+import {
+  getStartAndEndBeat,
+  getSelectedEventTool,
+  getSelectedEventColor,
+  getSelectedLaserSpeed,
+} from '../../reducers/editor.reducer';
 import useMousePositionOverElement from '../../hooks/use-mouse-position-over-element.hook';
 
 import BackgroundLines from './BackgroundLines';
@@ -15,37 +20,37 @@ import Track from './Track';
 
 const TRACKS = [
   {
-    id: 'laser-left',
+    id: 'laserLeft',
     label: 'Left laser',
     type: 'side-laser',
   },
   {
-    id: 'laser-right',
+    id: 'laserRight',
     label: 'Right laser',
     type: 'side-laser',
   },
   {
-    id: 'laser-back',
+    id: 'laserBack',
     label: 'Back laser',
     type: 'center-laser',
   },
   {
-    id: 'primary-light',
+    id: 'primaryLight',
     label: 'Primary light',
     type: 'center-laser',
   },
   {
-    id: 'track-neons',
+    id: 'trackNeons',
     label: 'Track neons',
     type: 'track-neons',
   },
   {
-    id: 'large-ring',
+    id: 'largeRing',
     label: 'Large ring',
     type: 'ring',
   },
   {
-    id: 'small-ring',
+    id: 'smallRing',
     label: 'Small ring',
     type: 'ring',
   },
@@ -59,6 +64,9 @@ const EventsGrid = ({
   endBeat,
   numOfBeatsToShow,
   snapTo,
+  selectedTool,
+  selectedColor,
+  selectedLaserSpeed,
   placeEvent,
 }) => {
   const [mouseCursorPosition, setMouseCursorPosition] = React.useState(null);
@@ -77,7 +85,11 @@ const EventsGrid = ({
       startBeat +
       normalize(mouseCursorPosition, 0, innerGridWidth, 0, beatNums.length);
 
-    placeEvent(trackId, beatNum);
+    // TODO: Validate that this tool makes sense for this track, choose the
+    // right event type.
+    const eventType = selectedTool;
+
+    placeEvent(trackId, beatNum, eventType, selectedColor, selectedLaserSpeed);
   };
 
   const tracksRef = useMousePositionOverElement((x, y) => {
@@ -249,6 +261,9 @@ const MouseCursor = styled.div`
 
 const mapStateToProps = (state, ownProps) => {
   const { startBeat, endBeat } = getStartAndEndBeat(state);
+  const selectedTool = getSelectedEventTool(state);
+  const selectedColor = getSelectedEventColor(state);
+  const selectedLaserSpeed = getSelectedLaserSpeed(state);
   const numOfBeatsToShow = endBeat - startBeat;
 
   return {
@@ -256,6 +271,9 @@ const mapStateToProps = (state, ownProps) => {
     endBeat,
     numOfBeatsToShow,
     snapTo: getSnapTo(state),
+    selectedTool,
+    selectedColor,
+    selectedLaserSpeed,
   };
 };
 

@@ -11,13 +11,17 @@ import { getCursorPositionInBeats } from './navigation.reducer';
 const NOTE_TOOLS = ['red-block', 'blue-block', 'mine', 'obstacle'];
 
 const EVENT_TOOLS = [
-  'light-on',
-  'light-off',
-  'light-on-off',
-  'light-flash',
-  'light-fade',
-  'pattern',
+  'on',
+  'off',
+  'on-off',
+  'flash',
+  'fade',
+  'rotate',
+  'change-speed',
+  'custom-pattern',
 ];
+
+const EVENT_COLORS = ['red', 'blue'];
 
 const BEATS_PER_ZOOM_LEVEL = [null, 32, 16, 8, 4];
 
@@ -32,6 +36,7 @@ const initialState = {
   events: {
     zoomLevel: 3,
     selectedTool: EVENT_TOOLS[0],
+    selectedColor: EVENT_COLORS[0],
     selectedLaserSpeed: 0,
   },
 };
@@ -104,6 +109,19 @@ function notes(state = initialState.notes, action) {
 
 function events(state = initialState.events, action) {
   switch (action.type) {
+    case 'SELECT_COLOR': {
+      const { view, color } = action;
+
+      if (view !== EVENTS_VIEW) {
+        return state;
+      }
+
+      return {
+        ...state,
+        selectedColor: color,
+      };
+    }
+
     case 'SELECT_TOOL': {
       const { view, tool } = action;
 
@@ -152,6 +170,9 @@ export const getSelectedCutDirection = state =>
   state.editor.notes.selectedDirection;
 
 export const getSelectedEventTool = state => state.editor.events.selectedTool;
+export const getSelectedEventColor = state => state.editor.events.selectedColor;
+export const getSelectedLaserSpeed = state =>
+  state.editor.events.selectedLaserSpeed;
 export const getZoomLevel = state => state.editor.events.zoomLevel;
 
 export const getBeatsPerZoomLevel = state => {

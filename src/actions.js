@@ -471,13 +471,20 @@ export const unloadSong = () => ({
   type: 'UNLOAD_SONG',
 });
 
-export const placeEvent = (trackId, beatNum) => (dispatch, getState) => {
-  const selectedTool = getSelectedEventTool(getState());
-
+export const placeEvent = (
+  trackId,
+  beatNum,
+  eventType,
+  eventColor,
+  eventLaserSpeed
+) => {
   return {
     type: 'PLACE_EVENT',
+    id: uuid(),
     trackId,
     beatNum,
-    selectedTool,
+    eventType,
+    eventColor,
+    eventLaserSpeed,
   };
 };
