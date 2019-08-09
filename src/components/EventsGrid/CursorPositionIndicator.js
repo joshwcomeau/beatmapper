@@ -11,6 +11,7 @@ const CursorPositionIndicator = ({
   cursorPositionInBeats,
   startBeat,
   endBeat,
+  zIndex,
 }) => {
   const cursorOffsetInWindow = normalize(
     cursorPositionInBeats,
@@ -24,6 +25,7 @@ const CursorPositionIndicator = ({
     <Elem
       style={{
         transform: `translateX(${cursorOffsetInWindow}px)`,
+        zIndex,
       }}
     />
   );
@@ -33,7 +35,6 @@ const Elem = styled.div`
   position: absolute;
   top: 0;
   left: -1.5px;
-  z-index: 5;
   width: 3px;
   height: 100%;
   background: ${COLORS.yellow[500]};

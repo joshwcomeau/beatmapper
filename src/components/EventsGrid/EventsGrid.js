@@ -5,10 +5,9 @@ import { connect } from 'react-redux';
 import * as actions from '../../actions';
 import { UNIT, COLORS } from '../../constants';
 import { range, normalize, roundToNearest } from '../../utils';
-import { getSnapTo } from '../../reducers/navigation.reducer';
+import { getIsLoading, getSnapTo } from '../../reducers/navigation.reducer';
 import {
   getStartAndEndBeat,
-  getSelectedEventTool,
   getSelectedEventColor,
   getSelectedLaserSpeed,
 } from '../../reducers/editor.reducer';
@@ -17,6 +16,13 @@ import useMousePositionOverElement from '../../hooks/use-mouse-position-over-ele
 import BackgroundLines from './BackgroundLines';
 import CursorPositionIndicator from './CursorPositionIndicator';
 import Track from './Track';
+
+const LAYERS = {
+  background: 0,
+  mouseCursor: 1,
+  tracks: 2,
+  songPositionIndicator: 3,
+};
 
 const TRACKS = [
   {
@@ -63,11 +69,8 @@ const EventsGrid = ({
   startBeat,
   endBeat,
   numOfBeatsToShow,
+  isLoading,
   snapTo,
-  selectedTool,
-  selectedColor,
-  selectedLaserSpeed,
-  placeEvent,
 }) => {
   const [mouseCursorPosition, setMouseCursorPosition] = React.useState(null);
 
@@ -79,23 +82,6 @@ const EventsGrid = ({
   const innerGridHeight = trackHeight * TRACKS.length;
 
   const beatNums = range(Math.floor(startBeat), Math.ceil(endBeat));
-
-  const handleClickTrack = trackId => {
-    const beatNum =
-      startBeat +
-      normalize(mouseCursorPosition, 0, innerGridWidth, 0, beatNums.length);
-
-    // TODO: Validate that this tool makes sense for this track, choose the
-    // right event type.
-    const eventType = selectedTool;
-
-    let eventColor = selectedColor;
-    if (selectedTool === 'off') {
-      eventColor = undefined;
-    }
-
-    placeEvent(trackId, beatNum, eventType, eventColor, selectedLaserSpeed);
-  };
 
   const tracksRef = useMousePositionOverElement((x, y) => {
     const positionInBeats = normalize(x, 0, innerGridWidth, 0, beatNums.length);
@@ -113,7 +99,7 @@ const EventsGrid = ({
   });
 
   return (
-    <Wrapper style={{ width: contentWidth }}>
+    <Wrapper isLoading={isLoading} style={{ width: contentWidth }}>
       <PrefixColumn style={{ width: prefixWidth }}>
         <Header style={{ height: headerHeight }} />
 
@@ -150,9 +136,18 @@ const EventsGrid = ({
                 key={id}
                 trackId={id}
                 height={trackHeight}
-                onMouseUp={() => handleClickTrack(id)}
-                numOfBeatsToShow={numOfBeatsToShow}
                 startBeat={startBeat}
+                numOfBeatsToShow={numOfBeatsToShow}
+                cursorAtBeat={
+                  startBeat +
+                  normalize(
+                    mouseCursorPosition,
+                    0,
+                    innerGridWidth,
+                    0,
+                    beatNums.length
+                  )
+                }
               />
             ))}
           </Tracks>
@@ -161,6 +156,7 @@ const EventsGrid = ({
             gridWidth={innerGridWidth}
             startBeat={startBeat}
             endBeat={endBeat}
+            zIndex={LAYERS.songPositionIndicator}
           />
 
           {typeof mouseCursorPosition === 'number' && (
@@ -175,6 +171,11 @@ const EventsGrid = ({
 const Wrapper = styled.div`
   display: flex;
   background: ${COLORS.blueGray[900]};
+  opacity: ${props => (props.isLoading ? 0.25 : 1)};
+  /*
+    Disallow clicking until the song has loaded, to prevent weird edge-case bugs
+  */
+  pointer-events: ${props => (props.isLoading ? 'none' : 'auto')};
 `;
 
 const PrefixColumn = styled.div`
@@ -230,7 +231,7 @@ const MainGridContent = styled.div`
 
 const BackgroundLinesWrapper = styled.div`
   position: absolute;
-  z-index: 0;
+  z-index: ${LAYERS.background};
   top: 0;
   left: 0;
   right: 0;
@@ -251,13 +252,13 @@ const TrackPrefix = styled.div`
 
 const Tracks = styled.div`
   position: relative;
-  z-index: 2;
+  z-index: ${LAYERS.tracks};
 `;
 
 const MouseCursor = styled.div`
   position: absolute;
   top: 0;
-  z-index: 6;
+  z-index: ${LAYERS.mouseCursor};
   width: 3px;
   height: 100%;
   background: ${COLORS.blueGray[100]};
@@ -269,27 +270,15 @@ const MouseCursor = styled.div`
 
 const mapStateToProps = (state, ownProps) => {
   const { startBeat, endBeat } = getStartAndEndBeat(state);
-  const selectedTool = getSelectedEventTool(state);
-  const selectedColor = getSelectedEventColor(state);
-  const selectedLaserSpeed = getSelectedLaserSpeed(state);
   const numOfBeatsToShow = endBeat - startBeat;
 
   return {
     startBeat,
     endBeat,
     numOfBeatsToShow,
+    isLoading: getIsLoading(state),
     snapTo: getSnapTo(state),
-    selectedTool,
-    selectedColor,
-    selectedLaserSpeed,
   };
 };
 
-const mapDispatchToProps = {
-  placeEvent: actions.placeEvent,
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(EventsGrid);
+export default connect(mapStateToProps)(EventsGrid);

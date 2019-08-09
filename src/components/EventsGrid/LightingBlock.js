@@ -5,6 +5,23 @@ import { connect } from 'react-redux';
 import { COLORS } from '../../constants';
 import { normalize } from '../../utils';
 
+const getBackgroundForEventType = (type, color) => {
+  switch (type) {
+    case 'on':
+    case 'off': {
+      // On/off are solid colors
+      return color;
+    }
+
+    case 'flash': {
+      return color;
+    }
+
+    default:
+      throw new Error('Unrecognized type: ' + type);
+  }
+};
+
 const LightingOnBlock = ({ event, startBeat, numOfBeatsToShow }) => {
   const offset = normalize(
     event.beatNum,
@@ -21,11 +38,13 @@ const LightingOnBlock = ({ event, startBeat, numOfBeatsToShow }) => {
       ? COLORS.blue[500]
       : COLORS.blueGray[400];
 
+  const background = event;
+
   return <Wrapper style={{ left: offset + '%', backgroundColor: color }} />;
 };
 
 const Wrapper = styled.div`
-  width: 10px;
+  width: 7px;
   height: 100%;
   position: absolute;
   border-radius: 4px;
