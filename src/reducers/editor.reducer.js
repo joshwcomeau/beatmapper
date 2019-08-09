@@ -13,7 +13,6 @@ const NOTE_TOOLS = ['red-block', 'blue-block', 'mine', 'obstacle'];
 const EVENT_TOOLS = [
   'on',
   'off',
-  'on-off',
   'flash',
   'fade',
   'rotate',

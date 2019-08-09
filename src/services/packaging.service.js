@@ -13,12 +13,10 @@ import {
   saveCoverArtFromBlob,
 } from './file.service';
 import { getSongIdFromName, sortDifficultyIds } from '../helpers/song.helpers';
-import { convertObstaclesFromRedux } from '../helpers/obstacles.helpers';
-import {
-  getNotes,
-  getEvents,
-  getObstacles,
-} from '../reducers/editor-entities.reducer';
+import { convertEventsToExportableJson } from '../helpers/events.helpers';
+import { convertObstaclesToExportableJson } from '../helpers/obstacles.helpers';
+import { getNotes, getObstacles } from '../reducers/editor-entities.reducer';
+import { getAllEventsAsArray } from '../reducers/editor-entities.reducer/events-view.reducer';
 import { getSelectedSong } from '../reducers/songs.reducer';
 import {
   getDifficultyRankForDifficulty,
@@ -156,8 +154,8 @@ function createBeatmapContents(
 export function createBeatmapContentsFromState(state) {
   const song = getSelectedSong(state);
   const notes = getNotes(state);
-  const events = getEvents(state);
-  const obstacles = convertObstaclesFromRedux(getObstacles(state));
+  const events = convertEventsToExportableJson(getAllEventsAsArray(state));
+  const obstacles = convertObstaclesToExportableJson(getObstacles(state));
 
   const shiftedNotes = shiftEntitiesByOffset(notes, song.offset, song.bpm);
   const shiftedEvents = shiftEntitiesByOffset(events, song.offset, song.bpm);

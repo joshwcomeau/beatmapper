@@ -20,7 +20,7 @@ export const convertObstaclesToRedux = obstacles => {
   });
 };
 
-export const convertObstaclesFromRedux = obstacles => {
+export const convertObstaclesToExportableJson = obstacles => {
   return obstacles.map(o => ({
     _time: o.beatStart,
     _duration: o.beatDuration,

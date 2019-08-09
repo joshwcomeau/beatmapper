@@ -1,6 +1,8 @@
 import undoable, { includeAction, groupByActionTypes } from 'redux-undo';
 import produce from 'immer';
 
+import { flatten } from '../../utils';
+
 const initialState = {
   tracks: {
     laserLeft: [],
@@ -73,8 +75,20 @@ const events = (state = initialState, action) => {
   }
 };
 
+//
+//
+//// SELECTORS
+//
+const getTracks = state => state.editorEntities.eventsView.tracks;
+
 export const getEventsForTrack = (state, trackId) => {
-  return state.editorEntities.eventsView.tracks[trackId];
+  const tracks = getTracks(state);
+  return tracks[trackId];
+};
+
+export const getAllEventsAsArray = state => {
+  const tracks = getTracks(state);
+  return flatten(Object.values(tracks));
 };
 
 export default events;

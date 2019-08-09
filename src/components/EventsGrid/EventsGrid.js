@@ -89,7 +89,12 @@ const EventsGrid = ({
     // right event type.
     const eventType = selectedTool;
 
-    placeEvent(trackId, beatNum, eventType, selectedColor, selectedLaserSpeed);
+    let eventColor = selectedColor;
+    if (selectedTool === 'off') {
+      eventColor = undefined;
+    }
+
+    placeEvent(trackId, beatNum, eventType, eventColor, selectedLaserSpeed);
   };
 
   const tracksRef = useMousePositionOverElement((x, y) => {

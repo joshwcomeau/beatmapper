@@ -1,6 +1,6 @@
 import {
   convertObstaclesToRedux,
-  convertObstaclesFromRedux,
+  convertObstaclesToExportableJson,
 } from './obstacles.helpers';
 
 const SAMPLE_PROPRIETARY_DATA = [
@@ -65,7 +65,7 @@ describe('Obstacles helpers', () => {
   });
 
   it('converts from redux to proprietary', () => {
-    const actualResult = convertObstaclesFromRedux(SAMPLE_REDUX_DATA);
+    const actualResult = convertObstaclesToExportableJson(SAMPLE_REDUX_DATA);
     const expectedResult = [
       { _time: 2, _lineIndex: 0, _type: 0, _duration: 4, _width: 2 },
       { _time: 4, _lineIndex: 2, _type: 1, _duration: 0, _width: 2 },
@@ -77,7 +77,7 @@ describe('Obstacles helpers', () => {
 
   it('converts full-circle', () => {
     const validData = SAMPLE_PROPRIETARY_DATA.slice(0, 3);
-    const actualResult = convertObstaclesFromRedux(
+    const actualResult = convertObstaclesToExportableJson(
       convertObstaclesToRedux(validData)
     );
     const expectedResult = validData;

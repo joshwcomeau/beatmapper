@@ -39,14 +39,14 @@ export type LaserSpeedTrackId = 'laserSpeedLeft' | 'laserSpeedRight';
 
 export type TrackId = LightingTrackId | RingTrackId | LaserSpeedTrackId;
 
+export type LightingEventType = 'on' | 'off' | 'flash' | 'fade';
+export type RingEventType = 'rotate';
+export type LaserSpeedEventType = 'change-speed';
+
 export type EventType =
-  | 'on'
-  | 'off'
-  | 'on-off'
-  | 'flash'
-  | 'fade'
-  | 'rotate'
-  | 'change-speed'
+  | LightingEventType
+  | RingEventType
+  | LaserSpeedEventType
   | 'custom-pattern';
 
 export type EventColor = 'red' | 'blue';
@@ -54,21 +54,23 @@ export type EventColor = 'red' | 'blue';
 export interface BaseEvent {
   trackId: TrackId;
   beatNum: number;
-  type: EventType;
 }
 
 export interface LightingEvent extends BaseEvent {
   id: LightingTrackId;
+  type: LightingEventType;
   color: EventColor;
   duration?: number;
 }
 
 export interface RingEvent extends BaseEvent {
   id: RingTrackId;
+  type: RingEventType;
 }
 
 export interface LaserSpeedEvent extends BaseEvent {
   id: LaserSpeedTrackId;
+  type: LaserSpeedEventType;
   laserSpeed: number;
 }
 

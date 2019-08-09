@@ -1,6 +1,12 @@
 import uuid from 'uuid/v1';
 
-import { Event, LightingEvent, LaserSpeedEvent } from '../types';
+import { Event, LightingEvent, LaserSpeedEvent, RingEvent } from '../types';
+
+interface JsonEvent {
+  _time: number;
+  _type: number;
+  _value: number;
+}
 
 const TRACK_ID_MAP = {
   laserBack: 0,
@@ -13,6 +19,23 @@ const TRACK_ID_MAP = {
   laserSpeedLeft: 12,
   laserSpeedRight: 13,
 };
+
+const TRACK_IDS_ARRAY = [
+  'laserBack',
+  'trackNeons',
+  'laserLeft',
+  'laserRight',
+  'primaryLight',
+  null,
+  null,
+  null,
+  'largeRing',
+  'smallRing',
+  null,
+  null,
+  'laserSpeedLeft',
+  'laserSpeedRight',
+];
 
 const LIGHT_EVENT_TYPES = {
   blue: {
@@ -29,16 +52,30 @@ const LIGHT_EVENT_TYPES = {
   },
 };
 
-const convertLightingEventToJson = (event: LightingEvent) => {
+const LIGHT_EVENTS_ARRAY = [
+  'off',
+  'on',
+  'flash',
+  'fade',
+  null,
+  'on',
+  'flash',
+  'fade',
+];
+
+const convertLightingEventToJson = (event: LightingEvent): JsonEvent => {
+  // `Off` events have no color attribute, since there is no way to tell when
+  // importing whether it was supposed to be red or blue.
+
+  const value = event.color ? LIGHT_EVENT_TYPES[event.color][event.type] : 0;
   return {
     _time: event.beatNum,
     _type: TRACK_ID_MAP[event.trackId],
-    // @ts-ignore
-    _value: LIGHT_EVENT_TYPES[event.color][event.type],
+    _value: value,
   };
 };
 
-const convertLaserSpeedEventToJson = (event: LaserSpeedEvent) => {
+const convertLaserSpeedEventToJson = (event: LaserSpeedEvent): JsonEvent => {
   const type = TRACK_ID_MAP[event.trackId];
 
   return {
@@ -47,7 +84,7 @@ const convertLaserSpeedEventToJson = (event: LaserSpeedEvent) => {
     _value: event.laserSpeed,
   };
 };
-const convertRotationEventToJson = (event: LaserSpeedEvent) => {
+const convertRotationEventToJson = (event: RingEvent): JsonEvent => {
   const type = TRACK_ID_MAP[event.trackId];
 
   return {
@@ -57,20 +94,61 @@ const convertRotationEventToJson = (event: LaserSpeedEvent) => {
   };
 };
 
-export const convertEventsToRedux = (events: Array<Event>) => {
+export const convertEventsToExportableJson = (
+  events: Array<Event>
+): Array<JsonEvent> => {
   return events.map(event => {
     if (
       event.trackId === 'laserSpeedLeft' ||
       event.trackId === 'laserSpeedRight'
     ) {
-      // @ts-ignore
-      return convertLaserSpeedEventToJson(event);
+      return convertLaserSpeedEventToJson(event as LaserSpeedEvent);
     } else if (event.trackId === 'smallRing' || event.trackId === 'largeRing') {
-      // @ts-ignore
-      return convertRotationEventToJson(event);
+      return convertRotationEventToJson(event as RingEvent);
     } else {
-      // @ts-ignore
-      return convertLightingEventToJson(event);
+      return convertLightingEventToJson(event as LightingEvent);
+    }
+  });
+};
+
+export const convertEventsToRedux = (events: Array<JsonEvent>) => {
+  return events.map(event => {
+    const id = uuid();
+    const trackId = TRACK_IDS_ARRAY[event._type];
+    const beatNum = event._time;
+
+    // Lighting event
+    if (event._type <= 4) {
+      const lightingType = LIGHT_EVENTS_ARRAY[event._value];
+      const color =
+        event._value === 0 ? undefined : event._value < 4 ? 'blue' : 'red';
+
+      return {
+        id,
+        trackId,
+        beatNum,
+        type: lightingType,
+        color,
+      };
+    } else if (trackId === 'smallRing' || trackId === 'largeRing') {
+      return {
+        id,
+        trackId,
+        beatNum,
+      };
+    } else if (trackId === 'laserSpeedLeft' || trackId === 'laserSpeedRight') {
+      const laserSpeed = event._value;
+
+      return {
+        id,
+        trackId,
+        beatNum,
+        laserSpeed,
+      };
+    } else {
+      throw new Error(
+        'Unrecognized event track: ' + JSON.stringify(event, null, 2)
+      );
     }
   });
 };

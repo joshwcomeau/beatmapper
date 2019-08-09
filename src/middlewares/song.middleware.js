@@ -19,6 +19,7 @@ import {
 } from '../helpers/audio.helpers';
 import { convertFileToArrayBuffer } from '../helpers/file.helpers';
 import { convertObstaclesToRedux } from '../helpers/obstacles.helpers';
+import { convertEventsToRedux } from '../helpers/events.helpers';
 import { clamp, roundToNearest } from '../utils';
 import {
   getFile,
@@ -96,15 +97,15 @@ export default function createSongMiddleware() {
 
           // our beatmap comes in a "raw" form, using proprietary fields.
           // At present, I'm using that proprietary structure for notes/mines,
-          // but I have my own structure for obstacles (and I hope to update
-          // notes as well maybe?)
-          // Convert the .dat fields to redux-friendly ones.
+          // but I have my own structure for obstacles and events.
+          // So I need to convert the ugly JSON format to something manageable.
           let convertedObstacles = convertObstaclesToRedux(unshiftedObstacles);
+          let convertedEvents = convertEventsToRedux(unshiftedObstacles);
 
           next(
             loadBeatmapEntities(
               unshiftedNotes,
-              unshiftedEvents,
+              convertedEvents,
               convertedObstacles
             )
           );

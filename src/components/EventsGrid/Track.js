@@ -5,10 +5,11 @@ import { connect } from 'react-redux';
 import { COLORS } from '../../constants';
 import { getEventsForTrack } from '../../reducers/editor-entities.reducer/events-view.reducer';
 
-import LightingOnBlock from './LightingOnBlock';
+import LightingBlock from './LightingBlock';
 
 const BLOCK_MAP = {
-  on: LightingOnBlock,
+  on: LightingBlock,
+  off: LightingBlock,
 };
 
 const EventsGridTrack = ({
@@ -27,9 +28,9 @@ const EventsGridTrack = ({
         return (
           <Component
             key={ev.id}
+            event={ev}
             startBeat={startBeat}
             numOfBeatsToShow={numOfBeatsToShow}
-            event={ev}
           />
         );
       })}

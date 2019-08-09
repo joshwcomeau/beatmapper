@@ -13,14 +13,23 @@ const LightingOnBlock = ({ event, startBeat, numOfBeatsToShow }) => {
     0,
     100
   );
-  return <Wrapper style={{ left: offset + '%' }} />;
+
+  const color =
+    event.color === 'red'
+      ? COLORS.red[500]
+      : event.color === 'blue'
+      ? COLORS.blue[500]
+      : COLORS.blueGray[400];
+
+  return <Wrapper style={{ left: offset + '%', backgroundColor: color }} />;
 };
 
 const Wrapper = styled.div`
   width: 10px;
   height: 100%;
-  background: red;
   position: absolute;
+  border-radius: 4px;
+  transform: translateX(-50%);
 `;
 
 export default connect(
