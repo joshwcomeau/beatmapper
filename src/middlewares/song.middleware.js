@@ -100,7 +100,7 @@ export default function createSongMiddleware() {
           // but I have my own structure for obstacles and events.
           // So I need to convert the ugly JSON format to something manageable.
           let convertedObstacles = convertObstaclesToRedux(unshiftedObstacles);
-          let convertedEvents = convertEventsToRedux(unshiftedObstacles);
+          let convertedEvents = convertEventsToRedux(unshiftedEvents);
 
           next(
             loadBeatmapEntities(

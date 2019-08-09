@@ -34,9 +34,23 @@ const events = (state = initialState, action) => {
       return initialState;
     }
 
-    // case 'LOAD_BEATMAP_ENTITIES': {
-    //   return action.events || [];
-    // }
+    case 'LOAD_BEATMAP_ENTITIES': {
+      // Entities are loaded all in 1 big array, since that's how they're saved
+      // to disk. Reduce them into a map based on trackId
+      if (!action.events || action.events.length === 0) {
+        return state;
+      }
+
+      const tracks = action.events.reduce((acc, event) => {
+        acc[event.trackId].push(event);
+        return acc;
+      }, initialState.tracks);
+
+      return {
+        ...state,
+        tracks,
+      };
+    }
 
     case 'PLACE_EVENT': {
       const {
