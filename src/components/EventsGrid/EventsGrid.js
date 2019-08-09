@@ -143,8 +143,11 @@ const EventsGrid = ({
             {TRACKS.map(({ id }) => (
               <Track
                 key={id}
+                trackId={id}
                 height={trackHeight}
                 onMouseUp={() => handleClickTrack(id)}
+                numOfBeatsToShow={numOfBeatsToShow}
+                startBeat={startBeat}
               />
             ))}
           </Tracks>
@@ -284,4 +287,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(React.memo(EventsGrid));
+)(EventsGrid);

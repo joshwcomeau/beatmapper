@@ -59,14 +59,22 @@ const events = (state = initialState, action) => {
         newEvent.laserSpeed = eventLaserSpeed;
       }
 
-      return produce(state, draftState => {
-        state.tracks[trackId].push(newEvent);
-      });
+      return {
+        ...state,
+        tracks: {
+          ...state.tracks,
+          [trackId]: [...state.tracks[trackId], newEvent],
+        },
+      };
     }
 
     default:
       return state;
   }
+};
+
+export const getEventsForTrack = (state, trackId) => {
+  return state.editorEntities.eventsView.tracks[trackId];
 };
 
 export default events;
