@@ -9,51 +9,37 @@ import SongInfo from '../SongInfo';
 import Spacer from '../Spacer';
 
 import BottomPanel from './BottomPanel';
-import TopPanel from './TopPanel';
+import GridControls from './GridControls';
 import KeyboardShortcuts from './KeyboardShortcuts';
 
-const Events = ({}) => {
+const Events = () => {
   const { width: windowWidth } = useWindowDimensions();
-  const contentWidth = windowWidth - SIDEBAR_WIDTH - UNIT * 4 * 2;
+  const contentWidth = windowWidth - SIDEBAR_WIDTH;
 
   return (
     <Wrapper>
-      <TopArea style={{ width: contentWidth }}>
-        <SongInfoWrapper>
-          <SongInfo />
-        </SongInfoWrapper>
+      <SongInfo />
 
-        <Spacer size={UNIT * 4} />
-
-        <TopPanel />
-      </TopArea>
+      <GridControls contentWidth={contentWidth} />
       <EventsGrid
         contentWidth={contentWidth}
         zoomLevel={3}
         events={[]}
         durationInBeats={100}
       />
-      <BottomPanel />
+      <BottomPanel contentWidth={contentWidth} />
 
       <KeyboardShortcuts />
     </Wrapper>
   );
 };
 
-const TopArea = styled.div`
-  display: flex;
-`;
-
-const SongInfoWrapper = styled.div`
-  padding-top: ${UNIT * 4}px;
-`;
-
 const Wrapper = styled.div`
   width: 100%;
   height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
 `;
 

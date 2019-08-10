@@ -23,17 +23,26 @@ const getBackgroundForEvent = event => {
     }
 
     case 'flash': {
+      const brightColor = Color(color)
+        .lighten(0.4)
+        .hsl();
       const semiTransparentColor = Color(color)
-        .fade(0.5)
-        .rgb();
-      return `linear-gradient(90deg, ${semiTransparentColor}, ${color})`;
+        .darken(0.5)
+
+        .hsl();
+      return `linear-gradient(90deg, ${semiTransparentColor}, ${brightColor})`;
     }
 
     case 'fade': {
+      const brightColor = Color(color)
+        .lighten(0.4)
+        .hsl();
+
       const semiTransparentColor = Color(color)
-        .fade(0.5)
+        .darken(0.5)
+
         .rgb();
-      return `linear-gradient(-90deg, ${semiTransparentColor}, ${color})`;
+      return `linear-gradient(-90deg, ${semiTransparentColor}, ${brightColor})`;
     }
 
     default:

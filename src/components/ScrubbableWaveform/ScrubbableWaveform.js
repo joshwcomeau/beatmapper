@@ -73,11 +73,13 @@ export const ScrubbableWaveform = ({
 
     if (!contextRef.current) {
       contextRef.current = canvasRef.current.getContext('2d');
-      const devicePixelRatio = getDevicePixelRatio();
-      contextRef.current.scale(devicePixelRatio, devicePixelRatio);
     }
 
     const ctx = contextRef.current;
+
+    const devicePixelRatio = getDevicePixelRatio();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(devicePixelRatio, devicePixelRatio);
 
     ctx.clearRect(0, 0, width, height);
 

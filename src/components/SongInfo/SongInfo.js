@@ -34,56 +34,61 @@ const NotesEditorSongInfo = ({
 
   return (
     <>
-      <Wrapper style={{ height: COVER_ART_SIZE }}>
-        <CoverArtImage size={COVER_ART_SIZE} filename={song.coverArtFilename} />
-        <Description>
-          <Text>
-            <Title>{song.name}</Title>
-            <Spacer size={UNIT / 2} />
-            <Subtitle>{song.artistName}</Subtitle>
-          </Text>
-          <Spacer size={UNIT} />
-          {selectedDifficulty && (
-            <Dropdown
-              label=""
-              value={selectedDifficulty}
-              onChange={ev => {
-                ev.target.blur();
+      <OuterWrapper>
+        <Wrapper style={{ height: COVER_ART_SIZE }}>
+          <CoverArtImage
+            size={COVER_ART_SIZE}
+            filename={song.coverArtFilename}
+          />
+          <Description>
+            <Text>
+              <Title>{song.name}</Title>
+              <Spacer size={UNIT / 2} />
+              <Subtitle>{song.artistName}</Subtitle>
+            </Text>
+            <Spacer size={UNIT} />
+            {selectedDifficulty && (
+              <Dropdown
+                label=""
+                value={selectedDifficulty}
+                onChange={ev => {
+                  ev.target.blur();
 
-                const { value } = ev.target;
+                  const { value } = ev.target;
 
-                if (value === 'create-new') {
-                  setShowCreateDifficultyModal(true);
-                } else {
-                  // TODO: Having the difficulty as part of the URL means that
-                  // a bunch of state is reset when you change URLs, stuff like
-                  // your position in the song. This might be annoying when
-                  // trying to jump quickly between two difficulties :/
-                  //
-                  // Maybe I can solve this by pushing query strings?
-                  // ?offset=716.83
-                  history.push(`/edit/${song.id}/${value}/notes`);
-                }
-              }}
-              width={90}
-              height={28}
-            >
-              {difficultyIds.map(id => (
-                <option
-                  key={id}
-                  value={id}
-                  when-selected={getLabelForDifficulty(id)}
-                >
-                  {getLabelForDifficulty(id)}
+                  if (value === 'create-new') {
+                    setShowCreateDifficultyModal(true);
+                  } else {
+                    // TODO: Having the difficulty as part of the URL means that
+                    // a bunch of state is reset when you change URLs, stuff like
+                    // your position in the song. This might be annoying when
+                    // trying to jump quickly between two difficulties :/
+                    //
+                    // Maybe I can solve this by pushing query strings?
+                    // ?offset=716.83
+                    history.push(`/edit/${song.id}/${value}/notes`);
+                  }
+                }}
+                width={90}
+                height={28}
+              >
+                {difficultyIds.map(id => (
+                  <option
+                    key={id}
+                    value={id}
+                    when-selected={getLabelForDifficulty(id)}
+                  >
+                    {getLabelForDifficulty(id)}
+                  </option>
+                ))}
+                <option value="create-new" when-selected="--">
+                  + Create new
                 </option>
-              ))}
-              <option value="create-new" when-selected="--">
-                + Create new
-              </option>
-            </Dropdown>
-          )}
-        </Description>
-      </Wrapper>
+              </Dropdown>
+            )}
+          </Description>
+        </Wrapper>
+      </OuterWrapper>
       <Modal
         width={430}
         isVisible={showCreateDifficultyModal}
@@ -100,6 +105,15 @@ const NotesEditorSongInfo = ({
     </>
   );
 };
+
+const OuterWrapper = styled.div`
+  position: absolute;
+  z-index: 10;
+  top: ${UNIT * 2}px;
+  left: ${UNIT * 2}px;
+  display: flex;
+  align-items: center;
+`;
 
 const Wrapper = styled.div`
   display: flex;

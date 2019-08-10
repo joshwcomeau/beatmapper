@@ -18,6 +18,8 @@ import LightingBlock from './LightingBlock';
 const BLOCK_MAP = {
   on: LightingBlock,
   off: LightingBlock,
+  flash: LightingBlock,
+  fade: LightingBlock,
 };
 
 const EventsGridTrack = ({

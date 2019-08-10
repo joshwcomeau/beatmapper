@@ -142,7 +142,6 @@ const EventsGrid = ({
           {beatNums.map(num => (
             <HeaderCell key={num}>
               <BeatNums>{num}</BeatNums>
-              <Nub />
             </HeaderCell>
           ))}
         </Header>
@@ -198,7 +197,7 @@ const EventsGrid = ({
 
 const Wrapper = styled.div`
   display: flex;
-  background: ${COLORS.blueGray[900]};
+  background: rgba(0, 0, 0, 0.45);
   opacity: ${props => (props.isLoading ? 0.25 : 1)};
   /*
     Disallow clicking until the song has loaded, to prevent weird edge-case bugs
@@ -239,19 +238,6 @@ const BeatNums = styled.span`
   }
 `;
 
-const Nub = styled.div`
-  position: absolute;
-  left: -1px;
-  bottom: 0;
-  width: 1px;
-  height: 5px;
-  background: ${COLORS.blueGray[500]};
-
-  ${HeaderCell}:first-of-type & {
-    display: none;
-  }
-`;
-
 const MainGridContent = styled.div`
   flex: 1;
   position: relative;
@@ -276,6 +262,10 @@ const TrackPrefix = styled.div`
   color: ${COLORS.blueGray[100]};
   padding: 0 ${UNIT}px;
   border-bottom: 1px solid ${COLORS.blueGray[400]};
+
+  &:last-of-type {
+    border-bottom: none;
+  }
 `;
 
 const Tracks = styled.div`

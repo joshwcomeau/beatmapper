@@ -110,12 +110,8 @@ function notes(state = initialState.notes, action) {
 
 function events(state = initialState.events, action) {
   switch (action.type) {
-    case 'SELECT_COLOR': {
-      const { view, color } = action;
-
-      if (view !== EVENTS_VIEW) {
-        return state;
-      }
+    case 'SELECT_EVENT_COLOR': {
+      const { color } = action;
 
       return {
         ...state,

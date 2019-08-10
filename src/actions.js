@@ -523,3 +523,7 @@ export const switchEventColor = (id, trackId) => ({
   id,
   trackId,
 });
+export const selectEventColor = color => ({
+  type: 'SELECT_EVENT_COLOR',
+  color,
+});

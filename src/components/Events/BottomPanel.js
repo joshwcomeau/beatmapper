@@ -9,7 +9,7 @@ import EditorStatusBar from '../EditorStatusBar';
 
 const PADDING = UNIT * 2;
 
-const EventsBottomPanel = () => {
+const EventsBottomPanel = ({ contentWidth }) => {
   // This is a known size because IconButton is always 36px squared, and it's
   // the tallest thing in this child.
   // TODO: Make this relationship explicit, share a constant or something
@@ -19,7 +19,7 @@ const EventsBottomPanel = () => {
   const waveformHeight = 80;
 
   return (
-    <Wrapper>
+    <Wrapper style={{ width: contentWidth }}>
       <SubWrapper>
         <EditorNavigationControls height={playbackControlsHeight} />
       </SubWrapper>

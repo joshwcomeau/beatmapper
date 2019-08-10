@@ -45,9 +45,7 @@ const NotesEditor = ({ isPlaying, pausePlaying, scrollThroughSong }) => {
 
   return (
     <Wrapper>
-      <SongInfoWrapper>
-        <SongInfo />
-      </SongInfoWrapper>
+      <SongInfo />
 
       <ReduxForwardingCanvas ref={canvasRef}>
         <MapVisualization />
@@ -67,15 +65,6 @@ const Wrapper = styled.div`
   background: #000;
   width: 100%;
   height: 100%;
-`;
-
-const SongInfoWrapper = styled.div`
-  position: absolute;
-  z-index: 10;
-  top: ${UNIT * 2}px;
-  left: ${UNIT * 2}px;
-  display: flex;
-  align-items: center;
 `;
 
 const mapStateToProps = state => ({

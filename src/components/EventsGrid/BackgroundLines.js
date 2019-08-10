@@ -12,22 +12,28 @@ const BackgroundLines = ({
   secondaryDivisions,
 }) => {
   const segmentWidth = width / numOfBeatsToShow;
-  const beatLines = range(numOfBeatsToShow).map(i => (
-    <line
-      key={i}
-      x1={(i + 1) * segmentWidth}
-      y1={0}
-      x2={(i + 1) * segmentWidth}
-      y2={height}
-      stroke={COLORS.blueGray[500]}
-      strokeWidth={1}
-    />
-  ));
+  const beatLines = range(numOfBeatsToShow).map(i => {
+    // No line necessary for the right edge of the grid
+    if (i === numOfBeatsToShow - 1) {
+      return null;
+    }
+    return (
+      <line
+        key={i}
+        x1={(i + 1) * segmentWidth}
+        y1={-6}
+        x2={(i + 1) * segmentWidth}
+        y2={height}
+        stroke={COLORS.blueGray[500]}
+        strokeWidth={1}
+      />
+    );
+  });
 
   const primaryLines = beatLines.map((_, segmentIndex) => {
     return range(primaryDivisions).map(i => {
       if (i === 0) {
-        return;
+        return null;
       }
 
       const subSegmentWidth = segmentWidth / primaryDivisions;
@@ -56,6 +62,7 @@ const BackgroundLines = ({
 
 const Svg = styled.svg`
   display: block;
+  overflow: visible;
 `;
 
 export default BackgroundLines;
