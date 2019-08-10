@@ -1,3 +1,10 @@
+/**
+ * NOTE: I don't really think this middleware is necessary.
+ * I think all this stuff can be done at the component level, maybe put into
+ * helper functions if it feels crowded.
+ *
+ * Will do a different approach for events. This is just for notes-view stuff.
+ */
 import {
   selectNote,
   deselectNote,

@@ -8,8 +8,7 @@ import { range, normalize, roundToNearest } from '../../utils';
 import { getIsLoading, getSnapTo } from '../../reducers/navigation.reducer';
 import {
   getStartAndEndBeat,
-  getSelectedEventColor,
-  getSelectedLaserSpeed,
+  getEventSelectionMode,
 } from '../../reducers/editor.reducer';
 import useMousePositionOverElement from '../../hooks/use-mouse-position-over-element.hook';
 
@@ -71,6 +70,8 @@ const EventsGrid = ({
   numOfBeatsToShow,
   isLoading,
   snapTo,
+  selectionMode,
+  finishManagingEventSelection,
 }) => {
   const [mouseCursorPosition, setMouseCursorPosition] = React.useState(null);
 
@@ -97,6 +98,33 @@ const EventsGrid = ({
 
     setMouseCursorPosition(roundedPositionInPx);
   });
+
+  // I can click on a block to start selecting it.
+  // If I hold the mouse down, I can drag to select (or deselect) many notes
+  // at a time.
+  // For this to work, I need to know when they start clicking and stop
+  // clicking. For starting clicking, I can use the `SELECT_NOTE` action,
+  // triggered when clicking a block... but they might not be over a block
+  // when they release the mouse. So instead I need to use a mouseUp handler
+  // up here.
+  React.useEffect(() => {
+    if (!selectionMode) {
+      return;
+    }
+
+    const handleMouseUp = () => {
+      // Wait 1 frame before wrapping up. This is to prevent the selection
+      // mode from changing before all event-handlers have been processed.
+      // Without the delay, the user might accidentally add notes to the
+      // placement grid - further up in the React tree - if they release the
+      // mouse while over a grid tile.
+      window.requestAnimationFrame(finishManagingEventSelection);
+    };
+
+    window.addEventListener('mouseup', handleMouseUp);
+
+    return () => window.removeEventListener('mouseup', handleMouseUp);
+  }, [selectionMode, finishManagingEventSelection]);
 
   return (
     <Wrapper isLoading={isLoading} style={{ width: contentWidth }}>
@@ -271,14 +299,23 @@ const MouseCursor = styled.div`
 const mapStateToProps = (state, ownProps) => {
   const { startBeat, endBeat } = getStartAndEndBeat(state);
   const numOfBeatsToShow = endBeat - startBeat;
+  const selectionMode = getEventSelectionMode(state);
 
   return {
     startBeat,
     endBeat,
     numOfBeatsToShow,
+    selectionMode,
     isLoading: getIsLoading(state),
     snapTo: getSnapTo(state),
   };
 };
 
-export default connect(mapStateToProps)(EventsGrid);
+const mapDispatchToProps = {
+  finishManagingEventSelection: actions.finishManagingEventSelection,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EventsGrid);

@@ -42,6 +42,10 @@ const events = (state = initialState, action) => {
       }
 
       const tracks = action.events.reduce((acc, event) => {
+        if (!event) {
+          return acc;
+        }
+
         acc[event.trackId].push(event);
         return acc;
       }, initialState.tracks);
@@ -82,6 +86,33 @@ const events = (state = initialState, action) => {
           [trackId]: [...state.tracks[trackId], newEvent],
         },
       };
+    }
+
+    case 'DELETE_EVENT':
+    case 'BULK_DELETE_EVENT': {
+      const { id, trackId } = action;
+
+      const newTrackArray = state.tracks[trackId].filter(ev => ev.id !== id);
+
+      return {
+        ...state,
+        tracks: {
+          ...state.tracks,
+          [trackId]: newTrackArray,
+        },
+      };
+    }
+
+    case 'SELECT_EVENT':
+    case 'DESELECT_EVENT': {
+      const { id, trackId } = action;
+
+      const eventIndex = state.tracks[trackId].findIndex(ev => ev.id === id);
+
+      return produce(state, draftState => {
+        draftState.tracks[trackId][eventIndex].selected =
+          action.type === 'SELECT_EVENT';
+      });
     }
 
     default:

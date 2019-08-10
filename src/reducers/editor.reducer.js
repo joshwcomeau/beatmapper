@@ -33,7 +33,9 @@ const initialState = {
     selectionMode: null, // null | 'select' | 'deselect' | 'delete'.
   },
   events: {
-    zoomLevel: 3,
+    zoomLevel: 2,
+    selectionMode: null, // null | 'select' | 'deselect' | 'delete' | 'place'
+    selectionModeTrackId: null,
     selectedTool: EVENT_TOOLS[0],
     selectedColor: EVENT_COLORS[0],
     selectedLaserSpeed: 0,
@@ -159,6 +161,21 @@ function events(state = initialState.events, action) {
       };
     }
 
+    case 'START_MANAGING_EVENT_SELECTION': {
+      return {
+        ...state,
+        selectionMode: action.selectionMode,
+        selectionModeTrackId: action.trackId,
+      };
+    }
+    case 'FINISH_MANAGING_EVENT_SELECTION': {
+      return {
+        ...state,
+        selectionMode: null,
+        selectionModeTrackId: null,
+      };
+    }
+
     default:
       return state;
   }
@@ -168,6 +185,9 @@ export const getSelectedNoteTool = state => state.editor.notes.selectedTool;
 export const getSelectedCutDirection = state =>
   state.editor.notes.selectedDirection;
 
+export const getEventSelectionMode = state => state.editor.events.selectionMode;
+export const getEventSelectionModeTrackId = state =>
+  state.editor.events.selectionModeTrackId;
 export const getSelectedEventTool = state => state.editor.events.selectedTool;
 export const getSelectedEventColor = state => state.editor.events.selectedColor;
 export const getSelectedLaserSpeed = state =>

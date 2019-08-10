@@ -29,15 +29,6 @@ const MapVisualization = ({ songId }) => {
     } else {
       controls.current.update();
     }
-
-    // if (typeof window.__THREE_DEVTOOLS__ !== 'undefined') {
-    //   window.__THREE_DEVTOOLS__.dispatchEvent(
-    //     new CustomEvent('observe', { detail: scene })
-    //   );
-    //   window.__THREE_DEVTOOLS__.dispatchEvent(
-    //     new CustomEvent('observe', { detail: gl })
-    //   );
-    // }
   });
 
   return (

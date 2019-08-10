@@ -350,6 +350,14 @@ export const startManagingNoteSelection = selectionMode => ({
 export const finishManagingNoteSelection = () => ({
   type: 'FINISH_MANAGING_NOTE_SELECTION',
 });
+export const startManagingEventSelection = (selectionMode, trackId) => ({
+  type: 'START_MANAGING_EVENT_SELECTION',
+  selectionMode,
+  trackId,
+});
+export const finishManagingEventSelection = () => ({
+  type: 'FINISH_MANAGING_EVENT_SELECTION',
+});
 
 export const downloadMapFiles = ({ version }) => ({
   type: 'DOWNLOAD_MAP_FILES',
@@ -488,3 +496,30 @@ export const placeEvent = (
     eventLaserSpeed,
   };
 };
+
+export const deleteEvent = (id, trackId) => ({
+  type: 'DELETE_EVENT',
+  id,
+  trackId,
+});
+export const bulkDeleteEvent = (id, trackId) => ({
+  type: 'BULK_DELETE_EVENT',
+  id,
+  trackId,
+});
+
+export const selectEvent = (id, trackId) => ({
+  type: 'SELECT_EVENT',
+  id,
+  trackId,
+});
+export const deselectEvent = (id, trackId) => ({
+  type: 'DESELECT_EVENT',
+  id,
+  trackId,
+});
+export const switchEventColor = (id, trackId) => ({
+  type: 'SWITCH_EVENT_COLOR',
+  id,
+  trackId,
+});
