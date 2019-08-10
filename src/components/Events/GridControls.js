@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
+import Color from 'color';
 
 import * as actions from '../../actions';
 import { UNIT, EVENTS_VIEW, COLORS } from '../../constants';
@@ -45,17 +46,38 @@ const GridControls = ({
   return (
     <Wrapper style={{ width: contentWidth }}>
       <Left>
-        <ControlItem label="Color">
+        <ControlItem label="Light Color">
           <ControlItemToggleButton
             value="red"
             isToggled={selectedColor === 'red'}
             onToggle={selectColor}
-          />
+          >
+            <Box color={COLORS.red[500]} />
+          </ControlItemToggleButton>
           <ControlItemToggleButton
             value="blue"
             isToggled={selectedColor === 'blue'}
             onToggle={selectColor}
-          />
+          >
+            <Box color={COLORS.blue[500]} />
+          </ControlItemToggleButton>
+        </ControlItem>
+        <Spacer size={UNIT * 4} />
+        <ControlItem label="Light Color">
+          <ControlItemToggleButton
+            value="red"
+            isToggled={selectedColor === 'red'}
+            onToggle={selectColor}
+          >
+            <Box color={COLORS.red[500]} />
+          </ControlItemToggleButton>
+          <ControlItemToggleButton
+            value="blue"
+            isToggled={selectedColor === 'blue'}
+            onToggle={selectColor}
+          >
+            <Box color={COLORS.blue[500]} />
+          </ControlItemToggleButton>
         </ControlItem>
       </Left>
 
@@ -90,12 +112,33 @@ const Wrapper = styled.div`
   padding: 0 ${UNIT * 2}px;
 `;
 
-const Left = styled.div``;
+const Left = styled.div`
+  display: flex;
+`;
 const Right = styled.div``;
 
 const ButtonRow = styled.div`
   display: flex;
   align-self: center;
+`;
+
+const Box = styled.div`
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  background: linear-gradient(
+    0deg,
+    ${props =>
+      Color(props.color)
+        .darken(0.2)
+        .hsl()
+        .string()},
+    ${props =>
+      Color(props.color)
+        .lighten(0.1)
+        .hsl()
+        .string()}
+  );
 `;
 
 const mapStateToProps = state => {
