@@ -1,12 +1,12 @@
 import uuid from 'uuid/v1';
 
-import { NOTES_VIEW, EVENTS_VIEW } from './constants';
+import { NOTES_VIEW, EVENTS_VIEW, BEATS_PER_ZOOM_LEVEL } from './constants';
 import {
   getNotes,
   getObstacles,
   getSelectedNotes,
 } from './reducers/editor-entities.reducer';
-import { getSelectedEventTool } from './reducers/editor.reducer';
+import { getBeatsPerZoomLevel } from './reducers/editor.reducer';
 import { getSelectedSong } from './reducers/songs.reducer';
 import { getCopiedNotes } from './reducers/clipboard.reducer';
 import { getCursorPositionInBeats } from './reducers/navigation.reducer';
@@ -475,6 +475,15 @@ export const jumpToBar = barNum => ({
   barNum,
 });
 
+export const seekForwards = view => ({
+  type: 'SEEK_FORWARDS',
+  view,
+});
+export const seekBackwards = view => ({
+  type: 'SEEK_BACKWARDS',
+  view,
+});
+
 export const unloadSong = () => ({
   type: 'UNLOAD_SONG',
 });
@@ -526,4 +535,10 @@ export const switchEventColor = (id, trackId) => ({
 export const selectEventColor = color => ({
   type: 'SELECT_EVENT_COLOR',
   color,
+});
+export const zoomIn = () => ({
+  type: 'ZOOM_IN',
+});
+export const zoomOut = () => ({
+  type: 'ZOOM_OUT',
 });

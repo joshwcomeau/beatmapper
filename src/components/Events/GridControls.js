@@ -2,46 +2,34 @@ import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import Color from 'color';
+import { Icon } from 'react-icons-kit';
+import { zoomIn as zoomInIcon } from 'react-icons-kit/feather/zoomIn';
+import { zoomOut as zoomOutIcon } from 'react-icons-kit/feather/zoomOut';
 
 import * as actions from '../../actions';
 import { UNIT, EVENTS_VIEW, COLORS } from '../../constants';
 import {
   getSelectedEventTool,
   getSelectedEventColor,
+  getZoomLevel,
 } from '../../reducers/editor.reducer';
 import MiniButton from '../MiniButton';
 import Spacer from '../Spacer';
 
 import ControlItem from './ControlItem';
 import ControlItemToggleButton from './ControlItemToggleButton';
-
-const PADDING = UNIT * 2;
-
-const LIGHT_TOOLS = [
-  {
-    id: 'on',
-    label: 'On',
-  },
-  {
-    id: 'off',
-    label: 'Off',
-  },
-  {
-    id: 'flash',
-    label: 'Flash',
-  },
-  {
-    id: 'fade',
-    label: 'Fade',
-  },
-];
+import EventToolIcon from './EventToolIcon';
+import UnstyledButton from '../UnstyledButton';
 
 const GridControls = ({
   contentWidth,
   selectedTool,
   selectedColor,
+  zoomLevel,
   selectTool,
   selectColor,
+  zoomIn,
+  zoomOut,
 }) => {
   return (
     <Wrapper style={{ width: contentWidth }}>
@@ -62,40 +50,70 @@ const GridControls = ({
             <Box color={COLORS.blue[500]} />
           </ControlItemToggleButton>
         </ControlItem>
+
         <Spacer size={UNIT * 4} />
-        <ControlItem label="Light Color">
+
+        <ControlItem label="Effect">
           <ControlItemToggleButton
-            value="red"
-            isToggled={selectedColor === 'red'}
-            onToggle={selectColor}
+            value="on"
+            isToggled={selectedTool === 'on'}
+            onToggle={() => selectTool(EVENTS_VIEW, 'on')}
           >
-            <Box color={COLORS.red[500]} />
+            <EventToolIcon
+              tool="on"
+              color={
+                selectedColor === 'red' ? COLORS.red[500] : COLORS.blue[500]
+              }
+            />
           </ControlItemToggleButton>
           <ControlItemToggleButton
-            value="blue"
-            isToggled={selectedColor === 'blue'}
-            onToggle={selectColor}
+            value="off"
+            isToggled={selectedTool === 'off'}
+            onToggle={() => selectTool(EVENTS_VIEW, 'off')}
           >
-            <Box color={COLORS.blue[500]} />
+            <EventToolIcon
+              tool="off"
+              color={
+                selectedColor === 'red' ? COLORS.red[500] : COLORS.blue[500]
+              }
+            />
+          </ControlItemToggleButton>
+          <ControlItemToggleButton
+            value="flash"
+            isToggled={selectedTool === 'flash'}
+            onToggle={() => selectTool(EVENTS_VIEW, 'flash')}
+          >
+            <EventToolIcon
+              tool="flash"
+              color={
+                selectedColor === 'red' ? COLORS.red[500] : COLORS.blue[500]
+              }
+            />
+          </ControlItemToggleButton>
+          <ControlItemToggleButton
+            value="fade"
+            isToggled={selectedTool === 'fade'}
+            onToggle={() => selectTool(EVENTS_VIEW, 'fade')}
+          >
+            <EventToolIcon
+              tool="fade"
+              color={
+                selectedColor === 'red' ? COLORS.red[500] : COLORS.blue[500]
+              }
+            />
           </ControlItemToggleButton>
         </ControlItem>
       </Left>
 
       <Right />
-      <ButtonRow>
-        {LIGHT_TOOLS.map(({ id, label }) => (
-          <React.Fragment key={id}>
-            <MiniButton
-              color={selectedTool === id ? COLORS.blue[700] : undefined}
-              hoverColor={selectedTool === id ? COLORS.blue[500] : undefined}
-              onClick={() => selectTool(EVENTS_VIEW, id)}
-            >
-              {label}
-            </MiniButton>
-            <Spacer size={UNIT} />
-          </React.Fragment>
-        ))}
-      </ButtonRow>
+      <ControlItem label="Zoom" align="right">
+        <ZoomBtn onClick={zoomOut} disabled={zoomLevel === 1}>
+          <Icon size={14} icon={zoomOutIcon} />
+        </ZoomBtn>
+        <ZoomBtn onClick={zoomIn} disabled={zoomLevel === 4}>
+          <Icon size={14} icon={zoomInIcon} />
+        </ZoomBtn>
+      </ControlItem>
     </Wrapper>
   );
 };
@@ -117,11 +135,6 @@ const Left = styled.div`
 `;
 const Right = styled.div``;
 
-const ButtonRow = styled.div`
-  display: flex;
-  align-self: center;
-`;
-
 const Box = styled.div`
   width: 16px;
   height: 16px;
@@ -141,16 +154,38 @@ const Box = styled.div`
   );
 `;
 
+const ZoomBtn = styled(UnstyledButton)`
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  background: ${COLORS.blueGray[900]};
+  color: ${COLORS.blueGray[100]};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:disabled {
+    opacity: 0.5;
+  }
+
+  & svg {
+    display: block !important;
+  }
+`;
+
 const mapStateToProps = state => {
   return {
     selectedTool: getSelectedEventTool(state),
     selectedColor: getSelectedEventColor(state),
+    zoomLevel: getZoomLevel(state),
   };
 };
 
 const mapDispatchToProps = {
   selectTool: actions.selectTool,
   selectColor: actions.selectEventColor,
+  zoomIn: actions.zoomIn,
+  zoomOut: actions.zoomOut,
 };
 
 export default connect(

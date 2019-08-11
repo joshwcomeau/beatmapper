@@ -6,9 +6,9 @@ import { UNIT } from '../../constants';
 import Heading from '../Heading';
 import Spacer from '../Spacer';
 
-const ControlItem = ({ label, children, isExpandable }) => {
+const ControlItem = ({ label, children, isExpandable, align }) => {
   return (
-    <Wrapper>
+    <Wrapper style={{ textAlign: align }}>
       <Heading size={4}>{label}</Heading>
       <Spacer size={UNIT} />
 

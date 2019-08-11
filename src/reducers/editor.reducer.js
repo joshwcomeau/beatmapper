@@ -4,7 +4,7 @@
  */
 import { combineReducers } from 'redux';
 
-import { NOTES_VIEW, EVENTS_VIEW } from '../constants';
+import { NOTES_VIEW, EVENTS_VIEW, BEATS_PER_ZOOM_LEVEL } from '../constants';
 import { floorToNearest } from '../utils';
 import { getCursorPositionInBeats } from './navigation.reducer';
 
@@ -21,8 +21,6 @@ const EVENT_TOOLS = [
 ];
 
 const EVENT_COLORS = ['red', 'blue'];
-
-const BEATS_PER_ZOOM_LEVEL = [null, 32, 16, 8, 4];
 
 const initialState = {
   // `notes` covers everything in the /notes editor view:
@@ -169,6 +167,22 @@ function events(state = initialState.events, action) {
         ...state,
         selectionMode: null,
         selectionModeTrackId: null,
+      };
+    }
+
+    case 'ZOOM_IN': {
+      const newZoomLevel = Math.min(4, state.zoomLevel + 1);
+      return {
+        ...state,
+        zoomLevel: newZoomLevel,
+      };
+    }
+
+    case 'ZOOM_OUT': {
+      const newZoomLevel = Math.max(1, state.zoomLevel - 1);
+      return {
+        ...state,
+        zoomLevel: newZoomLevel,
       };
     }
 

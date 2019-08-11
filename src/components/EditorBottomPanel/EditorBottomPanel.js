@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { UNIT } from '../../constants';
+import { UNIT, NOTES_VIEW } from '../../constants';
 
 import EditorNavigationControls from '../EditorNavigationControls';
 import EditorWaveform from '../EditorWaveform';
@@ -21,7 +21,10 @@ const EditorBottomPanel = () => {
   return (
     <Wrapper>
       <SubWrapper>
-        <EditorNavigationControls height={playbackControlsHeight} />
+        <EditorNavigationControls
+          height={playbackControlsHeight}
+          view={NOTES_VIEW}
+        />
       </SubWrapper>
       <SubWrapper>
         <EditorWaveform height={waveformHeight} />

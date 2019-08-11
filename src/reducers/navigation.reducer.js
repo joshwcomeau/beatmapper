@@ -79,7 +79,9 @@ export default function navigationReducer(state = initialState, action) {
       };
     }
 
-    case 'JUMP_TO_BAR': {
+    case 'JUMP_TO_BAR':
+    case 'SEEK_FORWARDS':
+    case 'SEEK_BACKWARDS': {
       return {
         ...state,
         animateBlockMotion: false,

@@ -28,6 +28,7 @@ import {
 } from '../services/file.service';
 import Sfx from '../services/sfx.service';
 import { getSongById, getSelectedSong } from '../reducers/songs.reducer';
+import { getBeatsPerZoomLevel } from '../reducers/editor.reducer';
 import { getNotes } from '../reducers/editor-entities.reducer';
 import {
   getVolume,
@@ -36,6 +37,7 @@ import {
   getCursorPositionInBeats,
 } from '../reducers/navigation.reducer';
 import { unshiftEntitiesByOffset } from '../services/packaging.service.nitty-gritty';
+import { NOTES_VIEW } from '../constants';
 
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 
@@ -229,6 +231,52 @@ export default function createSongMiddleware() {
         const song = getSelectedSong(state);
         const newCursorPosition =
           convertBeatsToMilliseconds(action.barNum * 4, song.bpm) + song.offset;
+
+        next(adjustCursorPosition(newCursorPosition));
+        audioElem.currentTime = newCursorPosition / 1000;
+
+        break;
+      }
+
+      case 'SEEK_FORWARDS':
+      case 'SEEK_BACKWARDS': {
+        const { view } = action;
+
+        next(action);
+
+        const state = store.getState();
+        const song = getSelectedSong(state);
+
+        // In events view, we always want to jump ahead to the next window.
+        // This is a bit tricky since it's not a fixed # of cells to jump.
+        const cursorPositionInBeats = getCursorPositionInBeats(state);
+        const beatsPerZoomLevel = getBeatsPerZoomLevel(state);
+
+        const windowSize = view === NOTES_VIEW ? 32 : beatsPerZoomLevel;
+
+        const currentWindowIndex = Math.floor(
+          cursorPositionInBeats / windowSize
+        );
+
+        let newStartBeat;
+        if (action.type === 'SEEK_FORWARDS') {
+          newStartBeat = windowSize * (currentWindowIndex + 1);
+        } else {
+          // In notes view, this should work like the next/previous buttons
+          // on CD players. If you click 'previous', it "rewinds" to the start
+          // of the current window, unless you're in the first couple beats,
+          // in which case it rewinds to the previous window.
+          const progressThroughWindow = cursorPositionInBeats % windowSize;
+
+          if (progressThroughWindow < 2) {
+            newStartBeat = windowSize * (currentWindowIndex - 1);
+          } else {
+            newStartBeat = windowSize * currentWindowIndex;
+          }
+        }
+
+        const newCursorPosition =
+          convertBeatsToMilliseconds(newStartBeat, song.bpm) + song.offset;
 
         next(adjustCursorPosition(newCursorPosition));
         audioElem.currentTime = newCursorPosition / 1000;

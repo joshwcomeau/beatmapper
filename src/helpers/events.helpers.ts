@@ -135,6 +135,7 @@ export const convertEventsToRedux = (events: Array<JsonEvent>) => {
         id,
         trackId,
         beatNum,
+        type: 'rotate',
       };
     } else if (trackId === 'laserSpeedLeft' || trackId === 'laserSpeedRight') {
       const laserSpeed = event._value;

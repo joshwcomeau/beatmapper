@@ -12,6 +12,7 @@ import CenteredSpinner from '../CenteredSpinner';
 
 const EditorWaveform = ({
   height,
+  view,
   song,
   waveformData,
   isLoadingSong,
@@ -31,6 +32,7 @@ const EditorWaveform = ({
       {boundingBox && song && (
         <ScrubbableWaveform
           key={song.id + '-' + song.selectedDifficulty}
+          view={view}
           width={boundingBox.width}
           height={height - UNIT * 2}
           waveformData={waveformData}

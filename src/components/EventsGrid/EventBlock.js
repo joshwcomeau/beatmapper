@@ -45,6 +45,10 @@ const getBackgroundForEvent = event => {
       return `linear-gradient(-90deg, ${semiTransparentColor}, ${brightColor})`;
     }
 
+    case 'rotate': {
+      return COLORS.yellow[500];
+    }
+
     default:
       throw new Error('Unrecognized type: ' + event.type);
   }

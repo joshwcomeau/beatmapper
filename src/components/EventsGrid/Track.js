@@ -13,14 +13,7 @@ import {
 } from '../../reducers/editor.reducer';
 import { getEventsForTrack } from '../../reducers/editor-entities.reducer/events-view.reducer';
 
-import LightingBlock from './LightingBlock';
-
-const BLOCK_MAP = {
-  on: LightingBlock,
-  off: LightingBlock,
-  flash: LightingBlock,
-  fade: LightingBlock,
-};
+import EventBlock from './EventBlock';
 
 const EventsGridTrack = ({
   trackId,
@@ -46,18 +39,15 @@ const EventsGridTrack = ({
   ...delegated
 }) => {
   const getPropsForPlacedEvent = () => {
-    const beatNum = startBeat + cursorAtBeat;
-
-    // TODO: Validate that this tool makes sense for this track, choose the
-    // right event type.
-    const eventType = selectedTool;
+    const isRingEvent = trackId === 'largeRing' || trackId === 'smallRing';
+    const eventType = isRingEvent ? 'rotate' : selectedTool;
 
     let eventColor = selectedColor;
-    if (selectedTool === 'off') {
+    if (isRingEvent || selectedTool === 'off') {
       eventColor = undefined;
     }
 
-    return [trackId, beatNum, eventType, eventColor, selectedLaserSpeed];
+    return [trackId, cursorAtBeat, eventType, eventColor, selectedLaserSpeed];
   };
   const handleClickTrack = () => {
     if (selectionMode) {
@@ -89,10 +79,10 @@ const EventsGridTrack = ({
       onContextMenu={ev => ev.preventDefault()}
     >
       {events.map(event => {
-        const Component = BLOCK_MAP[event.type];
+        // TODO: Pattern blocks?
 
         return (
-          <Component
+          <EventBlock
             key={event.id}
             event={event}
             startBeat={startBeat}

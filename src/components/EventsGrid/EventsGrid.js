@@ -7,6 +7,7 @@ import { UNIT, COLORS } from '../../constants';
 import { range, normalize, roundToNearest } from '../../utils';
 import { getIsLoading, getSnapTo } from '../../reducers/navigation.reducer';
 import {
+  getZoomLevel,
   getStartAndEndBeat,
   getEventSelectionMode,
 } from '../../reducers/editor.reducer';
@@ -63,7 +64,7 @@ const TRACKS = [
 
 const EventsGrid = ({
   contentWidth,
-  zoomLevel = 3,
+  zoomLevel,
   events,
   startBeat,
   endBeat,
@@ -294,6 +295,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     startBeat,
     endBeat,
+    zoomLevel: getZoomLevel(state),
     numOfBeatsToShow,
     selectionMode,
     isLoading: getIsLoading(state),

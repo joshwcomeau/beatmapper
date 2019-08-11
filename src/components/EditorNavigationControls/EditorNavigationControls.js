@@ -21,14 +21,16 @@ import CurrentBar from './CurrentBar';
 
 const EditorNavigationControls = ({
   height,
+  view,
   isPlaying,
   isLoadingSong,
   snapTo,
   startPlaying,
   pausePlaying,
-  scrollThroughSong,
   skipToStart,
   skipToEnd,
+  seekForwards,
+  seekBackwards,
   changeSnapping,
 }) => {
   const playButtonAction = isPlaying ? pausePlaying : startPlaying;
@@ -63,7 +65,7 @@ const EditorNavigationControls = ({
             disabled={isLoadingSong}
             color={COLORS.white}
             icon={rewind}
-            onClick={() => scrollThroughSong('backwards')}
+            onClick={() => seekBackwards(view)}
           />
           <IconButton
             disabled={isLoadingSong}
@@ -75,7 +77,7 @@ const EditorNavigationControls = ({
             disabled={isLoadingSong}
             color={COLORS.white}
             icon={fastForward}
-            onClick={() => scrollThroughSong('forwards')}
+            onClick={() => seekForwards(view)}
           />
           <IconButton
             disabled={isLoadingSong}
@@ -123,7 +125,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   startPlaying: actions.startPlaying,
   pausePlaying: actions.pausePlaying,
-  scrollThroughSong: actions.scrollThroughSong,
+  seekForwards: actions.seekForwards,
+  seekBackwards: actions.seekBackwards,
   skipToStart: actions.skipToStart,
   skipToEnd: actions.skipToEnd,
   changeSnapping: actions.changeSnapping,

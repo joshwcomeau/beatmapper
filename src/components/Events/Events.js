@@ -1,12 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { SIDEBAR_WIDTH, UNIT } from '../../constants';
+import { SIDEBAR_WIDTH } from '../../constants';
 import useWindowDimensions from '../../hooks/use-window-dimensions.hook';
 
 import EventsGrid from '../EventsGrid';
 import SongInfo from '../SongInfo';
-import Spacer from '../Spacer';
 
 import BottomPanel from './BottomPanel';
 import GridControls from './GridControls';
@@ -21,12 +20,7 @@ const Events = () => {
       <SongInfo />
 
       <GridControls contentWidth={contentWidth} />
-      <EventsGrid
-        contentWidth={contentWidth}
-        zoomLevel={3}
-        events={[]}
-        durationInBeats={100}
-      />
+      <EventsGrid contentWidth={contentWidth} />
       <BottomPanel contentWidth={contentWidth} />
 
       <KeyboardShortcuts />

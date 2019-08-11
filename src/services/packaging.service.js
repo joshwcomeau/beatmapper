@@ -115,20 +115,20 @@ function createBeatmapContents(
 ) {
   let contents;
 
-  // If the `offset` is non-zero, we need to do some maths to shift all the
-  // notes by that amount.
-  // NOTE: We don't need to do this for version 1. This is because version 1
-  // is pulled straight from localStorage, where this offset has already been
-  // applied
+  // We need to sort all notes, obstacles, and events, since the game can be
+  // funny when things aren't in order.
+  let sortedNotes = notes.sort((a, b) => a._time - b._time);
+  let sortedObstacles = obstacles.sort((a, b) => a._time - b._time);
+  let sortedEvents = events.sort((a, b) => a._time - b._time);
 
   if (meta.version === 2) {
     contents = {
       _version: '2.0.0',
       // BPM changes not yet supported.
       _BPMChanges: [],
-      _events: events,
-      _notes: notes,
-      _obstacles: obstacles,
+      _events: sortedEvents,
+      _notes: sortedNotes,
+      _obstacles: sortedObstacles,
       // Bookmarks not yet supported.
       _bookmarks: [],
     };
@@ -140,9 +140,9 @@ function createBeatmapContents(
       _noteJumpSpeed: Number(noteJumpSpeed),
       _shuffle: Number(swing || 0),
       _shufflePeriod: Number(swingPeriod || 0.5),
-      _events: events,
-      _notes: notes,
-      _obstacles: obstacles,
+      _events: sortedEvents,
+      _notes: sortedNotes,
+      _obstacles: sortedObstacles,
     };
   } else {
     throw new Error('unrecognized version: ' + meta.version);

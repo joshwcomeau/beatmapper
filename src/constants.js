@@ -41,7 +41,7 @@ export const COLORS = {
   black: '#000000',
 };
 
-export const DEVTOOLS_ENABLED_IN_DEV = false;
+export const DEVTOOLS_ENABLED_IN_DEV = true;
 
 export const BLOCK_SIZE = 1;
 export const BLOCK_COLUMN_WIDTH = BLOCK_SIZE * 1.5;
@@ -142,3 +142,5 @@ export const SNAPPING_INCREMENTS = [
 
 export const NOTES_VIEW = 'notes';
 export const EVENTS_VIEW = 'events';
+
+export const BEATS_PER_ZOOM_LEVEL = [null, 32, 16, 8, 4];
