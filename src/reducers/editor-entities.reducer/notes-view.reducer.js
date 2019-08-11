@@ -8,6 +8,7 @@ import {
   swapNotes,
 } from '../../helpers/notes.helpers';
 import { swapObstacles } from '../../helpers/obstacles.helpers';
+import { NOTES_VIEW } from '../../constants';
 
 const initialState = {
   notes: [],
@@ -127,13 +128,24 @@ const notes = (state = initialState.notes, action) => {
       return [...state.slice(0, noteIndex), ...state.slice(noteIndex + 1)];
     }
 
-    case 'DELETE_SELECTED_NOTES':
-    case 'CUT_SELECTED_NOTES': {
+    case 'DELETE_SELECTED_NOTES': {
       return state.filter(note => !note.selected);
     }
 
-    case 'PASTE_SELECTED_NOTES': {
-      const { cursorPositionInBeats, notes } = action;
+    case 'CUT_SELECTION': {
+      if (action.view !== NOTES_VIEW) {
+        return state;
+      }
+
+      return state.filter(note => !note.selected);
+    }
+
+    case 'PASTE_SELECTION': {
+      const { cursorPositionInBeats, view, data } = action;
+
+      if (view !== NOTES_VIEW || data.length === 0) {
+        return state;
+      }
 
       /*
         The notes that I copied have their time (in beats) from the origin 0.00.
@@ -149,12 +161,20 @@ const notes = (state = initialState.notes, action) => {
         We need to reset all of the _time values to be based from the current
         cursor position. If we're at beat #44, we need to shift them all forward
         by 10 beats.
-      */
-      if (notes.length === 0) {
-        return;
-      }
 
-      const deltaBetweenPeriods = cursorPositionInBeats - notes[0]._time;
+        Do the same thing for obstacles.
+      */
+
+      // The tricky thing here is that the clipboard contains intermingled
+      // notes/mines and obstacles, and their data format is different.
+      const isBlockOrMine = item => typeof item._cutDirection === 'number';
+
+      const earliestBeat = isBlockOrMine(data[0])
+        ? data[0]._time
+        : data[0].beatStart;
+      const deltaBetweenPeriods = cursorPositionInBeats - earliestBeat;
+
+      const notes = data.filter(isBlockOrMine);
 
       const timeShiftedNotes = notes.map(note => ({
         ...note,
@@ -265,9 +285,42 @@ const obstacles = (state = initialState.obstacles, action) => {
       return state.filter(obstacle => obstacle.id !== action.id);
     }
 
-    case 'DELETE_SELECTED_NOTES':
-    case 'CUT_SELECTED_NOTES': {
+    case 'DELETE_SELECTED_NOTES': {
       return state.filter(obstacle => !obstacle.selected);
+    }
+
+    case 'CUT_SELECTION': {
+      if (action.view !== NOTES_VIEW) {
+        return state;
+      }
+
+      return state.filter(obstacle => !obstacle.selected);
+    }
+    case 'PASTE_SELECTION': {
+      const { cursorPositionInBeats, view, data } = action;
+
+      if (view !== NOTES_VIEW || data.length === 0) {
+        return state;
+      }
+
+      // See PASTE_SELECTION in the above notes reducer to understand what's
+      // going on here.
+      const isObstacle = item => typeof item._cutDirection === 'undefined';
+
+      const earliestBeat = isObstacle(data[0])
+        ? data[0].beatStart
+        : data[0]._time;
+      const deltaBetweenPeriods = cursorPositionInBeats - earliestBeat;
+
+      const notes = data.filter(isObstacle);
+
+      const timeShiftedObstacles = notes.map(note => ({
+        ...note,
+        selected: false,
+        beatStart: note.beatStart + deltaBetweenPeriods,
+      }));
+
+      return [...state, ...timeShiftedObstacles];
     }
 
     case 'SELECT_OBSTACLE': {
@@ -308,7 +361,7 @@ const notesView = undoable(combineReducers({ notes, obstacles }), {
     'DELETE_NOTE',
     'BULK_DELETE_NOTE',
     'DELETE_SELECTED_NOTES',
-    'CUT_SELECTED_NOTES',
+    'CUT_SELECTION',
     'PASTE_SELECTED_NOTES',
     'CREATE_NEW_OBSTACLE',
     'RESIZE_OBSTACLE',

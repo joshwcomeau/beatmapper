@@ -1,14 +1,17 @@
 import uuid from 'uuid/v1';
 
-import { NOTES_VIEW, EVENTS_VIEW, BEATS_PER_ZOOM_LEVEL } from './constants';
+import { NOTES_VIEW, EVENTS_VIEW } from './constants';
+import { getSelection } from './reducers/editor-entities.reducer';
 import {
   getNotes,
   getObstacles,
   getSelectedNotes,
 } from './reducers/editor-entities.reducer/notes-view.reducer';
-import { getBeatsPerZoomLevel } from './reducers/editor.reducer';
 import { getSelectedSong } from './reducers/songs.reducer';
-import { getCopiedNotes } from './reducers/clipboard.reducer';
+import {
+  getCopiedNotesAndObstacles,
+  getCopiedEvents,
+} from './reducers/clipboard.reducer';
 import { getCursorPositionInBeats } from './reducers/navigation.reducer';
 
 export const loadDemoSong = () => ({
@@ -131,30 +134,38 @@ export const togglePlaying = () => ({
   type: 'TOGGLE_PLAYING',
 });
 
-export const cutSelectedNotes = () => (dispatch, getState) => {
-  const selectedNotes = getSelectedNotes(getState());
+export const cutSelection = view => (dispatch, getState) => {
+  const selection = getSelection(getState(), view);
 
   return dispatch({
-    type: 'CUT_SELECTED_NOTES',
-    notes: selectedNotes,
+    type: 'CUT_SELECTION',
+    view,
+    data: selection,
   });
 };
-export const copySelectedNotes = () => (dispatch, getState) => {
-  const selectedNotes = getSelectedNotes(getState());
+export const copySelection = view => (dispatch, getState) => {
+  const selectedNotes = getSelection(getState(), view);
 
   return dispatch({
-    type: 'COPY_SELECTED_NOTES',
-    notes: selectedNotes,
+    type: 'COPY_SELECTION',
+    view,
+    data: selectedNotes,
   });
 };
-export const pasteSelectedNotes = () => (dispatch, getState) => {
+export const pasteSelection = view => (dispatch, getState) => {
   const state = getState();
-  const selectedNotes = getCopiedNotes(state);
+
+  const data =
+    view === NOTES_VIEW
+      ? getCopiedNotesAndObstacles(state)
+      : getCopiedEvents(state);
+
   const cursorPositionInBeats = getCursorPositionInBeats(state);
 
   return dispatch({
-    type: 'PASTE_SELECTED_NOTES',
-    notes: selectedNotes,
+    type: 'PASTE_SELECTION',
+    view,
+    data,
     cursorPositionInBeats,
   });
 };

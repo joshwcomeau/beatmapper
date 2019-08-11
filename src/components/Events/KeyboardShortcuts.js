@@ -21,6 +21,7 @@ const KeyboardShortcuts = ({
   selectPreviousTool,
   deselectAll,
   toggleSelectAll,
+  cutSelection,
   jumpToBar,
   skipToStart,
   skipToEnd,
@@ -99,11 +100,11 @@ const KeyboardShortcuts = ({
       }
 
       case 'KeyX': {
-        // TODO
         if (!isMetaKeyPressed(ev)) {
           return;
         }
-        break;
+
+        return cutSelection(EVENTS_VIEW);
       }
       case 'KeyC': {
         // TODO
@@ -221,9 +222,9 @@ const mapDispatchToProps = {
   selectPreviousTool: actions.selectPreviousTool,
   deselectAll: actions.deselectAll,
   selectNoteDirection: actions.selectNoteDirection,
-  copySelectedNotes: actions.copySelectedNotes,
-  cutSelectedNotes: actions.cutSelectedNotes,
-  pasteSelectedNotes: actions.pasteSelectedNotes,
+  copySelection: actions.copySelection,
+  cutSelection: actions.cutSelection,
+  pasteSelection: actions.pasteSelection,
   undoNotes: actions.undoNotes,
   redoNotes: actions.redoNotes,
   swapSelectedNotes: actions.swapSelectedNotes,

@@ -2,6 +2,7 @@ import undoable, { includeAction, groupByActionTypes } from 'redux-undo';
 import produce from 'immer';
 
 import { flatten } from '../../utils';
+import { EVENTS_VIEW } from '../../constants';
 
 const initialState = {
   tracks: {
@@ -101,6 +102,20 @@ const events = (state = initialState, action) => {
           [trackId]: newTrackArray,
         },
       };
+    }
+
+    case 'CUT_SELECTION': {
+      if (action.view !== EVENTS_VIEW) {
+        return state;
+      }
+
+      return produce(state, draftState => {
+        const trackIds = Object.keys(state.tracks);
+
+        trackIds.forEach(trackId => {
+          draftState.tracks[trackId].filter(event => !event.selected);
+        });
+      });
     }
 
     case 'SELECT_EVENT':

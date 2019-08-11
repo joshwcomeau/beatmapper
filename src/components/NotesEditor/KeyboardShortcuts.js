@@ -23,9 +23,9 @@ const KeyboardShortcuts = ({
   selectTool,
   deselectAll,
   selectNoteDirection,
-  copySelectedNotes,
-  cutSelectedNotes,
-  pasteSelectedNotes,
+  copySelection,
+  cutSelection,
+  pasteSelection,
   undoNotes,
   redoNotes,
   swapSelectedNotes,
@@ -122,19 +122,19 @@ const KeyboardShortcuts = ({
         if (!isMetaKeyPressed(ev)) {
           return;
         }
-        return cutSelectedNotes();
+        return cutSelection(NOTES_VIEW);
       }
       case 'KeyC': {
         if (!isMetaKeyPressed(ev)) {
           return;
         }
-        return copySelectedNotes();
+        return copySelection(NOTES_VIEW);
       }
       case 'KeyV': {
         if (!isMetaKeyPressed(ev)) {
           return swapSelectedNotes('vertical');
         }
-        return pasteSelectedNotes();
+        return pasteSelection(NOTES_VIEW);
       }
 
       case 'KeyH': {
@@ -329,9 +329,9 @@ const mapDispatchToProps = {
   selectTool: actions.selectTool,
   deselectAll: actions.deselectAll,
   selectNoteDirection: actions.selectNoteDirection,
-  copySelectedNotes: actions.copySelectedNotes,
-  cutSelectedNotes: actions.cutSelectedNotes,
-  pasteSelectedNotes: actions.pasteSelectedNotes,
+  copySelection: actions.copySelection,
+  cutSelection: actions.cutSelection,
+  pasteSelection: actions.pasteSelection,
   undoNotes: actions.undoNotes,
   redoNotes: actions.redoNotes,
   swapSelectedNotes: actions.swapSelectedNotes,
