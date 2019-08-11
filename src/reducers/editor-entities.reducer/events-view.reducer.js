@@ -110,10 +110,26 @@ const events = (state = initialState, action) => {
       }
 
       return produce(state, draftState => {
-        const trackIds = Object.keys(state.tracks);
+        const trackIds = Object.keys(draftState.tracks);
 
         trackIds.forEach(trackId => {
-          draftState.tracks[trackId].filter(event => !event.selected);
+          draftState.tracks[trackId] = draftState.tracks[trackId].filter(
+            event => {
+              return !event.selected;
+            }
+          );
+        });
+      });
+    }
+
+    case 'PASTE_SELECTION': {
+      if (action.view !== EVENTS_VIEW) {
+        return state;
+      }
+
+      return produce(state, draftState => {
+        action.data.forEach(event => {
+          draftState.tracks[event.trackId].push(event);
         });
       });
     }

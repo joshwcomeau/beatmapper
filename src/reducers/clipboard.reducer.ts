@@ -37,13 +37,4 @@ export default function clipboard(state: State = initialState, action: Action) {
   }
 }
 
-export const getCopiedNotesAndObstacles = (state: any) => {
-  const { view, data } = state.clipboard;
-
-  return view === 'notes' ? data : [];
-};
-export const getCopiedEvents = (state: any) => {
-  const { view, data } = state.clipboard;
-
-  return view === 'events' ? data : [];
-};
+export const getCopiedData = (state: any) => state.clipboard.data;

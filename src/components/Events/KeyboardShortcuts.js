@@ -21,7 +21,9 @@ const KeyboardShortcuts = ({
   selectPreviousTool,
   deselectAll,
   toggleSelectAll,
+  copySelection,
   cutSelection,
+  pasteSelection,
   jumpToBar,
   skipToStart,
   skipToEnd,
@@ -107,18 +109,16 @@ const KeyboardShortcuts = ({
         return cutSelection(EVENTS_VIEW);
       }
       case 'KeyC': {
-        // TODO
         if (!isMetaKeyPressed(ev)) {
           return;
         }
-        break;
+        return copySelection(EVENTS_VIEW);
       }
       case 'KeyV': {
-        // TODO
         if (!isMetaKeyPressed(ev)) {
           return;
         }
-        break;
+        return pasteSelection(EVENTS_VIEW);
       }
 
       case 'KeyJ': {

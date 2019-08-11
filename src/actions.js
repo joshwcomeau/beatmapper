@@ -8,10 +8,7 @@ import {
   getSelectedNotes,
 } from './reducers/editor-entities.reducer/notes-view.reducer';
 import { getSelectedSong } from './reducers/songs.reducer';
-import {
-  getCopiedNotesAndObstacles,
-  getCopiedEvents,
-} from './reducers/clipboard.reducer';
+import { getCopiedData } from './reducers/clipboard.reducer';
 import { getCursorPositionInBeats } from './reducers/navigation.reducer';
 
 export const loadDemoSong = () => ({
@@ -144,22 +141,18 @@ export const cutSelection = view => (dispatch, getState) => {
   });
 };
 export const copySelection = view => (dispatch, getState) => {
-  const selectedNotes = getSelection(getState(), view);
+  const selection = getSelection(getState(), view);
 
   return dispatch({
     type: 'COPY_SELECTION',
     view,
-    data: selectedNotes,
+    data: selection,
   });
 };
 export const pasteSelection = view => (dispatch, getState) => {
   const state = getState();
 
-  const data =
-    view === NOTES_VIEW
-      ? getCopiedNotesAndObstacles(state)
-      : getCopiedEvents(state);
-
+  const data = getCopiedData(state);
   const cursorPositionInBeats = getCursorPositionInBeats(state);
 
   return dispatch({
