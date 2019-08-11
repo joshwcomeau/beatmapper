@@ -7,10 +7,10 @@
  * indexeddb as a text file, and I need to know which difficulty we're editing.
  */
 import { combineReducers } from 'redux';
-import { createSelector } from 'reselect';
 
-import notesView from './notes-view.reducer';
-import eventsView from './events-view.reducer';
+import { EVENTS_VIEW, NOTES_VIEW } from '../../constants';
+import notesView, { getSelectedNotesAndObstacles } from './notes-view.reducer';
+import eventsView, { getSelectedEvents } from './events-view.reducer';
 
 const initialState = {
   difficulty: null,
@@ -39,35 +39,13 @@ export default combineReducers({ difficulty, notesView, eventsView });
 //
 //
 // Selectors
-// TODO: Move most of these to their respective child reducer file
 //
 export const getDifficulty = state => state.editorEntities.difficulty;
-export const getNotes = state => state.editorEntities.notesView.present.notes;
-export const getEvents = state => [];
-export const getObstacles = state =>
-  state.editorEntities.notesView.present.obstacles;
 
-export const getSelectedNotes = state => {
-  return getNotes(state).filter(note => note.selected);
-};
-export const getSelectedObstacles = state => {
-  return getObstacles(state).filter(obstacle => obstacle.selected);
-};
-
-export const getNumOfBlocks = createSelector(
-  getNotes,
-  notes => {
-    return notes.filter(note => note._type === 0 || note._type === 1).length;
+export const getSelection = (state, view) => {
+  if (view === EVENTS_VIEW) {
+    return getSelectedEvents(state);
+  } else if (view === NOTES_VIEW) {
+    return getSelectedNotesAndObstacles(state);
   }
-);
-export const getNumOfMines = createSelector(
-  getNotes,
-  notes => {
-    return notes.filter(note => note._type === 3).length;
-  }
-);
-export const getNumOfObstacles = state => getObstacles(state).length;
-
-export const getNumOfSelectedNotes = state => {
-  return getSelectedNotes(state).length + getSelectedObstacles(state).length;
 };

@@ -5,7 +5,7 @@ import {
   getNotes,
   getObstacles,
   getSelectedNotes,
-} from './reducers/editor-entities.reducer';
+} from './reducers/editor-entities.reducer/notes-view.reducer';
 import { getBeatsPerZoomLevel } from './reducers/editor.reducer';
 import { getSelectedSong } from './reducers/songs.reducer';
 import { getCopiedNotes } from './reducers/clipboard.reducer';

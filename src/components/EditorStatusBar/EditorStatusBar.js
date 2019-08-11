@@ -22,7 +22,7 @@ import {
   getNumOfBlocks,
   getNumOfMines,
   getNumOfObstacles,
-} from '../../reducers/editor-entities.reducer';
+} from '../../reducers/editor-entities.reducer/notes-view.reducer';
 import {
   getIsLoading,
   getPlaybackRate,

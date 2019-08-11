@@ -13,7 +13,7 @@ import {
   toggleNoteColor,
 } from '../actions';
 import { findNoteByProperties } from '../helpers/notes.helpers';
-import { getNotes } from '../reducers/editor-entities.reducer';
+import { getNotes } from '../reducers/editor-entities.reducer/notes-view.reducer';
 
 export default function createSelectionMiddleware() {
   return store => next => action => {

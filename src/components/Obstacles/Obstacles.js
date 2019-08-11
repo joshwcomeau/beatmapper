@@ -6,7 +6,7 @@ import {
   getCursorPositionInBeats,
   getSnapTo,
 } from '../../reducers/navigation.reducer';
-import { getObstacles } from '../../reducers/editor-entities.reducer';
+import { getObstacles } from '../../reducers/editor-entities.reducer/notes-view.reducer';
 
 import ObstacleBox from '../ObstacleBox';
 

@@ -6,7 +6,7 @@ const initialState = {
   isLoading: false,
   isPlaying: false,
   duration: null,
-  snapTo: 1,
+  snapTo: 0.5,
   cursorPosition: 0,
   animateBlockMotion: true,
   playbackRate: 1,

@@ -5,7 +5,7 @@ import { maximize2 } from 'react-icons-kit/feather/maximize2';
 
 import * as actions from '../../actions';
 import { COLORS, UNIT, NOTES_VIEW } from '../../constants';
-import { getNumOfSelectedNotes } from '../../reducers/editor-entities.reducer';
+import { getNumOfSelectedNotes } from '../../reducers/editor-entities.reducer/notes-view.reducer';
 
 import MiniButton from '../MiniButton';
 import Heading from '../Heading';

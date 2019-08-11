@@ -9,7 +9,7 @@ import {
 } from '../../constants';
 import * as actions from '../../actions';
 import { getCursorPositionInBeats } from '../../reducers/navigation.reducer';
-import { getNotes } from '../../reducers/editor-entities.reducer';
+import { getNotes } from '../../reducers/editor-entities.reducer/notes-view.reducer';
 
 import Block from '../Block';
 import Mine from '../Mine';

@@ -29,7 +29,7 @@ import {
 import Sfx from '../services/sfx.service';
 import { getSongById, getSelectedSong } from '../reducers/songs.reducer';
 import { getBeatsPerZoomLevel } from '../reducers/editor.reducer';
-import { getNotes } from '../reducers/editor-entities.reducer';
+import { getNotes } from '../reducers/editor-entities.reducer/notes-view.reducer';
 import {
   getVolume,
   getPlaybackRate,
@@ -275,8 +275,14 @@ export default function createSongMiddleware() {
           }
         }
 
-        const newCursorPosition =
+        let newCursorPosition =
           convertBeatsToMilliseconds(newStartBeat, song.bpm) + song.offset;
+
+        newCursorPosition = clamp(
+          newCursorPosition,
+          0,
+          state.navigation.duration
+        );
 
         next(adjustCursorPosition(newCursorPosition));
         audioElem.currentTime = newCursorPosition / 1000;

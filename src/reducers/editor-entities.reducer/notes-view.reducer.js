@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { createSelector } from 'reselect';
 import undoable, { includeAction, groupByActionTypes } from 'redux-undo';
 import produce from 'immer';
 
@@ -316,5 +317,52 @@ const notesView = undoable(combineReducers({ notes, obstacles }), {
   ]),
   groupBy: groupByActionTypes(['SET_BLOCK_BY_DRAGGING', 'BULK_DELETE_NOTE']),
 });
+
+//
+//
+// Selectors
+//
+
+export const getNotes = state => state.editorEntities.notesView.present.notes;
+export const getEvents = state => [];
+export const getObstacles = state =>
+  state.editorEntities.notesView.present.obstacles;
+
+export const getSelectedNotes = createSelector(
+  getNotes,
+  notes => {
+    return notes.filter(note => note.selected);
+  }
+);
+export const getSelectedObstacles = createSelector(
+  getObstacles,
+  obstacles => {
+    return obstacles.filter(obstacle => obstacle.selected);
+  }
+);
+
+export const getSelectedNotesAndObstacles = createSelector(
+  getSelectedNotes,
+  getSelectedObstacles,
+  (notes, obstacles) => [...notes, ...obstacles]
+);
+
+export const getNumOfBlocks = createSelector(
+  getNotes,
+  notes => {
+    return notes.filter(note => note._type === 0 || note._type === 1).length;
+  }
+);
+export const getNumOfMines = createSelector(
+  getNotes,
+  notes => {
+    return notes.filter(note => note._type === 3).length;
+  }
+);
+export const getNumOfObstacles = state => getObstacles(state).length;
+
+export const getNumOfSelectedNotes = state => {
+  return getSelectedNotes(state).length + getSelectedObstacles(state).length;
+};
 
 export default notesView;

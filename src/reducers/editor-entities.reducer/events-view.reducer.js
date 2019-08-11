@@ -136,4 +136,10 @@ export const getAllEventsAsArray = state => {
   return flatten(Object.values(tracks));
 };
 
+export const getSelectedEvents = state => {
+  const allEvents = getAllEventsAsArray(state);
+
+  return allEvents.filter(event => event.selected);
+};
+
 export default events;
