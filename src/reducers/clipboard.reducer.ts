@@ -10,6 +10,18 @@ const initialState = {
   data: null,
 };
 
+const getBeatNumForItem = (item: any) => {
+  if (typeof item._time === 'number') {
+    return item._time;
+  } else if (typeof item.beatStart === 'number') {
+    return item.beatStart;
+  } else if (typeof item.beatNum === 'number') {
+    return item.beatNum;
+  } else {
+    throw new Error('Could not determine time for event');
+  }
+};
+
 export default function clipboard(state: State = initialState, action: Action) {
   switch (action.type) {
     case 'CUT_SELECTION':
@@ -20,10 +32,10 @@ export default function clipboard(state: State = initialState, action: Action) {
       // beat. This is made slightly tricky by the fact that notes have a
       // different data format from obstacles and events :/
       const sortedData = [...data].sort((a: any, b: any) => {
-        const aBeatStart = typeof a._time === 'number' ? a._time : a.beatStart;
-        const bBeatStart = typeof b._time === 'number' ? b._time : b.beatStart;
+        const aBeatNum = getBeatNumForItem(a);
+        const bBeatNum = getBeatNumForItem(b);
 
-        return aBeatStart - bBeatStart;
+        return aBeatNum - bBeatNum;
       });
 
       return {

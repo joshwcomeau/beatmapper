@@ -141,7 +141,7 @@ const notes = (state = initialState.notes, action) => {
     }
 
     case 'PASTE_SELECTION': {
-      const { cursorPositionInBeats, view, data } = action;
+      const { pasteAtBeat, view, data } = action;
 
       if (view !== NOTES_VIEW || data.length === 0) {
         return state;
@@ -172,7 +172,7 @@ const notes = (state = initialState.notes, action) => {
       const earliestBeat = isBlockOrMine(data[0])
         ? data[0]._time
         : data[0].beatStart;
-      const deltaBetweenPeriods = cursorPositionInBeats - earliestBeat;
+      const deltaBetweenPeriods = pasteAtBeat - earliestBeat;
 
       const notes = data.filter(isBlockOrMine);
 
@@ -297,7 +297,7 @@ const obstacles = (state = initialState.obstacles, action) => {
       return state.filter(obstacle => !obstacle.selected);
     }
     case 'PASTE_SELECTION': {
-      const { cursorPositionInBeats, view, data } = action;
+      const { pasteAtBeat, view, data } = action;
 
       if (view !== NOTES_VIEW || data.length === 0) {
         return state;
@@ -310,7 +310,7 @@ const obstacles = (state = initialState.obstacles, action) => {
       const earliestBeat = isObstacle(data[0])
         ? data[0].beatStart
         : data[0]._time;
-      const deltaBetweenPeriods = cursorPositionInBeats - earliestBeat;
+      const deltaBetweenPeriods = pasteAtBeat - earliestBeat;
 
       const notes = data.filter(isObstacle);
 

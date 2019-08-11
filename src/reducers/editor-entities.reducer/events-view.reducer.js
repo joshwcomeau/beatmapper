@@ -123,12 +123,24 @@ const events = (state = initialState, action) => {
     }
 
     case 'PASTE_SELECTION': {
-      if (action.view !== EVENTS_VIEW) {
+      const { view, data, pasteAtBeat } = action;
+
+      if (view !== EVENTS_VIEW) {
         return state;
       }
 
+      const earliestEventAt = data[0].beatNum;
+      const deltaBetweenPeriods = pasteAtBeat - earliestEventAt;
+
+      const timeShiftedData = data.map(event => ({
+        ...event,
+        selected: false,
+        beatNum: event.beatNum + deltaBetweenPeriods,
+      }));
+
       return produce(state, draftState => {
-        action.data.forEach(event => {
+        timeShiftedData.forEach(event => {
+          // Shift the event by the delta between
           draftState.tracks[event.trackId].push(event);
         });
       });

@@ -10,6 +10,7 @@ import {
 import { getSelectedSong } from './reducers/songs.reducer';
 import { getCopiedData } from './reducers/clipboard.reducer';
 import { getCursorPositionInBeats } from './reducers/navigation.reducer';
+import { getSelectedEventBeat } from './reducers/editor.reducer';
 
 export const loadDemoSong = () => ({
   type: 'LOAD_DEMO_SONG',
@@ -153,13 +154,38 @@ export const pasteSelection = view => (dispatch, getState) => {
   const state = getState();
 
   const data = getCopiedData(state);
-  const cursorPositionInBeats = getCursorPositionInBeats(state);
+
+  // If there's nothing copied, do nothing
+  if (!data) {
+    return;
+  }
+
+  // When pasting in notes view, we want to paste at the cursor position, where
+  // the song is currently playing. For the events view, we want to paste it
+  // where the mouse cursor is, the selected beat.
+  const pasteAtBeat =
+    view === NOTES_VIEW
+      ? getCursorPositionInBeats(state)
+      : getSelectedEventBeat(state);
+
+  // Every entity that has an ID (obstacles, events) needs a unique ID, we
+  // shouldn't blindly copy it over.
+  const uniqueData = data.map(item => {
+    if (typeof item.id === 'undefined') {
+      return item;
+    }
+
+    return {
+      ...item,
+      id: uuid(),
+    };
+  });
 
   return dispatch({
     type: 'PASTE_SELECTION',
     view,
-    data,
-    cursorPositionInBeats,
+    data: uniqueData,
+    pasteAtBeat,
   });
 };
 
