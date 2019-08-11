@@ -158,6 +158,48 @@ const events = (state = initialState, action) => {
       });
     }
 
+    case 'SELECT_ALL': {
+      const { view, metadata } = action;
+
+      if (view !== EVENTS_VIEW) {
+        return state;
+      }
+
+      return produce(state, draftState => {
+        const trackIds = Object.keys(draftState.tracks);
+
+        trackIds.forEach(trackId => {
+          // Set all events within our frame as selected, and deselect any
+          // selected events outside of it
+          draftState.tracks[trackId].forEach(event => {
+            const shouldBeSelected =
+              event.beatNum >= metadata.startBeat &&
+              event.beatNum <= metadata.endBeat;
+
+            event.selected = shouldBeSelected;
+          });
+        });
+      });
+    }
+
+    case 'DESELECT_ALL': {
+      const { view } = action;
+
+      if (view !== EVENTS_VIEW) {
+        return state;
+      }
+
+      return produce(state, draftState => {
+        const trackIds = Object.keys(draftState.tracks);
+
+        trackIds.forEach(trackId => {
+          draftState.tracks[trackId].forEach(event => {
+            event.selected = false;
+          });
+        });
+      });
+    }
+
     default:
       return state;
   }
@@ -169,9 +211,18 @@ const events = (state = initialState, action) => {
 //
 const getTracks = state => state.editorEntities.eventsView.tracks;
 
-export const getEventsForTrack = (state, trackId) => {
+export const getEventsForTrack = (
+  state,
+  trackId,
+  startBeat,
+  numOfBeatsToShow
+) => {
   const tracks = getTracks(state);
-  return tracks[trackId];
+  const endBeat = startBeat + numOfBeatsToShow;
+
+  return tracks[trackId].filter(
+    event => event.beatNum >= startBeat && event.beatNum <= endBeat
+  );
 };
 
 export const getAllEventsAsArray = state => {

@@ -7,10 +7,14 @@ import {
   getObstacles,
   getSelectedNotes,
 } from './reducers/editor-entities.reducer/notes-view.reducer';
+import { getAllEventsAsArray } from './reducers/editor-entities.reducer/events-view.reducer';
 import { getSelectedSong } from './reducers/songs.reducer';
 import { getCopiedData } from './reducers/clipboard.reducer';
 import { getCursorPositionInBeats } from './reducers/navigation.reducer';
-import { getSelectedEventBeat } from './reducers/editor.reducer';
+import {
+  getSelectedEventBeat,
+  getStartAndEndBeat,
+} from './reducers/editor.reducer';
 
 export const loadDemoSong = () => ({
   type: 'LOAD_DEMO_SONG',
@@ -328,10 +332,24 @@ export const deselectAll = view => ({
   type: 'DESELECT_ALL',
   view,
 });
-export const selectAll = view => ({
-  type: 'SELECT_ALL',
-  view,
-});
+export const selectAll = view => (dispatch, getState) => {
+  const state = getState();
+
+  // For the events view, we don't actually want to select EVERY note. We
+  // only want to select what is visible in the current frame.
+  let metadata = null;
+
+  if (view === EVENTS_VIEW) {
+    const { startBeat, endBeat } = getStartAndEndBeat(state);
+    metadata = { startBeat, endBeat };
+  }
+
+  dispatch({
+    type: 'SELECT_ALL',
+    view,
+    metadata,
+  });
+};
 export const toggleSelectAll = view => (dispatch, getState) => {
   const state = getState();
 
@@ -346,7 +364,9 @@ export const toggleSelectAll = view => (dispatch, getState) => {
 
     anythingSelected = anyNotesSelected || anyObstaclesSelected;
   } else if (view === EVENTS_VIEW) {
-    // TODO
+    const events = getAllEventsAsArray(state);
+
+    anythingSelected = events.some(e => e.selected);
   }
 
   if (anythingSelected) {

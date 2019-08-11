@@ -151,7 +151,12 @@ const Wrapper = styled.div`
 `;
 
 const mapStateToProps = (state, ownProps) => {
-  const events = getEventsForTrack(state, ownProps.trackId);
+  const events = getEventsForTrack(
+    state,
+    ownProps.trackId,
+    ownProps.startBeat,
+    ownProps.numOfBeatsToShow
+  );
   const selectionMode = getEventSelectionMode(state);
   const selectionModeTrackId = getEventSelectionModeTrackId(state);
   const selectedTool = getSelectedEventTool(state);

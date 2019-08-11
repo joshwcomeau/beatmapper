@@ -231,12 +231,18 @@ const notes = (state = initialState.notes, action) => {
     }
 
     case 'SELECT_ALL': {
+      if (action.view !== NOTES_VIEW) {
+        return state;
+      }
       return state.map(note => ({
         ...note,
         selected: true,
       }));
     }
     case 'DESELECT_ALL': {
+      if (action.view !== NOTES_VIEW) {
+        return state;
+      }
       return state.map(note => ({
         ...note,
         selected: false,
