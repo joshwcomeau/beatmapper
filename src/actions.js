@@ -363,6 +363,11 @@ export const finishManagingEventSelection = () => ({
   type: 'FINISH_MANAGING_EVENT_SELECTION',
 });
 
+export const moveMouseAcrossEventsGrid = selectedBeat => ({
+  type: 'MOVE_MOUSE_ACROSS_EVENTS_GRID',
+  selectedBeat,
+});
+
 export const downloadMapFiles = ({ version }) => ({
   type: 'DOWNLOAD_MAP_FILES',
   version,

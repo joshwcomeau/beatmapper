@@ -10,6 +10,7 @@ import {
   getZoomLevel,
   getStartAndEndBeat,
   getEventSelectionMode,
+  getSelectedEventBeat,
 } from '../../reducers/editor.reducer';
 import useMousePositionOverElement from '../../hooks/use-mouse-position-over-element.hook';
 
@@ -68,14 +69,14 @@ const EventsGrid = ({
   events,
   startBeat,
   endBeat,
+  selectedBeat,
   numOfBeatsToShow,
   isLoading,
   snapTo,
   selectionMode,
   finishManagingEventSelection,
+  moveMouseAcrossEventsGrid,
 }) => {
-  const [mouseCursorPosition, setMouseCursorPosition] = React.useState(null);
-
   const prefixWidth = 170;
   const innerGridWidth = contentWidth - prefixWidth;
   // TODO: Dynamic height?
@@ -88,17 +89,19 @@ const EventsGrid = ({
   const tracksRef = useMousePositionOverElement((x, y) => {
     const positionInBeats = normalize(x, 0, innerGridWidth, 0, beatNums.length);
     const roundedPositionInBeats = roundToNearest(positionInBeats, snapTo);
+    const hoveringOverBeatNum = roundedPositionInBeats + startBeat;
 
-    const roundedPositionInPx = normalize(
-      roundedPositionInBeats,
-      0,
-      beatNums.length,
-      0,
-      innerGridWidth
-    );
-
-    setMouseCursorPosition(roundedPositionInPx);
+    if (hoveringOverBeatNum !== selectedBeat)
+      moveMouseAcrossEventsGrid(hoveringOverBeatNum);
   });
+
+  const mousePositionInPx = normalize(
+    selectedBeat - startBeat,
+    0,
+    beatNums.length,
+    0,
+    innerGridWidth
+  );
 
   // I can click on a block to start selecting it.
   // If I hold the mouse down, I can drag to select (or deselect) many notes
@@ -166,16 +169,7 @@ const EventsGrid = ({
                 height={trackHeight}
                 startBeat={startBeat}
                 numOfBeatsToShow={numOfBeatsToShow}
-                cursorAtBeat={
-                  startBeat +
-                  normalize(
-                    mouseCursorPosition,
-                    0,
-                    innerGridWidth,
-                    0,
-                    beatNums.length
-                  )
-                }
+                cursorAtBeat={selectedBeat}
               />
             ))}
           </Tracks>
@@ -187,8 +181,8 @@ const EventsGrid = ({
             zIndex={LAYERS.songPositionIndicator}
           />
 
-          {typeof mouseCursorPosition === 'number' && (
-            <MouseCursor style={{ left: mouseCursorPosition }} />
+          {typeof mousePositionInPx === 'number' && (
+            <MouseCursor style={{ left: mousePositionInPx }} />
           )}
         </MainGridContent>
       </Grid>
@@ -291,10 +285,12 @@ const mapStateToProps = (state, ownProps) => {
   const { startBeat, endBeat } = getStartAndEndBeat(state);
   const numOfBeatsToShow = endBeat - startBeat;
   const selectionMode = getEventSelectionMode(state);
+  const selectedBeat = getSelectedEventBeat(state);
 
   return {
     startBeat,
     endBeat,
+    selectedBeat,
     zoomLevel: getZoomLevel(state),
     numOfBeatsToShow,
     selectionMode,
@@ -305,6 +301,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = {
   finishManagingEventSelection: actions.finishManagingEventSelection,
+  moveMouseAcrossEventsGrid: actions.moveMouseAcrossEventsGrid,
 };
 
 export default connect(

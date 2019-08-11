@@ -34,6 +34,7 @@ const initialState = {
     zoomLevel: 2,
     selectionMode: null, // null | 'select' | 'deselect' | 'delete' | 'place'
     selectionModeTrackId: null,
+    selectedBeat: null,
     selectedTool: EVENT_TOOLS[0],
     selectedColor: EVENT_COLORS[0],
     selectedLaserSpeed: 0,
@@ -108,6 +109,13 @@ function notes(state = initialState.notes, action) {
 
 function events(state = initialState.events, action) {
   switch (action.type) {
+    case 'MOVE_MOUSE_ACROSS_EVENTS_GRID': {
+      return {
+        ...state,
+        selectedBeat: action.selectedBeat,
+      };
+    }
+
     case 'SELECT_EVENT_COLOR': {
       const { color } = action;
 
@@ -219,5 +227,7 @@ export const getStartAndEndBeat = state => {
 };
 
 export const getRelevantEvents = state => {};
+
+export const getSelectedEventBeat = state => state.editor.events.selectedBeat;
 
 export default combineReducers({ notes, events });
