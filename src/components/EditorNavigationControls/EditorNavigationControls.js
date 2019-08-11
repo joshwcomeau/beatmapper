@@ -65,7 +65,10 @@ const EditorNavigationControls = ({
             disabled={isLoadingSong}
             color={COLORS.white}
             icon={rewind}
-            onClick={() => seekBackwards(view)}
+            onClick={ev => {
+              ev.currentTarget.blur();
+              seekBackwards(view);
+            }}
           />
           <IconButton
             disabled={isLoadingSong}
@@ -77,7 +80,10 @@ const EditorNavigationControls = ({
             disabled={isLoadingSong}
             color={COLORS.white}
             icon={fastForward}
-            onClick={() => seekForwards(view)}
+            onClick={ev => {
+              ev.currentTarget.blur();
+              seekForwards(view);
+            }}
           />
           <IconButton
             disabled={isLoadingSong}
