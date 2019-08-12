@@ -47,6 +47,10 @@ const events = (state = initialState, action) => {
           return acc;
         }
 
+        if (event.trackId === 'laserSpeedLeft') {
+          return acc;
+        }
+
         acc[event.trackId].push(event);
         return acc;
       }, initialState.tracks);
@@ -80,13 +84,28 @@ const events = (state = initialState, action) => {
         newEvent.laserSpeed = eventLaserSpeed;
       }
 
-      return {
-        ...state,
-        tracks: {
-          ...state.tracks,
-          [trackId]: [...state.tracks[trackId], newEvent],
-        },
-      };
+      // Find the spot for this event. All events should be added in
+      // chronological order.
+      let indexToInsertAt = 0;
+      const relevantEvents = state.tracks[trackId];
+      for (let i = relevantEvents.length - 1; i >= 0; i--) {
+        const event = relevantEvents[i];
+
+        // If there is already an event at this beat, we don't want to do
+        // anything!
+        if (event.beatNum === beatNum) {
+          return state;
+        }
+
+        // If this event is before our new one, we can insert it right after
+        if (event.beatNum < beatNum) {
+          indexToInsertAt = i + 1;
+        }
+      }
+
+      return produce(state, draftState => {
+        state.tracks[trackId].splice(indexToInsertAt, 0, newEvent);
+      });
     }
 
     case 'DELETE_EVENT':

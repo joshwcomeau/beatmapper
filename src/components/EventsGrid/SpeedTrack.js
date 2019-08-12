@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import * as actions from '../../actions';
 import { COLORS } from '../../constants';
-import { range } from '../../utils';
+import { range, normalize } from '../../utils';
 import {
   getEventSelectionMode,
   getEventSelectionModeTrackId,
@@ -16,6 +16,11 @@ import {
 import useMousePositionOverElement from '../../hooks/use-mouse-position-over-element.hook';
 
 const NUM_OF_SPEEDS = 8;
+
+const getYForSpeed = (height, speed) => {
+  const divisionHeight = height / 8;
+  return height - speed * divisionHeight;
+};
 
 const SpeedTrack = ({
   trackId,
@@ -62,41 +67,49 @@ const SpeedTrack = ({
   let plottablePoints = [
     {
       x: 0,
-      y: 7 - startSpeed,
+      y: getYForSpeed(height, startSpeed),
     },
   ];
 
-  console.log(events);
-
   events.forEach((event, index) => {
-    const previousLaserSpeed = plottablePoints[plottablePoints.length - 1].y;
+    const previousY = plottablePoints[plottablePoints.length - 1].y;
+
+    const getXPosition = normalize(
+      event.beatNum,
+      startBeat,
+      startBeat + numOfBeatsToShow,
+      0,
+      width
+    );
 
     plottablePoints.push(
       {
-        x: event.beatNum,
-        y: previousLaserSpeed,
+        x: getXPosition,
+        y: previousY,
       },
       {
-        x: event.beatNum,
-        y: 7 - event.laserSpeed,
+        x: getXPosition,
+        y: getYForSpeed(height, event.laserSpeed),
       }
     );
   });
 
   plottablePoints.push(
     {
-      x: numOfBeatsToShow,
-      y: 7 - endSpeed,
+      x: width,
+      y: getYForSpeed(height, endSpeed),
     },
     {
-      x: numOfBeatsToShow,
-      y: 7,
+      x: width,
+      y: height,
     },
     {
       x: 0,
-      y: 7 - endSpeed,
+      y: height,
     }
   );
+
+  const divisionHeight = height / 8;
 
   return (
     <Wrapper
@@ -110,20 +123,15 @@ const SpeedTrack = ({
       }}
       onContextMenu={ev => ev.preventDefault()}
     >
-      <Background
-        width={width}
-        height={height}
-        viewBox={`0 0 ${numOfBeatsToShow} 8`}
-        preserveAspectRatio="none"
-      >
-        {range(NUM_OF_SPEEDS).map(i => (
+      <Background width={width} height={height}>
+        {range(NUM_OF_SPEEDS + 1).map(i => (
           <line
             key={i}
             x1={0}
-            y1={7 - i}
-            x2={numOfBeatsToShow}
-            y2={7 - i}
-            strokeWidth={8 / height}
+            y1={getYForSpeed(height, i)}
+            x2={width}
+            y2={getYForSpeed(height, i)}
+            strokeWidth={1}
             stroke={COLORS.blueGray[700]}
             style={{ opacity: 0.6 }}
           />
