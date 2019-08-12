@@ -37,7 +37,6 @@ const initialState = {
     selectedBeat: null,
     selectedTool: EVENT_TOOLS[0],
     selectedColor: EVENT_COLORS[0],
-    selectedLaserSpeed: 0,
   },
 };
 
@@ -208,8 +207,6 @@ export const getEventSelectionModeTrackId = state =>
   state.editor.events.selectionModeTrackId;
 export const getSelectedEventTool = state => state.editor.events.selectedTool;
 export const getSelectedEventColor = state => state.editor.events.selectedColor;
-export const getSelectedLaserSpeed = state =>
-  state.editor.events.selectedLaserSpeed;
 export const getZoomLevel = state => state.editor.events.zoomLevel;
 
 export const getBeatsPerZoomLevel = state => {

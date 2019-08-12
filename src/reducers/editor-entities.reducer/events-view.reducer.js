@@ -236,4 +236,14 @@ export const getSelectedEvents = state => {
   return allEvents.filter(event => event.selected);
 };
 
+export const getTrackSpeedAtBeat = (state, trackId, beatNum) => {
+  const events = getEventsForTrack(state, trackId, 0, beatNum).reverse();
+
+  if (!events.length) {
+    return 0;
+  }
+
+  return events[0].laserSpeed;
+};
+
 export default events;

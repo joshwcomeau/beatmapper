@@ -9,16 +9,14 @@ import {
   getEventSelectionModeTrackId,
   getSelectedEventTool,
   getSelectedEventColor,
-  getSelectedLaserSpeed,
 } from '../../reducers/editor.reducer';
 import { getEventsForTrack } from '../../reducers/editor-entities.reducer/events-view.reducer';
 
 import EventBlock from './EventBlock';
 
-const EventsGridTrack = ({
+const BlockTrack = ({
   trackId,
   height,
-  type,
   startBeat,
   numOfBeatsToShow,
   cursorAtBeat,
@@ -27,7 +25,6 @@ const EventsGridTrack = ({
   selectionModeTrackId,
   selectedTool,
   selectedColor,
-  selectedLaserSpeed,
   placeEvent,
   deleteEvent,
   bulkDeleteEvent,
@@ -47,7 +44,7 @@ const EventsGridTrack = ({
       eventColor = undefined;
     }
 
-    return [trackId, cursorAtBeat, eventType, eventColor, selectedLaserSpeed];
+    return [trackId, cursorAtBeat, eventType, eventColor];
   };
   const handleClickTrack = () => {
     if (selectionMode) {
@@ -161,7 +158,6 @@ const mapStateToProps = (state, ownProps) => {
   const selectionModeTrackId = getEventSelectionModeTrackId(state);
   const selectedTool = getSelectedEventTool(state);
   const selectedColor = getSelectedEventColor(state);
-  const selectedLaserSpeed = getSelectedLaserSpeed(state);
 
   return {
     events,
@@ -169,7 +165,6 @@ const mapStateToProps = (state, ownProps) => {
     selectionModeTrackId,
     selectedTool,
     selectedColor,
-    selectedLaserSpeed,
   };
 };
 
@@ -187,4 +182,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(EventsGridTrack);
+)(BlockTrack);

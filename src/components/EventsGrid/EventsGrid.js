@@ -16,7 +16,8 @@ import useMousePositionOverElement from '../../hooks/use-mouse-position-over-ele
 
 import BackgroundLines from './BackgroundLines';
 import CursorPositionIndicator from './CursorPositionIndicator';
-import Track from './Track';
+import BlockTrack from './BlockTrack';
+import SpeedTrack from './SpeedTrack';
 
 const LAYERS = {
   background: 0,
@@ -27,39 +28,50 @@ const LAYERS = {
 
 const TRACKS = [
   {
+    id: 'laserSpeedLeft',
+    label: 'Left laser speed',
+    type: 'speed',
+  },
+  {
     id: 'laserLeft',
     label: 'Left laser',
-    type: 'side-laser',
+    type: 'blocks',
   },
+
   {
     id: 'laserRight',
     label: 'Right laser',
-    type: 'side-laser',
+    type: 'blocks',
+  },
+  {
+    id: 'laserSpeedRight',
+    label: 'Right laser speed',
+    type: 'speed',
   },
   {
     id: 'laserBack',
     label: 'Back laser',
-    type: 'center-laser',
+    type: 'blocks',
   },
   {
     id: 'primaryLight',
     label: 'Primary light',
-    type: 'center-laser',
+    type: 'blocks',
   },
   {
     id: 'trackNeons',
     label: 'Track neons',
-    type: 'track-neons',
+    type: 'blocks',
   },
   {
     id: 'largeRing',
     label: 'Large ring',
-    type: 'ring',
+    type: 'blocks',
   },
   {
     id: 'smallRing',
     label: 'Small ring',
-    type: 'ring',
+    type: 'blocks',
   },
 ];
 
@@ -80,9 +92,10 @@ const EventsGrid = ({
   const prefixWidth = 170;
   const innerGridWidth = contentWidth - prefixWidth;
   // TODO: Dynamic height?
-  const trackHeight = 40;
+  const blockTrackHeight = 48;
+  const speedTrackHeight = 48;
   const headerHeight = 32;
-  const innerGridHeight = trackHeight * TRACKS.length;
+  const innerGridHeight = blockTrackHeight * 7 + speedTrackHeight * 2;
 
   const beatNums = range(Math.floor(startBeat), Math.ceil(endBeat));
 
@@ -135,8 +148,13 @@ const EventsGrid = ({
       <PrefixColumn style={{ width: prefixWidth }}>
         <Header style={{ height: headerHeight }} />
 
-        {TRACKS.map(({ id, label }) => (
-          <TrackPrefix key={id} style={{ height: trackHeight }}>
+        {TRACKS.map(({ id, type, label }) => (
+          <TrackPrefix
+            key={id}
+            style={{
+              height: type === 'blocks' ? blockTrackHeight : speedTrackHeight,
+            }}
+          >
             {label}
           </TrackPrefix>
         ))}
@@ -162,16 +180,24 @@ const EventsGrid = ({
           </BackgroundLinesWrapper>
 
           <Tracks ref={tracksRef}>
-            {TRACKS.map(({ id }) => (
-              <Track
-                key={id}
-                trackId={id}
-                height={trackHeight}
-                startBeat={startBeat}
-                numOfBeatsToShow={numOfBeatsToShow}
-                cursorAtBeat={selectedBeat}
-              />
-            ))}
+            {TRACKS.map(({ id, type }) => {
+              const TrackComponent =
+                type === 'blocks' ? BlockTrack : SpeedTrack;
+
+              return (
+                <TrackComponent
+                  key={id}
+                  trackId={id}
+                  width={innerGridWidth}
+                  height={
+                    type === 'blocks' ? blockTrackHeight : speedTrackHeight
+                  }
+                  startBeat={startBeat}
+                  numOfBeatsToShow={numOfBeatsToShow}
+                  cursorAtBeat={selectedBeat}
+                />
+              );
+            })}
           </Tracks>
 
           <CursorPositionIndicator
