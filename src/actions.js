@@ -560,6 +560,15 @@ export const placeEvent = (
     eventLaserSpeed,
   };
 };
+export const changeLaserSpeed = (trackId, beatNum, speed) => {
+  return {
+    type: 'CHANGE_LASER_SPEED',
+    id: uuid(),
+    trackId,
+    beatNum,
+    speed,
+  };
+};
 
 export const deleteEvent = (id, trackId) => ({
   type: 'DELETE_EVENT',

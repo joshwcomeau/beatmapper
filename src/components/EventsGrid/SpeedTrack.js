@@ -33,7 +33,7 @@ const SpeedTrack = ({
   startSpeed,
   endSpeed,
   selectionMode,
-  placeEvent,
+  changeLaserSpeed,
   deleteEvent,
   bulkDeleteEvent,
   startManagingEventSelection,
@@ -54,13 +54,7 @@ const SpeedTrack = ({
   const handleClick = ev => {
     // TODO: use pointerdown so that I can let the user tweak before releasing
     // the mouse and confirming the placement.
-    placeEvent(
-      trackId,
-      cursorAtBeat,
-      'change-speed',
-      null,
-      cursorAtSpeed.current
-    );
+    changeLaserSpeed(trackId, cursorAtBeat, cursorAtSpeed.current);
   };
 
   let plottablePoints = [
@@ -73,7 +67,7 @@ const SpeedTrack = ({
   events.forEach((event, index) => {
     const previousY = plottablePoints[plottablePoints.length - 1].y;
 
-    const getXPosition = normalize(
+    const x = normalize(
       event.beatNum,
       startBeat,
       startBeat + numOfBeatsToShow,
@@ -83,11 +77,11 @@ const SpeedTrack = ({
 
     plottablePoints.push(
       {
-        x: getXPosition,
+        x: x,
         y: previousY,
       },
       {
-        x: getXPosition,
+        x: x,
         y: getYForSpeed(height, event.laserSpeed),
       }
     );
@@ -121,6 +115,7 @@ const SpeedTrack = ({
       onContextMenu={ev => ev.preventDefault()}
     >
       <Svg width={width} height={height}>
+        {/* Background 8 vertical lines, indicating the "levels" */}
         <Background>
           {range(NUM_OF_SPEEDS + 1).map(i => (
             <line
@@ -136,6 +131,10 @@ const SpeedTrack = ({
           ))}
         </Background>
 
+        {/*
+          The fill for our graph area, showing easily where the current speed
+          is at.
+        */}
         <polyline
           points={plottablePoints.reduce((acc, point) => {
             return `${acc} ${point.x},${point.y}`;
@@ -145,6 +144,39 @@ const SpeedTrack = ({
           fill={COLORS.green[500]}
           opacity={0.5}
         />
+
+        {/*
+          We also want to add little circles on every event. This'll allow the
+          user to drag and change the position of events, as well as delete
+          events they no longer want
+        */}
+        {events.map(event => {
+          const x = normalize(
+            event.beatNum,
+            startBeat,
+            startBeat + numOfBeatsToShow,
+            0,
+            width
+          );
+          const y = getYForSpeed(height, event.laserSpeed);
+
+          return (
+            <circle
+              key={event.id}
+              cx={x}
+              cy={y}
+              r={4}
+              fill={COLORS.green[500]}
+              style={{ cursor: 'pointer' }}
+              onPointerDown={ev => {
+                console.log('pd', ev.button);
+                if (ev.button === 2) {
+                  deleteEvent(event.id, trackId);
+                }
+              }}
+            />
+          );
+        })}
       </Svg>
     </Wrapper>
   );
@@ -162,7 +194,6 @@ const Wrapper = styled.div`
 const Svg = styled.svg`
   position: relative;
   display: block;
-  z-index: -10;
 `;
 
 const Background = styled.g``;
@@ -197,7 +228,7 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = {
-  placeEvent: actions.placeEvent,
+  changeLaserSpeed: actions.changeLaserSpeed,
   deleteEvent: actions.deleteEvent,
   bulkDeleteEvent: actions.bulkDeleteEvent,
   startManagingEventSelection: actions.startManagingEventSelection,

@@ -58,15 +58,7 @@ const events = (state = initialState, action) => {
     }
 
     case 'PLACE_EVENT': {
-      console.log('PLACE_EVENT', action);
-      const {
-        id,
-        trackId,
-        beatNum,
-        eventType,
-        eventColor,
-        eventLaserSpeed,
-      } = action;
+      const { id, trackId, beatNum, eventType, eventColor } = action;
 
       const newEvent = {
         id,
@@ -77,45 +69,43 @@ const events = (state = initialState, action) => {
 
       if (LIGHTING_TRACKS.includes(trackId)) {
         newEvent.color = eventColor;
-      } else if (LASER_SPEED_TRACKS.includes(trackId)) {
-        newEvent.laserSpeed = eventLaserSpeed;
       }
 
-      // Find the spot for this event. All events should be added in
-      // chronological order.
-      let indexToInsertAt = 0;
-      let eventOverlaps = false;
       const relevantEvents = state.tracks[trackId];
-      for (let i = relevantEvents.length - 1; i >= 0; i--) {
-        const event = relevantEvents[i];
+      const [indexToInsertAt, eventOverlaps] = findIndexForNewEvent(
+        beatNum,
+        relevantEvents
+      );
 
-        if (event.beatNum === beatNum) {
-          eventOverlaps = true;
-          indexToInsertAt = i;
-          break;
-        }
-
-        // If this event is before our new one, we can insert it right after
-        if (event.beatNum < beatNum) {
-          indexToInsertAt = i + 1;
-          break;
-        }
-      }
-
-      // For most tracks, we want to ignore duplicates. This is so that we can
-      // easily "fill in gaps" and not overwrite what is already there.
-      // But! For speed tracks, we need to be able to overwrite what is already
-      // there. The mechanism is fundamentally different
-      const shouldOverwrite =
-        (eventOverlaps && trackId === 'laserSpeedLeft') ||
-        trackId === 'laserSpeedRight';
-
-      if (eventOverlaps && !shouldOverwrite) {
+      // Don't allow multiple blocks in the same cell. Rather than overwrite,
+      // this strategy allows us to easily "fill gaps" by dragging over an area
+      if (eventOverlaps) {
         return state;
       }
 
       return produce(state, draftState => {
-        const numToRemove = shouldOverwrite ? 1 : 0;
+        draftState.tracks[trackId].splice(indexToInsertAt, 0, newEvent);
+      });
+    }
+
+    case 'CHANGE_LASER_SPEED': {
+      const { id, trackId, beatNum, speed } = action;
+
+      const newEvent = {
+        id,
+        trackId,
+        beatNum,
+        laserSpeed: speed,
+      };
+
+      const relevantEvents = state.tracks[trackId];
+      const [indexToInsertAt, eventOverlaps] = findIndexForNewEvent(
+        beatNum,
+        relevantEvents
+      );
+
+      return produce(state, draftState => {
+        const numToRemove = eventOverlaps ? 1 : 0;
         draftState.tracks[trackId].splice(
           indexToInsertAt,
           numToRemove,
@@ -238,6 +228,42 @@ const events = (state = initialState, action) => {
     default:
       return state;
   }
+};
+
+//
+//
+//// HELPERS
+//
+
+/**
+ * In addition to returning an index so that the caller knows where to insert
+ * the event, this method also returns whether or not there is already an
+ * event at the exact same beatNum.
+ *
+ * @returns [ index: number, overlaps: boolean ]
+ */
+const findIndexForNewEvent = (beatNum, relevantEvents) => {
+  // Find the spot for this event. All events should be added in
+  // chronological order.
+  let indexToInsertAt = 0;
+  let eventOverlaps = false;
+  for (let i = relevantEvents.length - 1; i >= 0; i--) {
+    const event = relevantEvents[i];
+
+    if (event.beatNum === beatNum) {
+      eventOverlaps = true;
+      indexToInsertAt = i;
+      break;
+    }
+
+    // If this event is before our new one, we can insert it right after
+    if (event.beatNum < beatNum) {
+      indexToInsertAt = i + 1;
+      break;
+    }
+  }
+
+  return [indexToInsertAt, eventOverlaps];
 };
 
 //
