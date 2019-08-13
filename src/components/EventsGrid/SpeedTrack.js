@@ -40,7 +40,6 @@ const SpeedTrack = ({
   ...delegated
 }) => {
   const cursorAtSpeed = React.useRef(null);
-  const clickedSpeed = React.useRef(null);
 
   const ref = useMousePositionOverElement((_, y) => {
     // We don't care about x, since we already have that under `cursorAtBeat`.
@@ -109,8 +108,6 @@ const SpeedTrack = ({
     }
   );
 
-  const divisionHeight = height / 8;
-
   return (
     <Wrapper
       ref={ref}
@@ -123,19 +120,21 @@ const SpeedTrack = ({
       }}
       onContextMenu={ev => ev.preventDefault()}
     >
-      <Background width={width} height={height}>
-        {range(NUM_OF_SPEEDS + 1).map(i => (
-          <line
-            key={i}
-            x1={0}
-            y1={getYForSpeed(height, i)}
-            x2={width}
-            y2={getYForSpeed(height, i)}
-            strokeWidth={1}
-            stroke={COLORS.blueGray[700]}
-            style={{ opacity: 0.6 }}
-          />
-        ))}
+      <Svg width={width} height={height}>
+        <Background>
+          {range(NUM_OF_SPEEDS + 1).map(i => (
+            <line
+              key={i}
+              x1={0}
+              y1={getYForSpeed(height, i)}
+              x2={width}
+              y2={getYForSpeed(height, i)}
+              strokeWidth={1}
+              stroke={COLORS.blueGray[700]}
+              style={{ opacity: 0.6 }}
+            />
+          ))}
+        </Background>
 
         <polyline
           points={plottablePoints.reduce((acc, point) => {
@@ -143,9 +142,10 @@ const SpeedTrack = ({
           }, '')}
           stroke="white"
           strokeWidth="0.2"
-          fill="none"
+          fill={COLORS.green[500]}
+          opacity={0.5}
         />
-      </Background>
+      </Svg>
     </Wrapper>
   );
 };
@@ -159,11 +159,13 @@ const Wrapper = styled.div`
   }
 `;
 
-const Background = styled.svg`
+const Svg = styled.svg`
   position: relative;
   display: block;
   z-index: -10;
 `;
+
+const Background = styled.g``;
 
 const mapStateToProps = (state, ownProps) => {
   const events = getEventsForTrack(

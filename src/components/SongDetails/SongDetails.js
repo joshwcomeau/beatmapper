@@ -272,6 +272,7 @@ const SongDetails = ({
                   BigMirrorEnvironment
                 </option>
                 <option value="TriangleEnvironment">TriangleEnvironment</option>
+                <option value="DragonsEnvironment">DragonsEnvironment</option>
               </DropdownInput>
             </Cell>
           </Row>

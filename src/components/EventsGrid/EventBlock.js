@@ -4,6 +4,14 @@ import { connect } from 'react-redux';
 import Color from 'color';
 
 import { COLORS } from '../../constants';
+import * as actions from '../../actions';
+import {
+  getEventSelectionMode,
+  getEventSelectionModeTrackId,
+  getSelectedEventTool,
+  getSelectedEventColor,
+} from '../../reducers/editor.reducer';
+import { getEventsForTrack } from '../../reducers/editor-entities.reducer/events-view.reducer';
 import { normalize } from '../../utils';
 import UnstyledButton from '../UnstyledButton';
 
@@ -46,7 +54,7 @@ const getBackgroundForEvent = event => {
     }
 
     case 'rotate': {
-      return COLORS.yellow[500];
+      return COLORS.green[500];
     }
 
     default:
@@ -54,11 +62,17 @@ const getBackgroundForEvent = event => {
   }
 };
 
-const LightingOnBlock = ({
+const EventBlock = ({
   event,
   startBeat,
   numOfBeatsToShow,
-  ...delegated
+  selectionMode,
+  selectEvent,
+  deselectEvent,
+  startManagingEventSelection,
+  bulkDeleteEvent,
+  switchEventColor,
+  deleteEvent,
 }) => {
   const offset = normalize(
     event.beatNum,
@@ -72,9 +86,53 @@ const LightingOnBlock = ({
 
   return (
     <Wrapper
-      onContextMenu={ev => ev.preventDefault()}
       style={{ left: offset + '%', background }}
-      {...delegated}
+      onClick={ev => ev.stopPropagation()}
+      onContextMenu={ev => ev.preventDefault()}
+      onPointerOver={ev => {
+        if (selectionMode === 'delete') {
+          bulkDeleteEvent(event.id, event.trackId);
+        } else if (selectionMode === 'select' && !event.selected) {
+          selectEvent(event.id, event.trackId);
+        } else if (selectionMode === 'deselect' && event.selected) {
+          deselectEvent(event.id, event.trackId);
+        }
+      }}
+      onPointerDown={ev => {
+        ev.stopPropagation();
+
+        // prettier-ignore
+        const clickType = ev.button === 0
+        ? 'left'
+        : ev.button === 1
+          ? 'middle'
+          : ev.button === 2
+            ? 'right'
+            : undefined;
+
+        let newSelectionMode;
+        if (clickType === 'left') {
+          newSelectionMode = event.selected ? 'deselect' : 'select';
+        } else if (clickType === 'right') {
+          newSelectionMode = 'delete';
+        }
+        if (newSelectionMode) {
+          startManagingEventSelection(newSelectionMode);
+        }
+
+        if (clickType === 'left') {
+          const actionToSend = event.selected ? deselectEvent : selectEvent;
+          actionToSend(event.id, event.trackId);
+        } else if (clickType === 'middle') {
+          switchEventColor(event.id, event.trackId);
+        } else if (clickType === 'right') {
+          deleteEvent(event.id, event.trackId);
+        }
+
+        if (ev.buttons === 2) {
+          deleteEvent(event.id, event.trackId);
+        }
+      }}
     >
       {event.selected && <SelectedGlow />}
     </Wrapper>
@@ -103,7 +161,22 @@ const SelectedGlow = styled.div`
   opacity: 0.6;
 `;
 
+const mapStateToProps = (state, ownProps) => {
+  const selectionMode = getEventSelectionMode(state);
+
+  return { selectionMode };
+};
+
+const mapDispatchToProps = {
+  deleteEvent: actions.deleteEvent,
+  bulkDeleteEvent: actions.bulkDeleteEvent,
+  selectEvent: actions.selectEvent,
+  deselectEvent: actions.deselectEvent,
+  switchEventColor: actions.switchEventColor,
+  startManagingEventSelection: actions.startManagingEventSelection,
+};
+
 export default connect(
-  null,
-  {}
-)(React.memo(LightingOnBlock));
+  mapStateToProps,
+  mapDispatchToProps
+)(React.memo(EventBlock));

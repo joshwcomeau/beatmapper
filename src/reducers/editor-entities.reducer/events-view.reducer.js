@@ -47,10 +47,6 @@ const events = (state = initialState, action) => {
           return acc;
         }
 
-        if (event.trackId === 'laserSpeedLeft') {
-          return acc;
-        }
-
         acc[event.trackId].push(event);
         return acc;
       }, initialState.tracks);
@@ -62,6 +58,7 @@ const events = (state = initialState, action) => {
     }
 
     case 'PLACE_EVENT': {
+      console.log('PLACE_EVENT', action);
       const {
         id,
         trackId,
@@ -87,24 +84,43 @@ const events = (state = initialState, action) => {
       // Find the spot for this event. All events should be added in
       // chronological order.
       let indexToInsertAt = 0;
+      let eventOverlaps = false;
       const relevantEvents = state.tracks[trackId];
       for (let i = relevantEvents.length - 1; i >= 0; i--) {
         const event = relevantEvents[i];
 
-        // If there is already an event at this beat, we don't want to do
-        // anything!
         if (event.beatNum === beatNum) {
-          return state;
+          eventOverlaps = true;
+          indexToInsertAt = i;
+          break;
         }
 
         // If this event is before our new one, we can insert it right after
         if (event.beatNum < beatNum) {
           indexToInsertAt = i + 1;
+          break;
         }
       }
 
+      // For most tracks, we want to ignore duplicates. This is so that we can
+      // easily "fill in gaps" and not overwrite what is already there.
+      // But! For speed tracks, we need to be able to overwrite what is already
+      // there. The mechanism is fundamentally different
+      const shouldOverwrite =
+        (eventOverlaps && trackId === 'laserSpeedLeft') ||
+        trackId === 'laserSpeedRight';
+
+      if (eventOverlaps && !shouldOverwrite) {
+        return state;
+      }
+
       return produce(state, draftState => {
-        state.tracks[trackId].splice(indexToInsertAt, 0, newEvent);
+        const numToRemove = shouldOverwrite ? 1 : 0;
+        draftState.tracks[trackId].splice(
+          indexToInsertAt,
+          numToRemove,
+          newEvent
+        );
       });
     }
 

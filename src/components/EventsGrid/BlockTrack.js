@@ -76,61 +76,13 @@ const BlockTrack = ({
       onContextMenu={ev => ev.preventDefault()}
     >
       {events.map(event => {
-        // TODO: Pattern blocks?
-
         return (
           <EventBlock
             key={event.id}
             event={event}
+            trackId={trackId}
             startBeat={startBeat}
             numOfBeatsToShow={numOfBeatsToShow}
-            onClick={ev => ev.stopPropagation()}
-            onPointerOver={ev => {
-              if (selectionMode === 'delete') {
-                bulkDeleteEvent(event.id, event.trackId);
-              } else if (selectionMode === 'select' && !event.selected) {
-                selectEvent(event.id, event.trackId);
-              } else if (selectionMode === 'deselect' && event.selected) {
-                deselectEvent(event.id, event.trackId);
-              }
-            }}
-            onPointerDown={ev => {
-              ev.stopPropagation();
-
-              // prettier-ignore
-              const clickType = ev.button === 0
-              ? 'left'
-              : ev.button === 1
-                ? 'middle'
-                : ev.button === 2
-                  ? 'right'
-                  : undefined;
-
-              let newSelectionMode;
-              if (clickType === 'left') {
-                newSelectionMode = event.selected ? 'deselect' : 'select';
-              } else if (clickType === 'right') {
-                newSelectionMode = 'delete';
-              }
-              if (newSelectionMode) {
-                startManagingEventSelection(newSelectionMode);
-              }
-
-              if (clickType === 'left') {
-                const actionToSend = event.selected
-                  ? deselectEvent
-                  : selectEvent;
-                actionToSend(event.id, event.trackId);
-              } else if (clickType === 'middle') {
-                switchEventColor(event.id, event.trackId);
-              } else if (clickType === 'right') {
-                deleteEvent(event.id, event.trackId);
-              }
-
-              if (ev.buttons === 2) {
-                deleteEvent(event.id, event.trackId);
-              }
-            }}
           />
         );
       })}
