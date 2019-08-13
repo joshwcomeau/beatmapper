@@ -17,7 +17,7 @@ const Events = () => {
 
   return (
     <Wrapper>
-      <SongInfo />
+      <SongInfo showDifficultySelector={false} coverArtSize="small" />
 
       <GridControls contentWidth={contentWidth} />
       <EventsGrid contentWidth={contentWidth} />

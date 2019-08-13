@@ -45,7 +45,7 @@ const NotesEditor = ({ isPlaying, pausePlaying, scrollThroughSong }) => {
 
   return (
     <Wrapper>
-      <SongInfo />
+      <SongInfo showDifficultySelector />
 
       <ReduxForwardingCanvas ref={canvasRef}>
         <MapVisualization />

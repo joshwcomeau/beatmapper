@@ -18,9 +18,14 @@ import Modal from '../Modal';
 import Dropdown from '../Dropdown';
 import CreateDifficultyForm from '../CreateDifficultyForm';
 
-const COVER_ART_SIZE = 75;
+const COVER_ART_SIZES = {
+  medium: 75,
+  small: 50,
+};
 
-const NotesEditorSongInfo = ({
+const SongInfo = ({
+  showDifficultySelector,
+  coverArtSize = 'medium',
   song,
   selectedDifficulty,
   difficultyIds,
@@ -35,9 +40,9 @@ const NotesEditorSongInfo = ({
   return (
     <>
       <OuterWrapper>
-        <Wrapper style={{ height: COVER_ART_SIZE }}>
+        <Wrapper style={{ height: COVER_ART_SIZES[coverArtSize] }}>
           <CoverArtImage
-            size={COVER_ART_SIZE}
+            size={COVER_ART_SIZES[coverArtSize]}
             filename={song.coverArtFilename}
           />
           <Description>
@@ -46,45 +51,48 @@ const NotesEditorSongInfo = ({
               <Spacer size={UNIT / 2} />
               <Subtitle>{song.artistName}</Subtitle>
             </Text>
-            <Spacer size={UNIT} />
-            {selectedDifficulty && (
-              <Dropdown
-                label=""
-                value={selectedDifficulty}
-                onChange={ev => {
-                  ev.target.blur();
 
-                  const { value } = ev.target;
+            {showDifficultySelector && selectedDifficulty && (
+              <>
+                <Spacer size={UNIT} />
+                <Dropdown
+                  label=""
+                  value={selectedDifficulty}
+                  onChange={ev => {
+                    ev.target.blur();
 
-                  if (value === 'create-new') {
-                    setShowCreateDifficultyModal(true);
-                  } else {
-                    // TODO: Having the difficulty as part of the URL means that
-                    // a bunch of state is reset when you change URLs, stuff like
-                    // your position in the song. This might be annoying when
-                    // trying to jump quickly between two difficulties :/
-                    //
-                    // Maybe I can solve this by pushing query strings?
-                    // ?offset=716.83
-                    history.push(`/edit/${song.id}/${value}/notes`);
-                  }
-                }}
-                width={90}
-                height={28}
-              >
-                {difficultyIds.map(id => (
-                  <option
-                    key={id}
-                    value={id}
-                    when-selected={getLabelForDifficulty(id)}
-                  >
-                    {getLabelForDifficulty(id)}
+                    const { value } = ev.target;
+
+                    if (value === 'create-new') {
+                      setShowCreateDifficultyModal(true);
+                    } else {
+                      // TODO: Having the difficulty as part of the URL means that
+                      // a bunch of state is reset when you change URLs, stuff like
+                      // your position in the song. This might be annoying when
+                      // trying to jump quickly between two difficulties :/
+                      //
+                      // Maybe I can solve this by pushing query strings?
+                      // ?offset=716.83
+                      history.push(`/edit/${song.id}/${value}/notes`);
+                    }
+                  }}
+                  width={90}
+                  height={28}
+                >
+                  {difficultyIds.map(id => (
+                    <option
+                      key={id}
+                      value={id}
+                      when-selected={getLabelForDifficulty(id)}
+                    >
+                      {getLabelForDifficulty(id)}
+                    </option>
+                  ))}
+                  <option value="create-new" when-selected="--">
+                    + Create new
                   </option>
-                ))}
-                <option value="create-new" when-selected="--">
-                  + Create new
-                </option>
-              </Dropdown>
+                </Dropdown>
+              </>
             )}
           </Description>
         </Wrapper>
@@ -154,5 +162,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(React.memo(NotesEditorSongInfo))
+  )(React.memo(SongInfo))
 );
