@@ -38,9 +38,26 @@ const events = (state = initialState, action) => {
         return initialState;
       }
 
+      // MAYBE TEMP:
+      // I'm noticing some weird bug where I get SO MANY EVENTS.
+      // Remove all duplicates.
+      const uniqueEvents = [];
+      action.events.forEach(event => {
+        const alreadyExists = uniqueEvents.some(uniqEvent => {
+          return (
+            uniqEvent.trackId === event.trackId &&
+            uniqEvent.beatNum === event.beatNum
+          );
+        });
+
+        if (!alreadyExists) {
+          uniqueEvents.push(event);
+        }
+      });
+
       // Entities are loaded all in 1 big array, since that's how they're saved
       // to disk. Reduce them into a map based on trackId
-      const tracks = action.events.reduce((acc, event) => {
+      const tracks = uniqueEvents.reduce((acc, event) => {
         if (!event) {
           return acc;
         }
