@@ -23,6 +23,7 @@ const SongDetails = ({
   updateSongDetails,
   deleteBeatmap,
   updateBeatmapMetadata,
+  history,
 }) => {
   const [name, setSongName] = React.useState(song.name || '');
   const [subName, setSongSubName] = React.useState(song.subName || '');
@@ -126,9 +127,25 @@ const SongDetails = ({
     // Delete our working state
     let mutableDifficultiesCopy = { ...difficultiesById };
     delete mutableDifficultiesCopy[id];
+
+    // Don't let the user delete the last difficulty!
+    const remainingDifficultyIds = Object.keys(mutableDifficultiesCopy);
+    if (remainingDifficultyIds.length === 0) {
+      alert(
+        'Sorry, you cannot delete the only remaining difficulty! Please create another difficulty first.'
+      );
+      return;
+    }
+
+    // If the user is currently editing the difficulty that they're trying to
+    // delete, let's redirect them to the next difficulty.
+    const nextDifficultyId = remainingDifficultyIds[0];
+
     setDifficultiesById(mutableDifficultiesCopy);
 
     deleteBeatmap(songId, id);
+
+    history.push(`/edit/${songId}/${nextDifficultyId}/details`);
   };
 
   const handleSaveBeatmap = (ev, difficulty) => {

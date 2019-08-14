@@ -41,7 +41,7 @@ export const COLORS = {
   black: '#000000',
 };
 
-export const DEVTOOLS_ENABLED_IN_DEV = false;
+export const DEVTOOLS_ENABLED_IN_DEV = true;
 
 export const BLOCK_SIZE = 1;
 export const BLOCK_COLUMN_WIDTH = BLOCK_SIZE * 1.5;
@@ -91,10 +91,6 @@ export const SNAPPING_INCREMENTS = [
   {
     value: 1 / 6,
     label: '1/6 Beat',
-  },
-  {
-    value: 1 / 5,
-    label: '1/5 Beat',
   },
   {
     value: 1 / 4,
