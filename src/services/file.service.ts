@@ -240,13 +240,16 @@ export const deleteAllSongFiles = async (song: any) => {
   const { id, songFilename, coverArtFilename, difficultiesById } = song;
 
   const infoDatName = getFilenameForThing(id, 'info');
-  const difficultyIds = Object.keys(difficultiesById);
+  const beatmapFilenames = Object.keys(difficultiesById).map(difficultyId => {
+    // @ts-ignore
+    return getFilenameForThing(id, 'beatmap', { difficulty: difficultyId });
+  });
 
   try {
     await deleteFile(songFilename);
     await deleteFile(coverArtFilename);
     await deleteFile(infoDatName);
-    await deleteFiles(difficultyIds);
+    await deleteFiles(beatmapFilenames);
     console.info(`Successfully deleted all files related to ${id}.`);
   } catch (err) {
     console.error('Could not delete all files for song:', err);

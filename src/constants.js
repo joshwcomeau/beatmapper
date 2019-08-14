@@ -93,6 +93,10 @@ export const SNAPPING_INCREMENTS = [
     label: '1/6 Beat',
   },
   {
+    value: 1 / 5,
+    label: '1/5 Beat',
+  },
+  {
     value: 1 / 4,
     label: '1/4 Beat',
     shortcutKey: 3,

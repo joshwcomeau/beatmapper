@@ -20,7 +20,10 @@ import {
   getObstacles,
 } from '../reducers/editor-entities.reducer/notes-view.reducer';
 import { getAllEventsAsArray } from '../reducers/editor-entities.reducer/events-view.reducer';
-import { getSelectedSong } from '../reducers/songs.reducer';
+import {
+  getSelectedSong,
+  getSelectedSongDifficultyIds,
+} from '../reducers/songs.reducer';
 import {
   getDifficultyRankForDifficulty,
   getArchiveVersion,
@@ -439,4 +442,34 @@ export const processImportedMap = async (zipFile, currentSongIds) => {
     environment: infoDatJson._environmentName,
     difficultiesById,
   };
+};
+
+export const saveEventsToAllDifficulties = state => {
+  const song = getSelectedSong(state);
+  const difficulties = getSelectedSongDifficultyIds(state);
+
+  const events = convertEventsToExportableJson(getAllEventsAsArray(state));
+  const shiftedEvents = shiftEntitiesByOffset(events, song.offset, song.bpm);
+
+  return Promise.all(
+    difficulties.map(
+      difficulty =>
+        new Promise((resolve, reject) => {
+          const beatmapFilename = getFilenameForThing(song.id, 'beatmap', {
+            difficulty,
+          });
+
+          getFile(beatmapFilename)
+            .then(fileContents => {
+              const data = JSON.parse(fileContents);
+              data._events = shiftedEvents;
+
+              return saveFile(beatmapFilename, JSON.stringify(data));
+            })
+            .then(data => {
+              resolve(data);
+            });
+        })
+    )
+  );
 };

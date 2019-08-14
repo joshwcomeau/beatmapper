@@ -25,7 +25,8 @@ interface Song {
     | 'DefaultEnvironment'
     | 'BigMirrorEnvironment'
     | 'TriangleEnvironment'
-    | 'NiceEnvironment';
+    | 'NiceEnvironment'
+    | 'DragonsEnvironment';
   songFilename: string;
   coverArtFilename: string;
   difficultiesById: { [key: string]: Difficulty };

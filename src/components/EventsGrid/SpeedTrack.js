@@ -169,7 +169,6 @@ const SpeedTrack = ({
               fill={COLORS.green[500]}
               style={{ cursor: 'pointer' }}
               onPointerDown={ev => {
-                console.log('pd', ev.button);
                 if (ev.button === 2) {
                   deleteEvent(event.id, trackId);
                 }

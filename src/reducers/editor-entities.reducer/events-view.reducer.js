@@ -26,8 +26,6 @@ const LIGHTING_TRACKS = [
   'trackNeons',
 ];
 
-const LASER_SPEED_TRACKS = ['laserSpeedLeft', 'laserSpeedRight'];
-
 const events = (state = initialState, action) => {
   switch (action.type) {
     case 'CREATE_NEW_SONG':
@@ -36,12 +34,12 @@ const events = (state = initialState, action) => {
     }
 
     case 'LOAD_BEATMAP_ENTITIES': {
-      // Entities are loaded all in 1 big array, since that's how they're saved
-      // to disk. Reduce them into a map based on trackId
       if (!action.events || action.events.length === 0) {
-        return state;
+        return initialState;
       }
 
+      // Entities are loaded all in 1 big array, since that's how they're saved
+      // to disk. Reduce them into a map based on trackId
       const tracks = action.events.reduce((acc, event) => {
         if (!event) {
           return acc;

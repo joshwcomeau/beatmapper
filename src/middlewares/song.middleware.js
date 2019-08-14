@@ -23,8 +23,10 @@ import { convertEventsToRedux } from '../helpers/events.helpers';
 import { clamp, roundToNearest } from '../utils';
 import {
   getFile,
+  deleteFile,
   getBeatmap,
   deleteAllSongFiles,
+  getFilenameForThing,
 } from '../services/file.service';
 import Sfx from '../services/sfx.service';
 import { getSongById, getSelectedSong } from '../reducers/songs.reducer';
@@ -399,6 +401,20 @@ export default function createSongMiddleware() {
       case 'UPDATE_PLAYBACK_SPEED': {
         next(action);
         audioElem.playbackRate = action.playbackRate;
+        break;
+      }
+
+      case 'DELETE_BEATMAP': {
+        const { songId, difficulty } = action;
+
+        // Our reducer will handle the redux state part, but we also need to
+        // delete the corresponding beatmap from the filesystem.
+        const beatmapFilename = getFilenameForThing(songId, 'beatmap', {
+          difficulty,
+        });
+        await deleteFile(beatmapFilename);
+
+        next(action);
         break;
       }
 

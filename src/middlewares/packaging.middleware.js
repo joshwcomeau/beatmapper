@@ -10,6 +10,7 @@ import {
   createInfoContent,
   createBeatmapContentsFromState,
   zipFiles,
+  saveEventsToAllDifficulties,
 } from '../services/packaging.service';
 
 window.saveFile = saveFile;
@@ -23,10 +24,6 @@ export default function createPackagingMiddleware() {
 
     const { version } = action;
 
-    // Ok, so I will eventually have other difficulties saved as .dat files.
-    // Rather than treat the currently-loaded difficulty separately, I should
-    // start by saving the current difficulty to disk, and then I can just load
-    // all difficulties from disk.
     const state = store.getState();
 
     const song = getSelectedSong(state);
@@ -38,6 +35,10 @@ export default function createPackagingMiddleware() {
     // Persist the info.dat and the currently-edited difficulty.
     await saveInfoDat(song.id, infoContent);
     await saveBeatmap(song.id, difficulty, beatmapContent);
+
+    // We also want to share events between all difficulties.
+    // Copy the events currently in state to the non-loaded beatmaps.
+    await saveEventsToAllDifficulties(state);
 
     // Next, I need to fetch all relevant files from disk.
     // TODO: Parallelize this if it takes too long
