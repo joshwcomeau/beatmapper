@@ -21,13 +21,16 @@ const FileUploader = ({
   renderWhenFileSelected,
   ...delegated
 }) => {
-  const onDrop = React.useCallback(acceptedFiles => {
-    const selectedFile = acceptedFiles[0];
+  const onDrop = React.useCallback(
+    acceptedFiles => {
+      const selectedFile = acceptedFiles[0];
 
-    if (selectedFile) {
-      onSelectFile(selectedFile);
-    }
-  }, []);
+      if (selectedFile) {
+        onSelectFile(selectedFile);
+      }
+    },
+    [onSelectFile]
+  );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 

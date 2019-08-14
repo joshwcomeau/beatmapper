@@ -5,7 +5,6 @@ import { getSelection } from './reducers/editor-entities.reducer';
 import {
   getNotes,
   getObstacles,
-  getSelectedNotes,
 } from './reducers/editor-entities.reducer/notes-view.reducer';
 import { getAllEventsAsArray } from './reducers/editor-entities.reducer/events-view.reducer';
 import { getSelectedSong } from './reducers/songs.reducer';

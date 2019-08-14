@@ -60,6 +60,7 @@ const BlockTrack = ({
       // they can all be undoed in 1 step
       placeEvent(...getPropsForPlacedEvent());
     }
+    // eslint-disable-next-line
   }, [selectionMode, cursorAtBeat]);
 
   return (

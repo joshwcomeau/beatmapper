@@ -5,13 +5,7 @@ import Color from 'color';
 
 import { COLORS } from '../../constants';
 import * as actions from '../../actions';
-import {
-  getEventSelectionMode,
-  getEventSelectionModeTrackId,
-  getSelectedEventTool,
-  getSelectedEventColor,
-} from '../../reducers/editor.reducer';
-import { getEventsForTrack } from '../../reducers/editor-entities.reducer/events-view.reducer';
+import { getEventSelectionMode } from '../../reducers/editor.reducer';
 import { normalize } from '../../utils';
 import UnstyledButton from '../UnstyledButton';
 

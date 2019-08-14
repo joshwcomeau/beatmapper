@@ -7,18 +7,15 @@
  */
 import React from 'react';
 
-import { throttle } from '../utils';
 import useBoundingBox from './use-bounding-box.hook';
 
 export default function useMousePositionOverElement(callback) {
   const [ref, bb] = useBoundingBox();
 
   React.useEffect(() => {
-    if (!ref.current) {
+    if (!bb) {
       return;
     }
-
-    const bb = ref.current.getBoundingClientRect();
 
     const handleMouseMove = ev => {
       // Check if the cursor is inside the box
@@ -38,7 +35,7 @@ export default function useMousePositionOverElement(callback) {
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [ref, callback]);
+  }, [bb, callback]);
 
   return ref;
 }

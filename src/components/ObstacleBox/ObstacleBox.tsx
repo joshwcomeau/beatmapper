@@ -99,22 +99,7 @@ const ObstacleBox: React.FC<Props> = ({
       emissiveIntensity: obstacle.selected ? 0.5 : 0,
     });
 
-    const workingMesh = new THREE.Mesh(geometry, material);
-
-    // Wireframe
-    const wireframeGeometry = new THREE.EdgesGeometry(workingMesh.geometry);
-    const wireframeMaterial = new THREE.LineBasicMaterial({
-      color: 0xff8880,
-      transparent: true,
-      opacity: tentative ? 0.25 : 1,
-    });
-    const wireframe = new THREE.LineSegments(
-      wireframeGeometry,
-      wireframeMaterial
-    );
-    // workingMesh.add(wireframe);
-
-    return workingMesh;
+    return new THREE.Mesh(geometry, material);
   }, [depth, height, tentative, width, obstacle.selected]);
 
   const humanizedPosition = getPositionForObstacle(obstacle);

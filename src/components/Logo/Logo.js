@@ -8,7 +8,6 @@ import { UNIT } from '../../constants';
 
 import Spacer from '../Spacer';
 import Block from '../Block';
-import BloomEffect from '../BloomEffect';
 
 const noop = () => {};
 

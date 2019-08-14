@@ -83,6 +83,7 @@ const PlacementGrid = ({
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
     };
+    // eslint-disable-next-line
   }, [mouseDownAt, selectedTool]);
 
   return (

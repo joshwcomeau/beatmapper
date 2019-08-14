@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import * as actions from '../../actions';
-import { UNIT } from '../../constants';
 import { isMetaKeyPressed } from '../../utils';
 import useMousewheel from '../../hooks/use-mousewheel.hook';
 

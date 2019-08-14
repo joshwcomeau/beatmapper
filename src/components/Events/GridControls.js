@@ -13,7 +13,6 @@ import {
   getSelectedEventColor,
   getZoomLevel,
 } from '../../reducers/editor.reducer';
-import MiniButton from '../MiniButton';
 import Spacer from '../Spacer';
 
 import ControlItem from './ControlItem';
