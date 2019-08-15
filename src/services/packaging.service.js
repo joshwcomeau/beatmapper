@@ -108,10 +108,10 @@ export function createInfoContent(song, meta = { version: 2 }) {
   return JSON.stringify(contents, null, 2);
 }
 
-function createBeatmapContents(
+export function createBeatmapContents(
   notes,
-  events = [],
   obstacles = [],
+  events = [],
   meta = { version: 2 },
   // The following fields are only necessary for v1.
   bpm,
@@ -171,7 +171,7 @@ export function createBeatmapContentsFromState(state) {
     song.bpm
   );
 
-  return createBeatmapContents(shiftedNotes, shiftedEvents, shiftedObstacles, {
+  return createBeatmapContents(shiftedNotes, shiftedObstacles, shiftedEvents, {
     version: 2,
   });
 }
@@ -217,8 +217,8 @@ export const zipFiles = (song, songFile, coverArtFile, version) => {
 
         const legacyFileContents = createBeatmapContents(
           beatmapData._notes,
-          beatmapData._events,
           beatmapData._obstacles,
+          beatmapData._events,
           { version: 1 },
           song.bpm,
           song.difficultiesById[difficulty].noteJumpSpeed,
@@ -275,8 +275,8 @@ export const convertLegacyArchive = async archive => {
 
       const newFileContents = createBeatmapContents(
         fileJson._notes,
-        fileJson._events,
         fileJson._obstacles,
+        fileJson._events,
         { version: 2 }
       );
 

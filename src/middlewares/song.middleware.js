@@ -19,10 +19,14 @@ import {
 } from '../helpers/audio.helpers';
 import { convertFileToArrayBuffer } from '../helpers/file.helpers';
 import { convertObstaclesToRedux } from '../helpers/obstacles.helpers';
-import { convertEventsToRedux } from '../helpers/events.helpers';
+import {
+  convertEventsToRedux,
+  convertEventsToExportableJson,
+} from '../helpers/events.helpers';
 import { clamp, roundToNearest } from '../utils';
 import {
   getFile,
+  saveFile,
   deleteFile,
   getBeatmap,
   deleteAllSongFiles,
@@ -31,6 +35,7 @@ import {
 import Sfx from '../services/sfx.service';
 import { getSongById, getSelectedSong } from '../reducers/songs.reducer';
 import { getBeatsPerZoomLevel } from '../reducers/editor.reducer';
+import { getAllEventsAsArray } from '../reducers/editor-entities.reducer/events-view.reducer';
 import { getNotes } from '../reducers/editor-entities.reducer/notes-view.reducer';
 import {
   getVolume,
@@ -38,7 +43,11 @@ import {
   getPlayNoteTick,
   getCursorPositionInBeats,
 } from '../reducers/navigation.reducer';
-import { unshiftEntitiesByOffset } from '../services/packaging.service.nitty-gritty';
+import { createBeatmapContents } from '../services/packaging.service';
+import {
+  shiftEntitiesByOffset,
+  unshiftEntitiesByOffset,
+} from '../services/packaging.service.nitty-gritty';
 import { NOTES_VIEW } from '../constants';
 
 const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -146,6 +155,36 @@ export default function createSongMiddleware() {
         });
 
         break;
+      }
+
+      case 'CREATE_DIFFICULTY': {
+        const { difficulty } = action;
+
+        const state = store.getState();
+        const song = getSelectedSong(state);
+        const events = convertEventsToExportableJson(
+          getAllEventsAsArray(state)
+        );
+        const shiftedEvents = shiftEntitiesByOffset(
+          events,
+          song.offset,
+          song.bpm
+        );
+
+        const beatmapContents = createBeatmapContents(
+          [], // Don't start with any notes or obstacles
+          [],
+          shiftedEvents,
+          { version: 2 }
+        );
+
+        const beatmapFilename = getFilenameForThing(song.id, 'beatmap', {
+          difficulty,
+        });
+
+        return saveFile(beatmapFilename, beatmapContents).then(() => {
+          next(action);
+        });
       }
 
       case 'TOGGLE_PLAYING': {

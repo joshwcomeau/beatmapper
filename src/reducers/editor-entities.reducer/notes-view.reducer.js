@@ -32,9 +32,9 @@ const getItemType = item => {
 const notes = (state = initialState.notes, action) => {
   switch (action.type) {
     case 'CREATE_NEW_SONG':
+    case 'START_LOADING_SONG':
     case 'CLEAR_ENTITIES': {
-      // Reset the notes array when creating a new song
-      return [];
+      return initialState.notes;
     }
 
     case 'LOAD_BEATMAP_ENTITIES': {
@@ -262,6 +262,7 @@ const notes = (state = initialState.notes, action) => {
 const obstacles = (state = initialState.obstacles, action) => {
   switch (action.type) {
     case 'CREATE_NEW_SONG':
+    case 'START_LOADING_SONG':
     case 'CLEAR_ENTITIES': {
       return [];
     }

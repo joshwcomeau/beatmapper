@@ -201,11 +201,13 @@ describe('Event helpers', () => {
           id: 'abc',
           trackId: 'smallRing',
           beatNum: 1,
+          type: 'rotate',
         },
         {
           id: 'abc',
           trackId: 'largeRing',
           beatNum: 1,
+          type: 'rotate',
         },
         {
           id: 'abc',

@@ -1,4 +1,5 @@
 import produce from 'immer';
+import { createSelector } from 'reselect';
 
 import { flatten } from '../../utils';
 import { EVENTS_VIEW } from '../../constants';
@@ -28,6 +29,7 @@ const LIGHTING_TRACKS = [
 const events = (state = initialState, action) => {
   switch (action.type) {
     case 'CREATE_NEW_SONG':
+    case 'START_LOADING_SONG':
     case 'CLEAR_ENTITIES': {
       return initialState;
     }
@@ -300,10 +302,15 @@ export const getEventsForTrack = (
   );
 };
 
-export const getAllEventsAsArray = state => {
-  const tracks = getTracks(state);
-  return flatten(Object.values(tracks));
-};
+export const getAllEventsAsArray = createSelector(
+  getTracks,
+  tracks => {
+    const flatEventsArray = flatten(Object.values(tracks));
+    // Sort the array so that events aren't grouped by track, but instead are
+    // wholly chronological
+    return flatEventsArray.sort((a, b) => a.beatNum - b.beatNum);
+  }
+);
 
 export const getSelectedEvents = state => {
   const allEvents = getAllEventsAsArray(state);
