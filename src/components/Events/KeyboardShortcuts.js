@@ -27,6 +27,8 @@ const KeyboardShortcuts = ({
   jumpToBar,
   skipToStart,
   skipToEnd,
+  undoEvents,
+  redoEvents,
 }) => {
   let keysDepressed = React.useRef({
     space: false,
@@ -150,7 +152,7 @@ const KeyboardShortcuts = ({
           return;
         }
 
-        return ev.shiftKey ? null : null;
+        return ev.shiftKey ? redoEvents() : undoEvents();
       }
 
       default:
@@ -214,20 +216,17 @@ const KeyboardShortcuts = ({
 const mapDispatchToProps = {
   togglePlaying: actions.togglePlaying,
   scrollThroughSong: actions.scrollThroughSong,
-  deleteSelectedNotes: actions.deleteSelectedNotes,
   changeSnapping: actions.changeSnapping,
   incrementSnapping: actions.incrementSnapping,
   decrementSnapping: actions.decrementSnapping,
   selectNextTool: actions.selectNextTool,
   selectPreviousTool: actions.selectPreviousTool,
   deselectAll: actions.deselectAll,
-  selectNoteDirection: actions.selectNoteDirection,
   copySelection: actions.copySelection,
   cutSelection: actions.cutSelection,
   pasteSelection: actions.pasteSelection,
-  undoNotes: actions.undoNotes,
-  redoNotes: actions.redoNotes,
-  swapSelectedNotes: actions.swapSelectedNotes,
+  undoEvents: actions.undoEvents,
+  redoEvents: actions.redoEvents,
   toggleSelectAll: actions.toggleSelectAll,
   jumpToBar: actions.jumpToBar,
   skipToStart: actions.skipToStart,

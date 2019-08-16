@@ -505,6 +505,12 @@ export const undoNotes = () => ({
 export const redoNotes = () => ({
   type: 'REDO_NOTES',
 });
+export const undoEvents = () => ({
+  type: 'UNDO_EVENTS',
+});
+export const redoEvents = () => ({
+  type: 'REDO_EVENTS',
+});
 
 export const deleteSong = songId => ({
   type: 'DELETE_SONG',
