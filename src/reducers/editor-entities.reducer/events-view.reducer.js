@@ -172,16 +172,19 @@ const eventsView = undoable(
           return state;
         }
 
-        const earliestEventAt = data[0].beatNum;
-        const deltaBetweenPeriods = pasteAtBeat - earliestEventAt;
-
-        const timeShiftedData = data.map(event => ({
-          ...event,
-          selected: false,
-          beatNum: event.beatNum + deltaBetweenPeriods,
-        }));
-
+        // Deselect all events.
         return produce(state, draftState => {
+          deselectAll(draftState);
+
+          const earliestEventAt = data[0].beatNum;
+          const deltaBetweenPeriods = pasteAtBeat - earliestEventAt;
+
+          const timeShiftedData = data.map(event => ({
+            ...event,
+            selected: true,
+            beatNum: event.beatNum + deltaBetweenPeriods,
+          }));
+
           timeShiftedData.forEach(event => {
             // Shift the event by the delta between
             draftState.tracks[event.trackId].push(event);
@@ -233,13 +236,7 @@ const eventsView = undoable(
         }
 
         return produce(state, draftState => {
-          const trackIds = Object.keys(draftState.tracks);
-
-          trackIds.forEach(trackId => {
-            draftState.tracks[trackId].forEach(event => {
-              event.selected = false;
-            });
-          });
+          deselectAll(draftState);
         });
       }
 
@@ -267,6 +264,24 @@ const eventsView = undoable(
 //
 //// HELPERS
 //
+
+/**
+ * Iterate through all tracks and mark all events as deselected.
+ *
+ * !! WARNING !! This method mutates the argument passed in. It's meant to be
+ * used within a `produce` callback.
+ */
+const deselectAll = draftState => {
+  const trackIds = Object.keys(draftState.tracks);
+
+  trackIds.forEach(trackId => {
+    draftState.tracks[trackId].forEach(event => {
+      event.selected = false;
+    });
+  });
+
+  return draftState;
+};
 
 /**
  * In addition to returning an index so that the caller knows where to insert

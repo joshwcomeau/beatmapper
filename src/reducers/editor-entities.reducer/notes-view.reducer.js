@@ -174,16 +174,23 @@ const notes = (state = initialState.notes, action) => {
         : data[0].beatStart;
       const deltaBetweenPeriods = pasteAtBeat - earliestBeat;
 
+      // When pasting a selection, we want to DESELECT all other notes.
+      // Otherwise, it's easy to forget that you have actively-selected notes
+      // somewhere else in the project.
+      const deselectedState = state.map(note => ({
+        ...note,
+        selected: false,
+      }));
+
       const notes = data.filter(isBlockOrMine);
 
       const timeShiftedNotes = notes.map(note => ({
         ...note,
-        // Don't auto-select newly-pasted notes, if their original is selected.
-        selected: false,
+        selected: true,
         _time: note._time + deltaBetweenPeriods,
       }));
 
-      return [...state, ...timeShiftedNotes];
+      return [...deselectedState, ...timeShiftedNotes];
     }
 
     case 'TOGGLE_NOTE_COLOR': {
@@ -319,15 +326,22 @@ const obstacles = (state = initialState.obstacles, action) => {
         : data[0]._time;
       const deltaBetweenPeriods = pasteAtBeat - earliestBeat;
 
-      const notes = data.filter(isObstacle);
-
-      const timeShiftedObstacles = notes.map(note => ({
-        ...note,
+      // When pasting a selection, we want to DESELECT all other notes.
+      // Otherwise, it's easy to forget that you have actively-selected notes
+      // somewhere else in the project.
+      const deselectedState = state.map(obstacle => ({
+        ...obstacle,
         selected: false,
-        beatStart: note.beatStart + deltaBetweenPeriods,
+      }));
+      const obstacles = data.filter(isObstacle);
+
+      const timeShiftedObstacles = obstacles.map(obstacle => ({
+        ...obstacle,
+        selected: false,
+        beatStart: obstacle.beatStart + deltaBetweenPeriods,
       }));
 
-      return [...state, ...timeShiftedObstacles];
+      return [...deselectedState, ...timeShiftedObstacles];
     }
 
     case 'SELECT_OBSTACLE': {
@@ -369,7 +383,7 @@ const notesView = undoable(combineReducers({ notes, obstacles }), {
     'BULK_DELETE_NOTE',
     'DELETE_SELECTED_NOTES',
     'CUT_SELECTION',
-    'PASTE_SELECTED_NOTES',
+    'PASTE_SELECTION',
     'CREATE_NEW_OBSTACLE',
     'RESIZE_OBSTACLE',
     'DELETE_OBSTACLE',
