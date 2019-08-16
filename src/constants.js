@@ -73,6 +73,14 @@ const metaKeyLabel = getMetaKeyLabel();
 
 export const SNAPPING_INCREMENTS = [
   {
+    value: 1 / 32,
+    label: '1/32 Beat',
+  },
+  {
+    value: 1 / 24,
+    label: '1/24 Beat',
+  },
+  {
     value: 1 / 16,
     label: '1/16 Beat',
     shortcutKey: 1,
