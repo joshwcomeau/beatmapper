@@ -5,7 +5,7 @@ import produce from 'immer';
 import { flatten } from '../../utils';
 import { EVENTS_VIEW } from '../../constants';
 
-const initialState = {
+const createInitialState = () => ({
   tracks: {
     laserLeft: [],
     laserRight: [],
@@ -17,7 +17,7 @@ const initialState = {
     laserSpeedLeft: [],
     laserSpeedRight: [],
   },
-};
+});
 
 const LIGHTING_TRACKS = [
   'laserLeft',
@@ -28,17 +28,17 @@ const LIGHTING_TRACKS = [
 ];
 
 const eventsView = undoable(
-  (state = initialState, action) => {
+  (state = createInitialState(), action) => {
     switch (action.type) {
       case 'CREATE_NEW_SONG':
       case 'START_LOADING_SONG':
       case 'CLEAR_ENTITIES': {
-        return initialState;
+        return createInitialState();
       }
 
       case 'LOAD_BEATMAP_ENTITIES': {
         if (!action.events || action.events.length === 0) {
-          return initialState;
+          return createInitialState();
         }
 
         // MAYBE TEMP:
@@ -60,6 +60,7 @@ const eventsView = undoable(
 
         // Entities are loaded all in 1 big array, since that's how they're saved
         // to disk. Reduce them into a map based on trackId
+        const initialState = createInitialState();
         const tracks = uniqueEvents.reduce((acc, event) => {
           if (!event) {
             return acc;
