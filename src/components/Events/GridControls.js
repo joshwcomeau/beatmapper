@@ -5,10 +5,13 @@ import Color from 'color';
 import { Icon } from 'react-icons-kit';
 import { zoomIn as zoomInIcon } from 'react-icons-kit/feather/zoomIn';
 import { zoomOut as zoomOutIcon } from 'react-icons-kit/feather/zoomOut';
+import { maximize as selectToolIcon } from 'react-icons-kit/feather/maximize';
+import { plus as placeToolIcon } from 'react-icons-kit/feather/plus';
 
 import * as actions from '../../actions';
 import { UNIT, EVENTS_VIEW, COLORS } from '../../constants';
 import {
+  getSelectedEventEditMode,
   getSelectedEventTool,
   getSelectedEventColor,
   getZoomLevel,
@@ -22,9 +25,11 @@ import UnstyledButton from '../UnstyledButton';
 
 const GridControls = ({
   contentWidth,
+  selectedEditMode,
   selectedTool,
   selectedColor,
   zoomLevel,
+  selectEditMode,
   selectTool,
   selectColor,
   zoomIn,
@@ -33,6 +38,24 @@ const GridControls = ({
   return (
     <Wrapper style={{ width: contentWidth }}>
       <Left>
+        <ControlItem label="Edit Mode">
+          <ControlItemToggleButton
+            value="place"
+            isToggled={selectedEditMode === 'place'}
+            onToggle={() => selectEditMode('place')}
+          >
+            <Icon icon={placeToolIcon} />
+          </ControlItemToggleButton>
+
+          <ControlItemToggleButton
+            value="select"
+            isToggled={selectedEditMode === 'select'}
+            onToggle={() => selectEditMode('select')}
+          >
+            <Icon icon={selectToolIcon} />
+          </ControlItemToggleButton>
+        </ControlItem>
+        <Spacer size={UNIT * 4} />
         <ControlItem label="Light Color">
           <ControlItemToggleButton
             value="red"
@@ -174,6 +197,7 @@ const ZoomBtn = styled(UnstyledButton)`
 
 const mapStateToProps = state => {
   return {
+    selectedEditMode: getSelectedEventEditMode(state),
     selectedTool: getSelectedEventTool(state),
     selectedColor: getSelectedEventColor(state),
     zoomLevel: getZoomLevel(state),
@@ -183,6 +207,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   selectTool: actions.selectTool,
   selectColor: actions.selectEventColor,
+  selectEditMode: actions.selectEventEditMode,
   zoomIn: actions.zoomIn,
   zoomOut: actions.zoomOut,
 };

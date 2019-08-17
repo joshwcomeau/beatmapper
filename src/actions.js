@@ -605,6 +605,10 @@ export const selectEventColor = color => ({
   type: 'SELECT_EVENT_COLOR',
   color,
 });
+export const selectEventEditMode = editMode => ({
+  type: 'SELECT_EVENT_EDIT_MODE',
+  editMode,
+});
 export const zoomIn = () => ({
   type: 'ZOOM_IN',
 });

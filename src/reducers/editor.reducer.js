@@ -20,6 +20,8 @@ const EVENT_TOOLS = [
   'custom-pattern',
 ];
 
+const EVENT_EDIT_MODES = ['place', 'select'];
+
 const EVENT_COLORS = ['red', 'blue'];
 
 const initialState = {
@@ -32,6 +34,7 @@ const initialState = {
   },
   events: {
     zoomLevel: 2,
+    selectedEditMode: EVENT_EDIT_MODES[0],
     selectionMode: null, // null | 'select' | 'deselect' | 'delete' | 'place'
     selectionModeTrackId: null,
     selectedBeat: null,
@@ -162,6 +165,13 @@ function events(state = initialState.events, action) {
       };
     }
 
+    case 'SELECT_EVENT_EDIT_MODE': {
+      return {
+        ...state,
+        selectedEditMode: action.editMode,
+      };
+    }
+
     case 'START_MANAGING_EVENT_SELECTION': {
       return {
         ...state,
@@ -205,6 +215,8 @@ export const getSelectedCutDirection = state =>
 export const getEventSelectionMode = state => state.editor.events.selectionMode;
 export const getEventSelectionModeTrackId = state =>
   state.editor.events.selectionModeTrackId;
+export const getSelectedEventEditMode = state =>
+  state.editor.events.selectedEditMode;
 export const getSelectedEventTool = state => state.editor.events.selectedTool;
 export const getSelectedEventColor = state => state.editor.events.selectedColor;
 export const getZoomLevel = state => state.editor.events.zoomLevel;
