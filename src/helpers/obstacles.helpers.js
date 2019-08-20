@@ -23,7 +23,7 @@ export const convertObstaclesToRedux = obstacles => {
 export const convertObstaclesToExportableJson = obstacles => {
   return obstacles.map(o => ({
     _time: o.beatStart,
-    _duration: o.beatDuration,
+    _duration: o.beatDuration === 0 ? 0.1 : o.beatDuration,
     _lineIndex: o.lane,
     _type: o.type === 'wall' ? 0 : 1,
     _width: o.colspan,
