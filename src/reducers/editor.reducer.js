@@ -35,11 +35,10 @@ const initialState = {
   events: {
     zoomLevel: 2,
     selectedEditMode: EVENT_EDIT_MODES[0],
-    selectionMode: null, // null | 'select' | 'deselect' | 'delete' | 'place'
-    selectionModeTrackId: null,
     selectedBeat: null,
     selectedTool: EVENT_TOOLS[0],
     selectedColor: EVENT_COLORS[0],
+    selectionBox: null,
   },
 };
 
@@ -115,6 +114,20 @@ function events(state = initialState.events, action) {
       return {
         ...state,
         selectedBeat: action.selectedBeat,
+      };
+    }
+
+    case 'DRAW_SELECTION_BOX': {
+      return {
+        ...state,
+        selectionBox: action.selectionBox,
+      };
+    }
+
+    case 'COMMIT_SELECTION': {
+      return {
+        ...state,
+        selectionBox: null,
       };
     }
 
@@ -220,6 +233,7 @@ export const getSelectedEventEditMode = state =>
 export const getSelectedEventTool = state => state.editor.events.selectedTool;
 export const getSelectedEventColor = state => state.editor.events.selectedColor;
 export const getZoomLevel = state => state.editor.events.zoomLevel;
+export const getSelectionBox = state => state.editor.events.selectionBox;
 
 export const getBeatsPerZoomLevel = state => {
   const zoomLevel = getZoomLevel(state);

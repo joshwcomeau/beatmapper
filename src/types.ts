@@ -54,7 +54,7 @@ export type EventColor = 'red' | 'blue';
 export interface BaseEvent {
   trackId: TrackId;
   beatNum: number;
-  selected?: boolean;
+  selected?: true | false | 'tentative';
 }
 
 export interface LightingEvent extends BaseEvent {

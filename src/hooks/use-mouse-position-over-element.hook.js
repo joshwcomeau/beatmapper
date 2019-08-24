@@ -1,10 +1,3 @@
-/**
- * A hook that handles scrolling on a specified element WITHOUT scrolling the
- * page. Needs to be in a hook since you can't call ev.preventDefault() on
- * standard `onWheel` events.
- *
- * Use sparingly.
- */
 import React from 'react';
 
 import useBoundingBox from './use-bounding-box.hook';

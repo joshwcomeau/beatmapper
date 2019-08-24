@@ -9,8 +9,9 @@ import { getIsLoading, getSnapTo } from '../../reducers/navigation.reducer';
 import {
   getZoomLevel,
   getStartAndEndBeat,
-  getEventSelectionMode,
+  getSelectedEventEditMode,
   getSelectedEventBeat,
+  getSelectionBox,
 } from '../../reducers/editor.reducer';
 import useMousePositionOverElement from '../../hooks/use-mouse-position-over-element.hook';
 
@@ -18,6 +19,7 @@ import BackgroundLines from './BackgroundLines';
 import CursorPositionIndicator from './CursorPositionIndicator';
 import BlockTrack from './BlockTrack';
 import SpeedTrack from './SpeedTrack';
+import SelectionBox from './SelectionBox';
 
 const LAYERS = {
   background: 0,
@@ -75,6 +77,8 @@ const TRACKS = [
   },
 ];
 
+const PREFIX_WIDTH = 170;
+
 const EventsGrid = ({
   contentWidth,
   zoomLevel,
@@ -82,15 +86,17 @@ const EventsGrid = ({
   startBeat,
   endBeat,
   selectedBeat,
+  selectionBox,
   numOfBeatsToShow,
   isLoading,
   snapTo,
-  selectionMode,
+  selectedEditMode,
   finishManagingEventSelection,
   moveMouseAcrossEventsGrid,
+  drawSelectionBox,
+  commitSelection,
 }) => {
-  const prefixWidth = 170;
-  const innerGridWidth = contentWidth - prefixWidth;
+  const innerGridWidth = contentWidth - PREFIX_WIDTH;
   // TODO: Dynamic height?
   const blockTrackHeight = 48;
   const speedTrackHeight = 48;
@@ -99,7 +105,29 @@ const EventsGrid = ({
 
   const beatNums = range(Math.floor(startBeat), Math.ceil(endBeat));
 
+  const [mouseDownAt, setMouseDownAt] = React.useState(null);
+  const [mousePosition, setMousePosition] = React.useState(null);
+  const mouseButtonDepressed = React.useRef(null); // 'left' | 'middle' | 'right'
+
   const tracksRef = useMousePositionOverElement((x, y) => {
+    const currentMousePosition = { x, y };
+    setMousePosition(currentMousePosition);
+
+    if (
+      selectedEditMode === 'select' &&
+      mouseDownAt &&
+      mouseButtonDepressed.current === 'left'
+    ) {
+      const newSelectionBox = {
+        top: Math.min(mouseDownAt.y, currentMousePosition.y),
+        left: Math.min(mouseDownAt.x, currentMousePosition.x),
+        right: Math.max(mouseDownAt.x, currentMousePosition.x),
+        bottom: Math.max(mouseDownAt.y, currentMousePosition.y),
+      };
+
+      drawSelectionBox(newSelectionBox);
+    }
+
     const positionInBeats = normalize(x, 0, innerGridWidth, 0, beatNums.length);
     const roundedPositionInBeats = roundToNearest(positionInBeats, snapTo);
     const hoveringOverBeatNum = roundedPositionInBeats + startBeat;
@@ -125,7 +153,8 @@ const EventsGrid = ({
   // when they release the mouse. So instead I need to use a mouseUp handler
   // up here.
   React.useEffect(() => {
-    if (!selectionMode) {
+    // TODO: Make this 'ifMouseDOwn', something something local state?
+    if (!selectedEditMode) {
       return;
     }
 
@@ -141,11 +170,35 @@ const EventsGrid = ({
     window.addEventListener('mouseup', handleMouseUp);
 
     return () => window.removeEventListener('mouseup', handleMouseUp);
-  }, [selectionMode, finishManagingEventSelection]);
+  }, [selectedEditMode, finishManagingEventSelection]);
+
+  const handleGridPointerDown = ev => {
+    if (ev.button === 0) {
+      mouseButtonDepressed.current = 'left';
+    } else if (ev.button === 2) {
+      mouseButtonDepressed.current = 'right';
+    } else {
+      // TODO: Middle button support?
+      mouseButtonDepressed.current = 'left';
+    }
+
+    setMouseDownAt(mousePosition);
+  };
+
+  const handleGridPointerUp = ev => {
+    mouseButtonDepressed.current = null;
+    setMouseDownAt(null);
+
+    console.log('pointer up');
+
+    if (selectionBox) {
+      commitSelection();
+    }
+  };
 
   return (
     <Wrapper isLoading={isLoading} style={{ width: contentWidth }}>
-      <PrefixColumn style={{ width: prefixWidth }}>
+      <PrefixColumn style={{ width: PREFIX_WIDTH }}>
         <Header style={{ height: headerHeight }} />
 
         {TRACKS.map(({ id, type, label }) => (
@@ -159,6 +212,7 @@ const EventsGrid = ({
           </TrackPrefix>
         ))}
       </PrefixColumn>
+
       <Grid>
         <Header style={{ height: headerHeight }}>
           {beatNums.map(num => (
@@ -179,7 +233,11 @@ const EventsGrid = ({
             />
           </BackgroundLinesWrapper>
 
-          <Tracks ref={tracksRef}>
+          <Tracks
+            ref={tracksRef}
+            onPointerDown={handleGridPointerDown}
+            onPointerUp={handleGridPointerUp}
+          >
             {TRACKS.map(({ id, type }) => {
               const TrackComponent =
                 type === 'blocks' ? BlockTrack : SpeedTrack;
@@ -199,6 +257,8 @@ const EventsGrid = ({
               );
             })}
           </Tracks>
+
+          {selectionBox && <SelectionBox box={selectionBox} />}
 
           <CursorPositionIndicator
             gridWidth={innerGridWidth}
@@ -310,7 +370,7 @@ const MouseCursor = styled.div`
 const mapStateToProps = (state, ownProps) => {
   const { startBeat, endBeat } = getStartAndEndBeat(state);
   const numOfBeatsToShow = endBeat - startBeat;
-  const selectionMode = getEventSelectionMode(state);
+  const selectedEditMode = getSelectedEventEditMode(state);
   const selectedBeat = getSelectedEventBeat(state);
 
   return {
@@ -319,15 +379,18 @@ const mapStateToProps = (state, ownProps) => {
     selectedBeat,
     zoomLevel: getZoomLevel(state),
     numOfBeatsToShow,
-    selectionMode,
+    selectedEditMode,
     isLoading: getIsLoading(state),
     snapTo: getSnapTo(state),
+    selectionBox: getSelectionBox(state),
   };
 };
 
 const mapDispatchToProps = {
   finishManagingEventSelection: actions.finishManagingEventSelection,
   moveMouseAcrossEventsGrid: actions.moveMouseAcrossEventsGrid,
+  drawSelectionBox: actions.drawSelectionBox,
+  commitSelection: actions.commitSelection,
 };
 
 export default connect(

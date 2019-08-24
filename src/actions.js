@@ -615,3 +615,11 @@ export const zoomIn = () => ({
 export const zoomOut = () => ({
   type: 'ZOOM_OUT',
 });
+
+export const drawSelectionBox = selectionBox => ({
+  type: 'DRAW_SELECTION_BOX',
+  selectionBox,
+});
+export const commitSelection = () => ({
+  type: 'COMMIT_SELECTION',
+});
