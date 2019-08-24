@@ -3,21 +3,17 @@ import undoable, { includeAction, groupByActionTypes } from 'redux-undo';
 import produce from 'immer';
 
 import { flatten } from '../../utils';
-import { EVENTS_VIEW } from '../../constants';
+import { EVENTS_VIEW, EVENT_TRACKS } from '../../constants';
 
 const createInitialState = () => ({
-  tracks: {
-    laserLeft: [],
-    laserRight: [],
-    laserBack: [],
-    primaryLight: [],
-    trackNeons: [],
-    largeRing: [],
-    smallRing: [],
-    laserSpeedLeft: [],
-    laserSpeedRight: [],
-  },
+  // Creates a `tracks` mapping where each track ID is given an empty array.
+  tracks: EVENT_TRACKS.reduce((acc, track) => {
+    acc[track.id] = [];
+    return acc;
+  }, {}),
 });
+
+console.log(createInitialState());
 
 const LIGHTING_TRACKS = [
   'laserLeft',
@@ -238,6 +234,16 @@ const eventsView = undoable(
 
         return produce(state, draftState => {
           deselectAll(draftState);
+        });
+      }
+
+      case 'DRAW_SELECTION_BOX': {
+        return produce(state, draftState => {
+          const trackIds = Object.keys(draftState.tracks);
+
+          trackIds.forEach(trackId => {
+            // TODO
+          });
         });
       }
 

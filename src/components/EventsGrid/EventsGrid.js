@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 
 import * as actions from '../../actions';
-import { UNIT, COLORS } from '../../constants';
+import { UNIT, COLORS, EVENT_TRACKS } from '../../constants';
 import { range, normalize, roundToNearest } from '../../utils';
 import { getIsLoading, getSnapTo } from '../../reducers/navigation.reducer';
 import {
@@ -28,56 +28,24 @@ const LAYERS = {
   songPositionIndicator: 3,
 };
 
-const TRACKS = [
-  {
-    id: 'laserSpeedLeft',
-    label: 'Left laser speed',
-    type: 'speed',
-  },
-  {
-    id: 'laserLeft',
-    label: 'Left laser',
-    type: 'blocks',
-  },
-
-  {
-    id: 'laserRight',
-    label: 'Right laser',
-    type: 'blocks',
-  },
-  {
-    id: 'laserSpeedRight',
-    label: 'Right laser speed',
-    type: 'speed',
-  },
-  {
-    id: 'laserBack',
-    label: 'Back laser',
-    type: 'blocks',
-  },
-  {
-    id: 'primaryLight',
-    label: 'Primary light',
-    type: 'blocks',
-  },
-  {
-    id: 'trackNeons',
-    label: 'Track neons',
-    type: 'blocks',
-  },
-  {
-    id: 'largeRing',
-    label: 'Large ring',
-    type: 'blocks',
-  },
-  {
-    id: 'smallRing',
-    label: 'Small ring',
-    type: 'blocks',
-  },
-];
-
 const PREFIX_WIDTH = 170;
+
+const convertMousePositionToBeatNum = (
+  x,
+  innerGridWidth,
+  beatNums,
+  startBeat,
+  snapTo
+) => {
+  const positionInBeats = normalize(x, 0, innerGridWidth, 0, beatNums.length);
+
+  let roundedPositionInBeats = positionInBeats;
+  if (typeof snapTo === 'number') {
+    roundedPositionInBeats = roundToNearest(positionInBeats, snapTo);
+  }
+
+  return roundedPositionInBeats + startBeat;
+};
 
 const EventsGrid = ({
   contentWidth,
@@ -98,10 +66,9 @@ const EventsGrid = ({
 }) => {
   const innerGridWidth = contentWidth - PREFIX_WIDTH;
   // TODO: Dynamic height?
-  const blockTrackHeight = 48;
-  const speedTrackHeight = 48;
+  const trackHeight = 48;
   const headerHeight = 32;
-  const innerGridHeight = blockTrackHeight * 7 + speedTrackHeight * 2;
+  const innerGridHeight = trackHeight * EVENT_TRACKS.length;
 
   const beatNums = range(Math.floor(startBeat), Math.ceil(endBeat));
 
@@ -112,6 +79,14 @@ const EventsGrid = ({
   const tracksRef = useMousePositionOverElement((x, y) => {
     const currentMousePosition = { x, y };
     setMousePosition(currentMousePosition);
+
+    const hoveringOverBeatNum = convertMousePositionToBeatNum(
+      x,
+      innerGridWidth,
+      beatNums,
+      startBeat,
+      snapTo
+    );
 
     if (
       selectedEditMode === 'select' &&
@@ -125,12 +100,35 @@ const EventsGrid = ({
         bottom: Math.max(mouseDownAt.y, currentMousePosition.y),
       };
 
-      drawSelectionBox(newSelectionBox);
-    }
+      // Selection boxes need to include their cartesian values, in pixels, but
+      // we should also encode the values in business terms: start/end beat,
+      // and start/end track
+      const startTrackIndex = Math.floor(newSelectionBox.top / trackHeight);
+      const endTrackIndex = Math.floor(newSelectionBox.bottom / trackHeight);
 
-    const positionInBeats = normalize(x, 0, innerGridWidth, 0, beatNums.length);
-    const roundedPositionInBeats = roundToNearest(positionInBeats, snapTo);
-    const hoveringOverBeatNum = roundedPositionInBeats + startBeat;
+      const startBeat = convertMousePositionToBeatNum(
+        newSelectionBox.left,
+        innerGridWidth,
+        beatNums,
+        startBeat
+      );
+
+      const endBeat = convertMousePositionToBeatNum(
+        newSelectionBox.left,
+        innerGridWidth,
+        beatNums,
+        startBeat
+      );
+
+      const newSelectionBoxInBeats = {
+        startTrackIndex,
+        endTrackIndex,
+        startBeat,
+        endBeat,
+      };
+
+      drawSelectionBox(newSelectionBox, newSelectionBoxInBeats);
+    }
 
     if (hoveringOverBeatNum !== selectedBeat)
       moveMouseAcrossEventsGrid(hoveringOverBeatNum);
@@ -172,7 +170,7 @@ const EventsGrid = ({
     return () => window.removeEventListener('mouseup', handleMouseUp);
   }, [selectedEditMode, finishManagingEventSelection]);
 
-  const handleGridPointerDown = ev => {
+  const handlePointerDown = ev => {
     if (ev.button === 0) {
       mouseButtonDepressed.current = 'left';
     } else if (ev.button === 2) {
@@ -185,11 +183,9 @@ const EventsGrid = ({
     setMouseDownAt(mousePosition);
   };
 
-  const handleGridPointerUp = ev => {
+  const handlePointerUp = ev => {
     mouseButtonDepressed.current = null;
     setMouseDownAt(null);
-
-    console.log('pointer up');
 
     if (selectionBox) {
       commitSelection();
@@ -201,11 +197,11 @@ const EventsGrid = ({
       <PrefixColumn style={{ width: PREFIX_WIDTH }}>
         <Header style={{ height: headerHeight }} />
 
-        {TRACKS.map(({ id, type, label }) => (
+        {EVENT_TRACKS.map(({ id, type, label }) => (
           <TrackPrefix
             key={id}
             style={{
-              height: type === 'blocks' ? blockTrackHeight : speedTrackHeight,
+              height: type === 'blocks' ? trackHeight : trackHeight,
             }}
           >
             {label}
@@ -235,10 +231,10 @@ const EventsGrid = ({
 
           <Tracks
             ref={tracksRef}
-            onPointerDown={handleGridPointerDown}
-            onPointerUp={handleGridPointerUp}
+            onPointerDown={handlePointerDown}
+            onPointerUp={handlePointerUp}
           >
-            {TRACKS.map(({ id, type }) => {
+            {EVENT_TRACKS.map(({ id, type }) => {
               const TrackComponent =
                 type === 'blocks' ? BlockTrack : SpeedTrack;
 
@@ -247,9 +243,7 @@ const EventsGrid = ({
                   key={id}
                   trackId={id}
                   width={innerGridWidth}
-                  height={
-                    type === 'blocks' ? blockTrackHeight : speedTrackHeight
-                  }
+                  height={type === 'blocks' ? trackHeight : trackHeight}
                   startBeat={startBeat}
                   numOfBeatsToShow={numOfBeatsToShow}
                   cursorAtBeat={selectedBeat}
