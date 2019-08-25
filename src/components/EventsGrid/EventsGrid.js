@@ -106,15 +106,15 @@ const EventsGrid = ({
       const startTrackIndex = Math.floor(newSelectionBox.top / trackHeight);
       const endTrackIndex = Math.floor(newSelectionBox.bottom / trackHeight);
 
-      const startBeat = convertMousePositionToBeatNum(
+      const start = convertMousePositionToBeatNum(
         newSelectionBox.left,
         innerGridWidth,
         beatNums,
         startBeat
       );
 
-      const endBeat = convertMousePositionToBeatNum(
-        newSelectionBox.left,
+      const end = convertMousePositionToBeatNum(
+        newSelectionBox.right,
         innerGridWidth,
         beatNums,
         startBeat
@@ -123,8 +123,8 @@ const EventsGrid = ({
       const newSelectionBoxInBeats = {
         startTrackIndex,
         endTrackIndex,
-        startBeat,
-        endBeat,
+        startBeat: start,
+        endBeat: end,
       };
 
       drawSelectionBox(newSelectionBox, newSelectionBoxInBeats);

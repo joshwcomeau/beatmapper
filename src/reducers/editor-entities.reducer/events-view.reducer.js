@@ -13,8 +13,6 @@ const createInitialState = () => ({
   }, {}),
 });
 
-console.log(createInitialState());
-
 const LIGHTING_TRACKS = [
   'laserLeft',
   'laserRight',
@@ -237,12 +235,57 @@ const eventsView = undoable(
         });
       }
 
-      case 'DRAW_SELECTION_BOX': {
+      case 'COMMIT_SELECTION': {
         return produce(state, draftState => {
           const trackIds = Object.keys(draftState.tracks);
 
           trackIds.forEach(trackId => {
-            // TODO
+            draftState.tracks[trackId].forEach(event => {
+              if (event.selected === 'tentative') {
+                event.selected = true;
+              }
+            });
+          });
+        });
+      }
+
+      case 'DRAW_SELECTION_BOX': {
+        const { selectionBoxInBeats, metadata } = action;
+
+        return produce(state, draftState => {
+          const trackIds = Object.keys(draftState.tracks);
+
+          trackIds.forEach(trackId => {
+            const trackIndex = EVENT_TRACKS.findIndex(
+              track => track.id === trackId
+            );
+
+            const isTrackIdWithinBox =
+              trackIndex >= selectionBoxInBeats.startTrackIndex &&
+              trackIndex <= selectionBoxInBeats.endTrackIndex;
+
+            draftState.tracks[trackId].forEach(event => {
+              const isInWindow =
+                event.beatNum >= metadata.window.startBeat &&
+                event.beatNum <= metadata.window.endBeat;
+
+              if (!isInWindow) {
+                return;
+              }
+
+              const isInSelectionBox =
+                isTrackIdWithinBox &&
+                event.beatNum >= selectionBoxInBeats.startBeat &&
+                event.beatNum <= selectionBoxInBeats.endBeat;
+
+              if (isInSelectionBox) {
+                event.selected = 'tentative';
+              } else {
+                if (event.selected === 'tentative') {
+                  event.selected = false;
+                }
+              }
+            });
           });
         });
       }

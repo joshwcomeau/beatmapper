@@ -616,11 +616,22 @@ export const zoomOut = () => ({
   type: 'ZOOM_OUT',
 });
 
-export const drawSelectionBox = (selectionBox, selectionBoxInBeats) => ({
-  type: 'DRAW_SELECTION_BOX',
-  selectionBox,
-  selectionBoxInBeats,
-});
+export const drawSelectionBox = (selectionBox, selectionBoxInBeats) => (
+  dispatch,
+  getState
+) => {
+  const state = getState();
+
+  const { startBeat, endBeat } = getStartAndEndBeat(state);
+  const metadata = { window: { startBeat, endBeat } };
+
+  dispatch({
+    type: 'DRAW_SELECTION_BOX',
+    selectionBox,
+    selectionBoxInBeats,
+    metadata,
+  });
+};
 
 export const commitSelection = () => ({
   type: 'COMMIT_SELECTION',

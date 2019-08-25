@@ -5,8 +5,7 @@ import { connect } from 'react-redux';
 import * as actions from '../../actions';
 import { COLORS } from '../../constants';
 import {
-  getEventSelectionMode,
-  getEventSelectionModeTrackId,
+  getSelectedEventEditMode,
   getSelectedEventTool,
   getSelectedEventColor,
 } from '../../reducers/editor.reducer';
@@ -21,20 +20,14 @@ const BlockTrack = ({
   numOfBeatsToShow,
   cursorAtBeat,
   events,
-  selectionMode,
-  selectionModeTrackId,
   selectedTool,
   selectedColor,
+  selectedEditMode,
   placeEvent,
-  deleteEvent,
-  bulkDeleteEvent,
-  selectEvent,
-  deselectEvent,
-  switchEventColor,
-  startManagingEventSelection,
-  finishManagingEventSelection,
   ...delegated
 }) => {
+  const [mouseButtonDepressed, setMouseButtonDepressed] = React.useState(null);
+
   const getPropsForPlacedEvent = () => {
     const isRingEvent = trackId === 'largeRing' || trackId === 'smallRing';
     const eventType = isRingEvent ? 'rotate' : selectedTool;
@@ -46,8 +39,9 @@ const BlockTrack = ({
 
     return [trackId, cursorAtBeat, eventType, eventColor];
   };
+
   const handleClickTrack = () => {
-    if (selectionMode) {
+    if (selectedEditMode === 'select') {
       return;
     }
 
@@ -55,23 +49,26 @@ const BlockTrack = ({
   };
 
   React.useEffect(() => {
-    if (selectionMode === 'place' && selectionModeTrackId === trackId) {
+    if (selectedEditMode === 'place' && mouseButtonDepressed === 'left') {
       // TODO: Technically this should be a new action, bulkPlaceEVent, so that
       // they can all be undoed in 1 step
       placeEvent(...getPropsForPlacedEvent());
     }
     // eslint-disable-next-line
-  }, [selectionMode, cursorAtBeat]);
+  }, [selectedEditMode, cursorAtBeat]);
 
   return (
     <Wrapper
       style={{ height }}
-      onClick={handleClickTrack}
+      onPointerUp={() => {
+        setMouseButtonDepressed(null);
+      }}
       onPointerDown={ev => {
         if (ev.buttons === 1) {
-          startManagingEventSelection('place', trackId);
+          handleClickTrack();
+          setMouseButtonDepressed('left');
         } else if (ev.buttons === 2) {
-          startManagingEventSelection('delete');
+          setMouseButtonDepressed('right');
         }
       }}
       onContextMenu={ev => ev.preventDefault()}
@@ -84,6 +81,9 @@ const BlockTrack = ({
             trackId={trackId}
             startBeat={startBeat}
             numOfBeatsToShow={numOfBeatsToShow}
+            deleteOnHover={
+              selectedEditMode === 'place' && mouseButtonDepressed === 'right'
+            }
           />
         );
       })}
@@ -107,15 +107,13 @@ const mapStateToProps = (state, ownProps) => {
     ownProps.startBeat,
     ownProps.numOfBeatsToShow
   );
-  const selectionMode = getEventSelectionMode(state);
-  const selectionModeTrackId = getEventSelectionModeTrackId(state);
+  const selectedEditMode = getSelectedEventEditMode(state);
   const selectedTool = getSelectedEventTool(state);
   const selectedColor = getSelectedEventColor(state);
 
   return {
     events,
-    selectionMode,
-    selectionModeTrackId,
+    selectedEditMode,
     selectedTool,
     selectedColor,
   };
@@ -123,16 +121,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = {
   placeEvent: actions.placeEvent,
-  deleteEvent: actions.deleteEvent,
-  bulkDeleteEvent: actions.bulkDeleteEvent,
-  selectEvent: actions.selectEvent,
-  deselectEvent: actions.deselectEvent,
-  switchEventColor: actions.switchEventColor,
-  startManagingEventSelection: actions.startManagingEventSelection,
-  finishManagingEventSelection: actions.finishManagingEventSelection,
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(BlockTrack);
+)(React.memo(BlockTrack));

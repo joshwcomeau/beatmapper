@@ -60,10 +60,10 @@ const EventBlock = ({
   event,
   startBeat,
   numOfBeatsToShow,
+  deleteOnHover,
   selectionMode,
   selectEvent,
   deselectEvent,
-  startManagingEventSelection,
   bulkDeleteEvent,
   switchEventColor,
   deleteEvent,
@@ -84,17 +84,11 @@ const EventBlock = ({
       onClick={ev => ev.stopPropagation()}
       onContextMenu={ev => ev.preventDefault()}
       onPointerOver={ev => {
-        if (selectionMode === 'delete') {
+        if (deleteOnHover) {
           bulkDeleteEvent(event.id, event.trackId);
-        } else if (selectionMode === 'select' && !event.selected) {
-          selectEvent(event.id, event.trackId);
-        } else if (selectionMode === 'deselect' && event.selected) {
-          deselectEvent(event.id, event.trackId);
         }
       }}
       onPointerDown={ev => {
-        ev.stopPropagation();
-
         // prettier-ignore
         const clickType = ev.button === 0
         ? 'left'
@@ -103,16 +97,6 @@ const EventBlock = ({
           : ev.button === 2
             ? 'right'
             : undefined;
-
-        let newSelectionMode;
-        if (clickType === 'left') {
-          newSelectionMode = event.selected ? 'deselect' : 'select';
-        } else if (clickType === 'right') {
-          newSelectionMode = 'delete';
-        }
-        if (newSelectionMode) {
-          startManagingEventSelection(newSelectionMode);
-        }
 
         if (clickType === 'left') {
           const actionToSend = event.selected ? deselectEvent : selectEvent;
@@ -167,7 +151,6 @@ const mapDispatchToProps = {
   selectEvent: actions.selectEvent,
   deselectEvent: actions.deselectEvent,
   switchEventColor: actions.switchEventColor,
-  startManagingEventSelection: actions.startManagingEventSelection,
 };
 
 export default connect(
