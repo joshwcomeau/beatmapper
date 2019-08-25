@@ -17,8 +17,11 @@ const KeyboardShortcuts = ({
   changeSnapping,
   incrementSnapping,
   decrementSnapping,
+  selectTool,
   selectNextTool,
   selectPreviousTool,
+  selectEventColor,
+  selectEventEditMode,
   deselectAll,
   toggleSelectAll,
   copySelection,
@@ -29,6 +32,7 @@ const KeyboardShortcuts = ({
   skipToEnd,
   undoEvents,
   redoEvents,
+  deleteSelectedEvents,
 }) => {
   let keysDepressed = React.useRef({
     space: false,
@@ -67,7 +71,6 @@ const KeyboardShortcuts = ({
       }
 
       case 'Escape': {
-        // TODO: Implement this
         return deselectAll(EVENTS_VIEW);
       }
 
@@ -99,8 +102,7 @@ const KeyboardShortcuts = ({
       }
 
       case 'Delete': {
-        // TODO
-        break;
+        return deleteSelectedEvents();
       }
 
       case 'KeyX': {
@@ -138,16 +140,39 @@ const KeyboardShortcuts = ({
       }
 
       case 'KeyA': {
-        if (!isMetaKeyPressed(ev)) {
-          return;
+        if (isMetaKeyPressed(ev)) {
+          ev.preventDefault();
+          return toggleSelectAll(EVENTS_VIEW);
         }
 
-        ev.preventDefault();
-        return toggleSelectAll(EVENTS_VIEW);
+        return selectEventEditMode('place');
+      }
+
+      case 'KeyS': {
+        return selectEventEditMode('select');
+      }
+
+      case 'KeyR': {
+        return selectEventColor('red');
+      }
+      case 'KeyB': {
+        return selectEventColor('blue');
+      }
+
+      case 'Digit1': {
+        return selectTool(EVENTS_VIEW, 'on');
+      }
+      case 'Digit2': {
+        return selectTool(EVENTS_VIEW, 'off');
+      }
+      case 'Digit3': {
+        return selectTool(EVENTS_VIEW, 'flash');
+      }
+      case 'Digit4': {
+        return selectTool(EVENTS_VIEW, 'fade');
       }
 
       case 'KeyZ': {
-        // TODO
         if (!isMetaKeyPressed(ev)) {
           return;
         }
@@ -166,23 +191,6 @@ const KeyboardShortcuts = ({
         keysDepressed.current.space = false;
         break;
       }
-      case 'KeyW': {
-        keysDepressed.current.w = false;
-        break;
-      }
-      case 'KeyA': {
-        keysDepressed.current.a = false;
-        break;
-      }
-      case 'KeyS': {
-        keysDepressed.current.s = false;
-        break;
-      }
-      case 'KeyD': {
-        keysDepressed.current.d = false;
-        break;
-      }
-
       default:
         return;
     }
@@ -219,8 +227,11 @@ const mapDispatchToProps = {
   changeSnapping: actions.changeSnapping,
   incrementSnapping: actions.incrementSnapping,
   decrementSnapping: actions.decrementSnapping,
+  selectTool: actions.selectTool,
   selectNextTool: actions.selectNextTool,
   selectPreviousTool: actions.selectPreviousTool,
+  selectEventColor: actions.selectEventColor,
+  selectEventEditMode: actions.selectEventEditMode,
   deselectAll: actions.deselectAll,
   copySelection: actions.copySelection,
   cutSelection: actions.cutSelection,
@@ -231,6 +242,7 @@ const mapDispatchToProps = {
   jumpToBar: actions.jumpToBar,
   skipToStart: actions.skipToStart,
   skipToEnd: actions.skipToEnd,
+  deleteSelectedEvents: actions.deleteSelectedEvents,
 };
 
 export default connect(

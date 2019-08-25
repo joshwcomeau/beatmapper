@@ -5,7 +5,7 @@ import Color from 'color';
 
 import { COLORS } from '../../constants';
 import * as actions from '../../actions';
-import { getEventSelectionMode } from '../../reducers/editor.reducer';
+import { getSelectedEventEditMode } from '../../reducers/editor.reducer';
 import { normalize } from '../../utils';
 import UnstyledButton from '../UnstyledButton';
 
@@ -61,7 +61,7 @@ const EventBlock = ({
   startBeat,
   numOfBeatsToShow,
   deleteOnHover,
-  selectionMode,
+  selectedEditMode,
   selectEvent,
   deselectEvent,
   bulkDeleteEvent,
@@ -89,6 +89,14 @@ const EventBlock = ({
         }
       }}
       onPointerDown={ev => {
+        // When in "select" mode, clicking the grid creates a selection box.
+        // We don't want to do that when the user clicks directly on a block.
+        // In "place" mode, we need the event to propagate to enable bulk
+        // delete.
+        if (selectedEditMode === 'select') {
+          ev.stopPropagation();
+        }
+
         // prettier-ignore
         const clickType = ev.button === 0
         ? 'left'
@@ -140,9 +148,9 @@ const SelectedGlow = styled.div`
 `;
 
 const mapStateToProps = (state, ownProps) => {
-  const selectionMode = getEventSelectionMode(state);
+  const selectedEditMode = getSelectedEventEditMode(state);
 
-  return { selectionMode };
+  return { selectedEditMode };
 };
 
 const mapDispatchToProps = {

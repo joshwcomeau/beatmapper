@@ -59,7 +59,6 @@ const EventsGrid = ({
   isLoading,
   snapTo,
   selectedEditMode,
-  finishManagingEventSelection,
   moveMouseAcrossEventsGrid,
   drawSelectionBox,
   commitSelection,
@@ -141,34 +140,6 @@ const EventsGrid = ({
     0,
     innerGridWidth
   );
-
-  // I can click on a block to start selecting it.
-  // If I hold the mouse down, I can drag to select (or deselect) many notes
-  // at a time.
-  // For this to work, I need to know when they start clicking and stop
-  // clicking. For starting clicking, I can use the `SELECT_NOTE` action,
-  // triggered when clicking a block... but they might not be over a block
-  // when they release the mouse. So instead I need to use a mouseUp handler
-  // up here.
-  React.useEffect(() => {
-    // TODO: Make this 'ifMouseDOwn', something something local state?
-    if (!selectedEditMode) {
-      return;
-    }
-
-    const handleMouseUp = () => {
-      // Wait 1 frame before wrapping up. This is to prevent the selection
-      // mode from changing before all event-handlers have been processed.
-      // Without the delay, the user might accidentally add notes to the
-      // placement grid - further up in the React tree - if they release the
-      // mouse while over a grid tile.
-      window.requestAnimationFrame(finishManagingEventSelection);
-    };
-
-    window.addEventListener('mouseup', handleMouseUp);
-
-    return () => window.removeEventListener('mouseup', handleMouseUp);
-  }, [selectedEditMode, finishManagingEventSelection]);
 
   const handlePointerDown = ev => {
     if (ev.button === 0) {
@@ -381,7 +352,6 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = {
-  finishManagingEventSelection: actions.finishManagingEventSelection,
   moveMouseAcrossEventsGrid: actions.moveMouseAcrossEventsGrid,
   drawSelectionBox: actions.drawSelectionBox,
   commitSelection: actions.commitSelection,

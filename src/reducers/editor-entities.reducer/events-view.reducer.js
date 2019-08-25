@@ -142,6 +142,18 @@ const eventsView = undoable(
         };
       }
 
+      case 'DELETE_SELECTED_EVENTS': {
+        return produce(state, draftState => {
+          const trackIds = Object.keys(draftState.tracks);
+
+          trackIds.forEach(trackId => {
+            draftState.tracks[trackId] = draftState.tracks[trackId].filter(
+              event => !event.selected
+            );
+          });
+        });
+      }
+
       case 'CUT_SELECTION': {
         if (action.view !== EVENTS_VIEW) {
           return state;

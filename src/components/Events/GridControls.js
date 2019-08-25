@@ -29,9 +29,9 @@ const GridControls = ({
   selectedTool,
   selectedColor,
   zoomLevel,
-  selectEditMode,
+  selectEventEditMode,
   selectTool,
-  selectColor,
+  selectEventColor,
   zoomIn,
   zoomOut,
 }) => {
@@ -42,7 +42,7 @@ const GridControls = ({
           <ControlItemToggleButton
             value="place"
             isToggled={selectedEditMode === 'place'}
-            onToggle={() => selectEditMode('place')}
+            onToggle={() => selectEventEditMode('place')}
           >
             <Icon icon={placeToolIcon} />
           </ControlItemToggleButton>
@@ -50,7 +50,7 @@ const GridControls = ({
           <ControlItemToggleButton
             value="select"
             isToggled={selectedEditMode === 'select'}
-            onToggle={() => selectEditMode('select')}
+            onToggle={() => selectEventEditMode('select')}
           >
             <Icon icon={selectToolIcon} />
           </ControlItemToggleButton>
@@ -60,14 +60,14 @@ const GridControls = ({
           <ControlItemToggleButton
             value="red"
             isToggled={selectedColor === 'red'}
-            onToggle={selectColor}
+            onToggle={selectEventColor}
           >
             <Box color={COLORS.red[500]} />
           </ControlItemToggleButton>
           <ControlItemToggleButton
             value="blue"
             isToggled={selectedColor === 'blue'}
-            onToggle={selectColor}
+            onToggle={selectEventColor}
           >
             <Box color={COLORS.blue[500]} />
           </ControlItemToggleButton>
@@ -206,8 +206,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
   selectTool: actions.selectTool,
-  selectColor: actions.selectEventColor,
-  selectEditMode: actions.selectEventEditMode,
+  selectEventColor: actions.selectEventColor,
+  selectEventEditMode: actions.selectEventEditMode,
   zoomIn: actions.zoomIn,
   zoomOut: actions.zoomOut,
 };

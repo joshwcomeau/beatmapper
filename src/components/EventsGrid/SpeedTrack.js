@@ -36,7 +36,6 @@ const SpeedTrack = ({
   changeLaserSpeed,
   deleteEvent,
   bulkDeleteEvent,
-  startManagingEventSelection,
   ...delegated
 }) => {
   const cursorAtSpeed = React.useRef(null);
@@ -107,11 +106,6 @@ const SpeedTrack = ({
       ref={ref}
       style={{ height }}
       onClick={handleClick}
-      onPointerDown={ev => {
-        if (ev.buttons === 2) {
-          startManagingEventSelection('delete');
-        }
-      }}
       onContextMenu={ev => ev.preventDefault()}
     >
       <Svg width={width} height={height}>
@@ -230,8 +224,6 @@ const mapDispatchToProps = {
   changeLaserSpeed: actions.changeLaserSpeed,
   deleteEvent: actions.deleteEvent,
   bulkDeleteEvent: actions.bulkDeleteEvent,
-  startManagingEventSelection: actions.startManagingEventSelection,
-  finishManagingEventSelection: actions.finishManagingEventSelection,
 };
 
 export default connect(

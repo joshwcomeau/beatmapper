@@ -10,15 +10,7 @@ import { getCursorPositionInBeats } from './navigation.reducer';
 
 const NOTE_TOOLS = ['red-block', 'blue-block', 'mine', 'obstacle'];
 
-const EVENT_TOOLS = [
-  'on',
-  'off',
-  'flash',
-  'fade',
-  'rotate',
-  'change-speed',
-  'custom-pattern',
-];
+const EVENT_TOOLS = ['on', 'off', 'flash', 'fade'];
 
 const EVENT_EDIT_MODES = ['place', 'select'];
 

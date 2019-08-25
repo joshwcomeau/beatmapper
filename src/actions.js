@@ -399,14 +399,6 @@ export const startManagingNoteSelection = selectionMode => ({
 export const finishManagingNoteSelection = () => ({
   type: 'FINISH_MANAGING_NOTE_SELECTION',
 });
-export const startManagingEventSelection = (selectionMode, trackId) => ({
-  type: 'START_MANAGING_EVENT_SELECTION',
-  selectionMode,
-  trackId,
-});
-export const finishManagingEventSelection = () => ({
-  type: 'FINISH_MANAGING_EVENT_SELECTION',
-});
 
 export const moveMouseAcrossEventsGrid = selectedBeat => ({
   type: 'MOVE_MOUSE_ACROSS_EVENTS_GRID',
@@ -584,6 +576,9 @@ export const bulkDeleteEvent = (id, trackId) => ({
   type: 'BULK_DELETE_EVENT',
   id,
   trackId,
+});
+export const deleteSelectedEvents = () => ({
+  type: 'DELETE_SELECTED_EVENTS',
 });
 
 export const selectEvent = (id, trackId) => ({
