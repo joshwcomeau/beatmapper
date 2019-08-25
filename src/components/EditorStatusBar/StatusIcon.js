@@ -2,7 +2,7 @@ import React from 'react';
 import { Icon } from 'react-icons-kit';
 import styled from 'styled-components';
 
-import UnstyledButton from '../UnstyledButton';
+import UnfocusedButton from '../UnfocusedButton';
 
 const StatusIcon = ({ icon, onClick, size = 16, opacity = 1, disabled }) => (
   <Wrapper
@@ -15,7 +15,7 @@ const StatusIcon = ({ icon, onClick, size = 16, opacity = 1, disabled }) => (
     <Icon icon={icon} size={size} style={{ transform: 'translateY(-2px)' }} />
   </Wrapper>
 );
-const Wrapper = styled(UnstyledButton)`
+const Wrapper = styled(UnfocusedButton)`
   color: inherit;
   display: inline-flex;
   justify-content: center;

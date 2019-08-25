@@ -189,7 +189,12 @@ const EventsGrid = ({
           ))}
         </Header>
 
-        <MainGridContent style={{ height: innerGridHeight }}>
+        <MainGridContent
+          style={{
+            height: innerGridHeight,
+            cursor: selectedEditMode === 'select' ? 'crosshair' : 'pointer',
+          }}
+        >
           <BackgroundLinesWrapper>
             <BackgroundLines
               width={innerGridWidth}

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { COLORS, UNIT } from '../../constants';
 
 import Spacer from '../Spacer';
-import UnstyledButton from '../UnstyledButton';
+import UnfocusedButton from '../UnfocusedButton';
 import StatusIcon from './StatusIcon';
 
 const Toggle = ({ size, onIcon, offIcon, value, onChange }) => {
@@ -20,7 +20,6 @@ const Toggle = ({ size, onIcon, offIcon, value, onChange }) => {
         opacity={value ? 0.5 : 1}
         icon={offIcon}
         onClick={ev => {
-          ev.currentTarget.blur();
           onChange(false);
         }}
       />
@@ -34,7 +33,6 @@ const Toggle = ({ size, onIcon, offIcon, value, onChange }) => {
           borderWidth,
         }}
         onClick={ev => {
-          ev.currentTarget.blur();
           onChange(!value);
         }}
       >
@@ -46,7 +44,6 @@ const Toggle = ({ size, onIcon, offIcon, value, onChange }) => {
         opacity={value ? 1 : 0.5}
         icon={onIcon}
         onClick={ev => {
-          ev.currentTarget.blur();
           onChange(true);
         }}
       />
@@ -58,7 +55,7 @@ const Wrapper = styled.div`
   display: flex;
 `;
 
-const ToggleWrapper = styled(UnstyledButton)`
+const ToggleWrapper = styled(UnfocusedButton)`
   position: relative;
   border-color: ${COLORS.blueGray[500]};
   border-style: solid;

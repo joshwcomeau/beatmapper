@@ -33,6 +33,8 @@ const KeyboardShortcuts = ({
   undoEvents,
   redoEvents,
   deleteSelectedEvents,
+  zoomOut,
+  zoomIn,
 }) => {
   let keysDepressed = React.useRef({
     space: false,
@@ -99,6 +101,15 @@ const KeyboardShortcuts = ({
       }
       case 'End': {
         return skipToEnd();
+      }
+      case 'Minus': {
+        return zoomOut();
+      }
+      case 'Equal': {
+        if (ev.shiftKey) {
+          // Shift+Equal is "Plus"
+          return zoomIn();
+        }
       }
 
       case 'Delete': {
@@ -243,6 +254,8 @@ const mapDispatchToProps = {
   skipToStart: actions.skipToStart,
   skipToEnd: actions.skipToEnd,
   deleteSelectedEvents: actions.deleteSelectedEvents,
+  zoomOut: actions.zoomOut,
+  zoomIn: actions.zoomIn,
 };
 
 export default connect(

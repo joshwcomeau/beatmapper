@@ -66,7 +66,6 @@ const EditorNavigationControls = ({
             color={COLORS.white}
             icon={rewind}
             onClick={ev => {
-              ev.currentTarget.blur();
               seekBackwards(view);
             }}
           />
@@ -81,7 +80,6 @@ const EditorNavigationControls = ({
             color={COLORS.white}
             icon={fastForward}
             onClick={ev => {
-              ev.currentTarget.blur();
               seekForwards(view);
             }}
           />

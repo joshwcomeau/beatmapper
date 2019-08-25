@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { UNIT, COLORS } from '../../constants';
 
-import UnstyledButton from '../UnstyledButton';
+import UnfocusedButton from '../UnfocusedButton';
 
 const IconButton = ({
   icon,
@@ -40,7 +40,7 @@ const IconButton = ({
   );
 };
 
-const ButtonElem = styled(UnstyledButton)`
+const ButtonElem = styled(UnfocusedButton)`
   width: 36px;
   height: 36px;
   display: flex;

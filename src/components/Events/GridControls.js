@@ -21,7 +21,7 @@ import Spacer from '../Spacer';
 import ControlItem from './ControlItem';
 import ControlItemToggleButton from './ControlItemToggleButton';
 import EventToolIcon from './EventToolIcon';
-import UnstyledButton from '../UnstyledButton';
+import UnfocusedButton from '../UnfocusedButton';
 
 const GridControls = ({
   contentWidth,
@@ -176,7 +176,7 @@ const Box = styled.div`
   );
 `;
 
-const ZoomBtn = styled(UnstyledButton)`
+const ZoomBtn = styled(UnfocusedButton)`
   width: 24px;
   height: 24px;
   border-radius: 4px;
