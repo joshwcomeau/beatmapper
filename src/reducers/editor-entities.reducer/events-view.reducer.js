@@ -227,7 +227,7 @@ const eventsView = undoable(
             draftState.tracks[trackId].forEach(event => {
               const shouldBeSelected =
                 event.beatNum >= metadata.startBeat &&
-                event.beatNum <= metadata.endBeat;
+                event.beatNum < metadata.endBeat;
 
               event.selected = shouldBeSelected;
             });
@@ -392,7 +392,7 @@ export const getEventsForTrack = (
   const endBeat = startBeat + numOfBeatsToShow;
 
   return tracks[trackId].filter(
-    event => event.beatNum >= startBeat && event.beatNum <= endBeat
+    event => event.beatNum >= startBeat && event.beatNum < endBeat
   );
 };
 
