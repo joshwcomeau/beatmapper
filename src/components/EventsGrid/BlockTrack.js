@@ -41,10 +41,6 @@ const BlockTrack = ({
   };
 
   const handleClickTrack = () => {
-    if (selectedEditMode === 'select') {
-      return;
-    }
-
     placeEvent(...getPropsForPlacedEvent());
   };
 
@@ -57,19 +53,30 @@ const BlockTrack = ({
     // eslint-disable-next-line
   }, [selectedEditMode, cursorAtBeat]);
 
+  const handlePointerUp = React.useCallback(() => {
+    setMouseButtonDepressed(null);
+  }, []);
+
+  React.useEffect(() => {
+    return () => window.removeEventListener('pointerup', handlePointerUp);
+  }, [handlePointerUp]);
+
   return (
     <Wrapper
       style={{ height }}
-      onPointerUp={() => {
-        setMouseButtonDepressed(null);
-      }}
       onPointerDown={ev => {
+        if (selectedEditMode === 'select') {
+          return;
+        }
+
         if (ev.buttons === 1) {
           handleClickTrack();
           setMouseButtonDepressed('left');
         } else if (ev.buttons === 2) {
           setMouseButtonDepressed('right');
         }
+
+        window.addEventListener('pointerup', handlePointerUp);
       }}
       onContextMenu={ev => ev.preventDefault()}
     >

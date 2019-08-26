@@ -65,7 +65,7 @@ const EventsGrid = ({
 }) => {
   const innerGridWidth = contentWidth - PREFIX_WIDTH;
   // TODO: Dynamic height?
-  const trackHeight = 48;
+  const trackHeight = 40;
   const headerHeight = 32;
   const innerGridHeight = trackHeight * EVENT_TRACKS.length;
 
