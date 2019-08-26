@@ -199,6 +199,20 @@ const eventsView = undoable(
         });
       }
 
+      case 'SWITCH_EVENT_COLOR': {
+        const { id, trackId } = action;
+
+        return produce(state, draftState => {
+          const eventIndex = state.tracks[trackId].findIndex(
+            ev => ev.id === id
+          );
+
+          const event = draftState.tracks[trackId][eventIndex];
+
+          event.color = event.color === 'blue' ? 'red' : 'blue';
+        });
+      }
+
       case 'SELECT_EVENT':
       case 'DESELECT_EVENT': {
         const { id, trackId } = action;
@@ -317,6 +331,7 @@ const eventsView = undoable(
       'BULK_DELETE_EVENT',
       'CUT_SELECTION',
       'PASTE_SELECTION',
+      'SWITCH_EVENT_COLOR',
     ]),
     groupBy: groupByActionTypes(['BULK_DELETE_EVENT']),
   }

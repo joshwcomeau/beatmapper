@@ -152,15 +152,21 @@ const EventsGrid = ({
     }
 
     setMouseDownAt(mousePosition);
-  };
 
-  const handlePointerUp = ev => {
-    mouseButtonDepressed.current = null;
-    setMouseDownAt(null);
+    function handlePointerUp() {
+      mouseButtonDepressed.current = null;
+      setMouseDownAt(null);
 
-    if (selectionBox) {
       commitSelection();
+
+      window.removeEventListener('pointerup', handlePointerUp);
     }
+
+    // HACK: I'm not cleaning up this event listener.
+    // Surprisingly this gave me trouble, but I also think it's fine since the
+    // user is unlikely to navigate away from this page while holding the
+    // mouse button down from within the grid.
+    window.addEventListener('pointerup', handlePointerUp);
   };
 
   return (
@@ -205,11 +211,7 @@ const EventsGrid = ({
             />
           </BackgroundLinesWrapper>
 
-          <Tracks
-            ref={tracksRef}
-            onPointerDown={handlePointerDown}
-            onPointerUp={handlePointerUp}
-          >
+          <Tracks ref={tracksRef} onPointerDown={handlePointerDown}>
             {EVENT_TRACKS.map(({ id, type }) => {
               const TrackComponent =
                 type === 'blocks' ? BlockTrack : SpeedTrack;
@@ -254,6 +256,8 @@ const Wrapper = styled.div`
     Disallow clicking until the song has loaded, to prevent weird edge-case bugs
   */
   pointer-events: ${props => (props.isLoading ? 'none' : 'auto')};
+  /* Don't allow the track labels or beat nums to be selected */
+  user-select: none;
 `;
 
 const PrefixColumn = styled.div`

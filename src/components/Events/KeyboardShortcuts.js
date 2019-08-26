@@ -110,6 +110,8 @@ const KeyboardShortcuts = ({
           // Shift+Equal is "Plus"
           return zoomIn();
         }
+
+        break;
       }
 
       case 'Delete': {

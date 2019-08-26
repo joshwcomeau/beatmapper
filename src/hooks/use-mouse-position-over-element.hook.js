@@ -1,8 +1,9 @@
 import React from 'react';
 
+import { clamp } from '../utils';
 import useBoundingBox from './use-bounding-box.hook';
 
-export default function useMousePositionOverElement(callback) {
+export default function useMousePositionOverElement(callback, options = {}) {
   const [ref, bb] = useBoundingBox();
 
   React.useEffect(() => {
@@ -15,10 +16,12 @@ export default function useMousePositionOverElement(callback) {
       const insideX = ev.pageX > bb.left && ev.pageX < bb.right;
       const insideY = ev.pageY > bb.top && ev.pageY < bb.bottom;
 
-      const x = ev.pageX - bb.left;
-      const y = ev.pageY - bb.top;
+      const x = clamp(ev.pageX - bb.left, 0, bb.width);
+      const y = clamp(ev.pageY - bb.top, 0, bb.height);
 
-      if (insideX && insideY) {
+      const shouldCall = options.onlyTriggerInside ? insideX && insideY : true;
+
+      if (shouldCall) {
         callback(x, y, ev);
       }
     };
@@ -28,7 +31,7 @@ export default function useMousePositionOverElement(callback) {
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [bb, callback]);
+  }, [bb, callback, options.onlyTriggerInside]);
 
   return ref;
 }
