@@ -15,6 +15,8 @@ import { fastForward as playbackSpeedMaxIcon } from 'react-icons-kit/feather/fas
 import { music as playbackSpeedMinIcon } from 'react-icons-kit/feather/music';
 import { bell as tickOnIcon } from 'react-icons-kit/feather/bell';
 import { bellOff as tickOffIcon } from 'react-icons-kit/feather/bellOff';
+import { minimize2 as distanceCloseIcon } from 'react-icons-kit/feather/minimize2';
+import { maximize2 as distanceFarIcon } from 'react-icons-kit/feather/maximize2';
 
 import * as actions from '../../actions';
 import { COLORS, UNIT } from '../../constants';
@@ -26,6 +28,7 @@ import {
 import {
   getIsLoading,
   getPlaybackRate,
+  getBeatDepth,
   getVolume,
   getPlayNoteTick,
 } from '../../reducers/navigation.reducer';
@@ -43,9 +46,11 @@ const EditorStatusBar = ({
   numOfMines,
   numOfObstacles,
   playbackRate,
+  beatDepth,
   volume,
   playNoteTick,
   updatePlaybackSpeed,
+  updateBeatDepth,
   updateVolume,
   toggleNoteTick,
 }) => {
@@ -68,9 +73,21 @@ const EditorStatusBar = ({
         />
         <Spacer size={UNIT * 6} />
         <SliderGroup
+          disabled={isLoading}
+          width={UNIT * 7}
+          height={height}
+          minIcon={distanceCloseIcon}
+          maxIcon={distanceFarIcon}
+          min={1}
+          max={16}
+          value={beatDepth}
+          onChange={value => updateBeatDepth(value)}
+        />
+        <Spacer size={UNIT * 6} />
+        <SliderGroup
           includeMidpointTick
           disabled={isLoading}
-          width={UNIT * 10}
+          width={UNIT * 7}
           height={height}
           minIcon={playbackSpeedMinIcon}
           maxIcon={playbackSpeedMaxIcon}
@@ -82,7 +99,7 @@ const EditorStatusBar = ({
         />
         <Spacer size={UNIT * 6} />
         <SliderGroup
-          width={UNIT * 10}
+          width={UNIT * 7}
           height={height}
           minIcon={volumeMinIcon}
           maxIcon={volumeMaxIcon}
@@ -118,6 +135,7 @@ const mapStateToProps = state => {
   return {
     isLoading: getIsLoading(state),
     playbackRate: getPlaybackRate(state),
+    beatDepth: getBeatDepth(state),
     volume: getVolume(state),
     playNoteTick: getPlayNoteTick(state),
     numOfBlocks: getNumOfBlocks(state),
@@ -128,6 +146,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
   updatePlaybackSpeed: actions.updatePlaybackSpeed,
+  updateBeatDepth: actions.updateBeatDepth,
   updateVolume: actions.updateVolume,
   toggleNoteTick: actions.toggleNoteTick,
 };

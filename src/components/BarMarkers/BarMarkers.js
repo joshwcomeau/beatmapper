@@ -1,17 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { BEAT_DEPTH, SONG_OFFSET } from '../../constants';
+import { SONG_OFFSET } from '../../constants';
 import { range } from '../../utils';
 import { convertMillisecondsToBeats } from '../../helpers/audio.helpers';
-import { getCursorPositionInBeats } from '../../reducers/navigation.reducer';
+import {
+  getCursorPositionInBeats,
+  getBeatDepth,
+} from '../../reducers/navigation.reducer';
 import { getSelectedSong } from '../../reducers/songs.reducer';
 
 import Marker from './Marker';
 
 const NUM_TO_RENDER = 12;
 
-const BarMarkers = ({ duration, cursorPositionInBeats, bpm }) => {
+const BarMarkers = ({ duration, beatDepth, cursorPositionInBeats, bpm }) => {
   const totalNumOfBeats = Math.ceil(convertMillisecondsToBeats(duration, bpm));
 
   const linesArray = React.useMemo(() => range(totalNumOfBeats * 4), [
@@ -42,7 +45,7 @@ const BarMarkers = ({ duration, cursorPositionInBeats, bpm }) => {
       <Marker
         key={i}
         barNum={isBar && i / 16}
-        offset={-SONG_OFFSET + -i * (BEAT_DEPTH / 4)}
+        offset={-SONG_OFFSET + -i * (beatDepth / 4)}
         type={type}
       />
     );
@@ -56,6 +59,7 @@ const mapStateToProps = state => {
     duration: state.navigation.duration,
     bpm: song.bpm,
     cursorPositionInBeats: getCursorPositionInBeats(state),
+    beatDepth: getBeatDepth(state),
     isPlaying: state.navigation.isPlaying,
   };
 };

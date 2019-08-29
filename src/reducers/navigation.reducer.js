@@ -10,6 +10,7 @@ const initialState = {
   cursorPosition: 0,
   animateBlockMotion: true,
   playbackRate: 1,
+  beatDepth: 8,
   volume: 0.75,
   playNoteTick: false,
 };
@@ -126,6 +127,14 @@ export default function navigationReducer(state = initialState, action) {
       };
     }
 
+    case 'UPDATE_BEAT_DEPTH': {
+      return {
+        ...state,
+        beatDepth: action.beatDepth,
+        animateBlockMotion: false,
+      };
+    }
+
     case 'CHANGE_SNAPPING': {
       return {
         ...state,
@@ -201,5 +210,6 @@ export const getCursorPositionInBeats = state => {
 };
 
 export const getPlaybackRate = state => state.navigation.playbackRate;
+export const getBeatDepth = state => state.navigation.beatDepth;
 export const getVolume = state => state.navigation.volume;
 export const getPlayNoteTick = state => state.navigation.playNoteTick;

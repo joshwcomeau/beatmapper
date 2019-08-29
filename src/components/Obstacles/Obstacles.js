@@ -5,6 +5,7 @@ import * as actions from '../../actions';
 import {
   getCursorPositionInBeats,
   getSnapTo,
+  getBeatDepth,
 } from '../../reducers/navigation.reducer';
 import { getObstacles } from '../../reducers/editor-entities.reducer/notes-view.reducer';
 
@@ -13,6 +14,7 @@ import ObstacleBox from '../ObstacleBox';
 const Obstacles = ({
   obstacles,
   cursorPositionInBeats,
+  beatDepth,
   selectionMode,
   snapTo,
   deleteObstacle,
@@ -24,6 +26,7 @@ const Obstacles = ({
     <ObstacleBox
       key={obstacle.id}
       obstacle={obstacle}
+      beatDepth={beatDepth}
       snapTo={snapTo}
       handleDelete={deleteObstacle}
       handleResize={resizeObstacle}
@@ -49,6 +52,7 @@ const mapStateToProps = state => {
   return {
     obstacles: getObstacles(state),
     cursorPositionInBeats: getCursorPositionInBeats(state),
+    beatDepth: getBeatDepth(state),
     selectionMode: state.editor.notes.selectionMode,
     snapTo: getSnapTo(state),
   };

@@ -432,6 +432,10 @@ export const updatePlaybackSpeed = playbackRate => ({
   type: 'UPDATE_PLAYBACK_SPEED',
   playbackRate,
 });
+export const updateBeatDepth = beatDepth => ({
+  type: 'UPDATE_BEAT_DEPTH',
+  beatDepth,
+});
 export const updateVolume = volume => ({
   type: 'UPDATE_VOLUME',
   volume,

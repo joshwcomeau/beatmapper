@@ -2,16 +2,19 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { useSpring, a } from 'react-spring/three';
 
-import { BEAT_DEPTH } from '../../constants';
-import { getCursorPositionInBeats } from '../../reducers/navigation.reducer';
+import {
+  getCursorPositionInBeats,
+  getBeatDepth,
+} from '../../reducers/navigation.reducer';
 import { getSelectedSong } from '../../reducers/songs.reducer';
 
 const TrackMover = ({
   cursorPositionInBeats,
+  beatDepth,
   animateBlockMotion,
   children,
 }) => {
-  const zPosition = cursorPositionInBeats * BEAT_DEPTH;
+  const zPosition = cursorPositionInBeats * beatDepth;
 
   const spring = useSpring({ zPosition, immediate: !animateBlockMotion });
 
@@ -33,6 +36,7 @@ const mapStateToProps = state => {
 
   return {
     cursorPositionInBeats: getCursorPositionInBeats(state, song.bpm),
+    beatDepth: getBeatDepth(state),
     animateBlockMotion: state.navigation.animateBlockMotion,
   };
 };

@@ -4,7 +4,6 @@ import * as THREE from 'three';
 import {
   BLOCK_COLUMN_WIDTH,
   BLOCK_PLACEMENT_SQUARE_SIZE,
-  BEAT_DEPTH,
   SONG_OFFSET,
   BLOCK_SIZE,
 } from '../../constants';
@@ -14,6 +13,7 @@ import { Obstacle } from '../../types';
 interface Props {
   obstacle: Obstacle;
   snapTo: number;
+  beatDepth: number;
   handleDelete: (id: string) => void;
   handleResize: (id: string, newBeatDuration: number) => void;
   handleClick: (id: string) => void;
@@ -24,10 +24,10 @@ const RESIZE_THRESHOLD = 30;
 
 // This method gets the position in terms of the obstacle's top-left corner!
 // This will need to be adjusted.
-const getPositionForObstacle = ({
-  lane,
-  beatStart,
-}: Obstacle): [number, number, number] => {
+const getPositionForObstacle = (
+  { lane, beatStart }: Obstacle,
+  beatDepth: number
+): [number, number, number] => {
   // Our `x` parameter is controlled by `lane`. It can be in 1 of 4 places.
   const x = lane * BLOCK_COLUMN_WIDTH - BLOCK_COLUMN_WIDTH * 2;
 
@@ -41,7 +41,7 @@ const getPositionForObstacle = ({
   // since, again, we only care about the top-left-front of our shape,
   // this one is easy: it's `beatStart` number of beats down the pike, plus whatever
   // offset we have, similar to SongBlocks
-  const z = beatStart * BEAT_DEPTH * -1 - SONG_OFFSET;
+  const z = beatStart * beatDepth * -1 - SONG_OFFSET;
 
   return [x, y, z];
 };
@@ -69,6 +69,7 @@ const adjustPositionForObstacle = (
 
 const ObstacleBox: React.FC<Props> = ({
   obstacle,
+  beatDepth,
   snapTo,
   handleDelete,
   handleResize,
@@ -80,7 +81,7 @@ const ObstacleBox: React.FC<Props> = ({
   const width = colspan * BLOCK_COLUMN_WIDTH;
   const height =
     type === 'wall' ? BLOCK_COLUMN_WIDTH * 3.5 : BLOCK_COLUMN_WIDTH * 1.25;
-  let depth = obstacle.beatDuration * BEAT_DEPTH;
+  let depth = obstacle.beatDuration * beatDepth;
   if (depth === 0) {
     depth = 0.01;
   }
@@ -102,7 +103,7 @@ const ObstacleBox: React.FC<Props> = ({
     return new THREE.Mesh(geometry, material);
   }, [depth, height, tentative, width, obstacle.selected]);
 
-  const humanizedPosition = getPositionForObstacle(obstacle);
+  const humanizedPosition = getPositionForObstacle(obstacle, beatDepth);
   const actualPosition = adjustPositionForObstacle(
     humanizedPosition,
     width,

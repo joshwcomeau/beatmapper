@@ -1,14 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {
-  BLOCK_COLUMN_WIDTH,
-  BEAT_DEPTH,
-  SONG_OFFSET,
-  COLORS,
-} from '../../constants';
+import { BLOCK_COLUMN_WIDTH, SONG_OFFSET, COLORS } from '../../constants';
 import * as actions from '../../actions';
-import { getCursorPositionInBeats } from '../../reducers/navigation.reducer';
+import {
+  getCursorPositionInBeats,
+  getBeatDepth,
+} from '../../reducers/navigation.reducer';
 import { getNotes } from '../../reducers/editor-entities.reducer/notes-view.reducer';
 
 import Block from '../Block';
@@ -27,13 +25,12 @@ const getColorForNoteType = type => {
   }
 };
 
-const getPositionForBlock = note => {
+const getPositionForBlock = (note, beatDepth) => {
   const x = note._lineIndex * BLOCK_COLUMN_WIDTH - BLOCK_COLUMN_WIDTH * 1.5;
   const y = note._lineLayer * BLOCK_COLUMN_WIDTH - BLOCK_COLUMN_WIDTH;
 
   // We want to first lay the notes out with proper spacing between them.
-  // A constant, BEAT_DEPTH, controls the distance between two 1/4
-  // notes.
+  // beatDepth controls the distance between two 1/4 notes.
   //
   // We want this to all be BPM-independent; two quarter notes should be equally
   // distant regardless of BPM. To do this, we have to convert the note time
@@ -41,7 +38,7 @@ const getPositionForBlock = note => {
   //
   // First, get the note's "starting" position. Where it is when the song is
   // at 0:00
-  const startingPosition = note._time * BEAT_DEPTH * -1;
+  const startingPosition = note._time * beatDepth * -1;
 
   // Next, take into account that the song is playing. `cursorPosition` will
   // continue to grow, and we need to cursorPosition it by the right number of
@@ -55,13 +52,14 @@ const getPositionForBlock = note => {
 const SongBlocks = ({
   notes,
   cursorPositionInBeats,
+  beatDepth,
   selectionMode,
   clickNote,
   startManagingNoteSelection,
   finishManagingNoteSelection,
   mouseOverNote,
 }) => {
-  const zPosition = -SONG_OFFSET + cursorPositionInBeats * BEAT_DEPTH;
+  const zPosition = -SONG_OFFSET + cursorPositionInBeats * beatDepth;
 
   // I can click on a block to start selecting it.
   // If I hold the mouse down, I can drag to select (or deselect) many notes
@@ -99,7 +97,7 @@ const SongBlocks = ({
   });
 
   return visibleNotes.map((note, index) => {
-    const { x, y, z } = getPositionForBlock(note);
+    const { x, y, z } = getPositionForBlock(note, beatDepth);
     const noteZPosition = zPosition + z;
 
     const NoteComponent = note._type === 3 ? Mine : Block;
@@ -130,6 +128,7 @@ const mapStateToProps = state => {
   return {
     notes: getNotes(state),
     cursorPositionInBeats: getCursorPositionInBeats(state),
+    beatDepth: getBeatDepth(state),
     selectionMode: state.editor.notes.selectionMode,
   };
 };
