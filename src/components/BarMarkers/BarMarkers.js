@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { SONG_OFFSET } from '../../constants';
+import { SONG_OFFSET, SURFACE_DEPTH } from '../../constants';
 import { range } from '../../utils';
 import { convertMillisecondsToBeats } from '../../helpers/audio.helpers';
 import {
@@ -12,9 +12,8 @@ import { getSelectedSong } from '../../reducers/songs.reducer';
 
 import Marker from './Marker';
 
-const NUM_TO_RENDER = 12;
-
 const BarMarkers = ({ duration, beatDepth, cursorPositionInBeats, bpm }) => {
+  const numToRender = SURFACE_DEPTH / beatDepth;
   const totalNumOfBeats = Math.ceil(convertMillisecondsToBeats(duration, bpm));
 
   const linesArray = React.useMemo(() => range(totalNumOfBeats * 4), [
@@ -30,7 +29,7 @@ const BarMarkers = ({ duration, beatDepth, cursorPositionInBeats, bpm }) => {
 
     return (
       beat >= cursorPositionInBeats - FUDGE_FACTOR &&
-      beat < cursorPositionInBeats + NUM_TO_RENDER + FUDGE_FACTOR
+      beat < cursorPositionInBeats + numToRender + FUDGE_FACTOR
     );
   });
 
