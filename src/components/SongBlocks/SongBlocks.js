@@ -1,7 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { BLOCK_COLUMN_WIDTH, SONG_OFFSET, COLORS } from '../../constants';
+import {
+  BLOCK_COLUMN_WIDTH,
+  SURFACE_DEPTH,
+  SONG_OFFSET,
+  COLORS,
+} from '../../constants';
 import * as actions from '../../actions';
 import {
   getCursorPositionInBeats,
@@ -88,11 +93,14 @@ const SongBlocks = ({
     return () => window.removeEventListener('mouseup', handleMouseUp);
   }, [selectionMode, finishManagingNoteSelection]);
 
-  // Filter out any notes not within a ~20 bar range
+  // We want to show all the notes that fit above our platform. The cutoff
+  // depends on the currently-selected beat depth.
+  const farLimit = SURFACE_DEPTH / beatDepth;
+  const closeLimit = (SURFACE_DEPTH / beatDepth) * 0.2;
   const visibleNotes = notes.filter(note => {
     return (
-      note._time > cursorPositionInBeats - 4 &&
-      note._time < cursorPositionInBeats + 16
+      note._time > cursorPositionInBeats - closeLimit &&
+      note._time < cursorPositionInBeats + farLimit
     );
   });
 

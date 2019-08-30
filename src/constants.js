@@ -52,6 +52,7 @@ export const SONG_OFFSET = 6;
 
 // How wide is the platform the notes float above?
 export const SURFACE_WIDTH = 6;
+export const SURFACE_DEPTH = 50;
 
 export const UNIT = 8;
 

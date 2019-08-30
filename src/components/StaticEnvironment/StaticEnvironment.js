@@ -1,13 +1,12 @@
 import React from 'react';
 import * as THREE from 'three';
 
-import { SURFACE_WIDTH, SONG_OFFSET } from '../../constants';
+import { SURFACE_WIDTH, SURFACE_DEPTH, SONG_OFFSET } from '../../constants';
 
 import RectAreaLight from '../RectAreaLight';
 
 const StaticEnvironment = props => {
   const PEG_WIDTH = 0.5;
-  const SURFACE_DEPTH = 50;
   const SURFACE_Z_CENTER = SURFACE_DEPTH / 2 + SONG_OFFSET - 1;
 
   const PEG_X_OFFSET = SURFACE_WIDTH / 2 - PEG_WIDTH;
