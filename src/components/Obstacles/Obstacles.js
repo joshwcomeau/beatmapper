@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import * as actions from '../../actions';
+import { SURFACE_DEPTH } from '../../constants';
 import {
   getCursorPositionInBeats,
   getSnapTo,
@@ -22,7 +23,18 @@ const Obstacles = ({
   selectObstacle,
   deselectObstacle,
 }) => {
-  return obstacles.map(obstacle => (
+  // Show only the obstacles that fit atop the platform.
+  const farLimit = SURFACE_DEPTH / beatDepth;
+  const closeLimit = (SURFACE_DEPTH / beatDepth) * 0.2;
+  const visibleObstacles = obstacles.filter(obstacle => {
+    const beatEnd = obstacle.beatStart + obstacle.beatDuration;
+    return (
+      beatEnd > cursorPositionInBeats - closeLimit &&
+      obstacle.beatStart < cursorPositionInBeats + farLimit
+    );
+  });
+
+  return visibleObstacles.map(obstacle => (
     <ObstacleBox
       key={obstacle.id}
       obstacle={obstacle}
