@@ -127,3 +127,5 @@ export const swapNotes = (axis, notes) => {
     return swapNotesVertically(notes);
   }
 };
+
+export const getNoteDensity = (notes, numOfBeats, bpm) => {};
