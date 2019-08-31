@@ -123,9 +123,9 @@ export function createBeatmapContents(
 
   // We need to sort all notes, obstacles, and events, since the game can be
   // funny when things aren't in order.
-  let sortedNotes = notes.sort((a, b) => a._time - b._time);
-  let sortedObstacles = obstacles.sort((a, b) => a._time - b._time);
-  let sortedEvents = events.sort((a, b) => a._time - b._time);
+  let sortedNotes = [...notes].sort((a, b) => a._time - b._time);
+  let sortedObstacles = [...obstacles].sort((a, b) => a._time - b._time);
+  let sortedEvents = [...events].sort((a, b) => a._time - b._time);
 
   if (meta.version === 2) {
     contents = {

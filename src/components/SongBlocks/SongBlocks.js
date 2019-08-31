@@ -12,7 +12,7 @@ import {
   getCursorPositionInBeats,
   getBeatDepth,
 } from '../../reducers/navigation.reducer';
-import { getNotes } from '../../reducers/editor-entities.reducer/notes-view.reducer';
+import { getVisibleNotes } from '../../reducers/editor-entities.reducer/notes-view.reducer';
 
 import Block from '../Block';
 import Mine from '../Mine';
@@ -93,18 +93,7 @@ const SongBlocks = ({
     return () => window.removeEventListener('mouseup', handleMouseUp);
   }, [selectionMode, finishManagingNoteSelection]);
 
-  // We want to show all the notes that fit above our platform. The cutoff
-  // depends on the currently-selected beat depth.
-  const farLimit = SURFACE_DEPTH / beatDepth;
-  const closeLimit = (SURFACE_DEPTH / beatDepth) * 0.2;
-  const visibleNotes = notes.filter(note => {
-    return (
-      note._time > cursorPositionInBeats - closeLimit &&
-      note._time < cursorPositionInBeats + farLimit
-    );
-  });
-
-  return visibleNotes.map((note, index) => {
+  return notes.map((note, index) => {
     const { x, y, z } = getPositionForBlock(note, beatDepth);
     const noteZPosition = zPosition + z;
 
@@ -134,7 +123,7 @@ const SongBlocks = ({
 
 const mapStateToProps = state => {
   return {
-    notes: getNotes(state),
+    notes: getVisibleNotes(state),
     cursorPositionInBeats: getCursorPositionInBeats(state),
     beatDepth: getBeatDepth(state),
     selectionMode: state.editor.notes.selectionMode,

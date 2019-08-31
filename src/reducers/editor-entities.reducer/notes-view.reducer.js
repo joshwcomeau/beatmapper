@@ -3,12 +3,13 @@ import { createSelector } from 'reselect';
 import undoable, { includeAction, groupByActionTypes } from 'redux-undo';
 import produce from 'immer';
 
+import { NOTES_VIEW, SURFACE_DEPTH } from '../../constants';
 import {
   findNoteIndexByProperties,
   swapNotes,
 } from '../../helpers/notes.helpers';
 import { swapObstacles } from '../../helpers/obstacles.helpers';
-import { NOTES_VIEW } from '../../constants';
+import { getCursorPositionInBeats, getBeatDepth } from './navigation.reducer';
 
 const initialState = {
   notes: [],
@@ -438,5 +439,22 @@ export const getNumOfObstacles = state => getObstacles(state).length;
 export const getNumOfSelectedNotes = state => {
   return getSelectedNotes(state).length + getSelectedObstacles(state).length;
 };
+
+export const getVisibleNotes = createSelector(
+  getNotes,
+  getCursorPositionInBeats,
+  getBeatDepth,
+  (notes, cursorPositionInBeats, beatDepth) => {
+    const farLimit = SURFACE_DEPTH / beatDepth;
+    const closeLimit = (SURFACE_DEPTH / beatDepth) * 0.2;
+
+    return notes.filter(note => {
+      return (
+        note._time > cursorPositionInBeats - closeLimit &&
+        note._time < cursorPositionInBeats + farLimit
+      );
+    });
+  }
+);
 
 export default notesView;
