@@ -2,6 +2,13 @@
   "name": "beatmapper",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "docs": "cd documentation/website && yarn start"
+  },
   "dependencies": {
     "@types/jest": "^24.0.15",
     "@types/node": "^12.6.2",
@@ -42,12 +49,6 @@
     "typescript": "^3.5.3",
     "uuid": "^3.3.2",
     "waveform-data": "^2.1.2"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
