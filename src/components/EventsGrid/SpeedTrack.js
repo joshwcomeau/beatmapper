@@ -5,10 +5,7 @@ import { connect } from 'react-redux';
 import * as actions from '../../actions';
 import { COLORS } from '../../constants';
 import { range, normalize } from '../../utils';
-import {
-  getEventSelectionMode,
-  getEventSelectionModeTrackId,
-} from '../../reducers/editor.reducer';
+import { getSelectedEventEditMode } from '../../reducers/editor.reducer';
 import {
   getEventsForTrack,
   getTrackSpeedAtBeat,
@@ -37,7 +34,7 @@ const SpeedTrack = ({
   events,
   startSpeed,
   endSpeed,
-  selectionMode,
+  selectedEditMode,
   changeLaserSpeed,
   deleteEvent,
   bulkDeleteEvent,
@@ -77,7 +74,7 @@ const SpeedTrack = ({
   });
 
   const handlePointerDown = ev => {
-    if (ev.button !== 0) {
+    if (ev.button !== 0 || selectedEditMode !== 'place') {
       return;
     }
 
@@ -236,15 +233,13 @@ const mapStateToProps = (state, ownProps) => {
     ownProps.trackId,
     ownProps.startBeat + ownProps.numOfBeatsToShow
   );
-  const selectionMode = getEventSelectionMode(state);
-  const selectionModeTrackId = getEventSelectionModeTrackId(state);
+  const selectedEditMode = getSelectedEventEditMode(state);
 
   return {
     events,
     startSpeed,
     endSpeed,
-    selectionMode,
-    selectionModeTrackId,
+    selectedEditMode,
   };
 };
 

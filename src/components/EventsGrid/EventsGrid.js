@@ -81,9 +81,7 @@ const EventsGrid = ({
   React.useEffect(() => {
     setMouseDownAt(null);
     setMousePosition(null);
-    if (selectedEditMode !== 'select') {
-      clearSelectionBox();
-    }
+    clearSelectionBox();
   }, [selectedEditMode]);
 
   const handleCompleteSelection = React.useCallback(() => {

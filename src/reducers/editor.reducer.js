@@ -228,9 +228,6 @@ export const getSelectedNoteTool = state => state.editor.notes.selectedTool;
 export const getSelectedCutDirection = state =>
   state.editor.notes.selectedDirection;
 
-export const getEventSelectionMode = state => state.editor.events.selectionMode;
-export const getEventSelectionModeTrackId = state =>
-  state.editor.events.selectionModeTrackId;
 export const getSelectedEventEditMode = state =>
   state.editor.events.selectedEditMode;
 export const getSelectedEventTool = state => state.editor.events.selectedTool;

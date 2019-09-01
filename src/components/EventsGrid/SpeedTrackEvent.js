@@ -24,10 +24,10 @@ const SpeedTrackEvent = ({
       cx={x}
       cy={y}
       r={4}
-      fill={COLORS.green[500]}
+      fill={event.selected ? COLORS.yellow[500] : COLORS.green[500]}
       style={{
         cursor: 'pointer',
-        opacity: event.id === 'tentative' ? 0.25 : 1,
+        opacity: event.id === 'tentative' ? 0.5 : 1,
       }}
       onPointerDown={ev => {
         if (ev.button === 2) {
