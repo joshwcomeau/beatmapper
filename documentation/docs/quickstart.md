@@ -1,10 +1,10 @@
 ---
-id: doc1
-title: Latin-ish
-sidebar_label: Example Page
+id: quickstart
+title: Quickstart Guide
+sidebar_label: Quickstart
 ---
 
-Check the [documentation](https://docusaurus.io) for how to use Docusaurus.
+Thanks for your interest in Beatmapper!
 
 ## Lorem
 

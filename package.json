@@ -10,7 +10,7 @@
     "webapp:test": "react-scripts test",
     "webapp:eject": "react-scripts eject",
     "docs:start": "cd documentation/website && yarn start",
-    "docs:build": "cd documentation/website && yarn build && mv ./build/docs ../../build/docs",
+    "docs:build": "cd documentation/website && yarn build && mv ./build/manual ../../build/manual",
     "postinstall": "cd documentation/website && yarn install"
   },
   "dependencies": {
