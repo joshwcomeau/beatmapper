@@ -238,6 +238,11 @@ export const scrubWaveform = newOffset => ({
   newOffset,
 });
 
+export const scrubEventsHeader = selectedBeat => ({
+  type: 'SCRUB_EVENTS_HEADER',
+  selectedBeat,
+});
+
 export const scrollThroughSong = direction => ({
   type: 'SCROLL_THROUGH_SONG',
   direction,

@@ -20,6 +20,7 @@ import CursorPositionIndicator from './CursorPositionIndicator';
 import BlockTrack from './BlockTrack';
 import SpeedTrack from './SpeedTrack';
 import SelectionBox from './SelectionBox';
+import GridHeader from './GridHeader';
 
 const LAYERS = {
   background: 0,
@@ -172,7 +173,7 @@ const EventsGrid = ({
   return (
     <Wrapper isLoading={isLoading} style={{ width: contentWidth }}>
       <PrefixColumn style={{ width: PREFIX_WIDTH }}>
-        <Header style={{ height: headerHeight }} />
+        <TopLeftBlankCell style={{ height: headerHeight }} />
 
         {EVENT_TRACKS.map(({ id, type, label }) => (
           <TrackPrefix
@@ -187,13 +188,11 @@ const EventsGrid = ({
       </PrefixColumn>
 
       <Grid>
-        <Header style={{ height: headerHeight }}>
-          {beatNums.map(num => (
-            <HeaderCell key={num}>
-              <BeatNums>{num}</BeatNums>
-            </HeaderCell>
-          ))}
-        </Header>
+        <GridHeader
+          height={headerHeight}
+          beatNums={beatNums}
+          selectedBeat={selectedBeat}
+        />
 
         <MainGridContent
           style={{
@@ -271,26 +270,8 @@ const Grid = styled.div`
   flex-direction: column;
 `;
 
-const Header = styled.div`
-  display: flex;
+const TopLeftBlankCell = styled.div`
   border-bottom: 1px solid ${COLORS.blueGray[500]};
-`;
-
-const HeaderCell = styled.div`
-  flex: 1;
-  position: relative;
-  display: flex;
-  align-items: flex-end;
-`;
-
-const BeatNums = styled.span`
-  display: inline-block;
-  transform: translateX(-50%);
-  padding-bottom: 8px;
-
-  ${HeaderCell}:first-of-type & {
-    display: none;
-  }
 `;
 
 const MainGridContent = styled.div`

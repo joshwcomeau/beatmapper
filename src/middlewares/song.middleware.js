@@ -269,6 +269,21 @@ export default function createSongMiddleware() {
         break;
       }
 
+      case 'SCRUB_EVENTS_HEADER': {
+        next(action);
+
+        const state = store.getState();
+        const song = getSelectedSong(state);
+        const newCursorPosition =
+          convertBeatsToMilliseconds(action.selectedBeat, song.bpm) +
+          song.offset;
+
+        next(adjustCursorPosition(newCursorPosition));
+        audioElem.currentTime = newCursorPosition / 1000;
+
+        break;
+      }
+
       case 'JUMP_TO_BAR': {
         next(action);
 
