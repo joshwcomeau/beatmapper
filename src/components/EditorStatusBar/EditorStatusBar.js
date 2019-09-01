@@ -5,6 +5,7 @@
  */
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import { box } from 'react-icons-kit/feather/box';
 import { codepen } from 'react-icons-kit/feather/codepen';
@@ -63,10 +64,16 @@ const EditorStatusBar = ({
   updateBeatDepth,
   updateVolume,
   toggleNoteTick,
+  location,
 }) => {
-  return (
-    <Wrapper style={{ height, lineHeight: `${height}px` }}>
-      <Left>
+  const isNotesView = !!location.pathname.match(/\/notes$/);
+
+  let leftContent;
+  let rightContent;
+
+  if (isNotesView) {
+    leftContent = (
+      <>
         <CountIndicator
           num={numOfBlocks}
           label={pluralize(numOfBlocks, 'block')}
@@ -90,8 +97,11 @@ const EditorStatusBar = ({
           label="Notes per second"
           icon={densityIcon}
         />
-      </Left>
-      <Right>
+      </>
+    );
+
+    rightContent = (
+      <>
         <Toggle
           size={8}
           value={playNoteTick}
@@ -136,7 +146,52 @@ const EditorStatusBar = ({
           value={volume}
           onChange={value => updateVolume(value)}
         />
-      </Right>
+      </>
+    );
+  } else {
+    leftContent = null;
+    rightContent = (
+      <>
+        <Toggle
+          size={8}
+          value={playNoteTick}
+          onIcon={tickOnIcon}
+          offIcon={tickOffIcon}
+          onChange={toggleNoteTick}
+        />
+        <Spacer size={UNIT * 6} />
+        <SliderGroup
+          includeMidpointTick
+          disabled={isLoading}
+          width={UNIT * 7}
+          height={height}
+          minIcon={playbackSpeedMinIcon}
+          maxIcon={playbackSpeedMaxIcon}
+          min={0.5}
+          max={1.5}
+          step={0.1}
+          value={playbackRate}
+          onChange={value => updatePlaybackSpeed(value)}
+        />
+        <Spacer size={UNIT * 6} />
+        <SliderGroup
+          width={UNIT * 7}
+          height={height}
+          minIcon={volumeMinIcon}
+          maxIcon={volumeMaxIcon}
+          min={0}
+          max={1}
+          value={volume}
+          onChange={value => updateVolume(value)}
+        />
+      </>
+    );
+  }
+
+  return (
+    <Wrapper style={{ height, lineHeight: `${height}px` }}>
+      <Left>{leftContent}</Left>
+      <Right>{rightContent}</Right>
     </Wrapper>
   );
 };
@@ -183,4 +238,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(EditorStatusBar);
+)(withRouter(EditorStatusBar));
