@@ -15,11 +15,15 @@ import {
 } from '../../reducers/editor-entities.reducer/events-view.reducer';
 import useMousePositionOverElement from '../../hooks/use-mouse-position-over-element.hook';
 
-const NUM_OF_SPEEDS = 8;
+import { getYForSpeed } from './EventsGrid.helpers';
+import SpeedTrackEvent from './SpeedTrackEvent';
 
-const getYForSpeed = (height, speed) => {
-  const divisionHeight = height / 8;
-  return height - speed * divisionHeight;
+const NUM_OF_SPEEDS = 7;
+const INITIAL_TENTATIVE_EVENT = {
+  id: 'tentative',
+  beatNum: null,
+  laserSpeed: null,
+  visible: false,
 };
 
 const SpeedTrack = ({
@@ -38,25 +42,57 @@ const SpeedTrack = ({
   bulkDeleteEvent,
   ...delegated
 }) => {
-  const cursorAtSpeed = React.useRef(null);
-
-  const ref = useMousePositionOverElement(
-    (_, y) => {
-      // We don't care about x, since we already have that under `cursorAtBeat`.
-      // We need to know which vertical bar they're closest to.
-      // `y` will be a number from 0 to `height`, where 0 is the top and `height`
-      // is the bottom. Start by flipping this, since we want speed to increase
-      // from bottom to top.
-      const invertedY = height - y;
-      cursorAtSpeed.current = Math.round(invertedY / (NUM_OF_SPEEDS - 2));
-    },
-    { onlyTriggerInside: true }
+  const [tentativeEvent, setTentativeEvent] = React.useState(
+    INITIAL_TENTATIVE_EVENT
   );
 
-  const handleClick = ev => {
-    // TODO: use pointerdown so that I can let the user tweak before releasing
-    // the mouse and confirming the placement.
-    changeLaserSpeed(trackId, cursorAtBeat, cursorAtSpeed.current);
+  const commitTentativeEvent = React.useRef(null);
+  React.useEffect(() => {
+    commitTentativeEvent.current = () => {
+      changeLaserSpeed(
+        trackId,
+        tentativeEvent.beatNum,
+        tentativeEvent.laserSpeed
+      );
+
+      setTentativeEvent(INITIAL_TENTATIVE_EVENT);
+    };
+  });
+
+  const ref = useMousePositionOverElement((_, y) => {
+    // We don't care about x, since we already have that under `cursorAtBeat`.
+    // We need to know which vertical bar they're closest to.
+    // `y` will be a number from 0 to `height`, where 0 is the top and `height`
+    // is the bottom. Start by flipping this, since we want speed to increase
+    // from bottom to top.
+    const invertedY = height - y;
+    const speed = Math.ceil(invertedY / (NUM_OF_SPEEDS - 2));
+
+    if (speed !== tentativeEvent.laserSpeed) {
+      setTentativeEvent({
+        ...tentativeEvent,
+        laserSpeed: speed,
+      });
+    }
+  });
+
+  const handlePointerDown = ev => {
+    if (ev.button !== 0) {
+      return;
+    }
+
+    setTentativeEvent({
+      ...tentativeEvent,
+      beatNum: cursorAtBeat,
+      visible: true,
+    });
+
+    const handlePointerUp = ev => {
+      commitTentativeEvent.current();
+      window.removeEventListener('pointerup', handlePointerUp);
+    };
+
+    window.addEventListener('pointerup', handlePointerUp);
   };
 
   let plottablePoints = [
@@ -108,7 +144,7 @@ const SpeedTrack = ({
     <Wrapper
       ref={ref}
       style={{ height }}
-      onClick={handleClick}
+      onPointerDown={handlePointerDown}
       onContextMenu={ev => ev.preventDefault()}
     >
       <Svg width={width} height={height}>
@@ -147,32 +183,28 @@ const SpeedTrack = ({
           user to drag and change the position of events, as well as delete
           events they no longer want
         */}
-        {events.map(event => {
-          const x = normalize(
-            event.beatNum,
-            startBeat,
-            startBeat + numOfBeatsToShow,
-            0,
-            width
-          );
-          const y = getYForSpeed(height, event.laserSpeed);
+        {events.map(event => (
+          <SpeedTrackEvent
+            key={event.id}
+            event={event}
+            trackId={trackId}
+            startBeat={startBeat}
+            endBeat={startBeat + numOfBeatsToShow}
+            parentWidth={width}
+            parentHeight={height}
+          />
+        ))}
 
-          return (
-            <circle
-              key={event.id}
-              cx={x}
-              cy={y}
-              r={4}
-              fill={COLORS.green[500]}
-              style={{ cursor: 'pointer' }}
-              onPointerDown={ev => {
-                if (ev.button === 2) {
-                  deleteEvent(event.id, trackId);
-                }
-              }}
-            />
-          );
-        })}
+        {tentativeEvent.visible && (
+          <SpeedTrackEvent
+            event={tentativeEvent}
+            trackId={trackId}
+            startBeat={startBeat}
+            endBeat={startBeat + numOfBeatsToShow}
+            parentWidth={width}
+            parentHeight={height}
+          />
+        )}
       </Svg>
     </Wrapper>
   );

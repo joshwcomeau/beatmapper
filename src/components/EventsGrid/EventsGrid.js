@@ -163,10 +163,10 @@ const EventsGrid = ({
       window.removeEventListener('pointerup', handlePointerUp);
     }
 
-    // HACK: I'm not cleaning up this event listener.
-    // Surprisingly this gave me trouble, but I also think it's fine since the
-    // user is unlikely to navigate away from this page while holding the
-    // mouse button down from within the grid.
+    // HACK: This event listener is only cleaned up from "within";
+    // When the user releases the mouse, the listener is unsubscribed.
+    // This has the potential issue that if this component unmounts while
+    // the mouse is held down, this listener will never be cleaned up.
     window.addEventListener('pointerup', handlePointerUp);
   };
 
