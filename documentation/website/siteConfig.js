@@ -21,9 +21,9 @@ const users = [
 ];
 
 const siteConfig = {
-  title: 'BeatMapper documentation', // Title for your website.
-  tagline: 'Documentation for the BeatMapper app',
-  url: 'https://www.beatmapper.com', // Your website URL
+  title: 'Beatmapper', // Title for your website.
+  tagline: 'Documentation for the Beatmapper app',
+  url: 'https://www.beatmapper.app', // Your website URL
   baseUrl: '/', // Base URL for your project */
   // For github.io type URLs, you would set the url and baseUrl like:
   //   url: 'https://facebook.github.io',
