@@ -14,6 +14,7 @@ import {
   getTrackSpeedAtBeat,
 } from '../../reducers/editor-entities.reducer/events-view.reducer';
 import useMousePositionOverElement from '../../hooks/use-mouse-position-over-element.hook';
+import usePointerUpHandler from '../../hooks/use-pointer-up-handler.hook';
 
 import { getYForSpeed } from './EventsGrid.helpers';
 import SpeedTrackEvent from './SpeedTrackEvent';
@@ -46,18 +47,17 @@ const SpeedTrack = ({
     INITIAL_TENTATIVE_EVENT
   );
 
-  const commitTentativeEvent = React.useRef(null);
-  React.useEffect(() => {
-    commitTentativeEvent.current = () => {
-      changeLaserSpeed(
-        trackId,
-        tentativeEvent.beatNum,
-        tentativeEvent.laserSpeed
-      );
+  const commitChanges = React.useCallback(() => {
+    changeLaserSpeed(
+      trackId,
+      tentativeEvent.beatNum,
+      tentativeEvent.laserSpeed
+    );
 
-      setTentativeEvent(INITIAL_TENTATIVE_EVENT);
-    };
-  });
+    setTentativeEvent(INITIAL_TENTATIVE_EVENT);
+  }, [trackId, tentativeEvent]);
+
+  usePointerUpHandler(tentativeEvent.visible, commitChanges);
 
   const ref = useMousePositionOverElement((_, y) => {
     // We don't care about x, since we already have that under `cursorAtBeat`.
@@ -86,13 +86,6 @@ const SpeedTrack = ({
       beatNum: cursorAtBeat,
       visible: true,
     });
-
-    const handlePointerUp = ev => {
-      commitTentativeEvent.current();
-      window.removeEventListener('pointerup', handlePointerUp);
-    };
-
-    window.addEventListener('pointerup', handlePointerUp);
   };
 
   let plottablePoints = [
