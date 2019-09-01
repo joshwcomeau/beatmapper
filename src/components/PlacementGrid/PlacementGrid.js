@@ -29,6 +29,8 @@ const PlacementGrid = ({
   const [mouseOverAt, setMouseOverAt] = React.useState(null);
   const cachedDirection = React.useRef(null);
 
+  // TODO: I should rework this using `usePointerUpHandler`.
+  // And maybe another one for pointermove?
   React.useEffect(() => {
     const handleMouseMove = ev => {
       const { rowIndex, colIndex, ...initialPosition } = mouseDownAt;

@@ -10,6 +10,7 @@ import {
   getSelectedEventColor,
 } from '../../reducers/editor.reducer';
 import { getEventsForTrack } from '../../reducers/editor-entities.reducer/events-view.reducer';
+import usePointerUpHandler from '../../hooks/use-pointer-up-handler.hook';
 
 import EventBlock from './EventBlock';
 
@@ -27,6 +28,12 @@ const BlockTrack = ({
   ...delegated
 }) => {
   const [mouseButtonDepressed, setMouseButtonDepressed] = React.useState(null);
+
+  const handlePointerUp = React.useCallback(() => {
+    setMouseButtonDepressed(null);
+  }, []);
+
+  usePointerUpHandler(!!mouseButtonDepressed, handlePointerUp);
 
   const getPropsForPlacedEvent = () => {
     const isRingEvent = trackId === 'largeRing' || trackId === 'smallRing';
@@ -53,14 +60,6 @@ const BlockTrack = ({
     // eslint-disable-next-line
   }, [selectedEditMode, cursorAtBeat]);
 
-  const handlePointerUp = React.useCallback(() => {
-    setMouseButtonDepressed(null);
-  }, []);
-
-  React.useEffect(() => {
-    return () => window.removeEventListener('pointerup', handlePointerUp);
-  }, [handlePointerUp]);
-
   return (
     <Wrapper
       style={{ height }}
@@ -75,8 +74,6 @@ const BlockTrack = ({
         } else if (ev.buttons === 2) {
           setMouseButtonDepressed('right');
         }
-
-        window.addEventListener('pointerup', handlePointerUp);
       }}
       onContextMenu={ev => ev.preventDefault()}
     >
