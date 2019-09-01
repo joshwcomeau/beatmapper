@@ -14,6 +14,7 @@ import {
   getSelectionBox,
 } from '../../reducers/editor.reducer';
 import useMousePositionOverElement from '../../hooks/use-mouse-position-over-element.hook';
+import usePointerUpHandler from '../../hooks/use-pointer-up-handler.hook';
 
 import BackgroundLines from './BackgroundLines';
 import CursorPositionIndicator from './CursorPositionIndicator';
@@ -62,6 +63,7 @@ const EventsGrid = ({
   selectedEditMode,
   moveMouseAcrossEventsGrid,
   drawSelectionBox,
+  clearSelectionBox,
   commitSelection,
 }) => {
   const innerGridWidth = contentWidth - PREFIX_WIDTH;
@@ -75,6 +77,29 @@ const EventsGrid = ({
   const [mouseDownAt, setMouseDownAt] = React.useState(null);
   const [mousePosition, setMousePosition] = React.useState(null);
   const mouseButtonDepressed = React.useRef(null); // 'left' | 'middle' | 'right'
+
+  React.useEffect(() => {
+    setMouseDownAt(null);
+    setMousePosition(null);
+    if (selectedEditMode !== 'select') {
+      clearSelectionBox();
+    }
+  }, [selectedEditMode]);
+
+  const handleCompleteSelection = React.useCallback(() => {
+    mouseButtonDepressed.current = null;
+    setMouseDownAt(null);
+
+    commitSelection();
+  }, [commitSelection]);
+
+  const shouldCompleteSelectionOnPointerUp =
+    selectedEditMode === 'select' && !!mouseDownAt;
+
+  usePointerUpHandler(
+    shouldCompleteSelectionOnPointerUp,
+    handleCompleteSelection
+  );
 
   const tracksRef = useMousePositionOverElement((x, y) => {
     const currentMousePosition = { x, y };
@@ -153,21 +178,6 @@ const EventsGrid = ({
     }
 
     setMouseDownAt(mousePosition);
-
-    function handlePointerUp() {
-      mouseButtonDepressed.current = null;
-      setMouseDownAt(null);
-
-      commitSelection();
-
-      window.removeEventListener('pointerup', handlePointerUp);
-    }
-
-    // HACK: This event listener is only cleaned up from "within";
-    // When the user releases the mouse, the listener is unsubscribed.
-    // This has the potential issue that if this component unmounts while
-    // the mouse is held down, this listener will never be cleaned up.
-    window.addEventListener('pointerup', handlePointerUp);
   };
 
   return (
@@ -344,6 +354,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = {
   moveMouseAcrossEventsGrid: actions.moveMouseAcrossEventsGrid,
   drawSelectionBox: actions.drawSelectionBox,
+  clearSelectionBox: actions.clearSelectionBox,
   commitSelection: actions.commitSelection,
 };
 

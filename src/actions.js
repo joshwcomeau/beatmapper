@@ -638,6 +638,10 @@ export const drawSelectionBox = (selectionBox, selectionBoxInBeats) => (
   });
 };
 
+export const clearSelectionBox = () => ({
+  type: 'CLEAR_SELECTION_BOX',
+});
+
 export const commitSelection = () => ({
   type: 'COMMIT_SELECTION',
 });

@@ -115,6 +115,17 @@ function events(state = initialState.events, action) {
         selectionBox: action.selectionBox,
       };
     }
+    case 'CLEAR_SELECTION_BOX': {
+      // Avoid a re-render if we already don't have a selectionBox
+      if (!state.selectionBox) {
+        return state;
+      }
+
+      return {
+        ...state,
+        selectionBox: null,
+      };
+    }
 
     case 'COMMIT_SELECTION': {
       return {
