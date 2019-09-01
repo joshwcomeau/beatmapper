@@ -22,7 +22,7 @@ import Spacer from '../Spacer';
 import Button from '../Button';
 
 const CreateDifficultyForm = ({
-  afterSubmit,
+  afterCreate,
   songId,
   currentDifficulty,
   difficultyIds,
@@ -100,11 +100,7 @@ const CreateDifficultyForm = ({
       <Button
         style={{ width: 275, margin: 'auto' }}
         onClick={() => {
-          createDifficulty(selectedId);
-
-          if (typeof afterSubmit === 'function') {
-            afterSubmit(selectedId);
-          }
+          createDifficulty(selectedId, afterCreate);
         }}
       >
         Create {getLabelForDifficulty(selectedId)} beatmap

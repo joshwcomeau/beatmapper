@@ -17,13 +17,16 @@ import { bell as tickOnIcon } from 'react-icons-kit/feather/bell';
 import { bellOff as tickOffIcon } from 'react-icons-kit/feather/bellOff';
 import { minimize2 as distanceCloseIcon } from 'react-icons-kit/feather/minimize2';
 import { maximize2 as distanceFarIcon } from 'react-icons-kit/feather/maximize2';
+import { layers as densityIcon } from 'react-icons-kit/feather/layers';
 
 import * as actions from '../../actions';
 import { COLORS, UNIT } from '../../constants';
+import { roundTo } from '../../utils';
 import {
   getNumOfBlocks,
   getNumOfMines,
   getNumOfObstacles,
+  getNoteDensity,
 } from '../../reducers/editor-entities.reducer/notes-view.reducer';
 import {
   getIsLoading,
@@ -39,6 +42,12 @@ import CountIndicator from './CountIndicator';
 import SliderGroup from './SliderGroup';
 import Toggle from './Toggle';
 
+const pluralize = (num, string) => {
+  const noun = num === 1 ? string : `${string}s`;
+
+  return `${num} ${noun}`;
+};
+
 const EditorStatusBar = ({
   height,
   isLoading,
@@ -48,6 +57,7 @@ const EditorStatusBar = ({
   playbackRate,
   beatDepth,
   volume,
+  noteDensity,
   playNoteTick,
   updatePlaybackSpeed,
   updateBeatDepth,
@@ -57,11 +67,29 @@ const EditorStatusBar = ({
   return (
     <Wrapper style={{ height, lineHeight: `${height}px` }}>
       <Left>
-        <CountIndicator num={numOfBlocks} type="block" icon={box} />
+        <CountIndicator
+          num={numOfBlocks}
+          label={pluralize(numOfBlocks, 'block')}
+          icon={box}
+        />
         <Spacer size={UNIT * 2} />
-        <CountIndicator num={numOfMines} type="mine" icon={globe} />
+        <CountIndicator
+          num={numOfMines}
+          label={pluralize(numOfBlocks, 'mine')}
+          icon={globe}
+        />
         <Spacer size={UNIT * 2} />
-        <CountIndicator num={numOfObstacles} type="obstacle" icon={codepen} />
+        <CountIndicator
+          num={numOfObstacles}
+          label={pluralize(numOfBlocks, 'obstacle')}
+          icon={codepen}
+        />
+        <Spacer size={UNIT * 6} />
+        <CountIndicator
+          num={roundTo(noteDensity, 1)}
+          label="Notes per second"
+          icon={densityIcon}
+        />
       </Left>
       <Right>
         <Toggle
@@ -141,6 +169,7 @@ const mapStateToProps = state => {
     numOfBlocks: getNumOfBlocks(state),
     numOfMines: getNumOfMines(state),
     numOfObstacles: getNumOfObstacles(state),
+    noteDensity: getNoteDensity(state),
   };
 };
 

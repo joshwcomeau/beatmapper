@@ -1,12 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {
-  BLOCK_COLUMN_WIDTH,
-  SURFACE_DEPTH,
-  SONG_OFFSET,
-  COLORS,
-} from '../../constants';
+import { BLOCK_COLUMN_WIDTH, SONG_OFFSET, COLORS } from '../../constants';
 import * as actions from '../../actions';
 import {
   getCursorPositionInBeats,

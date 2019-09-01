@@ -104,7 +104,7 @@ const SongInfo = ({
         onDismiss={() => setShowCreateDifficultyModal(false)}
       >
         <CreateDifficultyForm
-          afterSubmit={difficulty => {
+          afterCreate={difficulty => {
             setShowCreateDifficultyModal(false);
             history.push(`/edit/${song.id}/${difficulty}/notes`);
           }}

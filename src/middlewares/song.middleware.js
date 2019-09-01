@@ -158,7 +158,7 @@ export default function createSongMiddleware() {
       }
 
       case 'CREATE_DIFFICULTY': {
-        const { difficulty } = action;
+        const { difficulty, afterCreate } = action;
 
         const state = store.getState();
         const song = getSelectedSong(state);
@@ -184,6 +184,10 @@ export default function createSongMiddleware() {
 
         return saveFile(beatmapFilename, beatmapContents).then(() => {
           next(action);
+
+          if (typeof afterCreate === 'function') {
+            afterCreate(difficulty);
+          }
         });
       }
 

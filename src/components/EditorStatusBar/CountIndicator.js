@@ -7,15 +7,9 @@ import { UNIT } from '../../constants';
 
 import Spacer from '../Spacer';
 
-const pluralize = (num, string) => {
-  const noun = num === 1 ? string : `${string}s`;
-
-  return `${num} ${noun}`;
-};
-
-const CountIndicator = ({ num, type, icon }) => {
+const CountIndicator = ({ num, label, icon }) => {
   return (
-    <Tooltip title={pluralize(num, type)} delay={250}>
+    <Tooltip title={label} delay={250}>
       <Wrapper>
         <Icon icon={icon} size={12} style={{ transform: 'translateY(-2px)' }} />
         <Spacer size={UNIT} />

@@ -7,9 +7,11 @@ import { NOTES_VIEW, SURFACE_DEPTH } from '../../constants';
 import {
   findNoteIndexByProperties,
   swapNotes,
+  calculateNoteDensity,
 } from '../../helpers/notes.helpers';
 import { swapObstacles } from '../../helpers/obstacles.helpers';
-import { getCursorPositionInBeats, getBeatDepth } from './navigation.reducer';
+import { getCursorPositionInBeats, getBeatDepth } from '../navigation.reducer';
+import { getSelectedSong } from '../songs.reducer';
 
 const initialState = {
   notes: [],
@@ -454,6 +456,19 @@ export const getVisibleNotes = createSelector(
         note._time < cursorPositionInBeats + farLimit
       );
     });
+  }
+);
+
+export const getNoteDensity = createSelector(
+  getVisibleNotes,
+  getCursorPositionInBeats,
+  getBeatDepth,
+  getSelectedSong,
+  (notes, cursorPositionInBeats, beatDepth, song) => {
+    const { bpm } = song;
+    const segmentLengthInBeats = (SURFACE_DEPTH / beatDepth) * 1.2;
+
+    return calculateNoteDensity(notes.length, segmentLengthInBeats, bpm);
   }
 );
 

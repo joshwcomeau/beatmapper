@@ -98,9 +98,10 @@ export const changeSelectedDifficulty = (songId, difficulty) => ({
   songId,
   difficulty,
 });
-export const createDifficulty = difficulty => ({
+export const createDifficulty = (difficulty, afterCreate) => ({
   type: 'CREATE_DIFFICULTY',
   difficulty,
+  afterCreate,
 });
 
 export const startLoadingSong = (songId, difficulty) => ({

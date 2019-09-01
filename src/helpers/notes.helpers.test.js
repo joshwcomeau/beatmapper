@@ -1,13 +1,13 @@
-import { getNoteDensity } from './notes.helpers';
+import { calculateNoteDensity } from './notes.helpers';
 
 describe('Notes helpers', () => {
-  describe('getNoteDensity', () => {
+  describe('calculateNoteDensity', () => {
     it('gets note density for a simple case', () => {
       const numOfNotes = 10;
       const segmentLengthInBeats = 10;
       const bpm = 60;
 
-      const actualResult = getNoteDensity(
+      const actualResult = calculateNoteDensity(
         numOfNotes,
         segmentLengthInBeats,
         bpm
@@ -22,7 +22,7 @@ describe('Notes helpers', () => {
       const segmentLengthInBeats = 12;
       const bpm = 100;
 
-      const actualResult = getNoteDensity(
+      const actualResult = calculateNoteDensity(
         numOfNotes,
         segmentLengthInBeats,
         bpm
@@ -37,7 +37,7 @@ describe('Notes helpers', () => {
       const segmentLengthInBeats = 12;
       const bpm = 100;
 
-      const actualResult = getNoteDensity(
+      const actualResult = calculateNoteDensity(
         numOfNotes,
         segmentLengthInBeats,
         bpm

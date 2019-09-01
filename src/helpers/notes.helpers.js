@@ -128,13 +128,13 @@ export const swapNotes = (axis, notes) => {
   }
 };
 
-export const getNoteDensity = (numOfNotes, segmentLengthInBeats, bpm) => {
+export const calculateNoteDensity = (numOfNotes, segmentLengthInBeats, bpm) => {
   if (numOfNotes === 0) {
     return 0;
   }
 
   const numOfNotesPerBeat = numOfNotes / segmentLengthInBeats;
-  const notesPerSecond = (numOfNotesPerBeat * 60) / bpm;
+  const notesPerSecond = numOfNotesPerBeat * (bpm / 60);
 
   return notesPerSecond;
 };
