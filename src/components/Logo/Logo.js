@@ -66,7 +66,7 @@ const Logo = ({ size = 'full' }) => {
         />
       </Canvas>
       <Spacer size={UNIT} />
-      <Text style={{ fontSize: size === 'full' ? 24 : 18 }}>BeatMapper</Text>
+      <Text style={{ fontSize: size === 'full' ? 24 : 18 }}>Beatmapper</Text>
     </Wrapper>
   );
 };

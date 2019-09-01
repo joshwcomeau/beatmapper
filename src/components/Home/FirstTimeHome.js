@@ -20,7 +20,7 @@ const FirstTimeHome = ({ setModal, demoSong, history }) => {
     <MainContent>
       <Center>
         <Title size={1}>
-          BeatMapper is an unofficial web-based editor for Beat Saber™
+          Beatmapper is an unofficial web-based editor for Beat Saber™
         </Title>
         <Spacer size={UNIT * 4} />
         <div

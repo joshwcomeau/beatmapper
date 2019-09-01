@@ -35,7 +35,7 @@ const HelpButton = ({ view }) => {
           <Heading size={2}>General Help</Heading>
           <Spacer size={UNIT * 2} />
           <Paragraph>
-            BeatMapper is in <em>alpha</em>, which means you're bound to run
+            Beatmapper is in <em>alpha</em>, which means you're bound to run
             into some issues. You can let me know what you run into by{' '}
             <Link
               as="a"

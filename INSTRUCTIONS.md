@@ -4,7 +4,7 @@
 
 ### Song formatting
 
-You need to get your files in v2 format, and zipped together. This is done automatically by BeatMapper, but not by MM / EditSaber / other map software. If you've imported your BeatMapper map into another editor to work on the lighting, you'll need to convert the files to v2.
+You need to get your files in v2 format, and zipped together. This is done automatically by Beatmapper, but not by MM / EditSaber / other map software. If you've imported your Beatmapper map into another editor to work on the lighting, you'll need to convert the files to v2.
 
 Currently, you can use SideQuest to do this - the old "Custom Levels" button. Open the local songs folder, and drag your v1 file over. Click the "refresh" icon; it'll tell you "Error: No info.dat found". Click it again and it'll convert the files.
 

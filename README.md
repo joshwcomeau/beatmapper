@@ -10,18 +10,18 @@ A community of modders has sprung up to bring custom music to the game. Each new
 
 ### Getting started / Demo
 
-BeatMapper works entirely in-browser; there is nothing to download, nor is there a backend. You can get started now at https://beatmapper.app. On your first visit, you'll be able to play around with a demo song, to get a feel for the editor.
+Beatmapper works entirely in-browser; there is nothing to download, nor is there a backend. You can get started now at https://beatmapper.app. On your first visit, you'll be able to play around with a demo song, to get a feel for the editor.
 
 ### Why?
 
 There are several editors already in existence, including an official one. Why make another one?
 
 - Cross-platform support. This editor is the only editor that works on MacOS and Linux (some other editors don't even work in a Windows VM!)
-- Get started effortlessly. The most popular editor took me about 15 minutes to get working, and requires evading 2 toolbar installation requests. By contrast, BeatMapper is available in-browser, requires <1mb of total download including assets. It even comes with a demo track, so you can start playing around immediately!
+- Get started effortlessly. The most popular editor took me about 15 minutes to get working, and requires evading 2 toolbar installation requests. By contrast, Beatmapper is available in-browser, requires <1mb of total download including assets. It even comes with a demo track, so you can start playing around immediately!
 - Focus on user experience. While I am not a UX designer by trade, I believe that usability is important. I've run into a number of glaring UX problems using the other third-party editors, and I hope to produce an app that is much less frustrating to use.
-- Full compatibility. BeatMapper exports both available Beat Saber file formats, which means you can transfer exported maps directly to your Beat Saber device, or import them into other editors. You can also import existing maps in both formats.
+- Full compatibility. Beatmapper exports both available Beat Saber file formats, which means you can transfer exported maps directly to your Beat Saber device, or import them into other editors. You can also import existing maps in both formats.
 
-I'm creating BeatMapper primarily for myself, for fun. Bug reports and feature requests are appreciated, but please understand, I work on this when I want to, and feel no pressure to resolve any issues you may be experiencing. There's still a lot of work to do (see "upcoming features"), and there is no timetable.
+I'm creating Beatmapper primarily for myself, for fun. Bug reports and feature requests are appreciated, but please understand, I work on this when I want to, and feel no pressure to resolve any issues you may be experiencing. There's still a lot of work to do (see "upcoming features"), and there is no timetable.
 
 ### Features
 
