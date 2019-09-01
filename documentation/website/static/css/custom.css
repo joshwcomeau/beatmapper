@@ -1,4 +1,7 @@
 /* your custom css */
+.headerTitleWithLogo {
+  font-family: 'Raleway', sans-serif;
+}
 
 @media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
 }
