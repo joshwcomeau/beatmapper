@@ -1,4 +1,46 @@
-// TODO: Should I just give notes an ID?
+import uuid from 'uuid/v1';
+
+const HUMANIZED_DIRECTIONS = [
+  'up',
+  'down',
+  'left',
+  'right',
+  'upLeft',
+  'upRight',
+  'downLeft',
+  'downRight',
+  'face',
+];
+
+/**
+ * NOTE: Currently, the "redux" variant of the blocks format isn't used.
+ * I use the proprietary json format everywhere.
+ * I want to refactor this, to keep everything in line between blocks,
+ * obstacles, and mines. TODO.
+ */
+export const convertBlocksToRedux = blocks => {
+  return blocks.map(b => {
+    return {
+      id: uuid(),
+      color: b._type === 0 ? 'blue' : 'red',
+      direction: HUMANIZED_DIRECTIONS[b._cutDirection],
+      beatNum: b._time,
+      rowIndex: b._lineLayer,
+      colIndex: b._lineIndex,
+    };
+  });
+};
+
+export const convertBlocksToExportableJson = blocks => {
+  return blocks.map(b => ({
+    _time: b.beatNum,
+    _lineIndex: b.colIndex,
+    _lineLayer: b.rowIndex,
+    _type: b.color === 'blue' ? 0 : 1,
+    _cutDirection: HUMANIZED_DIRECTIONS.indexOf(b.direction),
+  }));
+};
+
 export const findNoteByProperties = (notes, { time, lineLayer, lineIndex }) => {
   return notes.find(note => {
     return (

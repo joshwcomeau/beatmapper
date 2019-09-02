@@ -1,11 +1,32 @@
 export type Difficulty = 'Easy' | 'Normal' | 'Hard' | 'Expert' | 'ExpertPlus';
 
+export type Direction =
+  | 'upLeft'
+  | 'up'
+  | 'upRight'
+  | 'right'
+  | 'downRight'
+  | 'down'
+  | 'downLeft'
+  | 'left'
+  | 'face';
+
 // So, there's probably a proper way to type Redux actions, but boy is it a lot
 // of potential work. Instead I'm only going to validate that it has the
 // mandatory `type` field.
 export type Action = {
   type: string;
   [x: string]: any;
+};
+
+export type Block = {
+  id: string;
+  color: 'red' | 'blue';
+  direction: Direction;
+  beatNum: number;
+  rowIndex: number;
+  colIndex: number;
+  selected?: boolean;
 };
 
 export type Obstacle = {

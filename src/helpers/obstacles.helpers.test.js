@@ -68,7 +68,7 @@ describe('Obstacles helpers', () => {
     const actualResult = convertObstaclesToExportableJson(SAMPLE_REDUX_DATA);
     const expectedResult = [
       { _time: 2, _lineIndex: 0, _type: 0, _duration: 4, _width: 2 },
-      { _time: 4, _lineIndex: 2, _type: 1, _duration: 0, _width: 2 },
+      { _time: 4, _lineIndex: 2, _type: 1, _duration: 0.1, _width: 2 },
       { _time: 4, _lineIndex: 0, _type: 0, _duration: 4, _width: 1 },
     ];
 
