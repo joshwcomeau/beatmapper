@@ -1,12 +1,35 @@
 /* your custom css */
 .headerTitleWithLogo {
   font-family: 'Raleway', sans-serif;
+  font-size: 24px !important;
+  font-weight: 700;
+}
+
+.fixedHeaderContainer {
+  min-height: 75px;
+  display: flex;
+  align-items: center;
+}
+.headerWrapper {
+  flex: 1;
+}
+
+a {
+  color: hsl(212, 100%, 45%);
+}
+
+a:hover {
+  color: hsl(212, 100%, 55%);
+  text-decoration: underline;
 }
 
 @media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
 }
 
-@media only screen and (min-width: 1024px) {
+@media only screen and (min-width: 737px) {
+  .mainContainer .wrapper .post {
+    padding: 16px;
+  }
 }
 
 @media only screen and (max-width: 1023px) {

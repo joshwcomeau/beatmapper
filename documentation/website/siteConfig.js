@@ -40,6 +40,7 @@ const siteConfig = {
   headerLinks: [
     { doc: 'quickstart', label: 'Quickstart Guide' },
     { doc: 'advanced', label: 'Advanced' },
+    { doc: 'keyboard-shortcuts', label: 'Shortcuts' },
   ],
 
   // If you have users set above, you add it here:

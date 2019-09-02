@@ -48,7 +48,7 @@ const EditorNavigationControls = ({
         >
           {SNAPPING_INCREMENTS.map(({ value, label, shortcutLabel }) => (
             <option key={value} value={value} when-selected={label}>
-              {label} ({shortcutLabel})
+              {label} {shortcutLabel && `(${shortcutLabel})`}
             </option>
           ))}
         </Dropdown>

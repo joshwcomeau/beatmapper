@@ -1,5 +1,7 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import ObstacleBox from '../ObstacleBox';
+import { getBeatDepth } from '../../reducers/navigation.reducer';
 
 const TentativeObstacle = props => {
   const { mouseDownAt } = props;
@@ -39,6 +41,7 @@ const TentativeObstacle = props => {
   return (
     <ObstacleBox
       obstacle={tentativeObstacle}
+      beatDepth={props.beatDepth}
       snapTo={1} // Doesn't matter
       handleDelete={() => {}}
       handleResize={() => {}}
@@ -47,4 +50,10 @@ const TentativeObstacle = props => {
   );
 };
 
-export default TentativeObstacle;
+const mapStateToProps = state => {
+  return {
+    beatDepth: getBeatDepth(state),
+  };
+};
+
+export default connect(mapStateToProps)(TentativeObstacle);
