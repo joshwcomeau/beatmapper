@@ -2,6 +2,10 @@ import webAudioBuilder from 'waveform-data/webaudio';
 
 import { roundToNearest } from '../utils';
 
+// Our most precise snapping increments are 1/24 and 1/32.
+// These two numbers share 1/96 as their lowest common multiple
+const LOWEST_COMMON_MULTIPLE = 1 / 96;
+
 export const createHtmlAudioElement = url => {
   const elem = document.createElement('audio');
   elem.src = url;
@@ -13,10 +17,9 @@ export const convertMillisecondsToBeats = (ms, bpm) => {
 
   let beats = (ms / 1000) * bps;
 
-  // To avoid floating-point issues like 2.999999997, let's round to the
-  // nearest 1/64th beat, since that's the highest level of precision we
-  // will actually need.
-  return roundToNearest(beats, 1 / 64);
+  // To avoid floating-point issues like 2.999999997, let's round. We'll choose
+  // the lowest-common-multiple to "snap" to any possible value.
+  return roundToNearest(beats, LOWEST_COMMON_MULTIPLE);
 };
 
 export const convertBeatsToMilliseconds = (beats, bpm) => {
@@ -76,7 +79,7 @@ export const getFormattedBarsAndBeats = cursorPositionInBeats => {
   const barNum = Math.floor(cursorPositionInBeats / 4);
   const beatNum = Math.abs(Math.floor(cursorPositionInBeats % 4));
   const remainder = String(
-    roundToNearest(Math.abs(cursorPositionInBeats) % 1, 1 / 32)
+    roundToNearest(Math.abs(cursorPositionInBeats) % 1, LOWEST_COMMON_MULTIPLE)
   )
     .replace('0.', '')
     .slice(0, 3)

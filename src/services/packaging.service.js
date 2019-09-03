@@ -300,8 +300,8 @@ export const convertLegacyArchive = async archive => {
 
   const fakeSong = {
     name: infoDatJson.songName,
-    subName: infoDatJson.songSubName,
-    artistName: infoDatJson.authorName,
+    artistName: infoDatJson.songSubName,
+    mapAuthorName: infoDatJson.authorName,
     bpm,
     offset,
     previewStartTime: infoDatJson.previewStartTime,
