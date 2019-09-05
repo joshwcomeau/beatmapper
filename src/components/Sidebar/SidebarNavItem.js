@@ -2,9 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { Tooltip } from 'react-tippy';
+import Icon from 'react-icons-kit';
 
 import { COLORS, UNIT, SIDEBAR_WIDTH } from '../../constants';
-import Icon from 'react-icons-kit';
+
+import BaseLink from '../BaseLink';
 
 const SidebarNavItem = ({ isActive, title, icon, to, onClick }) => {
   return (
@@ -27,7 +29,14 @@ const SidebarNavItem = ({ isActive, title, icon, to, onClick }) => {
               ? 'rgba(255, 255, 255, 1)'
               : 'rgba(255, 255, 255, 0.65)',
           }}
-          onClick={onClick}
+          onClick={ev => {
+            if (!onClick) {
+              return;
+            }
+
+            ev.preventDefault();
+            onClick(ev);
+          }}
         >
           <Icon icon={icon} size={20} />
         </LinkElem>
@@ -55,7 +64,7 @@ const Wrapper = styled.div`
   height: ${SIZE}px;
 `;
 
-const LinkElem = styled(Link)`
+const LinkElem = styled(BaseLink)`
   display: flex;
   justify-content: center;
   align-items: center;

@@ -1,9 +1,10 @@
 import styled from 'styled-components';
-import { Link as RRLink } from 'react-router-dom';
 
 import { COLORS } from '../../constants';
 
-export default styled(RRLink)`
+import BaseLink from '../BaseLink';
+
+export default styled(BaseLink)`
   color: ${COLORS.yellow[500]};
   text-decoration: none;
 

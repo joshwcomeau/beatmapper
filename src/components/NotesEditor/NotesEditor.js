@@ -50,8 +50,6 @@ const NotesEditor = ({ isPlaying, pausePlaying, scrollThroughSong }) => {
         <MapVisualization />
       </ReduxForwardingCanvas>
 
-      <HelpButton />
-
       <EditorBottomPanel />
       <EditorRightPanel />
 
