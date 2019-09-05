@@ -1,7 +1,7 @@
 ---
-id: quickstart
-title: Quickstart Guide
-sidebar_label: Quickstart
+id: manual
+title: User Manual
+sidebar_label: User Manual
 ---
 
 Beatmapper is a web-based editor for Beat Saber, a VR rhythm game. This document is meant to be a 5-minute read that gives you all the context you'll need to get started making great maps!
@@ -33,7 +33,7 @@ You'll need to select a difficulty. You can add more difficulties later, for now
 
 The primary editor view is the **notes view**. This view allows you to add _blocks_, _mines_, and _obstacles_ to your map:
 
-<img src="/manual/img/notes-view.png" style="width: 75%" />
+<img src="/docs/img/notes-view.png" style="width: 75%" />
 
 The main area is taken up by a 3D representation of the notes in your song. You'll see the **placement grid** in the center; these 12 squares represent the possible positions for blocks and other elements. You can **left-click** the square to add a block to a specific square, at the current moment in time.
 
@@ -47,17 +47,17 @@ There are many ways to move through time in the song:
 
 Scrolling with the mousewheel is the most precise way to select a specific bar/beat for placing blocks. An indicator on the right edge of the bottom panel shows you exactly where you're at:
 
-<img src="/manual/img/time-bars.png" style="width: 163px" />
+<img src="/docs/img/time-bars.png" style="width: 163px" />
 
 By default, every mouse-wheel tick will move you by _half of a beat_ forwards or backwards. You can control this by tweaking the _snapping interval_ on the left edge of the bottom panel:
 
-<img src="/manual/img/snapping-interval.png" style="width: 194px" />
+<img src="/docs/img/snapping-interval.png" style="width: 194px" />
 
 Clicking on the dropdown will show you all available options, as well as the corresponding keyboard shortcuts:
 
-<img src="/manual/img/snapping-interval-shortcuts.png" style="width: 292px" />
+<img src="/docs/img/snapping-interval-shortcuts.png" style="width: 292px" />
 
-> You can also shift between snapping intervals by holding `ctrl` (or `⌘` on Mac) and spinning the mousewheel. There are many helpful [keyboard shortcuts](/manual/docs/keyboard-shortcuts) available
+> You can also shift between snapping intervals by holding `ctrl` (or `⌘` on Mac) and spinning the mousewheel. There are many helpful [keyboard shortcuts](/docs/docs/keyboard-shortcuts) available
 
 #### Navigating space
 
@@ -71,11 +71,11 @@ At any point, you can press **backspace** to return to the initial camera positi
 
 To place a block, click on the corresponding square in the _placement grid_:
 
-<img src="/manual/img/place-block.gif" style="width: 315px" />
+<img src="/docs/img/place-block.gif" style="width: 315px" />
 
 Blocks can be placed in 8 cardinal directions, as well as a directionless "face" block. Blocks also come in two colors, corresponding to which saber they need to be struck with. You can select color and direction using the right sidebar:
 
-<img src="/manual/img/tweak-color-and-direction.gif" style="width: 370px" />
+<img src="/docs/img/tweak-color-and-direction.gif" style="width: 370px" />
 
 You'll be changing color and direction quite a lot while mapping, so a number of conveniences are provided. First, you can use **keyboard shortcuts**:
 
@@ -84,11 +84,11 @@ You'll be changing color and direction quite a lot while mapping, so a number of
 
 You can swap the color of an existing block by clicking on it with the **middle mouse button**:
 
-<img src="/manual/img/swap-block-color.gif" style="width: 400px" />
+<img src="/docs/img/swap-block-color.gif" style="width: 400px" />
 
 Finally, you can **click and drag** to dynamically select a block direction. This is my personal favourite way to place blocks:
 
-<img src="/manual/img/drag-direction.gif" style="width: 400px" />
+<img src="/docs/img/drag-direction.gif" style="width: 400px" />
 
 #### Placing mines and obstacles
 
@@ -98,19 +98,19 @@ Mines are meant to be avoided by the sabers. You can select them from the right 
 
 Mines don't have colors or directions, but otherwise they work just like blocks:
 
-<img src="/manual/img/place-mine.gif" style="width: 307px" />
+<img src="/docs/img/place-mine.gif" style="width: 307px" />
 
 Obstacles are a bit different - they take up multiple cells at the same time, and come in two variants: **walls** and **ceilings**.
 
 To place a wall, click and drag across the _bottom 2 rows_ in the placement grid:
 
-<img src="/manual/img/place-obstacle.gif" style="width: 307px" />
+<img src="/docs/img/place-obstacle.gif" style="width: 307px" />
 
 > You'll notice that for walls, you're limited to placing walls that are 1 or 2 columns wide, no wider. This is a safety precaution; 3-column-thick walls can be hazardous, as folks try to leap out of the way. If you really want to place a super-wide wall, you'll need to do it in another editor.
 
 Ceilings are placed the same way, but by clicking on the top row of squares. You can flip between ceilings and walls by moving the mouse up and down, before releasing:
 
-<img src="/manual/img/place-ceiling.gif" style="width: 307px" />
+<img src="/docs/img/place-ceiling.gif" style="width: 307px" />
 
 #### Selecting and deleting items
 
@@ -118,13 +118,13 @@ Blocks, mines, and obstacles all work the same way when it comes to selections a
 
 To select items, you can click on them. Selected items turn yellow to indicate that they're selected:
 
-<img src="/manual/img/select-intro.gif" style="width: 400px" />
+<img src="/docs/img/select-intro.gif" style="width: 400px" />
 
 > The number of selected items is shown in the sidebar. It's a good idea to keep an eye on this, to make sure you don't "forget" about selected notes you don't need selected anymore.
 
 As a convenience, you can **click and hold** to select (or deselect) many items at once:
 
-<img src="/manual/img/select-all.gif" style="width: 300px" />
+<img src="/docs/img/select-all.gif" style="width: 300px" />
 
 To **clear your selection**, press the `Escape` key on your keyboard. You can also toggle between selecting all notes and no notes with `ctrl+A` (`⌘+A` on Mac)
 
@@ -136,7 +136,7 @@ If you make a mistake deleting items, you can undo with `ctrl+Z` or `⌘+Z`.
 
 At the very bottom of the screen, you'll find some numbers and controls:
 
-![bottom bar](/manual/img/bottom-bar.png)
+![bottom bar](/docs/img/bottom-bar.png)
 
 There's a bunch of helpful stuff down here:
 
@@ -151,11 +151,11 @@ There's a bunch of helpful stuff down here:
 
 The sidebar on the left contains the links to other views:
 
-<img src="/manual/img/sidebar.png" style="width: 111px" />
+<img src="/docs/img/sidebar.png" style="width: 111px" />
 
 Let's visit the third icon in the list, to view the **events view**:
 
-<img src="/manual/img/events-view.png" style="width: 75%" />
+<img src="/docs/img/events-view.png" style="width: 75%" />
 
 ## Migrating from another editor
 

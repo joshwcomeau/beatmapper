@@ -24,13 +24,13 @@ const siteConfig = {
   title: 'Beatmapper', // Title for your website.
   tagline: 'Learn to use Beatmapper',
   url: 'https://www.beatmapper.app', // Your website URL
-  baseUrl: '/manual/', // Base URL for your project */
+  baseUrl: '/docs/', // Base URL for your project */
   // For github.io type URLs, you would set the url and baseUrl like:
   //   url: 'https://facebook.github.io',
   //   baseUrl: '/test-site/',
 
   // Used for publishing and more
-  projectName: 'manual',
+  projectName: 'docs',
   organizationName: 'Beatmapper',
   // For top-level user or org sites, the organization is still the same.
   // e.g., for the https://JoelMarcey.github.io site, it would be set like...
@@ -38,9 +38,10 @@ const siteConfig = {
 
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [
-    { doc: 'quickstart', label: 'Quickstart Guide' },
+    { doc: 'manual', label: 'User Manual' },
     { doc: 'advanced', label: 'Advanced' },
     { doc: 'keyboard-shortcuts', label: 'Shortcuts' },
+    { doc: 'migrating', label: 'Migrating' },
   ],
 
   // If you have users set above, you add it here:
