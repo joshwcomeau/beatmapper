@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "concurrently -p \"[{name}]\" -n \"WEBAPP,DOCS\" -c \"bgBlue.bold,bgYellow.bold\" \"yarn webapp:start\" \"yarn docs:start --port 3001\"",
+    "start": "concurrently -p \"[{name}]\" -n \"WEBAPP,DOCS\" -c \"bgBlue.bold,bgYellow.bold\" \"PORT=3001 yarn webapp:start\" \"yarn docs:start --port 3002\"",
     "build": "yarn webapp:build && yarn docs:build",
     "webapp:start": "react-scripts start",
     "webapp:build": "react-scripts build",
