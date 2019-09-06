@@ -35,7 +35,7 @@ const BackgroundBox = ({ box, color = 'red', startBeat, numOfBeatsToShow }) => {
 const Wrapper = styled.div`
   height: 100%;
   position: absolute;
-  opacity: 0.5;
+  opacity: 0.2;
 `;
 
 export default BackgroundBox;

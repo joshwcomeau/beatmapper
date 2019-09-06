@@ -5,8 +5,22 @@ export const getBackgroundBoxes = (
   numOfBeatsToShow
 ) => {
   let backgroundBoxes = [];
-  const onEvents = events.filter(ev => ev.type === 'on' || ev.type === 'flash');
-  const offEvents = events.filter(
+
+  // If the initial lighting value is true, we wanna convert it into a pseudo-
+  // event. It's simpler if we treat it as an 'on' event at the very first beat
+  // of the section.
+  const workableEvents = [...events];
+  if (initialLightingValue) {
+    workableEvents.unshift({
+      type: 'on',
+      beatNum: startBeat,
+    });
+  }
+
+  const onEvents = workableEvents.filter(
+    ev => ev.type === 'on' || ev.type === 'flash'
+  );
+  const offEvents = workableEvents.filter(
     ev => ev.type !== 'on' && ev.type !== 'flash'
   );
 
@@ -16,6 +30,9 @@ export const getBackgroundBoxes = (
       duration: startBeat + numOfBeatsToShow,
     });
     return backgroundBoxes;
+  }
+
+  if (onEvents.length === 0) {
   }
 
   return [];
