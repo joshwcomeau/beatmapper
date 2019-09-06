@@ -135,6 +135,41 @@ describe('BlockTrack helpers', () => {
       expect(actualResult).toEqual(expectedResult);
     });
 
+    it('handles turning on when already on', () => {
+      //  R  [____R___]
+      const events = [
+        {
+          id: 'a',
+          trackId: 'laserLeft',
+          beatNum: 12,
+          type: 'on',
+          color: 'red',
+        },
+      ];
+      const initialTrackLightingColor = 'red';
+      const startBeat = 8;
+      const numOfBeatsToShow = 8;
+
+      const expectedResult = [
+        // Should be a single box filling the available space.
+        {
+          id: 'initial-8-8',
+          beatNum: 8,
+          duration: 8,
+          color: 'red',
+        },
+      ];
+      const actualResult = getBackgroundBoxes(
+        events,
+        LIGHTING_TRACK_ID,
+        initialTrackLightingColor,
+        startBeat,
+        numOfBeatsToShow
+      );
+
+      expect(actualResult).toEqual(expectedResult);
+    });
+
     it('handles color changes', () => {
       //  0  [R___B_0_]
       const events = [
