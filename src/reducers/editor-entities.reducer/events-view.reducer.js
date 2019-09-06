@@ -411,6 +411,17 @@ export const getEventsForTrack = (
   );
 };
 
+export const getInitialLightingValue = (state, trackId, startBeat) => {
+  const relevantEvents = getEventsForTrack(state, trackId, 0, startBeat);
+  if (relevantEvents.length === 0) {
+    return false;
+  }
+
+  const lastEvent = relevantEvents[relevantEvents.length - 1];
+
+  return lastEvent.type === 'on' || lastEvent.type === 'flash';
+};
+
 export const getAllEventsAsArray = createSelector(
   getTracks,
   tracks => {

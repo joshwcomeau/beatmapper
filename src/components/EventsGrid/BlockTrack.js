@@ -9,10 +9,15 @@ import {
   getSelectedEventTool,
   getSelectedEventColor,
 } from '../../reducers/editor.reducer';
-import { getEventsForTrack } from '../../reducers/editor-entities.reducer/events-view.reducer';
+import {
+  getEventsForTrack,
+  getInitialLightingValue,
+} from '../../reducers/editor-entities.reducer/events-view.reducer';
 import usePointerUpHandler from '../../hooks/use-pointer-up-handler.hook';
 
 import EventBlock from './EventBlock';
+import BackgroundBox from './BackgroundBox';
+import { getBackgroundBoxes } from './BlockTrack.helpers';
 
 const BlockTrack = ({
   trackId,
@@ -24,6 +29,7 @@ const BlockTrack = ({
   selectedTool,
   selectedColor,
   selectedEditMode,
+  initialLightingValue,
   placeEvent,
   ...delegated
 }) => {
@@ -60,6 +66,13 @@ const BlockTrack = ({
     // eslint-disable-next-line
   }, [selectedEditMode, cursorAtBeat]);
 
+  const backgroundBoxes = getBackgroundBoxes(
+    events,
+    initialLightingValue,
+    startBeat,
+    numOfBeatsToShow
+  );
+
   return (
     <Wrapper
       style={{ height }}
@@ -77,6 +90,15 @@ const BlockTrack = ({
       }}
       onContextMenu={ev => ev.preventDefault()}
     >
+      {backgroundBoxes.map(box => (
+        <BackgroundBox
+          key={box.id}
+          box={box}
+          startBeat={startBeat}
+          numOfBeatsToShow={numOfBeatsToShow}
+        />
+      ))}
+
       {events.map(event => {
         return (
           <EventBlock
@@ -115,11 +137,18 @@ const mapStateToProps = (state, ownProps) => {
   const selectedTool = getSelectedEventTool(state);
   const selectedColor = getSelectedEventColor(state);
 
+  const initialLightingValue = getInitialLightingValue(
+    state,
+    ownProps.trackId,
+    ownProps.startBeat
+  );
+
   return {
     events,
     selectedEditMode,
     selectedTool,
     selectedColor,
+    initialLightingValue,
   };
 };
 

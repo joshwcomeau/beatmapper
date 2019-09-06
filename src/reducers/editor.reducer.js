@@ -250,8 +250,6 @@ export const getStartAndEndBeat = state => {
   return { startBeat, endBeat };
 };
 
-export const getRelevantEvents = state => {};
-
 export const getSelectedEventBeat = state => state.editor.events.selectedBeat;
 
 export default combineReducers({ notes, events });
