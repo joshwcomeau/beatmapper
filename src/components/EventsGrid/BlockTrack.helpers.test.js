@@ -1,12 +1,13 @@
 /**
  * These tests have comments to quickly explain the situation they're testing:
- * 1 [__0_1___]
+ * R [__0_B___]
  *
  * To read this:
- * - The first number, 1 or 0, represents whether the lighting was on in a
- *   previous frame. Whether or not the track is initially lit
- * - The array contains 8 "spots" which can either be blank (no event),
- *   0 (lighting off event), or 1 (lighting on event).
+ * - The "array" holds 8 beats, representing the event-grid for a given frame.
+ * - The frame can have `R` events (Red light on), `B` events (Blue light on),
+ *   or `0` (light off)
+ * - The letter to the left of the array represents the initial light value,
+ *   the value it held before the current frame started
  */
 import { getBackgroundBoxes } from './BlockTrack.helpers';
 
@@ -69,7 +70,7 @@ describe('BlockTrack helpers', () => {
     });
 
     it('handles an empty set of events with initial lighting', () => {
-      //  1  [________]
+      //  R  [________]
       const events = [];
       const initialTrackLightingColor = 'red';
       const startBeat = 8;
@@ -95,7 +96,7 @@ describe('BlockTrack helpers', () => {
     });
 
     it('handles a basic on-off case', () => {
-      //  0  [1___0___]
+      //  0  [R___0___]
       const events = [
         {
           id: 'a',
@@ -121,6 +122,59 @@ describe('BlockTrack helpers', () => {
           beatNum: 8,
           duration: 4,
           color: 'red',
+        },
+      ];
+      const actualResult = getBackgroundBoxes(
+        events,
+        LIGHTING_TRACK_ID,
+        initialTrackLightingColor,
+        startBeat,
+        numOfBeatsToShow
+      );
+
+      expect(actualResult).toEqual(expectedResult);
+    });
+
+    it('handles color changes', () => {
+      //  0  [R___B_0_]
+      const events = [
+        {
+          id: 'a',
+          trackId: 'laserLeft',
+          beatNum: 8,
+          type: 'on',
+          color: 'red',
+        },
+        {
+          id: 'b',
+          trackId: 'laserLeft',
+          beatNum: 12,
+          type: 'on',
+          color: 'blue',
+        },
+        {
+          id: 'b',
+          trackId: 'laserLeft',
+          beatNum: 14,
+          type: 'off',
+        },
+      ];
+      const initialTrackLightingColor = false;
+      const startBeat = 8;
+      const numOfBeatsToShow = 8;
+
+      const expectedResult = [
+        {
+          id: 'a',
+          beatNum: 8,
+          duration: 4,
+          color: 'red',
+        },
+        {
+          id: 'b',
+          beatNum: 12,
+          duration: 2,
+          color: 'blue',
         },
       ];
       const actualResult = getBackgroundBoxes(

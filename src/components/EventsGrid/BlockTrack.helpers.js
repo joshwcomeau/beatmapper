@@ -61,23 +61,19 @@ export const getBackgroundBoxes = (
     }
   }
 
-  let cursorLitStatus = false;
   let tentativeBox = null;
 
   workableEvents.forEach(event => {
     const isEventOn = getIsEventOn(event);
 
-    // 3 relevant possibilities:
+    // relevant possibilities:
     // It was off, and now it's on
     // It was on, and not it's off
-    // It hasn't changed (on -> on, or off -> off)
-    const isSameAsCurrent = cursorLitStatus === isEventOn;
-    if (isSameAsCurrent) {
-      return;
-    }
+    // It was red, and now it's blue (or vice versa)
+    // It hasn't changed (blue -> blue, red -> red, or off -> off)
 
-    if (isEventOn && !cursorLitStatus) {
-      cursorLitStatus = true;
+    // 1. It was off and now it's on
+    if (!tentativeBox && isEventOn) {
       tentativeBox = {
         id: event.id,
         beatNum: event.beatNum,
@@ -87,13 +83,30 @@ export const getBackgroundBoxes = (
       return;
     }
 
-    if (!isEventOn && cursorLitStatus) {
-      cursorLitStatus = false;
+    // 2. It was on, and now it's off
+    if (tentativeBox && !isEventOn) {
       tentativeBox.duration = event.beatNum - tentativeBox.beatNum;
       backgroundBoxes.push(tentativeBox);
 
       tentativeBox = null;
     }
+
+    // 3. Color changed
+    if (tentativeBox && isEventOn && tentativeBox.color !== event.color) {
+      tentativeBox.duration = event.beatNum - tentativeBox.beatNum;
+      backgroundBoxes.push(tentativeBox);
+
+      tentativeBox = {
+        id: event.id,
+        beatNum: event.beatNum,
+        duration: undefined,
+        color: event.color,
+      };
+
+      return;
+    }
+
+    // 4.Hasn't changed (do nothing)
   });
 
   // If there's still a tentative box after iterating through all events, it
