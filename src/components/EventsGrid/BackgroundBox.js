@@ -11,13 +11,7 @@ const BackgroundBox = ({ box, startBeat, numOfBeatsToShow }) => {
     0,
     100
   );
-  const width = normalize(
-    box.duration,
-    startBeat,
-    numOfBeatsToShow + startBeat,
-    0,
-    100
-  );
+  const width = normalize(box.duration, 0, numOfBeatsToShow, 0, 100);
 
   return (
     <Wrapper

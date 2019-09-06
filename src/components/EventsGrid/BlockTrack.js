@@ -74,8 +74,6 @@ const BlockTrack = ({
     numOfBeatsToShow
   );
 
-  console.log(backgroundBoxes);
-
   return (
     <Wrapper
       style={{ height }}

@@ -54,8 +54,9 @@ export const getBackgroundBoxes = (
         id: pseudoInitialEvent.id,
         beatNum: pseudoInitialEvent.beatNum,
         duration: numOfBeatsToShow,
-        color: 'red',
+        color: initialTrackLightingColor,
       });
+
       return backgroundBoxes;
     }
   }
