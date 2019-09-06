@@ -1,6 +1,7 @@
 /**
  * This reducer holds transient state for the editor.
- * It can be thrown away with no worries.
+ * It's persisted for quality-of-life, but really it can be thrown away without
+ * much user pain (unless it's every time)
  */
 import { combineReducers } from 'redux';
 

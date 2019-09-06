@@ -11,7 +11,7 @@ import createDemoMiddleware from '../middlewares/demo.middleware';
 import createEngine from './persistence-engine';
 
 export default function configureStore(initialState) {
-  const persistenceEngine = createEngine(['songs', 'user']);
+  const persistenceEngine = createEngine(['user', 'editor', ['songs', 'byId']]);
 
   const songMiddleware = createSongMiddleware();
   const selectionMiddleware = createSelectionMiddleware();
