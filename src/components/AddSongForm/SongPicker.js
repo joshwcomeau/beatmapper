@@ -36,9 +36,14 @@ const SongPicker = ({ height, songFile, setSongFile }) => {
       description="Browse for an .ogg song"
       height={height}
       onSelectFile={file => {
-        // Ugh, so for ~reasons~, some songs have their extension changed
-        // to .egg.
-        const isValid = file.type === 'audio/ogg' || file.name.match(/\.egg$/);
+        // Couple things make this weird:
+        // - Firefox treats all ogg files as video/ogg instead of audio/ogg
+        // - Sometimes, file extensions are changed to .egg, for reasons I don't
+        //   fully understand.
+        const isValid =
+          file.type === 'audio/ogg' ||
+          file.type === 'video/ogg' ||
+          file.name.match(/\.egg$/);
 
         if (!isValid) {
           // Rather than use the `accept` field to disallow selecting
