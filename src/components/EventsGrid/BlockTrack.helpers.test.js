@@ -33,7 +33,7 @@ describe('BlockTrack helpers', () => {
           type: 'off',
         },
       ];
-      const isTrackInitiallyLit = false;
+      const initialTrackLightingColor = false;
       const startBeat = 0;
       const numOfBeatsToShow = 8;
 
@@ -41,7 +41,7 @@ describe('BlockTrack helpers', () => {
       const actualResult = getBackgroundBoxes(
         events,
         trackId,
-        isTrackInitiallyLit,
+        initialTrackLightingColor,
         startBeat,
         numOfBeatsToShow
       );
@@ -52,7 +52,7 @@ describe('BlockTrack helpers', () => {
     it('handles an empty set of events without initial lighting', () => {
       //  0  [________]
       const events = [];
-      const isTrackInitiallyLit = false;
+      const initialTrackLightingColor = false;
       const startBeat = 0;
       const numOfBeatsToShow = 8;
 
@@ -60,7 +60,7 @@ describe('BlockTrack helpers', () => {
       const actualResult = getBackgroundBoxes(
         events,
         LIGHTING_TRACK_ID,
-        isTrackInitiallyLit,
+        initialTrackLightingColor,
         startBeat,
         numOfBeatsToShow
       );
@@ -71,7 +71,7 @@ describe('BlockTrack helpers', () => {
     it('handles an empty set of events with initial lighting', () => {
       //  1  [________]
       const events = [];
-      const isTrackInitiallyLit = true;
+      const initialTrackLightingColor = 'red';
       const startBeat = 8;
       const numOfBeatsToShow = 8;
 
@@ -86,7 +86,7 @@ describe('BlockTrack helpers', () => {
       const actualResult = getBackgroundBoxes(
         events,
         LIGHTING_TRACK_ID,
-        isTrackInitiallyLit,
+        initialTrackLightingColor,
         startBeat,
         numOfBeatsToShow
       );
@@ -111,7 +111,7 @@ describe('BlockTrack helpers', () => {
           type: 'off',
         },
       ];
-      const isTrackInitiallyLit = false;
+      const initialTrackLightingColor = false;
       const startBeat = 8;
       const numOfBeatsToShow = 8;
 
@@ -126,7 +126,7 @@ describe('BlockTrack helpers', () => {
       const actualResult = getBackgroundBoxes(
         events,
         LIGHTING_TRACK_ID,
-        isTrackInitiallyLit,
+        initialTrackLightingColor,
         startBeat,
         numOfBeatsToShow
       );

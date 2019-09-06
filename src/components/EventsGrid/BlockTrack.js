@@ -11,7 +11,7 @@ import {
 } from '../../reducers/editor.reducer';
 import {
   getEventsForTrack,
-  getIsTrackInitiallyLit,
+  getInitialTrackLightingColor,
 } from '../../reducers/editor-entities.reducer/events-view.reducer';
 import usePointerUpHandler from '../../hooks/use-pointer-up-handler.hook';
 
@@ -29,7 +29,7 @@ const BlockTrack = ({
   selectedTool,
   selectedColor,
   selectedEditMode,
-  isTrackInitiallyLit,
+  initialTrackLightingColor,
   placeEvent,
   ...delegated
 }) => {
@@ -69,10 +69,12 @@ const BlockTrack = ({
   const backgroundBoxes = getBackgroundBoxes(
     events,
     trackId,
-    isTrackInitiallyLit,
+    initialTrackLightingColor,
     startBeat,
     numOfBeatsToShow
   );
+
+  console.log(backgroundBoxes);
 
   return (
     <Wrapper
@@ -138,7 +140,7 @@ const mapStateToProps = (state, ownProps) => {
   const selectedTool = getSelectedEventTool(state);
   const selectedColor = getSelectedEventColor(state);
 
-  const isTrackInitiallyLit = getIsTrackInitiallyLit(
+  const initialTrackLightingColor = getInitialTrackLightingColor(
     state,
     ownProps.trackId,
     ownProps.startBeat
@@ -149,7 +151,7 @@ const mapStateToProps = (state, ownProps) => {
     selectedEditMode,
     selectedTool,
     selectedColor,
-    isTrackInitiallyLit,
+    initialTrackLightingColor,
   };
 };
 

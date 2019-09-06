@@ -411,15 +411,16 @@ export const getEventsForTrack = (
   );
 };
 
-export const getIsTrackInitiallyLit = (state, trackId, startBeat) => {
+export const getInitialTrackLightingColor = (state, trackId, startBeat) => {
   const relevantEvents = getEventsForTrack(state, trackId, 0, startBeat);
   if (relevantEvents.length === 0) {
-    return false;
+    return null;
   }
 
   const lastEvent = relevantEvents[relevantEvents.length - 1];
+  const isLastEventOn = lastEvent.type === 'on' || lastEvent.type === 'flash';
 
-  return lastEvent.type === 'on' || lastEvent.type === 'flash';
+  return isLastEventOn ? lastEvent.color : null;
 };
 
 export const getAllEventsAsArray = createSelector(

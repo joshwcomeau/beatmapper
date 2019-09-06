@@ -1,15 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import { connect } from 'react-redux';
-import Color from 'color';
 
-import { COLORS } from '../../constants';
-import * as actions from '../../actions';
-import { getSelectedEventEditMode } from '../../reducers/editor.reducer';
 import { normalize } from '../../utils';
-import UnstyledButton from '../UnstyledButton';
 
-const BackgroundBox = ({ box, color = 'red', startBeat, numOfBeatsToShow }) => {
+const BackgroundBox = ({ box, startBeat, numOfBeatsToShow }) => {
   const startOffset = normalize(
     box.beatNum,
     startBeat,
@@ -27,7 +21,11 @@ const BackgroundBox = ({ box, color = 'red', startBeat, numOfBeatsToShow }) => {
 
   return (
     <Wrapper
-      style={{ left: startOffset + '%', width: width + '%', background: color }}
+      style={{
+        left: startOffset + '%',
+        width: width + '%',
+        background: box.color,
+      }}
     />
   );
 };

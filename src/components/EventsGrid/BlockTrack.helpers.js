@@ -23,7 +23,7 @@ const getIsLightingTrack = trackId => {
 export const getBackgroundBoxes = (
   events,
   trackId,
-  isTrackInitiallyLit,
+  initialTrackLightingColor,
   startBeat,
   numOfBeatsToShow
 ) => {
@@ -39,7 +39,7 @@ export const getBackgroundBoxes = (
   // event. It's simpler if we treat it as an 'on' event at the very first beat
   // of the section.
   const workableEvents = [...events];
-  if (isTrackInitiallyLit) {
+  if (initialTrackLightingColor) {
     const pseudoInitialEvent = {
       id: `initial-${startBeat}-${numOfBeatsToShow}`,
       type: 'on',
