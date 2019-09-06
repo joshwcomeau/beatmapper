@@ -411,7 +411,7 @@ export const getEventsForTrack = (
   );
 };
 
-export const getInitialLightingValue = (state, trackId, startBeat) => {
+export const getIsTrackInitiallyLit = (state, trackId, startBeat) => {
   const relevantEvents = getEventsForTrack(state, trackId, 0, startBeat);
   if (relevantEvents.length === 0) {
     return false;
