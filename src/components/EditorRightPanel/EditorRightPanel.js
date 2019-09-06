@@ -12,7 +12,7 @@ import Spacer from '../Spacer';
 const EditorRightPanel = () => {
   const windowDimensions = useWindowDimensions();
 
-  const panelHeight = 500;
+  let panelHeight = 500;
   // HACK: This should be a constant somewhere, used to set bottom panel
   // height!
   const bottomPanelHeight = 180;
@@ -20,7 +20,11 @@ const EditorRightPanel = () => {
   const availableSpace =
     windowDimensions.height - bottomPanelHeight - panelHeight;
 
-  const top = Math.max(availableSpace / 2, 90);
+  const top = Math.max(0, availableSpace / 2);
+
+  if (availableSpace < 0) {
+    panelHeight = panelHeight + availableSpace;
+  }
 
   return (
     <Wrapper style={{ height: panelHeight, top }}>
@@ -45,6 +49,7 @@ const Wrapper = styled.div`
   border-left: 1px solid rgba(255, 255, 255, 0.1);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   user-select: none;
+  overflow: auto;
 `;
 
 export default EditorRightPanel;

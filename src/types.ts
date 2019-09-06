@@ -73,25 +73,25 @@ export type EventType =
 export type EventColor = 'red' | 'blue';
 
 export interface BaseEvent {
+  id: string;
   trackId: TrackId;
   beatNum: number;
   selected?: true | false | 'tentative';
 }
 
 export interface LightingEvent extends BaseEvent {
-  id: LightingTrackId;
+  trackId: LightingTrackId;
   type: LightingEventType;
-  color: EventColor;
-  duration?: number;
+  color?: EventColor;
 }
 
 export interface RingEvent extends BaseEvent {
-  id: RingTrackId;
+  trackId: RingTrackId;
   type: RingEventType;
 }
 
 export interface LaserSpeedEvent extends BaseEvent {
-  id: LaserSpeedTrackId;
+  trackId: LaserSpeedTrackId;
   type: LaserSpeedEventType;
   laserSpeed: number;
 }
