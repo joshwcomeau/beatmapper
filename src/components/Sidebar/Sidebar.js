@@ -63,7 +63,10 @@ const Sidebar = ({ location, match, leaveEditor }) => {
           <SidebarNavItem
             title="Settings"
             icon={settings}
-            onClick={() => alert('click')}
+            onClick={ev => {
+              ev.preventDefault();
+              alert('click');
+            }}
             isActive={false}
           />
           <SidebarNavItem
