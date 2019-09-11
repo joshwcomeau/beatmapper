@@ -1,6 +1,7 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import * as storage from 'redux-storage';
 import thunk from 'redux-thunk';
+import { createStateSyncMiddleware } from 'redux-state-sync';
 
 import rootReducer from '../reducers';
 import createSongMiddleware from '../middlewares/song.middleware';
@@ -13,6 +14,8 @@ import createEngine from './persistence-engine';
 export default function configureStore(initialState) {
   const persistenceEngine = createEngine(['user', 'editor', ['songs', 'byId']]);
 
+  const stateSyncMiddleware = createStateSyncMiddleware();
+
   const songMiddleware = createSongMiddleware();
   const selectionMiddleware = createSelectionMiddleware();
   const downloadMiddleware = createPackagingMiddleware();
@@ -23,6 +26,8 @@ export default function configureStore(initialState) {
   const wrappedReducer = storage.reducer(rootReducer);
 
   const middlewares = [
+    // NOTE: This middleware should be first. I get weird errors otherwise.
+    stateSyncMiddleware,
     thunk,
     storageMiddleware,
     songMiddleware,
