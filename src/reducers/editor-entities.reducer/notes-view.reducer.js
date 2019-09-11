@@ -340,7 +340,7 @@ const obstacles = (state = initialState.obstacles, action) => {
 
       const timeShiftedObstacles = obstacles.map(obstacle => ({
         ...obstacle,
-        selected: false,
+        selected: true,
         beatStart: obstacle.beatStart + deltaBetweenPeriods,
       }));
 
@@ -391,8 +391,9 @@ const notesView = undoable(combineReducers({ notes, obstacles }), {
     'RESIZE_OBSTACLE',
     'DELETE_OBSTACLE',
     'SWAP_SELECTED_NOTES',
+    'TOGGLE_NOTE_COLOR',
   ]),
-  groupBy: groupByActionTypes(['SET_BLOCK_BY_DRAGGING', 'BULK_DELETE_NOTE']),
+  groupBy: groupByActionTypes(['BULK_DELETE_NOTE']),
 });
 
 //

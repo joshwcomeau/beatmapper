@@ -52,7 +52,15 @@ const Mine = React.memo(
 
             // Start selecting! If this block is already selected, it'll
             // start deselecting instead
-            const selectionMode = isSelected ? 'deselect' : 'select';
+            let selectionMode;
+            if (ev.button === 0) {
+              selectionMode = isSelected ? 'deselect' : 'select';
+            } else if (ev.button === 1) {
+              // Middle clicks shouldnt affect selections
+              selectionMode = null;
+            } else if (ev.button === 2) {
+              selectionMode = 'delete';
+            }
             handleStartSelecting(selectionMode);
 
             const clickType = ev.button === 2 ? 'right' : 'left';
