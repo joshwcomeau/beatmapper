@@ -121,6 +121,7 @@ const OuterWrapper = styled.div`
   left: ${UNIT * 2}px;
   display: flex;
   align-items: center;
+  user-select: none;
 `;
 
 const Wrapper = styled.div`
