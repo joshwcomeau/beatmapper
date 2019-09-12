@@ -22,7 +22,7 @@ const SelectionBox = ({ box }) => {
 const Box = styled.div`
   position: absolute;
   z-index: 10;
-  border: 2px solid ${COLORS.white};
+  border: 2px dashed ${COLORS.white};
   border-radius: 5px;
   pointer-events: none;
 `;

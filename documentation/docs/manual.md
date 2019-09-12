@@ -37,7 +37,7 @@ The primary editor view is the **notes view**. This view allows you to add _bloc
 
 The main area is taken up by a 3D representation of the notes in your song. You'll see the **placement grid** in the center; these 12 squares represent the possible positions for blocks and other elements. You can **left-click** the square to add a block to a specific square, at the current moment in time.
 
-#### Navigating time
+### Navigating time
 
 There are many ways to move through time in the song:
 
@@ -59,7 +59,7 @@ Clicking on the dropdown will show you all available options, as well as the cor
 
 > You can also shift between snapping intervals by holding `ctrl` (or `⌘` on Mac) and spinning the mousewheel. There are many helpful [keyboard shortcuts](/docs/docs/keyboard-shortcuts) available
 
-#### Navigating space
+### Navigating space
 
 By default, the camera will be facing the placement grid head-on.
 
@@ -67,7 +67,7 @@ You can move the camera by **holding shift** and **using WASD**, as you might in
 
 At any point, you can press **backspace** to return to the initial camera position, facing the placement grid.
 
-#### Placing blocks
+### Placing blocks
 
 To place a block, click on the corresponding square in the _placement grid_:
 
@@ -90,7 +90,7 @@ Finally, you can **click and drag** to dynamically select a block direction. Thi
 
 <img src="/docs/img/drag-direction.gif" style="width: 400px" />
 
-#### Placing mines and obstacles
+### Placing mines and obstacles
 
 There are two other tools we need to familiarize ourselves with: **mines** and **obstacles**.
 
@@ -112,7 +112,7 @@ Ceilings are placed the same way, but by clicking on the top row of squares. You
 
 <img src="/docs/img/place-ceiling.gif" style="width: 307px" />
 
-#### Selecting and deleting items
+### Selecting and deleting items
 
 Blocks, mines, and obstacles all work the same way when it comes to selections and deletions.
 
@@ -132,7 +132,13 @@ To **delete selected items**, you can use the `Delete` key. Alternatively, you c
 
 If you make a mistake deleting items, you can undo with `ctrl+Z` or `⌘+Z`.
 
-#### Miscellaneous helpers
+You can **copy and paste** using the standard shortcuts for your operating system:
+
+- `ctrl+c` or `⌘+c` to copy
+- `ctrl+v` or `⌘+v` to cut (copies to the clipboard and deletes the blocks)
+- `ctrl+p` or `⌘+p` to paste
+
+### Miscellaneous helpers
 
 At the very bottom of the screen, you'll find some numbers and controls:
 
@@ -149,6 +155,8 @@ There's a bunch of helpful stuff down here:
 
 ## Events view
 
+> This documentation is a work-in-progress. The events view is not covered in enough detail yet, so some experimentation will be required.
+
 The sidebar on the left contains the links to other views:
 
 <img src="/docs/img/sidebar.png" style="width: 111px" />
@@ -157,6 +165,106 @@ Let's visit the third icon in the list, to view the **events view**:
 
 <img src="/docs/img/events-view.png" style="width: 75%" />
 
-## Migrating from another editor
+### Navigation
 
-WIP
+A thick vertical yellow bar represents the current timestamp; if you press `Space` to play the song, you'll see it tracks the song position.
+
+By default, the events grid will show **16 beats of a song**. When the yellow bar reaches the end of that 16-beat window, it jumps immediately to the next 16 beat window.
+
+You can increase or decrease the number of beats shown in the window using the zoom-in / zoom-out buttons in the top-right of the grid.
+
+### Track types
+
+In the Events view, there are 9 tracks that give you control over different events. They come in 3 flavors:
+
+#### Lighting tracks
+
+<img src="/docs/img/light-track.png" style="max-width: 75%" />
+
+These tracks allow you to turn a light on and off. There are 5 lighting tracks:
+
+- Left laser
+- Right laser
+- Back laser
+- Primary light
+- Track neons
+
+> These names might not always be accurate; different environments place the lights differently. These labels are only guaranteed to be correct for the default environment, although they're generally pretty close.
+
+Lighting tracks are the most complicated, because they support **4 event types**:
+
+- **on**: Turns a light on at medium brightness
+- **off**: Turns a light off
+- **flash**: Briefly sets the light to maximum brightness, fading to medium brightness. Turns a light on, if it wasn't already on.
+- **fade**: Briefly sets the light to maximum brightness, fading out completely. Turns a light off, if it was already on.
+
+Additionally, on/flash/fade can be given a color, either **red** or **blue**.
+
+You can switch between colors and event types using the toolbar above the tracks, or via keyboard shortcuts:
+
+- `1`: Set event type to **on**
+- `2`: Set event type to **on**
+- `3`: Set event type to **on**
+- `4`: Set event type to **on**
+- `Tab` / `Shift+Tab`: Cycle through event types
+- `R`: Set color to `red`
+- `B`: Set color to `blue`
+
+#### Ring tracks
+
+<img src="/docs/img/ring-track.png" style="max-width: 75%" />
+
+There are two ring tracks, _large ring_ and _small ring_. There is only 1 event type for these tracks, which triggers a rotation event. This is a very coarse control; you do not have the ability to change the speed of the rotation, nor can you stop a rotation currently in progress. You can think of it as a button on a video game controller; press "A" to punch. You can control how often you press the button, but that's about it.
+
+#### Laser speed tracks
+
+<img src="/docs/img/speed-track.png" style="max-width: 75%" />
+
+There are two laser-speed tracks, _left laser speed_ and _right laser speed_. As you might expect, these are associated with the lighting tracks _left laser_ and _right laser_.
+
+Each track has 9 possible values: the numbers 0 through 8, inclusive. These values set the speed of their corresponding laser; 0 means that the laser is not moving, 8 means that the laser is swinging rapidly through the environment.
+
+Speed tracks have no effect when their corresponding lighting track is off.
+
+### Placing and managing events
+
+There are two editing modes:
+
+- `Add` (keyboard shortcut: `A`): Place new events on the tracks
+- `Select` (keyboard shortcut: `S`): Select existing events
+
+#### Add mode
+
+Add mode is the primary mode, and it allows you to place and delete events across all tracks. Left click to add the selected event type and color to the current track, at the current time.
+
+As you move your cursor across the grid, you'll notice a white vertical line following the cursor. This is the `selected beat`; when you click to add events, it will be added precisely to the beat indicated by the white line. By default, this line jumps by 1/2 beat at a time, but you can change this by tweaking the "snapping interval" dropdown, in the same place as the notes view:
+
+<img src="/docs/img/snapping-interval.png" style="width: 194px" />
+
+Some additional things to know:
+
+- You can right-click to delete individual events, although it might be faster to use `Select` mode, described below
+- You can tap the middle-click button while hovering over a lighting event to toggle its color between red and blue
+- You can place multiple blocks within a single track by clicking and dragging in an empty space. Blocks will be placed according to the snapping interval.
+- You can delete multiple blocks within a single track by right-clicking and dragging
+- Laser speed tracks work a little bit differently; clicking and dragging controls the position of a single event.
+
+#### Select mode
+
+Select mode is a great way to make batch modifications to the events in the current window. Clicking and dragging creates a dotted box, and any events within this box when you release the mouse button are selected. You can tell which events are selected because they inherit a soft yellow glow, similar to the blocks in the notes view.
+
+Selected blocks can be manipulated in a few ways, discussed in the next section:
+
+### Moving selected notes
+
+> In the future, I hope to expand the functionality in this area. Right now, bulk note management is fairly limited
+
+With notes selected, you can delete them with the `delete` key, cut or copy them with standard operating-system shortcuts:
+
+- `ctrl+c` or `⌘+c` to copy
+- `ctrl+v` or `⌘+v` to cut (copies to the clipboard and deletes the blocks)
+- `ctrl+p` or `⌘+p` to paste
+
+Important to note, events are pasted based on the mouse position (the thin vertical line), not the song position (the thick yellow line).
+
+In the future, I hope to allow notes to be moved from left to right, or even across tracks, but this functionality is not yet built.

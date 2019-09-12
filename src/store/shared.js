@@ -16,7 +16,12 @@ export const createPersistenceEngine = () =>
 export const createAllSharedMiddlewares = persistenceEngine => {
   const stateSyncMiddleware = createStateSyncMiddleware({
     // We don't need to save in other tabs
-    blacklist: ['REDUX_STORAGE_SAVE'],
+    blacklist: [
+      'REDUX_STORAGE_SAVE',
+      'START_PLAYING',
+      'PAUSE_PLAYING',
+      'TOGGLE_PLAYING',
+    ],
   });
 
   const songMiddleware = createSongMiddleware();
