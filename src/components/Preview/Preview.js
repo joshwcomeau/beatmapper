@@ -3,18 +3,15 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import * as actions from '../../actions';
-import { isMetaKeyPressed } from '../../utils';
-import useMousewheel from '../../hooks/use-mousewheel.hook';
+import useScrollThroughSong from '../../hooks/use-scroll-through-song.hook';
 
 import ReduxForwardingCanvas from '../ReduxForwardingCanvas';
-import MapVisualization from '../MapVisualization';
 import EditorBottomPanel from '../EditorBottomPanel';
-import EditorRightPanel from '../EditorRightPanel';
-import SongInfo from '../SongInfo';
 
-import KeyboardShortcuts from './KeyboardShortcuts';
+// import KeyboardShortcuts from './KeyboardShortcuts';
+import LightingPreview from './LightingPreview';
 
-const NotesEditor = ({ isPlaying, pausePlaying, scrollThroughSong }) => {
+const Preview = ({ isPlaying, pausePlaying, scrollThroughSong }) => {
   const canvasRef = React.useRef(null);
 
   React.useEffect(() => {
@@ -24,35 +21,15 @@ const NotesEditor = ({ isPlaying, pausePlaying, scrollThroughSong }) => {
     };
   }, [pausePlaying]);
 
-  useMousewheel(canvasRef, true, ev => {
-    // Ignore mousewheels when the ctrl key is held.
-    // Those mousewheel events will be captured above, for changing the
-    // snapping.
-    if (isMetaKeyPressed(ev)) {
-      return;
-    }
-
-    ev.preventDefault();
-
-    const direction = ev.deltaY < 0 ? 'forwards' : 'backwards';
-
-    if (!isPlaying) {
-      scrollThroughSong(direction);
-    }
-  });
+  useScrollThroughSong(canvasRef, isPlaying, scrollThroughSong);
 
   return (
     <Wrapper>
-      <SongInfo showDifficultySelector />
-
       <ReduxForwardingCanvas ref={canvasRef}>
-        <MapVisualization />
+        <LightingPreview />
       </ReduxForwardingCanvas>
 
       <EditorBottomPanel />
-      <EditorRightPanel />
-
-      <KeyboardShortcuts />
     </Wrapper>
   );
 };
@@ -75,4 +52,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(NotesEditor);
+)(Preview);

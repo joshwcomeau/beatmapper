@@ -10,6 +10,7 @@ import { getSelectedSong } from '../../reducers/songs.reducer';
 import Sidebar from '../Sidebar';
 import NotesEditor from '../NotesEditor';
 import Events from '../Events';
+import Preview from '../Preview';
 import SongDetails from '../SongDetails';
 import Download from '../Download';
 import LoadingScreen from '../LoadingScreen';
@@ -53,6 +54,7 @@ const Editor = ({
             component={NotesEditor}
           />
           <Route path="/edit/:songId/:difficulty/events" component={Events} />
+          <Route path="/edit/:songId/:difficulty/preview" component={Preview} />
           <Route
             path="/edit/:songId/:difficulty/details"
             component={SongDetails}

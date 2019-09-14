@@ -9,6 +9,7 @@ import { sliders } from 'react-icons-kit/feather/sliders';
 import { download } from 'react-icons-kit/feather/download';
 import { settings } from 'react-icons-kit/feather/settings';
 import { helpCircle } from 'react-icons-kit/feather/helpCircle';
+import { play } from 'react-icons-kit/feather/play';
 
 import { COLORS, UNIT, SIDEBAR_WIDTH } from '../../constants';
 import * as actions from '../../actions';
@@ -42,6 +43,12 @@ const Sidebar = ({ location, match, leaveEditor }) => {
             icon={sun}
             to={`/edit/${songId}/${difficulty}/events`}
             isActive={!!location.pathname.match(/\/events$/)}
+          />
+          <SidebarNavItem
+            title="Preview"
+            icon={play}
+            to={`/edit/${songId}/${difficulty}/preview`}
+            isActive={!!location.pathname.match(/\/preview$/)}
           />
           <SidebarNavItem
             title="Song Details"
