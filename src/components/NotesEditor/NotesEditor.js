@@ -11,8 +11,10 @@ import MapVisualization from '../MapVisualization';
 import EditorBottomPanel from '../EditorBottomPanel';
 import EditorRightPanel from '../EditorRightPanel';
 import SongInfo from '../SongInfo';
+import GlobalShortcuts from '../GlobalShortcuts';
 
 import KeyboardShortcuts from './KeyboardShortcuts';
+import { NOTES_VIEW } from '../../constants';
 
 const NotesEditor = ({ isPlaying, pausePlaying, scrollThroughSong }) => {
   const canvasRef = React.useRef(null);
@@ -52,6 +54,7 @@ const NotesEditor = ({ isPlaying, pausePlaying, scrollThroughSong }) => {
       <EditorBottomPanel />
       <EditorRightPanel />
 
+      <GlobalShortcuts view={NOTES_VIEW} />
       <KeyboardShortcuts />
     </Wrapper>
   );
