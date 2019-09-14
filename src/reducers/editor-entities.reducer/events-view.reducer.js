@@ -411,13 +411,22 @@ export const getEventsForTrack = (
   );
 };
 
-export const getInitialTrackLightingColor = (state, trackId, startBeat) => {
+export const getEventForTrackAtBeat = (state, trackId, startBeat) => {
   const relevantEvents = getEventsForTrack(state, trackId, 0, startBeat);
   if (relevantEvents.length === 0) {
     return null;
   }
 
-  const lastEvent = relevantEvents[relevantEvents.length - 1];
+  return relevantEvents[relevantEvents.length - 1];
+};
+
+export const getInitialTrackLightingColor = (state, trackId, startBeat) => {
+  const lastEvent = getEventForTrackAtBeat(state, trackId, startBeat);
+
+  if (!lastEvent) {
+    return null;
+  }
+
   const isLastEventOn = lastEvent.type === 'on' || lastEvent.type === 'flash';
 
   return isLastEventOn ? lastEvent.color : null;
