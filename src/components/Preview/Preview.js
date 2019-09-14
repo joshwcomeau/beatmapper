@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import * as actions from '../../actions';
+import { PREVIEW_VIEW } from '../../constants';
 import useScrollThroughSong from '../../hooks/use-scroll-through-song.hook';
 
 import ReduxForwardingCanvas from '../ReduxForwardingCanvas';
@@ -10,6 +11,7 @@ import EditorBottomPanel from '../EditorBottomPanel';
 
 // import KeyboardShortcuts from './KeyboardShortcuts';
 import LightingPreview from './LightingPreview';
+import GlobalShortcuts from '../GlobalShortcuts';
 
 const Preview = ({ isPlaying, pausePlaying, scrollThroughSong }) => {
   const canvasRef = React.useRef(null);
@@ -30,6 +32,8 @@ const Preview = ({ isPlaying, pausePlaying, scrollThroughSong }) => {
       </ReduxForwardingCanvas>
 
       <EditorBottomPanel />
+
+      <GlobalShortcuts view={PREVIEW_VIEW} />
     </Wrapper>
   );
 };

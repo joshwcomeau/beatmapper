@@ -152,6 +152,7 @@ export const SNAPPING_INCREMENTS = [
 
 export const NOTES_VIEW = 'notes';
 export const EVENTS_VIEW = 'events';
+export const PREVIEW_VIEW = 'preview';
 
 export const BEATS_PER_ZOOM_LEVEL = [null, 32, 16, 8, 4];
 
