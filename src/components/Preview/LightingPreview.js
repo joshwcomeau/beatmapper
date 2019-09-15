@@ -10,8 +10,9 @@ import { useRender } from 'react-three-fiber';
 
 import Controls from '../../controls';
 
-import SideLaser from './SideLaser';
 import StaticEnvironment from '../StaticEnvironment';
+import SideLaser from './SideLaser';
+import SmallRings from './SmallRings';
 
 const LightingPreview = ({ songId }) => {
   const controls = React.useRef(null);
@@ -34,6 +35,8 @@ const LightingPreview = ({ songId }) => {
 
       <SideLaser side="left" />
       <SideLaser side="right" />
+
+      <SmallRings />
     </>
   );
 };
