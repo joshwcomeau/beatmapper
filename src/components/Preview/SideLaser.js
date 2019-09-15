@@ -29,7 +29,8 @@ const getSinRotationValue = (
   }
 
   // I don't want every beam to sit at exactly the same spot in the sin cycle.
-  // I chose random numbers that seem to match that in Beat Saber
+  // In the game, the first 2 lasers follow each other closely, while the
+  // remaining ones swivel at seemingly random offsets.
   let beamIndexOffset;
   if (beamIndex === 0) {
     beamIndexOffset = 0;
@@ -52,10 +53,10 @@ const SideLaser = ({
   laserSpeed,
   secondsSinceSongStart,
 }) => {
-  const NUM_OF_BEAMS = 4;
-  const laserIndices = range(0, NUM_OF_BEAMS);
+  const NUM_OF_HORIZONTAL_BEAMS = 4;
+  const laserIndices = range(0, NUM_OF_HORIZONTAL_BEAMS);
 
-  const zDistanceBetweenBeams = 10;
+  const zDistanceBetweenBeams = -20;
   const xDistanceBetweenBeams = side === 'left' ? -2 : 2;
 
   // We want the two sides to be threaded through each other, so the left side
@@ -63,6 +64,7 @@ const SideLaser = ({
   const zLeftSideOffset = zDistanceBetweenBeams / 2;
 
   const xOffset = side === 'right' ? 40 : -40;
+  const yOffset = -10;
   const zOffset = side === 'right' ? -100 : -100 - zLeftSideOffset;
 
   const status = lastEvent ? lastEvent.type : 'off';
@@ -70,10 +72,10 @@ const SideLaser = ({
   const color =
     status === 'off' ? LASER_COLORS.off : LASER_COLORS[lastEvent.color];
 
-  return laserIndices.map(index => {
+  const horizontalBeams = laserIndices.map(index => {
     const position = [
       xOffset + index * xDistanceBetweenBeams,
-      -20,
+      yOffset,
       zOffset + index * zDistanceBetweenBeams,
     ];
 
@@ -96,6 +98,25 @@ const SideLaser = ({
       />
     );
   });
+
+  // Side lasers also feature a single "perspective" beam, shooting into the
+  // distance.
+  const perspectiveBeam = (
+    <LaserBeam
+      color={color}
+      position={[xOffset * 1.5, yOffset, -45]}
+      rotation={[convertDegreesToRadians(90), 0, 0]}
+      lastEventId={eventId}
+      status={status}
+    />
+  );
+
+  return (
+    <>
+      {horizontalBeams}
+      {perspectiveBeam}
+    </>
+  );
 };
 
 const mapStateToProps = (state, ownProps) => {

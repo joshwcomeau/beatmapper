@@ -32,8 +32,6 @@ const StaticEnvironment = props => {
   return (
     <>
       {/* Fog! Hide objects very far away. */}
-      <fogExp2 attach="fog" args={[0x000000, 0.02]} />
-
       <primitive object={midLightTarget} />
       <primitive object={frontLightTarget} />
 
@@ -123,8 +121,6 @@ const StaticEnvironment = props => {
         angle={1}
         penumbra={1}
       />
-
-      <ambientLight intensity={0.45} />
     </>
   );
 };

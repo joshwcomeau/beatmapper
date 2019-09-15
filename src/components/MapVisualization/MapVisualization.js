@@ -35,6 +35,11 @@ const MapVisualization = ({ songId }) => {
     <>
       <StaticEnvironment />
 
+      {/* Fog */}
+      <fogExp2 attach="fog" args={[0x000000, 0.02]} />
+
+      <ambientLight intensity={0.45} />
+
       <TrackMover>
         <SongBlocks />
         <BarMarkers />

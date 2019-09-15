@@ -11,6 +11,7 @@ import { useRender } from 'react-three-fiber';
 import Controls from '../../controls';
 
 import SideLaser from './SideLaser';
+import StaticEnvironment from '../StaticEnvironment';
 
 const LightingPreview = ({ songId }) => {
   const controls = React.useRef(null);
@@ -27,9 +28,12 @@ const LightingPreview = ({ songId }) => {
 
   return (
     <>
+      <StaticEnvironment />
+
+      <fogExp2 attach="fog" args={[0x000000, 0.0055]} />
+
       <SideLaser side="left" />
       <SideLaser side="right" />
-      <ambientLight intensity={0.1} />
     </>
   );
 };
