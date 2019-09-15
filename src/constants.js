@@ -71,6 +71,12 @@ export const DIFFICULTY_COLORS = {
   ExpertPlus: '#FF5FF9',
 };
 
+export const LASER_COLORS = {
+  red: '#ff000c',
+  blue: '#123bff',
+  off: '#000000',
+};
+
 const metaKeyLabel = getMetaKeyLabel();
 
 export const SNAPPING_INCREMENTS = [

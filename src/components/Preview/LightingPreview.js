@@ -10,7 +10,7 @@ import { useRender } from 'react-three-fiber';
 
 import Controls from '../../controls';
 
-import LeftLaser from './LeftLaser';
+import SideLaser from './SideLaser';
 
 const LightingPreview = ({ songId }) => {
   const controls = React.useRef(null);
@@ -27,7 +27,8 @@ const LightingPreview = ({ songId }) => {
 
   return (
     <>
-      <LeftLaser />
+      <SideLaser side="left" />
+      <SideLaser side="right" />
       <ambientLight intensity={0.1} />
     </>
   );
