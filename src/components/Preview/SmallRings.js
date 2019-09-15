@@ -12,6 +12,7 @@ const SmallRings = ({ numOfRings = 16 }) => {
 
   return range(numOfRings).map(index => (
     <Ring
+      key={index}
       size={12}
       y={-2}
       z={firstRingOffset + distanceBetweenRings * index}

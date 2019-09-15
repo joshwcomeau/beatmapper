@@ -54,7 +54,7 @@ const LaserBeam = ({
   lastEventId,
 }) => {
   const radius = 0.35;
-  const height = 300;
+  const height = 500;
 
   // ~~Complicated Business~~
   // This component renders super often, since its `rotation` can change on

@@ -12,7 +12,9 @@ import Controls from '../../controls';
 
 import StaticEnvironment from '../StaticEnvironment';
 import SideLaser from './SideLaser';
+import BackLaser from './BackLaser';
 import SmallRings from './SmallRings';
+import PrimaryLight from './PrimaryLight';
 
 const LightingPreview = ({ songId }) => {
   const controls = React.useRef(null);
@@ -36,7 +38,11 @@ const LightingPreview = ({ songId }) => {
       <SideLaser side="left" />
       <SideLaser side="right" />
 
+      <BackLaser />
+
       <SmallRings />
+
+      <PrimaryLight />
     </>
   );
 };

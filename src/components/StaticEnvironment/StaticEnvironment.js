@@ -5,7 +5,7 @@ import { SURFACE_WIDTH, SURFACE_DEPTH, SONG_OFFSET } from '../../constants';
 
 import RectAreaLight from '../RectAreaLight';
 
-const StaticEnvironment = props => {
+const StaticEnvironment = ({ includeEdgeStrips }) => {
   const PEG_WIDTH = 0.5;
   const SURFACE_Z_CENTER = SURFACE_DEPTH / 2 + SONG_OFFSET - 1;
 
@@ -76,20 +76,24 @@ const StaticEnvironment = props => {
       </mesh>
 
       {/* Edge light strips */}
-      <RectAreaLight
-        intensity={0.8}
-        width={0.1}
-        height={50}
-        position={leftRectLightPosition}
-        lookAt={leftRectLightLookAt}
-      />
-      <RectAreaLight
-        intensity={0.8}
-        width={0.1}
-        height={50}
-        position={rightRectLightPosition}
-        lookAt={rightRectLightLookAt}
-      />
+      {includeEdgeStrips && (
+        <>
+          <RectAreaLight
+            intensity={0.8}
+            width={0.1}
+            height={50}
+            position={leftRectLightPosition}
+            lookAt={leftRectLightLookAt}
+          />
+          <RectAreaLight
+            intensity={0.8}
+            width={0.1}
+            height={50}
+            position={rightRectLightPosition}
+            lookAt={rightRectLightLookAt}
+          />
+        </>
+      )}
 
       {/* Bright lights on the placement grid */}
       <spotLight

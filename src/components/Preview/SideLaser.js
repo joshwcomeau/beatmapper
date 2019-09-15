@@ -22,7 +22,7 @@ const getSinRotationValue = (
   secondsSinceSongStart,
   laserSpeed
 ) => {
-  const defaultRotation = side === 'left' ? -50 : 50;
+  const defaultRotation = side === 'left' ? -55 : 55;
 
   if (laserSpeed === 0) {
     return defaultRotation;

@@ -33,7 +33,7 @@ const MapVisualization = ({ songId }) => {
 
   return (
     <>
-      <StaticEnvironment />
+      <StaticEnvironment includeEdgeStrips />
 
       {/* Fog */}
       <fogExp2 attach="fog" args={[0x000000, 0.02]} />
