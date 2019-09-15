@@ -37,6 +37,7 @@ const KeyboardShortcuts = ({
   deleteSelectedEvents,
   seekForwards,
   seekBackwards,
+  downloadMapFiles,
 }) => {
   let keysDepressed = React.useRef({
     space: false,
@@ -178,6 +179,15 @@ const KeyboardShortcuts = ({
         }
       }
 
+      case 'KeyS': {
+        if (!isMetaKeyPressed(ev)) {
+          return;
+        }
+
+        ev.preventDefault();
+        return downloadMapFiles({ version: 2 });
+      }
+
       default:
         return;
     }
@@ -243,6 +253,7 @@ const mapDispatchToProps = {
   deleteSelectedNotes: actions.deleteSelectedNotes,
   seekForwards: actions.seekForwards,
   seekBackwards: actions.seekBackwards,
+  downloadMapFiles: actions.downloadMapFiles,
 };
 
 export default connect(
