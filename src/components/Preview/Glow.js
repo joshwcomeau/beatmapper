@@ -4,50 +4,13 @@ import { useThree } from 'react-three-fiber';
 import { useSpring, animated } from 'react-spring/three';
 
 import { normalize } from '../../utils';
+import useOnChange from '../../hooks/use-on-change.hook';
+
+import { getSpringConfigForLight } from './Preview.helpers';
 
 const ON_PROPS = { opacity: 0.75 };
-const OFF_PROPS = { opacity: 0.5 };
+const OFF_PROPS = { opacity: 0 };
 const BRIGHT_PROPS = { opacity: 1 };
-
-const getIntensityInfoForStatus = status => {
-  switch (status) {
-    case 'off':
-      return {
-        to: OFF_PROPS,
-        immediate: true,
-        reset: false,
-      };
-
-    case 'on': {
-      return {
-        to: ON_PROPS,
-        immediate: true,
-        reset: false,
-      };
-    }
-
-    case 'flash': {
-      return {
-        from: BRIGHT_PROPS,
-        to: ON_PROPS,
-        immediate: false,
-        reset: false,
-      };
-    }
-
-    case 'fade': {
-      return {
-        from: BRIGHT_PROPS,
-        to: OFF_PROPS,
-        immediate: false,
-        reset: false,
-      };
-    }
-
-    default:
-      throw new Error('Unrecognized status: ' + status);
-  }
-};
 
 const vertexShader = `
 uniform vec3 viewVector;
@@ -77,24 +40,19 @@ void main()
 const Glow = ({ x, y, z, color, size, status, lastEventId }) => {
   const { camera } = useThree();
 
-  let springConfig = getIntensityInfoForStatus(status);
-  const cachedEventId = React.useRef(lastEventId);
+  let springConfig = getSpringConfigForLight(
+    [ON_PROPS, OFF_PROPS, BRIGHT_PROPS],
+    status
+  );
 
-  React.useEffect(() => {
-    const lastEventIdChanged = lastEventId !== cachedEventId.current;
+  useOnChange(() => {
+    const statusShouldReset = status === 'flash' || status === 'fade';
 
-    if (lastEventIdChanged) {
-      const statusShouldReset = status === 'flash' || status === 'fade';
-
-      springConfig.reset = statusShouldReset;
-
-      cachedEventId.current = lastEventId;
-    }
-  });
+    springConfig.reset = statusShouldReset;
+  }, lastEventId);
 
   const spring = useSpring(springConfig);
 
-  // const sphereGeometry = new THREE.SphereGeometry(size, 32, 16);
   return (
     <mesh position={[x, y, z]}>
       <sphereGeometry attach="geometry" args={[size, 32, 16]} />
@@ -117,7 +75,7 @@ const Glow = ({ x, y, z, color, size, status, lastEventId }) => {
         ]}
         uniforms-glowColor-value={new THREE.Color(color)}
         uniforms-p-value={spring.opacity.interpolate(o =>
-          normalize(o, 0, 1, 10, 2)
+          normalize(o, 0, 1, 12, 2)
         )}
       />
     </mesh>

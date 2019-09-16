@@ -74,6 +74,8 @@ export const DIFFICULTY_COLORS = {
 export const LASER_COLORS = {
   red: '#ff000c',
   blue: '#123bff',
+  'red-bright': '#ff5a62',
+  'blue-bright': '#5f7bff',
   off: '#000000',
 };
 

@@ -1,49 +1,13 @@
 import React from 'react';
 import { useSpring, animated } from 'react-spring/three';
 
+import useOnChange from '../../hooks/use-on-change.hook';
+
+import { getSpringConfigForLight } from './Preview.helpers';
+
 const ON_PROPS = { emissiveIntensity: 0.75, opacity: 0.75 };
 const OFF_PROPS = { emissiveIntensity: 0, opacity: 0.5 };
 const BRIGHT_PROPS = { emissiveIntensity: 1, opacity: 1 };
-
-const getIntensityInfoForStatus = status => {
-  switch (status) {
-    case 'off':
-      return {
-        to: OFF_PROPS,
-        immediate: true,
-        reset: false,
-      };
-
-    case 'on': {
-      return {
-        to: ON_PROPS,
-        immediate: true,
-        reset: false,
-      };
-    }
-
-    case 'flash': {
-      return {
-        from: BRIGHT_PROPS,
-        to: ON_PROPS,
-        immediate: false,
-        reset: false,
-      };
-    }
-
-    case 'fade': {
-      return {
-        from: BRIGHT_PROPS,
-        to: OFF_PROPS,
-        immediate: false,
-        reset: false,
-      };
-    }
-
-    default:
-      throw new Error('Unrecognized status: ' + status);
-  }
-};
 
 const LaserBeam = ({
   color,
@@ -74,21 +38,16 @@ const LaserBeam = ({
   // so that the next render sets it back to `false`.
   //
   // This feels hacky, but I don't know of a better way.
-  let springConfig = getIntensityInfoForStatus(status);
+  let springConfig = getSpringConfigForLight(
+    [ON_PROPS, OFF_PROPS, BRIGHT_PROPS],
+    status
+  );
 
-  const cachedEventId = React.useRef(lastEventId);
+  useOnChange(() => {
+    const statusShouldReset = status === 'flash' || status === 'fade';
 
-  React.useEffect(() => {
-    const lastEventIdChanged = lastEventId !== cachedEventId.current;
-
-    if (lastEventIdChanged) {
-      const statusShouldReset = status === 'flash' || status === 'fade';
-
-      springConfig.reset = statusShouldReset;
-
-      cachedEventId.current = lastEventId;
-    }
-  });
+    springConfig.reset = statusShouldReset;
+  }, lastEventId);
 
   const spring = useSpring(springConfig);
 
