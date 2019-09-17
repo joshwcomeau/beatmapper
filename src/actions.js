@@ -411,9 +411,10 @@ export const moveMouseAcrossEventsGrid = selectedBeat => ({
   selectedBeat,
 });
 
-export const downloadMapFiles = ({ version }) => ({
+export const downloadMapFiles = ({ version = 2, songId }) => ({
   type: 'DOWNLOAD_MAP_FILES',
   version,
+  songId,
 });
 
 export const updateBeatmapMetadata = (

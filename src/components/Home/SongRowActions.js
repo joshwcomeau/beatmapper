@@ -8,7 +8,7 @@ import * as actions from '../../actions';
 
 import MiniButton from '../MiniButton';
 
-const SongRowActions = ({ songId, size, deleteSong }) => {
+const SongRowActions = ({ songId, size, deleteSong, downloadMapFiles }) => {
   const handleDelete = () => {
     if (window.confirm('Are you sure? This action cannot be undone 😱')) {
       deleteSong(songId);
@@ -26,16 +26,22 @@ const SongRowActions = ({ songId, size, deleteSong }) => {
         style={{ height: size, width: size }}
         value=""
         onChange={ev => {
-          if (ev.target.value === 'copy') {
-            handleCopy();
-          } else if (ev.target.value === 'delete') {
-            handleDelete();
+          switch (ev.target.value) {
+            case 'copy':
+              return handleCopy();
+            case 'delete':
+              return handleDelete();
+            case 'download':
+              return downloadMapFiles({ songId });
+            default:
+              throw new Error('Unrecognized action: ' + ev.target.value);
           }
         }}
       >
         <option />
         <option value="copy">Copy</option>
         <option value="delete">Delete</option>
+        <option value="download">Download</option>
       </Select>
     </MiniButton>
   );
@@ -56,5 +62,5 @@ const Select = styled.select`
 
 export default connect(
   null,
-  { deleteSong: actions.deleteSong }
+  { deleteSong: actions.deleteSong, downloadMapFiles: actions.downloadMapFiles }
 )(SongRowActions);

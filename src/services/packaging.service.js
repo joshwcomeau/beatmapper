@@ -157,8 +157,7 @@ export function createBeatmapContents(
   return JSON.stringify(contents, null, 2);
 }
 
-export function createBeatmapContentsFromState(state) {
-  const song = getSelectedSong(state);
+export function createBeatmapContentsFromState(state, song) {
   const notes = getNotes(state);
   const events = convertEventsToExportableJson(getAllEventsAsArray(state));
   const obstacles = convertObstaclesToExportableJson(getObstacles(state));

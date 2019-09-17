@@ -1,6 +1,6 @@
 import { saveBeatmap } from '../services/file.service';
 import { createBeatmapContentsFromState } from '../services/packaging.service';
-import { getSelectedSongId } from '../reducers/songs.reducer';
+import { getSelectedSong } from '../reducers/songs.reducer';
 import { getDifficulty } from '../reducers/editor-entities.reducer';
 
 export default function createBackupMiddleware() {
@@ -26,10 +26,10 @@ export default function createBackupMiddleware() {
     if (action.type === 'REDUX_STORAGE_SAVE') {
       const state = store.getState();
 
-      const songId = getSelectedSongId(state);
+      const song = getSelectedSong(state);
       const difficulty = getDifficulty(state);
-      const beatmapContents = createBeatmapContentsFromState(state);
-      saveBeatmap(songId, difficulty, beatmapContents).catch(err => {
+      const beatmapContents = createBeatmapContentsFromState(state, song);
+      saveBeatmap(song.id, difficulty, beatmapContents).catch(err => {
         console.error('Could not run backup for beatmap file', err);
       });
     }
