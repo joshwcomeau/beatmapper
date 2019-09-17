@@ -1,43 +1,54 @@
 import React from 'react';
 import * as THREE from 'three';
-import { useRender, useThree, apply } from 'react-three-fiber';
-import {
-  RenderPass,
-  EffectPass,
-  BloomEffect,
-  EffectComposer,
-} from 'postprocessing';
+import { useThree, useRender } from 'react-three-fiber';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
 
-apply({ EffectComposer, EffectPass, RenderPass });
-
-const Effect = () => {
-  const { gl, scene, camera, size } = useThree();
+export function Bloom({ children }) {
+  const { gl, camera, size } = useThree();
+  const scene = React.useRef();
   const composer = React.useRef();
-  const clock = React.useRef(new THREE.Clock());
-  const bloomEffect = React.useRef(new BloomEffect());
-
-  bloomEffect.current.distinction = 0.4;
-
   React.useEffect(() => {
-    composer.current.setSize(size.width, size.height);
-  }, [size]);
+    composer.current = new EffectComposer(gl);
+    composer.current.addPass(new RenderPass(scene.current, camera));
+    const bloomPass = new UnrealBloomPass(
+      new THREE.Vector2(size.width, size.height),
+      1.5,
+      0.4,
+      0.85
+    );
 
-  const takeOverRendering = true;
+    gl.toneMappingExposure = 3;
+    bloomPass.threshold = 0;
+    bloomPass.strength = 4;
+    bloomPass.radius = 0.75;
 
-  useRender(() => {
-    composer.current.render(clock.current.getDelta());
-  }, takeOverRendering);
+    composer.current.addPass(bloomPass);
+  }, []);
 
-  return (
-    <effectComposer ref={composer} args={[gl]}>
-      <renderPass attachArray="passes" args={[scene, camera]} />
-      <effectPass
-        attachArray="passes"
-        args={[camera, bloomEffect.current]}
-        renderToScreen
-      />
-    </effectComposer>
+  React.useEffect(
+    () => void composer.current.setSize(size.width, size.height),
+    [size]
   );
-};
+  useRender(() => {
+    composer.current.render();
+    // gl.autoClear = false;
+    // gl.clearDepth();
+    // gl.render(scene.current, camera);
+  });
+  return <scene ref={scene}>{children}</scene>;
+}
 
-export default Effect;
+export function NoBloom({ children }) {
+  const scene = React.useRef();
+  const { gl, camera } = useThree();
+  useRender(() => {
+    gl.autoClear = false;
+    gl.clearDepth();
+    gl.render(scene.current, camera);
+  });
+  return <scene ref={scene}>{children}</scene>;
+}
+
+export default Bloom;

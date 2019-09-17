@@ -18,6 +18,8 @@ import Obstacles from '../Obstacles';
 import PlacementGrid from '../PlacementGrid';
 import TrackMover from '../TrackMover';
 
+import Lighting from './Lighting';
+
 const MapVisualization = ({ songId }) => {
   const controls = React.useRef(null);
 
@@ -38,7 +40,7 @@ const MapVisualization = ({ songId }) => {
       {/* Fog */}
       <fogExp2 attach="fog" args={[0x000000, 0.02]} />
 
-      <ambientLight intensity={0.45} />
+      <Lighting />
 
       <TrackMover>
         <SongBlocks />

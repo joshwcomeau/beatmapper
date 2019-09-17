@@ -75,7 +75,7 @@ const Glow = ({ x, y, z, color, size, status, lastEventId }) => {
         ]}
         uniforms-glowColor-value={new THREE.Color(color)}
         uniforms-p-value={spring.opacity.interpolate(o =>
-          normalize(o, 0, 1, 12, 2)
+          normalize(o, 0, 1, 16, 7)
         )}
       />
     </mesh>

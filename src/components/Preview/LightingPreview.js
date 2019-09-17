@@ -11,6 +11,7 @@ import { useRender } from 'react-three-fiber';
 import Controls from '../../controls';
 
 import StaticEnvironment from '../StaticEnvironment';
+import { Bloom, NoBloom } from '../BloomEffect';
 import SideLaser from './SideLaser';
 import BackLaser from './BackLaser';
 import SmallRings from './SmallRings';
@@ -31,18 +32,27 @@ const LightingPreview = ({ songId }) => {
 
   return (
     <>
-      <StaticEnvironment />
+      <Bloom>
+        <SideLaser side="left" />
+        <SideLaser side="right" />
 
-      <fogExp2 attach="fog" args={[0x000000, 0.0055]} />
+        <BackLaser />
 
-      <SideLaser side="left" />
-      <SideLaser side="right" />
+        <SmallRings />
 
-      <BackLaser />
+        <PrimaryLight />
+      </Bloom>
 
-      <SmallRings />
-
-      <PrimaryLight />
+      <NoBloom>
+        <>
+          <StaticEnvironment />
+          <ambientLight intensity={0.2} />
+        </>
+      </NoBloom>
+      {/*
+      <NoBloom>
+        <fogExp2 attach="fog" args={[0x000000, 0.0055]} />
+      </NoBloom> */}
     </>
   );
 };

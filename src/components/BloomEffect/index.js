@@ -1,1 +1,1 @@
-export { default } from "./BloomEffect";
+export { default, Bloom, NoBloom } from './BloomEffect';

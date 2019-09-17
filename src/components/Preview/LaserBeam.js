@@ -6,7 +6,7 @@ import useOnChange from '../../hooks/use-on-change.hook';
 import { getSpringConfigForLight } from './Preview.helpers';
 
 const ON_PROPS = { emissiveIntensity: 0.75, opacity: 0.75 };
-const OFF_PROPS = { emissiveIntensity: 0, opacity: 0.5 };
+const OFF_PROPS = { emissiveIntensity: 0, opacity: 0 };
 const BRIGHT_PROPS = { emissiveIntensity: 1, opacity: 1 };
 
 const LaserBeam = ({

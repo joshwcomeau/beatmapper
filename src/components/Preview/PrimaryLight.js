@@ -14,7 +14,7 @@ import LaserBeam from './LaserBeam';
 import Glow from './Glow';
 
 const ON_PROPS = { emissiveIntensity: 0.75, opacity: 0.75 };
-const OFF_PROPS = { emissiveIntensity: 0, opacity: 0.5 };
+const OFF_PROPS = { emissiveIntensity: 0, opacity: 0 };
 const BRIGHT_PROPS = { emissiveIntensity: 1, opacity: 1 };
 
 const PrimaryLight = ({ lastEvent, secondsSinceSongStart }) => {
