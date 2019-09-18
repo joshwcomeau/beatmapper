@@ -82,13 +82,13 @@ const EditorStatusBar = ({
         <Spacer size={UNIT * 2} />
         <CountIndicator
           num={numOfMines}
-          label={pluralize(numOfBlocks, 'mine')}
+          label={pluralize(numOfMines, 'mine')}
           icon={globe}
         />
         <Spacer size={UNIT * 2} />
         <CountIndicator
           num={numOfObstacles}
-          label={pluralize(numOfBlocks, 'obstacle')}
+          label={pluralize(numOfObstacles, 'obstacle')}
           icon={codepen}
         />
         <Spacer size={UNIT * 6} />
