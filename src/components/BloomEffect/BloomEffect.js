@@ -19,7 +19,7 @@ export function Bloom({ children }) {
       0.85
     );
 
-    gl.toneMappingExposure = 3;
+    gl.toneMappingExposure = 2.5;
     bloomPass.threshold = 0;
     bloomPass.strength = 4;
     bloomPass.radius = 0.75;

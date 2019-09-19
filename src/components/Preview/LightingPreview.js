@@ -16,6 +16,7 @@ import SideLaser from './SideLaser';
 import BackLaser from './BackLaser';
 import SmallRings from './SmallRings';
 import PrimaryLight from './PrimaryLight';
+import AmbientLighting from './AmbientLighting';
 
 const LightingPreview = ({ songId }) => {
   const controls = React.useRef(null);
@@ -46,13 +47,9 @@ const LightingPreview = ({ songId }) => {
       <NoBloom>
         <>
           <StaticEnvironment />
-          <ambientLight intensity={0.2} />
+          <AmbientLighting />
         </>
       </NoBloom>
-      {/*
-      <NoBloom>
-        <fogExp2 attach="fog" args={[0x000000, 0.0055]} />
-      </NoBloom> */}
     </>
   );
 };
