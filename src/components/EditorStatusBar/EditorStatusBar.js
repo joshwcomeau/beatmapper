@@ -18,16 +18,13 @@ import { bell as tickOnIcon } from 'react-icons-kit/feather/bell';
 import { bellOff as tickOffIcon } from 'react-icons-kit/feather/bellOff';
 import { minimize2 as distanceCloseIcon } from 'react-icons-kit/feather/minimize2';
 import { maximize2 as distanceFarIcon } from 'react-icons-kit/feather/maximize2';
-import { layers as densityIcon } from 'react-icons-kit/feather/layers';
 
 import * as actions from '../../actions';
 import { COLORS, UNIT } from '../../constants';
-import { roundTo } from '../../utils';
 import {
   getNumOfBlocks,
   getNumOfMines,
   getNumOfObstacles,
-  getNoteDensity,
 } from '../../reducers/editor-entities.reducer/notes-view.reducer';
 import {
   getIsLoading,
@@ -42,6 +39,7 @@ import Spacer from '../Spacer';
 import CountIndicator from './CountIndicator';
 import SliderGroup from './SliderGroup';
 import Toggle from './Toggle';
+import NoteDensityIndicator from './NoteDensityIndicator';
 
 const pluralize = (num, string) => {
   const noun = num === 1 ? string : `${string}s`;
@@ -71,6 +69,8 @@ const EditorStatusBar = ({
   let leftContent;
   let rightContent;
 
+  console.log('Render ESB');
+
   if (isNotesView) {
     leftContent = (
       <>
@@ -92,11 +92,7 @@ const EditorStatusBar = ({
           icon={codepen}
         />
         <Spacer size={UNIT * 6} />
-        <CountIndicator
-          num={roundTo(noteDensity, 1)}
-          label="Notes per second"
-          icon={densityIcon}
-        />
+        <NoteDensityIndicator />
       </>
     );
 
@@ -203,10 +199,18 @@ const Wrapper = styled.div`
   font-size: 12px;
   padding: 0 ${UNIT * 2}px;
   color: ${COLORS.blueGray[300]};
+
+  @media (max-width: 850px) {
+    justify-content: center;
+  }
 `;
 
 const Left = styled.div`
   display: flex;
+
+  @media (max-width: 850px) {
+    display: none;
+  }
 `;
 
 const Right = styled.div`
@@ -224,7 +228,6 @@ const mapStateToProps = state => {
     numOfBlocks: getNumOfBlocks(state),
     numOfMines: getNumOfMines(state),
     numOfObstacles: getNumOfObstacles(state),
-    noteDensity: getNoteDensity(state),
   };
 };
 
