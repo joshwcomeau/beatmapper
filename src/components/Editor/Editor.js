@@ -13,6 +13,7 @@ import Events from '../Events';
 import SongDetails from '../SongDetails';
 import Download from '../Download';
 import LoadingScreen from '../LoadingScreen';
+import EditorPrompts from '../EditorPrompts';
 
 const Editor = ({
   songId,
@@ -63,6 +64,8 @@ const Editor = ({
           />
         </Switch>
       </Wrapper>
+
+      <EditorPrompts />
     </>
   );
 };

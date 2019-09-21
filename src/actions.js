@@ -646,3 +646,8 @@ export const clearSelectionBox = () => ({
 export const commitSelection = () => ({
   type: 'COMMIT_SELECTION',
 });
+
+export const dismissPrompt = promptId => ({
+  type: 'DISMISS_PROMPT',
+  promptId,
+});

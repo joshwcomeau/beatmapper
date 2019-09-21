@@ -1,7 +1,5 @@
 // @flow
 /**
- * TODO: This code duplicates a lot of TwoPaneModal. Should be reconciled :/
- *
  * TODO: Accessibility. There are a lot of a11y things for modals, and this
  * component isn't doing any of them :/
  *

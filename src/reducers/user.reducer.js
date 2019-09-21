@@ -8,6 +8,7 @@
 
 const initialState = {
   isNewUser: true,
+  seenPrompts: [],
 };
 
 export default function user(state = initialState, action) {
@@ -31,9 +32,17 @@ export default function user(state = initialState, action) {
       };
     }
 
+    case 'DISMISS_PROMPT': {
+      return {
+        ...state,
+        seenPrompts: [...state.seenPrompts, action.promptId],
+      };
+    }
+
     default:
       return state;
   }
 }
 
 export const getIsNewUser = state => state.user.isNewUser;
+export const getSeenPrompts = state => state.user.seenPrompts;
