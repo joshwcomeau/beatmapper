@@ -398,12 +398,7 @@ const findIndexForNewEvent = (beatNum, relevantEvents) => {
 //
 const getTracks = state => state.editorEntities.eventsView.present.tracks;
 
-export const getEventsForTrack = (
-  state,
-  trackId,
-  startBeat,
-  numOfBeatsToShow
-) => {
+const getEventsForTrack = (state, trackId, startBeat, numOfBeatsToShow) => {
   const tracks = getTracks(state);
   const endBeat = startBeat + numOfBeatsToShow;
 
