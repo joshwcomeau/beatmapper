@@ -18,17 +18,17 @@ const PROMPTS = [
     title: 'Warning: Alpha Software',
     contents: () => (
       <>
-        <Paragraph>Hi there, new user!</Paragraph>
+        <Paragraph>👋 Hi there, new user!</Paragraph>
 
         <Paragraph>
           Just a heads-up: Beatmapper is still under development. It's in
-          pre-release / alpha. Many core features are missing, and{' '}
-          <strong>things may break at any time.</strong> Download your work
-          frequently.
+          pre-release / alpha. Many core features are missing, and things may
+          break at any time. <strong>Download your work frequently!</strong>
         </Paragraph>
 
         <Paragraph>
           This editor makes heavy use of <strong>keyboard shortcuts</strong>.
+          <br />
           Please{' '}
           <strong>
             <Link to="https://beatmapper.app/docs/docs/manual.html">
@@ -40,7 +40,8 @@ const PROMPTS = [
 
         <Paragraph>
           Finally, some important context: This is a passion project by 1
-          developer, not a commercial project. Please treat it as such.
+          developer, not a commercial project. It is offered 🌈 for free ✨.
+          Please set your expectations accordingly.
         </Paragraph>
       </>
     ),
@@ -74,6 +75,10 @@ const ModalContents = styled.div`
   p {
     margin-bottom: ${UNIT * 3}px;
     font-size: 18px;
+  }
+
+  p:last-of-type {
+    margin-bottom: 0;
   }
 
   strong {
