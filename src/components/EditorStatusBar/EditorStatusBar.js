@@ -69,8 +69,6 @@ const EditorStatusBar = ({
   let leftContent;
   let rightContent;
 
-  console.log('Render ESB');
-
   if (isNotesView) {
     leftContent = (
       <>

@@ -7,7 +7,7 @@ import { COLORS } from '../../constants';
 import { range, normalize } from '../../utils';
 import { getSelectedEventEditMode } from '../../reducers/editor.reducer';
 import {
-  getEventsForTrack,
+  makeGetEventsForTrack,
   getTrackSpeedAtBeat,
 } from '../../reducers/editor-entities.reducer/events-view.reducer';
 import useMousePositionOverElement from '../../hooks/use-mouse-position-over-element.hook';
@@ -216,31 +216,37 @@ const Svg = styled.svg`
 
 const Background = styled.g``;
 
-const mapStateToProps = (state, ownProps) => {
-  const events = getEventsForTrack(
-    state,
-    ownProps.trackId,
-    ownProps.startBeat,
-    ownProps.numOfBeatsToShow
-  );
-  const startSpeed = getTrackSpeedAtBeat(
-    state,
-    ownProps.trackId,
-    ownProps.startBeat
-  );
-  const endSpeed = getTrackSpeedAtBeat(
-    state,
-    ownProps.trackId,
-    ownProps.startBeat + ownProps.numOfBeatsToShow
-  );
-  const selectedEditMode = getSelectedEventEditMode(state);
+const makeMapStateToProps = (state, { trackId }) => {
+  const getEventsForTrack = makeGetEventsForTrack(trackId);
 
-  return {
-    events,
-    startSpeed,
-    endSpeed,
-    selectedEditMode,
+  const mapStateToProps = (state, ownProps) => {
+    const events = getEventsForTrack(
+      state,
+      ownProps.trackId,
+      ownProps.startBeat,
+      ownProps.numOfBeatsToShow
+    );
+    const startSpeed = getTrackSpeedAtBeat(
+      state,
+      ownProps.trackId,
+      ownProps.startBeat
+    );
+    const endSpeed = getTrackSpeedAtBeat(
+      state,
+      ownProps.trackId,
+      ownProps.startBeat + ownProps.numOfBeatsToShow
+    );
+    const selectedEditMode = getSelectedEventEditMode(state);
+
+    return {
+      events,
+      startSpeed,
+      endSpeed,
+      selectedEditMode,
+    };
   };
+
+  return mapStateToProps;
 };
 
 const mapDispatchToProps = {
@@ -250,6 +256,6 @@ const mapDispatchToProps = {
 };
 
 export default connect(
-  mapStateToProps,
+  makeMapStateToProps,
   mapDispatchToProps
 )(SpeedTrack);

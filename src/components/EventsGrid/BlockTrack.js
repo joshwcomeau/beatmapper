@@ -10,7 +10,7 @@ import {
   getSelectedEventColor,
 } from '../../reducers/editor.reducer';
 import {
-  getEventsForTrack,
+  makeGetEventsForTrack,
   getInitialTrackLightingColor,
 } from '../../reducers/editor-entities.reducer/events-view.reducer';
 import usePointerUpHandler from '../../hooks/use-pointer-up-handler.hook';
@@ -19,20 +19,22 @@ import EventBlock from './EventBlock';
 import BackgroundBox from './BackgroundBox';
 import { getBackgroundBoxes } from './BlockTrack.helpers';
 
-const BlockTrack = ({
-  trackId,
-  height,
-  startBeat,
-  numOfBeatsToShow,
-  cursorAtBeat,
-  events,
-  selectedTool,
-  selectedColor,
-  selectedEditMode,
-  initialTrackLightingColor,
-  placeEvent,
-  ...delegated
-}) => {
+const BlockTrack = props => {
+  const {
+    trackId,
+    height,
+    startBeat,
+    numOfBeatsToShow,
+    cursorAtBeat,
+    events,
+    selectedTool,
+    selectedColor,
+    selectedEditMode,
+    initialTrackLightingColor,
+    placeEvent,
+    ...delegated
+  } = props;
+
   const [mouseButtonDepressed, setMouseButtonDepressed] = React.useState(null);
 
   const handlePointerUp = React.useCallback(() => {
@@ -127,30 +129,31 @@ const Wrapper = styled.div`
   }
 `;
 
-const mapStateToProps = (state, ownProps) => {
-  const events = getEventsForTrack(
-    state,
-    ownProps.trackId,
-    ownProps.startBeat,
-    ownProps.numOfBeatsToShow
-  );
-  const selectedEditMode = getSelectedEventEditMode(state);
-  const selectedTool = getSelectedEventTool(state);
-  const selectedColor = getSelectedEventColor(state);
+const makeMapStateToProps = (state, { trackId }) => {
+  const getEventsForTrack = makeGetEventsForTrack(trackId);
 
-  const initialTrackLightingColor = getInitialTrackLightingColor(
-    state,
-    ownProps.trackId,
-    ownProps.startBeat
-  );
+  const mapStateToProps = (state, ownProps) => {
+    const events = getEventsForTrack(state);
+    const selectedEditMode = getSelectedEventEditMode(state);
+    const selectedTool = getSelectedEventTool(state);
+    const selectedColor = getSelectedEventColor(state);
 
-  return {
-    events,
-    selectedEditMode,
-    selectedTool,
-    selectedColor,
-    initialTrackLightingColor,
+    const initialTrackLightingColor = getInitialTrackLightingColor(
+      state,
+      ownProps.trackId,
+      ownProps.startBeat
+    );
+
+    return {
+      events,
+      selectedEditMode,
+      selectedTool,
+      selectedColor,
+      initialTrackLightingColor,
+    };
   };
+
+  return mapStateToProps;
 };
 
 const mapDispatchToProps = {
@@ -158,6 +161,6 @@ const mapDispatchToProps = {
 };
 
 export default connect(
-  mapStateToProps,
+  makeMapStateToProps,
   mapDispatchToProps
 )(React.memo(BlockTrack));

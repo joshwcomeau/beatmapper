@@ -4,6 +4,7 @@ import produce from 'immer';
 
 import { flatten } from '../../utils';
 import { EVENTS_VIEW, EVENT_TRACKS } from '../../constants';
+import { getStartAndEndBeat } from '../editor.reducer';
 
 const createInitialState = () => ({
   // Creates a `tracks` mapping where each track ID is given an empty array.
@@ -410,6 +411,17 @@ export const getEventsForTrack = (
     event => event.beatNum >= startBeat && event.beatNum < endBeat
   );
 };
+
+export const makeGetEventsForTrack = trackId =>
+  createSelector(
+    getStartAndEndBeat,
+    getTracks,
+    ({ startBeat, endBeat }, tracks) => {
+      return tracks[trackId].filter(
+        event => event.beatNum >= startBeat && event.beatNum < endBeat
+      );
+    }
+  );
 
 export const getInitialTrackLightingColor = (state, trackId, startBeat) => {
   const relevantEvents = getEventsForTrack(state, trackId, 0, startBeat);

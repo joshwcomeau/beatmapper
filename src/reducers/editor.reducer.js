@@ -4,6 +4,7 @@
  * much user pain (unless it's every time)
  */
 import { combineReducers } from 'redux';
+import { createSelector } from 'reselect';
 
 import { NOTES_VIEW, EVENTS_VIEW, BEATS_PER_ZOOM_LEVEL } from '../constants';
 import { floorToNearest } from '../utils';
@@ -240,15 +241,30 @@ export const getBeatsPerZoomLevel = state => {
   const zoomLevel = getZoomLevel(state);
   return BEATS_PER_ZOOM_LEVEL[zoomLevel];
 };
-export const getStartAndEndBeat = state => {
-  const cursorPositionInBeats = getCursorPositionInBeats(state);
-  const numOfBeatsToShow = getBeatsPerZoomLevel(state);
 
-  const startBeat = floorToNearest(cursorPositionInBeats, numOfBeatsToShow);
-  const endBeat = startBeat + numOfBeatsToShow;
+export const getZoomLevelStartBeat = createSelector(
+  getCursorPositionInBeats,
+  getBeatsPerZoomLevel,
+  (cursorPositionInBeats, beatsPerZoomLevel) => {
+    return floorToNearest(cursorPositionInBeats, beatsPerZoomLevel);
+  }
+);
+export const getZoomLevelEndBeat = createSelector(
+  getZoomLevelStartBeat,
+  getBeatsPerZoomLevel,
+  (startBeat, beatsPerZoomLevel) => {
+    return startBeat + beatsPerZoomLevel;
+  }
+);
 
-  return { startBeat, endBeat };
-};
+// TODO: Get rid of this silly selector!
+export const getStartAndEndBeat = createSelector(
+  getZoomLevelStartBeat,
+  getZoomLevelEndBeat,
+  (startBeat, endBeat) => {
+    return { startBeat, endBeat };
+  }
+);
 
 export const getSelectedEventBeat = state => state.editor.events.selectedBeat;
 

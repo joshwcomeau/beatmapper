@@ -94,6 +94,8 @@ export const ScrubbableWaveform = ({
       ctx.lineTo(i + 0.5, getY(height, resampledData.max[i]));
     });
 
+    console.log('Drawing waveform');
+
     ctx.stroke();
   }, [width, height, waveformData]);
 
