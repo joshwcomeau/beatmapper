@@ -24,6 +24,7 @@ export default function createBackupMiddleware() {
     // indexeddb. It uses the same mechanism as Redux Storage, but it's treated
     // separately.)
     if (action.type === 'REDUX_STORAGE_SAVE') {
+      console.log('save!');
       const state = store.getState();
 
       const song = getSelectedSong(state);

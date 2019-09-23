@@ -237,30 +237,6 @@ const PlacementGrid = ({
         })
       )}
 
-      <mesh position={[0, -2.5, position[2]]}>
-        <planeGeometry
-          attach="geometry"
-          args={[
-            // while each square is roughly 1/4 the total width, I remove
-            // a bit of a gutter (not just between squares, but around the
-            // perimeter). I need to reduce the width ever-so-slight;y
-            width - width * 0.01,
-            // The height is an arbitrary magic number which works
-            0.45,
-            // no need for multiple segments.
-            1,
-            1,
-          ]}
-        />
-        <meshBasicMaterial
-          attach="material"
-          color={0xffffff}
-          transparent={true}
-          opacity={0.1}
-          side={THREE.DoubleSide}
-        />
-      </mesh>
-
       {mouseDownAt && selectedTool === 'obstacle' && (
         <TentativeObstacle
           mouseDownAt={mouseDownAt}

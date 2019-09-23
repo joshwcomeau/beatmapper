@@ -1,9 +1,16 @@
 import React from 'react';
 import * as THREE from 'three';
 
-import { SURFACE_WIDTH, SURFACE_DEPTH, SONG_OFFSET } from '../../constants';
+import {
+  SURFACE_WIDTH,
+  SURFACE_DEPTH,
+  SONG_OFFSET,
+  BLOCK_COLUMN_WIDTH,
+} from '../../constants';
 
 import RectAreaLight from '../RectAreaLight';
+
+const GRID_Y_BASE = BLOCK_COLUMN_WIDTH * -1.5;
 
 const StaticEnvironment = props => {
   const PEG_WIDTH = 0.5;
@@ -11,16 +18,26 @@ const StaticEnvironment = props => {
 
   const PEG_X_OFFSET = SURFACE_WIDTH / 2 - PEG_WIDTH;
 
-  const { current: leftRectLightPosition } = React.useRef([-2.95, -2.74, -30]);
-  const { current: leftRectLightLookAt } = React.useRef([
+  const STRIP_HEIGHT = GRID_Y_BASE + 0.01;
+
+  const { current: leftRectLightPosition } = React.useRef([
     -2.95,
-    -2.74 + 10,
+    STRIP_HEIGHT,
     -30,
   ]);
-  const { current: rightRectLightPosition } = React.useRef([2.95, -2.74, -30]);
+  const { current: leftRectLightLookAt } = React.useRef([
+    -2.95,
+    STRIP_HEIGHT + 10,
+    -30,
+  ]);
+  const { current: rightRectLightPosition } = React.useRef([
+    2.95,
+    STRIP_HEIGHT,
+    -30,
+  ]);
   const { current: rightRectLightLookAt } = React.useRef([
     2.95,
-    -2.74 + 10,
+    STRIP_HEIGHT + 10,
     -30,
   ]);
 
@@ -38,7 +55,7 @@ const StaticEnvironment = props => {
       <primitive object={frontLightTarget} />
 
       {/* Surface */}
-      <mesh position={[0, -3, -SURFACE_Z_CENTER]} receiveShadow>
+      <mesh position={[0, GRID_Y_BASE - 0.25, -SURFACE_Z_CENTER]} receiveShadow>
         <boxGeometry
           attach="geometry"
           args={[SURFACE_WIDTH, 0.5, SURFACE_DEPTH]}
@@ -52,7 +69,7 @@ const StaticEnvironment = props => {
       </mesh>
 
       {/* Pegs */}
-      <mesh position={[-PEG_X_OFFSET, -13, -SURFACE_Z_CENTER]}>
+      <mesh position={[-PEG_X_OFFSET, -12.25, -SURFACE_Z_CENTER]}>
         <boxGeometry
           attach="geometry"
           args={[0.5, 20, SURFACE_DEPTH - PEG_WIDTH * 4]}
@@ -64,7 +81,7 @@ const StaticEnvironment = props => {
           color="#222222"
         />
       </mesh>
-      <mesh position={[PEG_X_OFFSET, -13, -SURFACE_Z_CENTER]}>
+      <mesh position={[PEG_X_OFFSET, -12.25, -SURFACE_Z_CENTER]}>
         <boxGeometry
           attach="geometry"
           args={[0.5, 20, SURFACE_DEPTH - PEG_WIDTH * 4]}
