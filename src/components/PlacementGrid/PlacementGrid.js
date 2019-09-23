@@ -29,6 +29,24 @@ const PlacementGrid = ({
   const [mouseOverAt, setMouseOverAt] = React.useState(null);
   const cachedDirection = React.useRef(null);
 
+  const [hoveredCell, setHoveredCell] = React.useState(null);
+
+  // React.useEffect(() => {
+  //   let timeoutId;
+
+  //   if (!mouseOverAt) {
+  //     timeoutId = window.setTimeout(() => {
+  //       setHoveredCell(null);
+  //     })
+  //   } else {
+  //     window.clearTimeout(timeoutId)
+  //   }
+
+  //   return () => {
+
+  //   }
+  // }, [mouseOverAt])
+
   // TODO: I should rework this using `usePointerUpHandler`.
   // And maybe another one for pointermove?
   React.useEffect(() => {
@@ -72,6 +90,8 @@ const PlacementGrid = ({
     const handleMouseUp = ev => {
       window.requestAnimationFrame(() => {
         setMouseDownAt(null);
+        setMouseOverAt(null);
+        setHoveredCell(null);
         cachedDirection.current = null;
       });
     };
@@ -95,9 +115,11 @@ const PlacementGrid = ({
           const cellSize = width / 4;
           const paddedCellSize = cellSize - width * 0.01;
 
+          const cellId = `${rowIndex}-${colIndex}`;
+
           return (
             <mesh
-              key={`${rowIndex}-${colIndex}`}
+              key={cellId}
               position={[
                 position[0] - cellSize * 1.5 + colIndex * cellSize,
                 position[1] - cellSize * 1 + rowIndex * cellSize,
@@ -177,6 +199,15 @@ const PlacementGrid = ({
               }}
               onPointerOver={ev => {
                 setMouseOverAt({ rowIndex, colIndex });
+
+                if (!mouseDownAt) {
+                  setHoveredCell(cellId);
+                }
+              }}
+              onPointerOut={ev => {
+                if (!mouseDownAt && hoveredCell === `${rowIndex}-${colIndex}`) {
+                  setHoveredCell(null);
+                }
               }}
             >
               <planeGeometry
@@ -187,13 +218,37 @@ const PlacementGrid = ({
                 attach="material"
                 color={0xffffff}
                 transparent={true}
-                opacity={0.1}
+                opacity={hoveredCell === cellId ? 0.2 : 0.1}
                 side={THREE.DoubleSide}
               />
             </mesh>
           );
         })
       )}
+
+      <mesh position={[0, -2.5, position[2]]}>
+        <planeGeometry
+          attach="geometry"
+          args={[
+            // while each square is roughly 1/4 the total width, I remove
+            // a bit of a gutter (not just between squares, but around the
+            // perimeter). I need to reduce the width ever-so-slight;y
+            width - width * 0.01,
+            // The height is an arbitrary magic number which works
+            0.45,
+            // no need for multiple segments.
+            1,
+            1,
+          ]}
+        />
+        <meshBasicMaterial
+          attach="material"
+          color={0xffffff}
+          transparent={true}
+          opacity={0.1}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
 
       {mouseDownAt && selectedTool === 'obstacle' && (
         <TentativeObstacle
