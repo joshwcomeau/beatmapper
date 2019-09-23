@@ -259,6 +259,25 @@ const notes = (state = initialState.notes, action) => {
       }));
     }
 
+    case 'SELECT_ALL_IN_RANGE': {
+      const { start, end, view } = action;
+
+      if (view !== NOTES_VIEW) {
+        return state;
+      }
+
+      return state.map(note => {
+        const barNum = note._time / 4;
+
+        const selected = barNum >= start && barNum < end;
+
+        return {
+          ...note,
+          selected,
+        };
+      });
+    }
+
     case 'SWAP_SELECTED_NOTES': {
       const { axis } = action;
       return swapNotes(axis, state);
@@ -364,6 +383,24 @@ const obstacles = (state = initialState.obstacles, action) => {
       });
     }
 
+    case 'SELECT_ALL_IN_RANGE': {
+      const { start, end, view } = action;
+
+      if (view !== NOTES_VIEW) {
+        return state;
+      }
+
+      return state.map(obstacle => {
+        const barNum = obstacle.beatStart / 4;
+        const selected = barNum >= start && barNum < end;
+
+        return {
+          ...obstacle,
+          selected,
+        };
+      });
+    }
+
     case 'SWAP_SELECTED_NOTES': {
       const { axis } = action;
       return swapObstacles(axis, state);
@@ -402,7 +439,6 @@ const notesView = undoable(combineReducers({ notes, obstacles }), {
 //
 
 export const getNotes = state => state.editorEntities.notesView.present.notes;
-export const getEvents = state => [];
 export const getObstacles = state =>
   state.editorEntities.notesView.present.obstacles;
 

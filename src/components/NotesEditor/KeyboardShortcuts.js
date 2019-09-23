@@ -94,6 +94,7 @@ const KeyboardShortcuts = ({
           return selectNoteDirection(3);
         }
       }
+
       case 'KeyF': {
         if (ev.shiftKey) {
           return;

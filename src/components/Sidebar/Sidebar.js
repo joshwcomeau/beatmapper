@@ -44,12 +44,13 @@ const Sidebar = ({ location, match, leaveEditor }) => {
             to={`/edit/${songId}/${difficulty}/events`}
             isActive={!!location.pathname.match(/\/events$/)}
           />
-          <SidebarNavItem
+          {/* SECRET for now */}
+          {/* <SidebarNavItem
             title="Preview"
             icon={play}
             to={`/edit/${songId}/${difficulty}/preview`}
             isActive={!!location.pathname.match(/\/preview$/)}
-          />
+          /> */}
           <SidebarNavItem
             title="Song Details"
             icon={sliders}

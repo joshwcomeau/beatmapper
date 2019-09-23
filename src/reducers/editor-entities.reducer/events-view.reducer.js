@@ -261,6 +261,29 @@ const eventsView = undoable(
         });
       }
 
+      case 'SELECT_ALL_IN_RANGE': {
+        const { start, end, view } = action;
+
+        if (view !== EVENTS_VIEW) {
+          return state;
+        }
+
+        return produce(state, draftState => {
+          const trackIds = Object.keys(draftState.tracks);
+
+          trackIds.forEach(trackId => {
+            // Set all events within our frame as selected, and deselect any
+            // selected events outside of it
+            draftState.tracks[trackId].forEach(event => {
+              const barNum = event.beatNum / 4;
+              const shouldBeSelected = barNum >= start && barNum < end;
+
+              event.selected = shouldBeSelected;
+            });
+          });
+        });
+      }
+
       case 'COMMIT_SELECTION': {
         return produce(state, draftState => {
           const trackIds = Object.keys(draftState.tracks);

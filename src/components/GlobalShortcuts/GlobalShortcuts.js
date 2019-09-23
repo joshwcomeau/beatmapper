@@ -23,6 +23,7 @@ const KeyboardShortcuts = ({
   selectPreviousTool,
   selectColor,
   deselectAll,
+  selectAllInRange,
   copySelection,
   cutSelection,
   pasteSelection,
@@ -188,6 +189,27 @@ const KeyboardShortcuts = ({
         return downloadMapFiles({ version: 2 });
       }
 
+      case 'KeyQ': {
+        let barStr = window.prompt(
+          'Quick-select all entities in a given range of bars. Eg. "40-60" will select everything from bars 40 to 60'
+        );
+
+        if (!barStr) {
+          return;
+        }
+
+        barStr = barStr.replace(/\s/g, ''); // Remove whitespace
+
+        const startAndEnd = barStr.split('-');
+        let [start, end] = startAndEnd.map(Number);
+
+        if (typeof end !== 'number') {
+          end = Infinity;
+        }
+
+        return selectAllInRange(view, start, end);
+      }
+
       default:
         return;
     }
@@ -239,6 +261,7 @@ const mapDispatchToProps = {
   selectPreviousTool: actions.selectPreviousTool,
   selectColor: actions.selectColor,
   deselectAll: actions.deselectAll,
+  selectAllInRange: actions.selectAllInRange,
   copySelection: actions.copySelection,
   cutSelection: actions.cutSelection,
   pasteSelection: actions.pasteSelection,

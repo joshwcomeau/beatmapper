@@ -385,6 +385,13 @@ export const toggleSelectAll = view => (dispatch, getState) => {
   }
 };
 
+export const selectAllInRange = (view, start, end) => ({
+  type: 'SELECT_ALL_IN_RANGE',
+  view,
+  start,
+  end,
+});
+
 export const deleteNote = (time, lineLayer, lineIndex) => ({
   type: 'DELETE_NOTE',
   time,
