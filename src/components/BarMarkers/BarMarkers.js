@@ -43,7 +43,7 @@ const BarMarkers = ({ duration, beatDepth, cursorPositionInBeats, bpm }) => {
     return (
       <Marker
         key={i}
-        barNum={isBar && i / 16}
+        beatNum={isBeat && i / 4}
         offset={-SONG_OFFSET + -i * (beatDepth / 4)}
         type={type}
       />

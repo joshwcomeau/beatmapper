@@ -71,6 +71,14 @@ export const DIFFICULTY_COLORS = {
   ExpertPlus: '#FF5FF9',
 };
 
+export const LASER_COLORS = {
+  red: '#ff000c',
+  blue: '#123bff',
+  'red-bright': '#ff5a62',
+  'blue-bright': '#5f7bff',
+  off: '#000000',
+};
+
 const metaKeyLabel = getMetaKeyLabel();
 
 export const SNAPPING_INCREMENTS = [
@@ -152,6 +160,7 @@ export const SNAPPING_INCREMENTS = [
 
 export const NOTES_VIEW = 'notes';
 export const EVENTS_VIEW = 'events';
+export const PREVIEW_VIEW = 'preview';
 
 export const BEATS_PER_ZOOM_LEVEL = [null, 32, 16, 8, 4];
 

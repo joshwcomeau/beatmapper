@@ -6147,10 +6147,10 @@ locate-path@^3.0.0:
     p-locate "^3.0.0"
     path-exists "^3.0.0"
 
-lodash-es@^4.17.11:
-  version "4.17.11"
-  resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.11.tgz#145ab4a7ac5c5e52a3531fb4f310255a152b4be0"
-  integrity sha512-DHb1ub+rMjjrxqlB3H56/6MXtm1lSksDp2rA2cNWjG8mlDUYFhUj3Di2Zn5IwSU87xLv8tNIQ7sSwE/YOX/D/Q==
+lodash-es@^4.17.15:
+  version "4.17.15"
+  resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.15.tgz#21bd96839354412f23d7a10340e5eac6ee455d78"
+  integrity sha512-rlrc3yU3+JNOpZ9zj5pQtxnx2THmvRykwL4Xlxoa8I9lHBlVbbyPhgyPMioxVZ4NqyxaVVtaJnzsyOidQIhyyQ==
 
 lodash._getnative@^3.0.0:
   version "3.9.1"
@@ -8378,7 +8378,7 @@ react-pure-render@^1.0.2:
   resolved "https://registry.yarnpkg.com/react-pure-render/-/react-pure-render-1.0.2.tgz#9d8a928c7f2c37513c2d064e57b3e3c356e9fabb"
   integrity sha1-nYqSjH8sN1E8LQZOV7Pjw1bp+rs=
 
-react-reconciler@^0.20.4:
+react-reconciler@0.20.4:
   version "0.20.4"
   resolved "https://registry.yarnpkg.com/react-reconciler/-/react-reconciler-0.20.4.tgz#3da6a95841592f849cb4edd3d38676c86fd920b2"
   integrity sha512-kxERc4H32zV2lXMg/iMiwQHOtyqf15qojvkcZ5Ja2CPkjVohHw9k70pdDBwrnQhLVetUJBSYyqU3yqrlVTOajA==
@@ -8437,16 +8437,16 @@ react-spring@^8.0.27:
     "@babel/runtime" "^7.3.1"
     prop-types "^15.5.8"
 
-react-three-fiber@^2.2.9:
-  version "2.2.9"
-  resolved "https://registry.yarnpkg.com/react-three-fiber/-/react-three-fiber-2.2.9.tgz#26391ca3edebb2216d641d0c8ac9c8a5a4b8ce2a"
-  integrity sha512-7UFVrqrMLadKSMkxv9ICgZwAZDMjsMR5digGaDK/ASFVm0JZuBZ2rTNyZQzoKDvSANfEpiW4Qx1Sw9Li0KJlJA==
+react-three-fiber@2.4.3:
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/react-three-fiber/-/react-three-fiber-2.4.3.tgz#2eb16d2ba7a8b40e37a8a994507745b2769162db"
+  integrity sha512-XL5GxJyoX2FY1UjdPmlKU95+NCR7UIVgI4upQEXockpp41K5z+hXoC3S8gvJbd0XfRs1dii1uk5F9pz9vp/IvQ==
   dependencies:
     "@babel/runtime" "^7.4.4"
     "@types/three" "^0.103.2"
-    lodash-es "^4.17.11"
+    lodash-es "^4.17.15"
     pointer-events-polyfill "^0.4.4-pre"
-    react-reconciler "^0.20.4"
+    react-reconciler "0.20.4"
     resize-observer-polyfill "^1.5.1"
     scheduler "0.13.3"
 

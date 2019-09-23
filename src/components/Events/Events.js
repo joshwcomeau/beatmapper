@@ -1,11 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { SIDEBAR_WIDTH } from '../../constants';
+import { SIDEBAR_WIDTH, EVENTS_VIEW } from '../../constants';
 import useWindowDimensions from '../../hooks/use-window-dimensions.hook';
 
 import EventsGrid from '../EventsGrid';
 import SongInfo from '../SongInfo';
+import GlobalShortcuts from '../GlobalShortcuts';
 
 import BottomPanel from './BottomPanel';
 import GridControls from './GridControls';
@@ -23,6 +24,7 @@ const Events = () => {
       <EventsGrid contentWidth={contentWidth} />
       <BottomPanel contentWidth={contentWidth} />
 
+      <GlobalShortcuts view={EVENTS_VIEW} />
       <KeyboardShortcuts />
     </Wrapper>
   );

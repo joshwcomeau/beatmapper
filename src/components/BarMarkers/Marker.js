@@ -14,14 +14,14 @@ const textGeometryOptions = {
 
 const HEIGHT = BLOCK_COLUMN_WIDTH * -1.5 + 0.01;
 
-const Marker = ({ barNum, offset, type }) => {
+const Marker = ({ beatNum, offset, type }) => {
   const depth = type === 'bar' ? 0.3 : type === 'beat' ? 0.2 : 0.08;
 
   const color = type === 'sub-beat' ? '#AAAAAA' : '#FFFFFF';
 
   const textPadding = 0.5;
 
-  const label = String(barNum);
+  const label = String(beatNum);
 
   const lineWidth = SURFACE_WIDTH - 0.2;
 
@@ -32,8 +32,11 @@ const Marker = ({ barNum, offset, type }) => {
         <meshStandardMaterial attach="material" color={color} />
       </mesh>
 
-      {typeof barNum === 'number' && (
-        <mesh position={[SURFACE_WIDTH / 2 + textPadding, HEIGHT, offset]}>
+      {typeof beatNum === 'number' && (
+        <mesh
+          position={[SURFACE_WIDTH / 2 + textPadding, HEIGHT, offset]}
+          rotation={[0, 0, 0]}
+        >
           <textGeometry attach="geometry" args={[label, textGeometryOptions]} />
           <meshLambertMaterial attach="material" color="#AAA" />
         </mesh>

@@ -197,20 +197,24 @@ export default function navigationReducer(state = initialState, action) {
   }
 }
 
-export const getIsPlaying = state => state.navigation.isPlaying;
 export const getIsLoading = state => state.navigation.isLoading;
+export const getIsPlaying = state => state.navigation.isPlaying;
+export const getDuration = state => state.navigation.duration;
 export const getSnapTo = state => state.navigation.snapTo;
 export const getCursorPosition = state => state.navigation.cursorPosition;
-
-export const getCursorPositionInBeats = state => {
-  const song = getSelectedSong(state);
-  return convertMillisecondsToBeats(
-    state.navigation.cursorPosition - song.offset,
-    song.bpm
-  );
-};
-
 export const getPlaybackRate = state => state.navigation.playbackRate;
 export const getBeatDepth = state => state.navigation.beatDepth;
 export const getVolume = state => state.navigation.volume;
 export const getPlayNoteTick = state => state.navigation.playNoteTick;
+
+export const getCursorPositionInBeats = state => {
+  const song = getSelectedSong(state);
+  return convertMillisecondsToBeats(
+    getCursorPosition(state) - song.offset,
+    song.bpm
+  );
+};
+export const getDurationInBeats = state => {
+  const song = getSelectedSong(state);
+  return convertMillisecondsToBeats(getDuration(state), song.bpm);
+};

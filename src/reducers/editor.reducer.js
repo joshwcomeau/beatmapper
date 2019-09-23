@@ -84,6 +84,24 @@ function notes(state = initialState.notes, action) {
       };
     }
 
+    case 'SELECT_COLOR': {
+      if (action.view !== NOTES_VIEW) {
+        return state;
+      }
+
+      let toolName;
+      if (action.color === 'red') {
+        toolName = 'red-block';
+      } else {
+        toolName = 'blue-block';
+      }
+
+      return {
+        ...state,
+        selectedTool: toolName,
+      };
+    }
+
     case 'START_MANAGING_NOTE_SELECTION': {
       return {
         ...state,
@@ -136,8 +154,12 @@ function events(state = initialState.events, action) {
       };
     }
 
-    case 'SELECT_EVENT_COLOR': {
-      const { color } = action;
+    case 'SELECT_COLOR': {
+      const { view, color } = action;
+
+      if (view !== EVENTS_VIEW) {
+        return state;
+      }
 
       return {
         ...state,

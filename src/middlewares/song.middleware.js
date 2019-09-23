@@ -48,7 +48,7 @@ import {
   shiftEntitiesByOffset,
   unshiftEntitiesByOffset,
 } from '../services/packaging.service.nitty-gritty';
-import { NOTES_VIEW } from '../constants';
+import { EVENTS_VIEW } from '../constants';
 
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 
@@ -312,7 +312,7 @@ export default function createSongMiddleware() {
         const cursorPositionInBeats = getCursorPositionInBeats(state);
         const beatsPerZoomLevel = getBeatsPerZoomLevel(state);
 
-        const windowSize = view === NOTES_VIEW ? 32 : beatsPerZoomLevel;
+        const windowSize = view === EVENTS_VIEW ? beatsPerZoomLevel : 32;
 
         const currentWindowIndex = Math.floor(
           cursorPositionInBeats / windowSize

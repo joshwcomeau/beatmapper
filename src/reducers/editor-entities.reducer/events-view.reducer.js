@@ -262,6 +262,29 @@ const eventsView = undoable(
         });
       }
 
+      case 'SELECT_ALL_IN_RANGE': {
+        const { start, end, view } = action;
+
+        if (view !== EVENTS_VIEW) {
+          return state;
+        }
+
+        return produce(state, draftState => {
+          const trackIds = Object.keys(draftState.tracks);
+
+          trackIds.forEach(trackId => {
+            // Set all events within our frame as selected, and deselect any
+            // selected events outside of it
+            draftState.tracks[trackId].forEach(event => {
+              const barNum = event.beatNum / 4;
+              const shouldBeSelected = barNum >= start && barNum < end;
+
+              event.selected = shouldBeSelected;
+            });
+          });
+        });
+      }
+
       case 'COMMIT_SELECTION': {
         return produce(state, draftState => {
           const trackIds = Object.keys(draftState.tracks);
@@ -418,13 +441,22 @@ export const makeGetEventsForTrack = trackId =>
     }
   );
 
-export const getInitialTrackLightingColor = (state, trackId, startBeat) => {
+export const getEventForTrackAtBeat = (state, trackId, startBeat) => {
   const relevantEvents = getEventsForTrack(state, trackId, 0, startBeat);
   if (relevantEvents.length === 0) {
     return null;
   }
 
-  const lastEvent = relevantEvents[relevantEvents.length - 1];
+  return relevantEvents[relevantEvents.length - 1];
+};
+
+export const getInitialTrackLightingColor = (state, trackId, startBeat) => {
+  const lastEvent = getEventForTrackAtBeat(state, trackId, startBeat);
+
+  if (!lastEvent) {
+    return null;
+  }
+
   const isLastEventOn = lastEvent.type === 'on' || lastEvent.type === 'flash';
 
   return isLastEventOn ? lastEvent.color : null;

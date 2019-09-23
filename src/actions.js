@@ -9,10 +9,14 @@ import {
 import { getAllEventsAsArray } from './reducers/editor-entities.reducer/events-view.reducer';
 import { getSelectedSong } from './reducers/songs.reducer';
 import { getCopiedData } from './reducers/clipboard.reducer';
-import { getCursorPositionInBeats } from './reducers/navigation.reducer';
+import {
+  getCursorPositionInBeats,
+  getDurationInBeats,
+} from './reducers/navigation.reducer';
 import {
   getSelectedEventBeat,
   getStartAndEndBeat,
+  getBeatsPerZoomLevel,
 } from './reducers/editor.reducer';
 
 export const loadDemoSong = () => ({
@@ -381,6 +385,13 @@ export const toggleSelectAll = view => (dispatch, getState) => {
   }
 };
 
+export const selectAllInRange = (view, start, end) => ({
+  type: 'SELECT_ALL_IN_RANGE',
+  view,
+  start,
+  end,
+});
+
 export const deleteNote = (time, lineLayer, lineIndex) => ({
   type: 'DELETE_NOTE',
   time,
@@ -602,15 +613,19 @@ export const deselectEvent = (id, trackId) => ({
   id,
   trackId,
 });
+export const selectColor = (view, color) => ({
+  type: 'SELECT_COLOR',
+  view,
+  color,
+});
+
 export const switchEventColor = (id, trackId) => ({
   type: 'SWITCH_EVENT_COLOR',
   id,
   trackId,
 });
-export const selectEventColor = color => ({
-  type: 'SELECT_EVENT_COLOR',
-  color,
-});
+export const selectEventColor = color => selectColor(EVENTS_VIEW, color);
+
 export const selectEventEditMode = editMode => ({
   type: 'SELECT_EVENT_EDIT_MODE',
   editMode,
