@@ -1,9 +1,7 @@
 // eslint-disable-next-line import/no-webpack-loader-syntax
-import worker from 'workerize-loader!../workers/autosave';
+import autosaveWorker from '../workers/autosave.worker';
 
-console.log(worker);
-const instance = worker();
-console.log(instance);
+const instance = autosaveWorker();
 
 export default function createBackupMiddleware() {
   return store => next => action => {

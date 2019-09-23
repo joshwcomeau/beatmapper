@@ -19,11 +19,11 @@ import { getDifficulty } from '../reducers/editor-entities.reducer';
 // much to keep in RAM. So I store non-loaded songs to disk, stored in
 // indexeddb. It uses the same mechanism as Redux Storage, but it's treated
 // separately.)
-export default function autosave(state) {
-  console.log('Autosave!');
+export function save(state) {
   const song = getSelectedSong(state);
   const difficulty = getDifficulty(state);
   const beatmapContents = createBeatmapContentsFromState(state, song);
+
   saveBeatmap(song.id, difficulty, beatmapContents).catch(err => {
     console.error('Could not run backup for beatmap file', err);
   });
