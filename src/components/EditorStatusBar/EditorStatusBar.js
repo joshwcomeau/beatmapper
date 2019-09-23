@@ -110,8 +110,8 @@ const EditorStatusBar = ({
           height={height}
           minIcon={distanceCloseIcon}
           maxIcon={distanceFarIcon}
-          min={1}
-          max={16}
+          min={7}
+          max={14}
           value={beatDepth}
           onChange={value => updateBeatDepth(value)}
         />

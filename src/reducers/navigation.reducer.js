@@ -10,7 +10,7 @@ const initialState = {
   cursorPosition: 0,
   animateBlockMotion: true,
   playbackRate: 1,
-  beatDepth: 8,
+  beatDepth: 9,
   volume: 0.75,
   playNoteTick: false,
 };

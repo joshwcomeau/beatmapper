@@ -15,10 +15,9 @@ const textGeometryOptions = {
 const HEIGHT = BLOCK_COLUMN_WIDTH * -1.5 + 0.01;
 
 const Marker = ({ barNum, offset, type }) => {
-  const depth = type === 'bar' ? 0.3 : type === 'beat' ? 0.2 : 0.05;
+  const depth = type === 'bar' ? 0.3 : type === 'beat' ? 0.2 : 0.08;
 
-  const color =
-    type === 'bar' ? '#FFFFFF' : type === 'beat' ? '#AAAAAA' : '#333333';
+  const color = type === 'sub-beat' ? '#AAAAAA' : '#FFFFFF';
 
   const textPadding = 0.5;
 
