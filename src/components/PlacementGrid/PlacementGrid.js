@@ -29,26 +29,16 @@ const PlacementGrid = ({
   const [mouseOverAt, setMouseOverAt] = React.useState(null);
   const cachedDirection = React.useRef(null);
 
+  // `hoveredCell` is an indication of which square is currently highlighted
+  // by the cursor. You might think I could just use `mouseOverAt`, but
+  // there are 2 reasons why I can't:
+  // - When clicking and dragging to place a cell, I want to 'lock'
+  //   hoveredCell, even though I'm still mousing over other cells
+  // - A weird bug (maybe?) means that mouseOver events can fire BEFORE
+  //   mouseOut events (on the cell being leaved). So I get buggy flickering
+  //   if I don't use this derived value.
   const [hoveredCell, setHoveredCell] = React.useState(null);
 
-  // React.useEffect(() => {
-  //   let timeoutId;
-
-  //   if (!mouseOverAt) {
-  //     timeoutId = window.setTimeout(() => {
-  //       setHoveredCell(null);
-  //     })
-  //   } else {
-  //     window.clearTimeout(timeoutId)
-  //   }
-
-  //   return () => {
-
-  //   }
-  // }, [mouseOverAt])
-
-  // TODO: I should rework this using `usePointerUpHandler`.
-  // And maybe another one for pointermove?
   React.useEffect(() => {
     const handleMouseMove = ev => {
       const { rowIndex, colIndex, ...initialPosition } = mouseDownAt;
@@ -115,11 +105,14 @@ const PlacementGrid = ({
           const cellSize = width / 4;
           const paddedCellSize = cellSize - width * 0.01;
 
-          const cellId = `${rowIndex}-${colIndex}`;
+          const isHovered =
+            hoveredCell &&
+            hoveredCell.rowIndex === rowIndex &&
+            hoveredCell.colIndex === colIndex;
 
           return (
             <mesh
-              key={cellId}
+              key={`${rowIndex}-${colIndex}`}
               position={[
                 position[0] - cellSize * 1.5 + colIndex * cellSize,
                 position[1] - cellSize * 1 + rowIndex * cellSize,
@@ -173,6 +166,12 @@ const PlacementGrid = ({
                   return;
                 }
 
+                // If the user is placing an obstacle, the idea of a hovered
+                // cell suddenly doesn't make as much sense.
+                if (selectedTool === 'obstacle' && isHovered) {
+                  setHoveredCell(null);
+                }
+
                 ev.stopPropagation();
 
                 setMouseDownAt({
@@ -200,12 +199,24 @@ const PlacementGrid = ({
               onPointerOver={ev => {
                 setMouseOverAt({ rowIndex, colIndex });
 
+                // Don't update 'hoveredCell' if I'm clicking and dragging
+                // a block
                 if (!mouseDownAt) {
-                  setHoveredCell(cellId);
+                  setHoveredCell({ rowIndex, colIndex });
                 }
               }}
               onPointerOut={ev => {
-                if (!mouseDownAt && hoveredCell === `${rowIndex}-${colIndex}`) {
+                // If the user is in the middle of placing a block, ignore
+                // this event
+                if (mouseDownAt) {
+                  return;
+                }
+
+                // A strange quirk/bug can mean that the `pointerOut` event
+                // fires AFTER the user has already entered a new cell.
+                // Only unset the hovered cell if they haven't already
+                // moved onto a new cell.
+                if (isHovered) {
                   setHoveredCell(null);
                 }
               }}
@@ -218,7 +229,7 @@ const PlacementGrid = ({
                 attach="material"
                 color={0xffffff}
                 transparent={true}
-                opacity={hoveredCell === cellId ? 0.2 : 0.1}
+                opacity={isHovered ? 0.2 : 0.1}
                 side={THREE.DoubleSide}
               />
             </mesh>
