@@ -7,9 +7,9 @@ import oswaldGlyphs from '../../assets/fonts/oswald.json';
 const font = new THREE.Font(oswaldGlyphs);
 const textGeometryOptions = {
   font,
-  size: 0.75,
-  height: 0.1,
-  curveSegments: 4,
+  size: 0.4,
+  height: 0.025,
+  curveSegments: 2,
 };
 
 const HEIGHT = BLOCK_COLUMN_WIDTH * -1.5 + 0.01;
@@ -33,10 +33,7 @@ const Marker = ({ beatNum, offset, type }) => {
       </mesh>
 
       {typeof beatNum === 'number' && (
-        <mesh
-          position={[SURFACE_WIDTH / 2 + textPadding, HEIGHT, offset]}
-          rotation={[0, 0, 0]}
-        >
+        <mesh position={[SURFACE_WIDTH / 2 + textPadding, HEIGHT, offset]}>
           <textGeometry attach="geometry" args={[label, textGeometryOptions]} />
           <meshLambertMaterial attach="material" color="#AAA" />
         </mesh>

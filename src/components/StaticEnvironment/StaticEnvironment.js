@@ -57,7 +57,7 @@ const StaticEnvironment = ({ includeEdgeStrips }) => {
       </mesh>
 
       {/* Pegs */}
-      <mesh position={[-PEG_X_OFFSET, -12.25, -SURFACE_Z_CENTER]}>
+      <mesh position={[-PEG_X_OFFSET, -12.7, -SURFACE_Z_CENTER]}>
         <boxGeometry
           attach="geometry"
           args={[0.5, 20, SURFACE_DEPTH - PEG_WIDTH * 4]}
@@ -69,7 +69,7 @@ const StaticEnvironment = ({ includeEdgeStrips }) => {
           color="#222222"
         />
       </mesh>
-      <mesh position={[PEG_X_OFFSET, -12.25, -SURFACE_Z_CENTER]}>
+      <mesh position={[PEG_X_OFFSET, -12.7, -SURFACE_Z_CENTER]}>
         <boxGeometry
           attach="geometry"
           args={[0.5, 20, SURFACE_DEPTH - PEG_WIDTH * 4]}
