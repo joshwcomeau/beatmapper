@@ -20,8 +20,8 @@ const TrackMover = ({
     zPosition,
     immediate: !animateBlockMotion,
     config: {
-      tension: 256,
-      friction: 20,
+      tension: 360,
+      friction: 22,
       mass: 0.4,
     },
   });

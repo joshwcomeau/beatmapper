@@ -12,7 +12,7 @@ import Spacer from '../Spacer';
 const EditorRightPanel = () => {
   const windowDimensions = useWindowDimensions();
 
-  let panelHeight = 500;
+  let panelHeight = 520;
   // HACK: This should be a constant somewhere, used to set bottom panel
   // height!
   const bottomPanelHeight = 180;
