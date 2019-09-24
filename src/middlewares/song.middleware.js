@@ -284,13 +284,13 @@ export default function createSongMiddleware() {
         break;
       }
 
-      case 'JUMP_TO_BAR': {
+      case 'JUMP_TO_BEAT': {
         next(action);
 
         const state = store.getState();
         const song = getSelectedSong(state);
         const newCursorPosition =
-          convertBeatsToMilliseconds(action.barNum * 4, song.bpm) + song.offset;
+          convertBeatsToMilliseconds(action.beatNum, song.bpm) + song.offset;
 
         next(adjustCursorPosition(newCursorPosition));
         audioElem.currentTime = newCursorPosition / 1000;

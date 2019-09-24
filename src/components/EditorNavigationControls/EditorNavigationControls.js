@@ -17,7 +17,7 @@ import Dropdown from '../Dropdown';
 import Spacer from '../Spacer';
 
 import CurrentTime from './CurrentTime';
-import CurrentBar from './CurrentBar';
+import CurrentBeat from './CurrentBeat';
 
 const EditorNavigationControls = ({
   height,
@@ -94,7 +94,7 @@ const EditorNavigationControls = ({
       <Right>
         <CurrentTime />
         <Spacer size={UNIT * 4} />
-        <CurrentBar />
+        <CurrentBeat />
       </Right>
     </Wrapper>
   );

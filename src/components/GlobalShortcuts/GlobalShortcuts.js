@@ -27,7 +27,7 @@ const KeyboardShortcuts = ({
   copySelection,
   cutSelection,
   pasteSelection,
-  jumpToBar,
+  jumpToBeat,
   skipToStart,
   skipToEnd,
   undoNotes,
@@ -146,17 +146,17 @@ const KeyboardShortcuts = ({
       }
 
       case 'KeyJ': {
-        const bar = window.prompt(
-          'Enter bar number (eg. 1.25 for the 5th beat)'
+        const beatNum = window.prompt(
+          'Enter the beat number you wish to jump to (eg. 16)'
         );
 
-        if (bar === null || bar === '') {
+        if (beatNum === null || beatNum === '') {
           return;
         }
 
-        const barNum = Number(bar);
+        console.log(Number(beatNum));
 
-        return jumpToBar(barNum);
+        return jumpToBeat(Number(beatNum));
       }
 
       case 'KeyR': {
@@ -269,7 +269,7 @@ const mapDispatchToProps = {
   redoEvents: actions.redoEvents,
   undoNotes: actions.undoNotes,
   redoNotes: actions.redoNotes,
-  jumpToBar: actions.jumpToBar,
+  jumpToBeat: actions.jumpToBeat,
   skipToStart: actions.skipToStart,
   skipToEnd: actions.skipToEnd,
   deleteSelectedEvents: actions.deleteSelectedEvents,

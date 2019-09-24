@@ -75,9 +75,8 @@ export const getFormattedTimestamp = cursorPosition => {
   return `${minutes}:${seconds}`;
 };
 
-export const getFormattedBarsAndBeats = cursorPositionInBeats => {
-  const barNum = Math.floor(cursorPositionInBeats / 4);
-  const beatNum = Math.abs(Math.floor(cursorPositionInBeats % 4));
+export const getFormattedBeatNum = cursorPositionInBeats => {
+  const beatNum = Math.floor(cursorPositionInBeats);
   const remainder = String(
     roundToNearest(Math.abs(cursorPositionInBeats) % 1, LOWEST_COMMON_MULTIPLE)
   )
@@ -85,5 +84,5 @@ export const getFormattedBarsAndBeats = cursorPositionInBeats => {
     .slice(0, 3)
     .padEnd(3, '0');
 
-  return `${barNum}:${beatNum}.${remainder}`;
+  return `${beatNum}.${remainder}`;
 };

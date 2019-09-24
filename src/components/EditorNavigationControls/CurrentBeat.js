@@ -1,19 +1,23 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getFormattedBarsAndBeats } from '../../helpers/audio.helpers';
-import { getCursorPositionInBeats } from '../../reducers/navigation.reducer';
+import { getFormattedBeatNum } from '../../helpers/audio.helpers';
+import {
+  getCursorPositionInBeats,
+  getIsPlaying,
+} from '../../reducers/navigation.reducer';
 import { getSelectedSong } from '../../reducers/songs.reducer';
 
 import LabeledNumber from '../LabeledNumber';
 import { roundToNearest } from '../../utils';
 
-const CurrentBar = ({ displayString }) => {
-  return <LabeledNumber label="Bars">{displayString}</LabeledNumber>;
+const CurrentBeat = ({ displayString }) => {
+  return <LabeledNumber label="Beat">{displayString}</LabeledNumber>;
 };
 
 const mapStateToProps = state => {
   const song = getSelectedSong(state);
+  const isPlaying = getIsPlaying(state);
 
   let displayString = '--';
   if (song) {
@@ -23,9 +27,11 @@ const mapStateToProps = state => {
     // It's a hot blurry mess.
     // Instead of trying to debounce rendering, let's just round the value
     // aggressively
-    displayString = getFormattedBarsAndBeats(
-      roundToNearest(cursorPositionInBeats, 0.5)
-    );
+    let roundedCursorPosition = isPlaying
+      ? roundToNearest(cursorPositionInBeats, 0.5)
+      : cursorPositionInBeats;
+
+    displayString = getFormattedBeatNum(roundedCursorPosition);
   }
 
   return {
@@ -33,4 +39,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(CurrentBar);
+export default connect(mapStateToProps)(CurrentBeat);

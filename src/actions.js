@@ -540,9 +540,9 @@ export const swapSelectedNotes = axis => ({
   axis,
 });
 
-export const jumpToBar = barNum => ({
-  type: 'JUMP_TO_BAR',
-  barNum,
+export const jumpToBeat = beatNum => ({
+  type: 'JUMP_TO_BEAT',
+  beatNum,
 });
 
 export const seekForwards = view => ({
