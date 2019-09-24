@@ -16,7 +16,15 @@ const TrackMover = ({
 }) => {
   const zPosition = cursorPositionInBeats * beatDepth;
 
-  const spring = useSpring({ zPosition, immediate: !animateBlockMotion });
+  const spring = useSpring({
+    zPosition,
+    immediate: !animateBlockMotion,
+    config: {
+      tension: 256,
+      friction: 20,
+      mass: 0.4,
+    },
+  });
 
   return (
     <a.group
