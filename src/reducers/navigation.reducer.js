@@ -74,6 +74,14 @@ export default function navigationReducer(state = initialState, action) {
     }
 
     case 'JUMP_TO_BEAT':
+    case 'SELECT_ALL_IN_RANGE': {
+      return {
+        ...state,
+        isPlaying: false,
+        animateBlockMotion: false,
+      };
+    }
+
     case 'SEEK_FORWARDS':
     case 'SEEK_BACKWARDS': {
       return {

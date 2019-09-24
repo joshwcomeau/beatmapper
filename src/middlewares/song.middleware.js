@@ -284,6 +284,21 @@ export default function createSongMiddleware() {
         break;
       }
 
+      case 'SELECT_ALL_IN_RANGE': {
+        next(action);
+
+        const state = store.getState();
+        const song = getSelectedSong(state);
+        const newCursorPosition =
+          convertBeatsToMilliseconds(action.start, song.bpm) + song.offset;
+
+        next(adjustCursorPosition(newCursorPosition));
+        audioElem.currentTime = newCursorPosition / 1000;
+        audioElem.pause();
+
+        break;
+      }
+
       case 'JUMP_TO_BEAT': {
         next(action);
 
@@ -294,6 +309,7 @@ export default function createSongMiddleware() {
 
         next(adjustCursorPosition(newCursorPosition));
         audioElem.currentTime = newCursorPosition / 1000;
+        audioElem.pause();
 
         break;
       }
