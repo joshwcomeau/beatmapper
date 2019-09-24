@@ -9,14 +9,10 @@ import {
 import { getAllEventsAsArray } from './reducers/editor-entities.reducer/events-view.reducer';
 import { getSelectedSong } from './reducers/songs.reducer';
 import { getCopiedData } from './reducers/clipboard.reducer';
-import {
-  getCursorPositionInBeats,
-  getDurationInBeats,
-} from './reducers/navigation.reducer';
+import { getCursorPositionInBeats } from './reducers/navigation.reducer';
 import {
   getSelectedEventBeat,
   getStartAndEndBeat,
-  getBeatsPerZoomLevel,
 } from './reducers/editor.reducer';
 
 export const loadDemoSong = () => ({
@@ -556,10 +552,6 @@ export const seekForwards = view => ({
 export const seekBackwards = view => ({
   type: 'SEEK_BACKWARDS',
   view,
-});
-
-export const unloadSong = () => ({
-  type: 'UNLOAD_SONG',
 });
 
 export const placeEvent = (

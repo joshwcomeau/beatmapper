@@ -5,6 +5,8 @@ import styled from 'styled-components';
 import * as actions from '../../actions';
 import { UNIT } from '../../constants';
 import { getSelectedSong } from '../../reducers/songs.reducer';
+import { getIsPlaying } from '../../reducers/navigation.reducer';
+import useMount from '../../hooks/use-mount.hook';
 
 import Heading from '../Heading';
 import Paragraph from '../Paragraph';
@@ -12,7 +14,14 @@ import Spacer from '../Spacer';
 import Button from '../Button';
 import MiniButton from '../MiniButton';
 
-const Download = ({ song, downloadMapFiles }) => {
+const Download = ({ song, isPlaying, downloadMapFiles, pausePlaying }) => {
+  // When this component mounts, if the song is playing, pause it.
+  useMount(() => {
+    if (isPlaying) {
+      pausePlaying();
+    }
+  });
+
   return (
     <Wrapper>
       <Heading size={1}>Download Map</Heading>
@@ -55,11 +64,13 @@ const Wrapper = styled.div`
 const mapStateToProps = state => {
   return {
     song: getSelectedSong(state),
+    isPlaying: getIsPlaying(state),
   };
 };
 
 const mapDispatchToProps = {
   downloadMapFiles: actions.downloadMapFiles,
+  pausePlaying: actions.pausePlaying,
 };
 
 export default connect(

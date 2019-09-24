@@ -267,9 +267,7 @@ const notes = (state = initialState.notes, action) => {
       }
 
       return state.map(note => {
-        const barNum = note._time / 4;
-
-        const selected = barNum >= start && barNum < end;
+        const selected = note._time >= start && note._time < end;
 
         return {
           ...note,
@@ -391,8 +389,8 @@ const obstacles = (state = initialState.obstacles, action) => {
       }
 
       return state.map(obstacle => {
-        const barNum = obstacle.beatStart / 4;
-        const selected = barNum >= start && barNum < end;
+        const selected =
+          obstacle.beatStart >= start && obstacle.beatStart < end;
 
         return {
           ...obstacle,

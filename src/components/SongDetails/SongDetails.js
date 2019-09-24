@@ -7,8 +7,10 @@ import { COLORS, UNIT } from '../../constants';
 import * as actions from '../../actions';
 import { createInfoContent } from '../../services/packaging.service';
 import { saveInfoDat } from '../../services/file.service';
+import useMount from '../../hooks/use-mount.hook';
 import { sortDifficultyIds } from '../../helpers/song.helpers';
 import { getSelectedSong } from '../../reducers/songs.reducer';
+import { getIsPlaying } from '../../reducers/navigation.reducer';
 
 import TextInput from '../TextInput';
 import DropdownInput from '../DropdownInput';
@@ -20,6 +22,8 @@ import BeatmapSettings from './BeatmapSettings';
 
 const SongDetails = ({
   song,
+  isPlaying,
+  pausePlaying,
   updateSongDetails,
   deleteBeatmap,
   updateBeatmapMetadata,
@@ -50,6 +54,13 @@ const SongDetails = ({
 
   const songId = song.id;
   const difficultyIds = sortDifficultyIds(Object.keys(difficultiesById));
+
+  // When this component mounts, if the song is playing, pause it.
+  useMount(() => {
+    if (isPlaying) {
+      pausePlaying();
+    }
+  });
 
   const handleSubmit = async ev => {
     if (!name || !artistName || !bpm) {
@@ -389,14 +400,18 @@ const Center = styled.div`
 const mapStateToProps = state => {
   return {
     song: getSelectedSong(state),
+    isPlaying: getIsPlaying(state),
   };
+};
+
+const mapDispatchToProps = {
+  updateSongDetails: actions.updateSongDetails,
+  deleteBeatmap: actions.deleteBeatmap,
+  updateBeatmapMetadata: actions.updateBeatmapMetadata,
+  pausePlaying: actions.pausePlaying,
 };
 
 export default connect(
   mapStateToProps,
-  {
-    updateSongDetails: actions.updateSongDetails,
-    deleteBeatmap: actions.deleteBeatmap,
-    updateBeatmapMetadata: actions.updateBeatmapMetadata,
-  }
+  mapDispatchToProps
 )(withRouter(SongDetails));

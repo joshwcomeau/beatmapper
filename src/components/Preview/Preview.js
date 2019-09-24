@@ -13,15 +13,8 @@ import EditorBottomPanel from '../EditorBottomPanel';
 import LightingPreview from './LightingPreview';
 import GlobalShortcuts from '../GlobalShortcuts';
 
-const Preview = ({ isPlaying, pausePlaying, scrollThroughSong }) => {
+const Preview = ({ isPlaying, scrollThroughSong }) => {
   const canvasRef = React.useRef(null);
-
-  React.useEffect(() => {
-    return () => {
-      // On unmount, pause the track
-      pausePlaying();
-    };
-  }, [pausePlaying]);
 
   useScrollThroughSong(canvasRef, isPlaying, scrollThroughSong);
 
@@ -49,7 +42,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  pausePlaying: actions.pausePlaying,
   scrollThroughSong: actions.scrollThroughSong,
 };
 

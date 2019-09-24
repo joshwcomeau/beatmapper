@@ -390,8 +390,11 @@ export default function createSongMiddleware() {
       }
 
       case 'LEAVE_EDITOR': {
+        next(action);
+
         window.cancelAnimationFrame(animationFrameId);
         audioElem.pause();
+        audioElem.currentTime = 0;
         break;
       }
 

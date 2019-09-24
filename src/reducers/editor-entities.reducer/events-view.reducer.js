@@ -276,8 +276,8 @@ const eventsView = undoable(
             // Set all events within our frame as selected, and deselect any
             // selected events outside of it
             draftState.tracks[trackId].forEach(event => {
-              const barNum = event.beatNum / 4;
-              const shouldBeSelected = barNum >= start && barNum < end;
+              const shouldBeSelected =
+                event.beatNum >= start && event.beatNum < end;
 
               event.selected = shouldBeSelected;
             });

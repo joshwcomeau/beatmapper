@@ -25,7 +25,7 @@ const Sidebar = ({ location, match, leaveEditor }) => {
     <Wrapper>
       <Top>
         <Spacer size={UNIT * 2} />
-        <SidebarNavItem icon={home} to="/" onClick={leaveEditor} />
+        <SidebarNavItem icon={home} to="/" />
 
         <Spacer size={UNIT * 2} />
         <Divider />

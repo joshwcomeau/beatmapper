@@ -19,13 +19,6 @@ import { NOTES_VIEW } from '../../constants';
 const NotesEditor = ({ isPlaying, pausePlaying, scrollThroughSong }) => {
   const canvasRef = React.useRef(null);
 
-  React.useEffect(() => {
-    return () => {
-      // On unmount, pause the track
-      pausePlaying();
-    };
-  }, [pausePlaying]);
-
   useMousewheel(canvasRef, true, ev => {
     // Ignore mousewheels when the ctrl key is held.
     // Those mousewheel events will be captured above, for changing the

@@ -34,11 +34,8 @@ const BarMarkers = ({ duration, beatDepth, cursorPositionInBeats, bpm }) => {
   });
 
   return visibleSubsetOfLines.map(i => {
-    // Emphasize every bar (4 beats).
-    const isBar = i % 16 === 0;
     const isBeat = i % 4 === 0;
-
-    const type = isBar ? 'bar' : isBeat ? 'beat' : 'sub-beat';
+    const type = isBeat ? 'beat' : 'sub-beat';
 
     return (
       <Marker

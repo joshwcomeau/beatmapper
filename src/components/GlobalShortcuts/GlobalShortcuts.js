@@ -190,17 +190,17 @@ const KeyboardShortcuts = ({
       }
 
       case 'KeyQ': {
-        let barStr = window.prompt(
-          'Quick-select all entities in a given range of bars. Eg. "40-60" will select everything from bars 40 to 60'
+        let beatStr = window.prompt(
+          'Quick-select all entities in a given range of beats. Eg. "16-32" will select everything from beat 16 to 32.'
         );
 
-        if (!barStr) {
+        if (!beatStr) {
           return;
         }
 
-        barStr = barStr.replace(/\s/g, ''); // Remove whitespace
+        beatStr = beatStr.replace(/\s/g, ''); // Remove whitespace
 
-        const startAndEnd = barStr.split('-');
+        const startAndEnd = beatStr.split('-');
         let [start, end] = startAndEnd.map(Number);
 
         if (typeof end !== 'number') {
