@@ -72,6 +72,7 @@ const Block = React.memo(
     color = 0xff0000,
     isTransparent,
     isSelected,
+    selectionMode,
     handleClick,
     handleStartSelecting,
     handleMouseOver,
@@ -100,19 +101,18 @@ const Block = React.memo(
 
       // We can rapidly select/deselect/delete notes by clicking, holding,
       // and dragging the cursor across the field.
-      // prettier-ignore
-      let selectionMode;
+      let newSelectionMode;
       if (ev.button === 0) {
-        selectionMode = isSelected ? 'deselect' : 'select';
+        newSelectionMode = isSelected ? 'deselect' : 'select';
       } else if (ev.button === 1) {
         // Middle clicks shouldnt affect selections
-        selectionMode = null;
+        newSelectionMode = null;
       } else if (ev.button === 2) {
-        selectionMode = 'delete';
+        newSelectionMode = 'delete';
       }
 
-      if (selectionMode) {
-        handleStartSelecting(selectionMode);
+      if (newSelectionMode) {
+        handleStartSelecting(newSelectionMode);
       }
 
       // prettier-ignore
@@ -130,9 +130,12 @@ const Block = React.memo(
     };
 
     const onPointerOver = ev => {
-      ev.stopPropagation();
-
-      handleMouseOver(time, lineLayer, lineIndex);
+      // While selecting/deselecting/deleting notes, pointer-over events are
+      // important and should trump others.
+      if (selectionMode) {
+        ev.stopPropagation();
+        handleMouseOver(time, lineLayer, lineIndex);
+      }
     };
 
     return (
