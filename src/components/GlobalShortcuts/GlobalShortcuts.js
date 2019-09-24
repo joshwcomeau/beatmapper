@@ -154,8 +154,6 @@ const KeyboardShortcuts = ({
           return;
         }
 
-        console.log(Number(beatNum));
-
         return jumpToBeat(Number(beatNum));
       }
 

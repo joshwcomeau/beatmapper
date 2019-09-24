@@ -14,7 +14,6 @@ process.on('unhandledRejection', err => {
 // Ensure environment variables are read.
 require('../config/env');
 
-
 const path = require('path');
 const chalk = require('react-dev-utils/chalk');
 const fs = require('fs-extra');
@@ -67,23 +66,23 @@ checkBrowsers(paths.appPath, isInteractive)
   .then(
     ({ stats, previousFileSizes, warnings }) => {
       if (warnings.length) {
-        console.log(chalk.yellow('Compiled with warnings.\n'));
-        console.log(warnings.join('\n\n'));
-        console.log(
+        console.info(chalk.yellow('Compiled with warnings.\n'));
+        console.info(warnings.join('\n\n'));
+        console.info(
           '\nSearch for the ' +
             chalk.underline(chalk.yellow('keywords')) +
             ' to learn more about each warning.'
         );
-        console.log(
+        console.info(
           'To ignore, add ' +
             chalk.cyan('// eslint-disable-next-line') +
             ' to the line before.\n'
         );
       } else {
-        console.log(chalk.green('Compiled successfully.\n'));
+        console.info(chalk.green('Compiled successfully.\n'));
       }
 
-      console.log('File sizes after gzip:\n');
+      console.info('File sizes after gzip:\n');
       printFileSizesAfterBuild(
         stats,
         previousFileSizes,
@@ -91,7 +90,7 @@ checkBrowsers(paths.appPath, isInteractive)
         WARN_AFTER_BUNDLE_GZIP_SIZE,
         WARN_AFTER_CHUNK_GZIP_SIZE
       );
-      console.log();
+      console.info();
 
       const appPackage = require(paths.appPackageJson);
       const publicUrl = paths.publicUrl;
@@ -106,14 +105,14 @@ checkBrowsers(paths.appPath, isInteractive)
       );
     },
     err => {
-      console.log(chalk.red('Failed to compile.\n'));
+      console.info(chalk.red('Failed to compile.\n'));
       printBuildError(err);
       process.exit(1);
     }
   )
   .catch(err => {
     if (err && err.message) {
-      console.log(err.message);
+      console.info(err.message);
     }
     process.exit(1);
   });
@@ -124,15 +123,15 @@ function build(previousFileSizes) {
   // This now has been deprecated in favor of jsconfig/tsconfig.json
   // This lets you use absolute paths in imports inside large monorepos:
   if (process.env.NODE_PATH) {
-    console.log(
+    console.info(
       chalk.yellow(
         'Setting NODE_PATH to resolve modules absolutely has been deprecated in favor of setting baseUrl in jsconfig.json (or tsconfig.json if you are using TypeScript) and will be removed in a future major release of create-react-app.'
       )
     );
-    console.log();
+    console.info();
   }
 
-  console.log('Creating an optimized production build...');
+  console.info('Creating an optimized production build...');
 
   const compiler = webpack(config);
   return new Promise((resolve, reject) => {
@@ -165,7 +164,7 @@ function build(previousFileSizes) {
           process.env.CI.toLowerCase() !== 'false') &&
         messages.warnings.length
       ) {
-        console.log(
+        console.info(
           chalk.yellow(
             '\nTreating warnings as errors because process.env.CI = true.\n' +
               'Most CI servers set it automatically.\n'

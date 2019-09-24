@@ -14,7 +14,6 @@ process.on('unhandledRejection', err => {
 // Ensure environment variables are read.
 require('../config/env');
 
-
 const fs = require('fs');
 const chalk = require('react-dev-utils/chalk');
 const webpack = require('webpack');
@@ -45,20 +44,20 @@ const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3000;
 const HOST = process.env.HOST || '0.0.0.0';
 
 if (process.env.HOST) {
-  console.log(
+  console.info(
     chalk.cyan(
       `Attempting to bind to HOST environment variable: ${chalk.yellow(
         chalk.bold(process.env.HOST)
       )}`
     )
   );
-  console.log(
+  console.info(
     `If this was unintentional, check that you haven't mistakenly set it in your shell.`
   );
-  console.log(
+  console.info(
     `Learn more here: ${chalk.yellow('https://bit.ly/CRA-advanced-config')}`
   );
-  console.log();
+  console.info();
 }
 
 // We require that you explicitly set browsers and do not fall back to
@@ -108,7 +107,7 @@ checkBrowsers(paths.appPath, isInteractive)
     // Launch WebpackDevServer.
     devServer.listen(port, HOST, err => {
       if (err) {
-        return console.log(err);
+        return console.info(err);
       }
       if (isInteractive) {
         clearConsole();
@@ -118,15 +117,15 @@ checkBrowsers(paths.appPath, isInteractive)
       // This now has been deprecated in favor of jsconfig/tsconfig.json
       // This lets you use absolute paths in imports inside large monorepos:
       if (process.env.NODE_PATH) {
-        console.log(
+        console.info(
           chalk.yellow(
             'Setting NODE_PATH to resolve modules absolutely has been deprecated in favor of setting baseUrl in jsconfig.json (or tsconfig.json if you are using TypeScript) and will be removed in a future major release of create-react-app.'
           )
         );
-        console.log();
+        console.info();
       }
 
-      console.log(chalk.cyan('Starting the development server...\n'));
+      console.info(chalk.cyan('Starting the development server...\n'));
       openBrowser(urls.localUrlForBrowser);
     });
 
@@ -139,7 +138,7 @@ checkBrowsers(paths.appPath, isInteractive)
   })
   .catch(err => {
     if (err && err.message) {
-      console.log(err.message);
+      console.info(err.message);
     }
     process.exit(1);
   });
