@@ -23,11 +23,16 @@ const Marker = ({ beatNum, offset, type }) => {
 
   const label = String(beatNum);
 
-  const lineWidth = SURFACE_WIDTH - 0.2;
+  const overextendBy = type === 'beat' ? 0.3 : 0;
+  const lineWidth = SURFACE_WIDTH + overextendBy;
+  const xOffset = overextendBy / 2;
 
   return (
     <>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, HEIGHT, offset]}>
+      <mesh
+        rotation={[-Math.PI / 2, 0, 0]}
+        position={[xOffset, HEIGHT, offset]}
+      >
         <planeGeometry attach="geometry" args={[lineWidth, depth]} />
         <meshStandardMaterial attach="material" color={color} />
       </mesh>
