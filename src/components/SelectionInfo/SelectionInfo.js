@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { maximize2 } from 'react-icons-kit/feather/maximize2';
+import { maximize as quickSelectIcon } from 'react-icons-kit/feather/maximize';
+import { maximize2 as swapIcon } from 'react-icons-kit/feather/maximize2';
 
 import * as actions from '../../actions';
 import { COLORS, UNIT, NOTES_VIEW } from '../../constants';
@@ -41,25 +42,32 @@ const SelectionInfo = ({
   numOfSelectedItems,
   deselectAll,
   swapSelectedNotes,
+  promptSelectAllInRange,
 }) => {
   return (
     <Wrapper>
       <Heading size={3}>Selection</Heading>
       <Spacer size={UNIT * 1.5} />
       <NotesText numOfSelectedItems={numOfSelectedItems} />
-      {numOfSelectedItems > 0 && (
+      <Spacer size={UNIT * 2} />
+      {numOfSelectedItems === 0 ? (
         <>
-          <Spacer size={UNIT * 2} />
+          <MiniButton onClick={() => promptSelectAllInRange(NOTES_VIEW)}>
+            Select Range
+          </MiniButton>
+        </>
+      ) : (
+        <>
           <Row>
             <Spacer size={1} />
             <IconButton
               rotation={45}
-              icon={maximize2}
+              icon={swapIcon}
               onClick={() => swapSelectedNotes('horizontal')}
             />
             <IconButton
               rotation={-45}
-              icon={maximize2}
+              icon={swapIcon}
               onClick={() => swapSelectedNotes('vertical')}
             />
           </Row>
@@ -96,6 +104,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   deselectAll: actions.deselectAll,
   swapSelectedNotes: actions.swapSelectedNotes,
+  promptSelectAllInRange: actions.promptSelectAllInRange,
 };
 
 export default connect(

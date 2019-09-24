@@ -23,7 +23,7 @@ const KeyboardShortcuts = ({
   selectPreviousTool,
   selectColor,
   deselectAll,
-  selectAllInRange,
+  promptSelectAllInRange,
   copySelection,
   cutSelection,
   pasteSelection,
@@ -188,24 +188,7 @@ const KeyboardShortcuts = ({
       }
 
       case 'KeyQ': {
-        let beatStr = window.prompt(
-          'Quick-select all entities in a given range of beats. Eg. "16-32" will select everything from beat 16 to 32.'
-        );
-
-        if (!beatStr) {
-          return;
-        }
-
-        beatStr = beatStr.replace(/\s/g, ''); // Remove whitespace
-
-        const startAndEnd = beatStr.split('-');
-        let [start, end] = startAndEnd.map(Number);
-
-        if (typeof end !== 'number') {
-          end = Infinity;
-        }
-
-        return selectAllInRange(view, start, end);
+        return promptSelectAllInRange(view);
       }
 
       default:
@@ -259,7 +242,7 @@ const mapDispatchToProps = {
   selectPreviousTool: actions.selectPreviousTool,
   selectColor: actions.selectColor,
   deselectAll: actions.deselectAll,
-  selectAllInRange: actions.selectAllInRange,
+  promptSelectAllInRange: actions.promptSelectAllInRange,
   copySelection: actions.copySelection,
   cutSelection: actions.cutSelection,
   pasteSelection: actions.pasteSelection,
