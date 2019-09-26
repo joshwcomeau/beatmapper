@@ -66,10 +66,24 @@ export default function songsReducer(state: State = initialState, action: any) {
       });
     }
 
+    case 'LEAVE_EDITOR': {
+      return {
+        ...state,
+        selectedId: null,
+      };
+    }
+
     case 'START_IMPORTING_SONG': {
       return {
         ...state,
         processingImport: true,
+      };
+    }
+
+    case 'CANCEL_IMPORTING_SONG': {
+      return {
+        ...state,
+        processingImport: false,
       };
     }
 

@@ -15,7 +15,7 @@ const config = {
   name: 'beat-mapper-state',
 };
 
-const createEngine = whitelist => {
+const createEngine = (whitelist = []) => {
   // This `createEngine` function modified
   // https://raw.githubusercontent.com/mathieudutour/redux-storage-engine-localforage/master/src/index.js
   const reduxStore = localforage.createInstance({

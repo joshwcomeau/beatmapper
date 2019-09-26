@@ -53,7 +53,7 @@ const mapStateToProps = state => {
 
   return {
     duration: state.navigation.duration,
-    bpm: song.bpm,
+    bpm: song ? song.bpm : null,
     cursorPositionInBeats: getCursorPositionInBeats(state),
     beatDepth: getBeatDepth(state),
     isPlaying: state.navigation.isPlaying,

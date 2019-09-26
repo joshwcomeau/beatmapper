@@ -82,15 +82,15 @@ export const startImportingSong = () => ({
   type: 'START_IMPORTING_SONG',
 });
 
+export const cancelImportingSong = () => ({
+  type: 'CANCEL_IMPORTING_SONG',
+});
+
 export const importExistingSong = songData => ({
   type: 'IMPORT_EXISTING_SONG',
   songData,
   createdAt: Date.now(),
   lastOpenedAt: Date.now(),
-});
-
-export const clearEntities = () => ({
-  type: 'CLEAR_ENTITIES',
 });
 
 export const changeSelectedDifficulty = (songId, difficulty) => ({

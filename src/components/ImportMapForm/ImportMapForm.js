@@ -9,7 +9,7 @@ import Paragraph from '../Paragraph';
 import Spacer from '../Spacer';
 import List from '../List';
 
-const ImportMapForm = ({ onImport }) => {
+const ImportMapForm = ({ onImport, onCancel }) => {
   return (
     <Wrapper>
       <Heading size={1}>Import existing map</Heading>
@@ -37,7 +37,7 @@ const ImportMapForm = ({ onImport }) => {
         Drag and drop (or click to select) the .zip file:
       </BottomParagraph>{' '}
       <Spacer size={UNIT * 3} />
-      <ImportMap onImport={onImport} />
+      <ImportMap onImport={onImport} onCancel={onCancel} />
     </Wrapper>
   );
 };

@@ -16,6 +16,8 @@ import Download from '../Download';
 import LoadingScreen from '../LoadingScreen';
 import EditorPrompts from '../EditorPrompts';
 
+import EditorErrors from './EditorErrors';
+
 const Editor = ({
   songId,
   difficulty,
@@ -49,22 +51,27 @@ const Editor = ({
       <Sidebar />
 
       <Wrapper>
-        <Switch>
-          <Route
-            path="/edit/:songId/:difficulty/notes"
-            component={NotesEditor}
-          />
-          <Route path="/edit/:songId/:difficulty/events" component={Events} />
-          <Route path="/edit/:songId/:difficulty/preview" component={Preview} />
-          <Route
-            path="/edit/:songId/:difficulty/details"
-            component={SongDetails}
-          />
-          <Route
-            path="/edit/:songId/:difficulty/download"
-            component={Download}
-          />
-        </Switch>
+        <EditorErrors>
+          <Switch>
+            <Route
+              path="/edit/:songId/:difficulty/notes"
+              component={NotesEditor}
+            />
+            <Route path="/edit/:songId/:difficulty/events" component={Events} />
+            <Route
+              path="/edit/:songId/:difficulty/preview"
+              component={Preview}
+            />
+            <Route
+              path="/edit/:songId/:difficulty/details"
+              component={SongDetails}
+            />
+            <Route
+              path="/edit/:songId/:difficulty/download"
+              component={Download}
+            />
+          </Switch>
+        </EditorErrors>
       </Wrapper>
 
       <EditorPrompts />

@@ -10,15 +10,18 @@ import FileUploader from '../FileUploader';
 
 const ImportMap = ({
   onImport,
+  onCancel,
   height,
   songs,
   startImportingSong,
+  cancelImportingSong,
   importExistingSong,
 }) => {
   const songIds = songs.map(song => song.id);
 
   const handleSelectExistingMap = async file => {
     startImportingSong();
+
     try {
       const songData = await processImportedMap(file, songIds);
 
@@ -26,6 +29,8 @@ const ImportMap = ({
       onImport();
     } catch (err) {
       console.error('Could not import map:', err);
+      cancelImportingSong();
+      onCancel();
     }
   };
 
@@ -47,6 +52,7 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = {
   startImportingSong: actions.startImportingSong,
+  cancelImportingSong: actions.cancelImportingSong,
   importExistingSong: actions.importExistingSong,
 };
 

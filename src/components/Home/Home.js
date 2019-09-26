@@ -41,7 +41,10 @@ const Home = ({ isNewUser, songs, isProcessingImport }) => {
         isVisible={modal === 'import-map'}
         onDismiss={() => setModal(null)}
       >
-        <ImportMapForm onImport={() => setModal(null)} />
+        <ImportMapForm
+          onImport={() => setModal(null)}
+          onCancel={() => setModal(null)}
+        />
       </Modal>
     </BasicLayout>
   );

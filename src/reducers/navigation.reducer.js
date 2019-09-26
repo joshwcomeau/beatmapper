@@ -210,6 +210,11 @@ export const getPlayNoteTick = state => state.navigation.playNoteTick;
 
 export const getCursorPositionInBeats = state => {
   const song = getSelectedSong(state);
+
+  if (!song) {
+    return null;
+  }
+
   return convertMillisecondsToBeats(
     getCursorPosition(state) - song.offset,
     song.bpm

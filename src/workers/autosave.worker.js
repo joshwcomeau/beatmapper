@@ -21,6 +21,12 @@ import { getDifficulty } from '../reducers/editor-entities.reducer';
 // separately.)
 export function save(state) {
   const song = getSelectedSong(state);
+
+  // We only want to autosave when a song is currently selected
+  if (!song) {
+    return;
+  }
+
   const difficulty = getDifficulty(state);
   const beatmapContents = createBeatmapContentsFromState(state, song);
 

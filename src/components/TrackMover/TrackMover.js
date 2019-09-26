@@ -6,7 +6,6 @@ import {
   getCursorPositionInBeats,
   getBeatDepth,
 } from '../../reducers/navigation.reducer';
-import { getSelectedSong } from '../../reducers/songs.reducer';
 
 const TrackMover = ({
   cursorPositionInBeats,
@@ -40,10 +39,8 @@ const TrackMover = ({
 };
 
 const mapStateToProps = state => {
-  const song = getSelectedSong(state);
-
   return {
-    cursorPositionInBeats: getCursorPositionInBeats(state, song.bpm),
+    cursorPositionInBeats: getCursorPositionInBeats(state),
     beatDepth: getBeatDepth(state),
     animateBlockMotion: state.navigation.animateBlockMotion,
   };

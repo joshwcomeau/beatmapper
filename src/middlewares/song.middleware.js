@@ -285,8 +285,6 @@ export default function createSongMiddleware() {
       }
 
       case 'SELECT_ALL_IN_RANGE': {
-        console.log('Select all in range');
-
         const state = store.getState();
         const song = getSelectedSong(state);
         const newCursorPosition =

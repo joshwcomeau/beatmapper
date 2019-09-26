@@ -26,8 +26,7 @@ const eventsView = undoable(
   (state = createInitialState(), action) => {
     switch (action.type) {
       case 'CREATE_NEW_SONG':
-      case 'START_LOADING_SONG':
-      case 'CLEAR_ENTITIES': {
+      case 'START_LOADING_SONG': {
         return createInitialState();
       }
 

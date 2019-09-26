@@ -36,7 +36,7 @@ const notes = (state = initialState.notes, action) => {
   switch (action.type) {
     case 'CREATE_NEW_SONG':
     case 'START_LOADING_SONG':
-    case 'CLEAR_ENTITIES': {
+    case 'LEAVE_EDITOR': {
       return initialState.notes;
     }
 
@@ -290,7 +290,7 @@ const obstacles = (state = initialState.obstacles, action) => {
   switch (action.type) {
     case 'CREATE_NEW_SONG':
     case 'START_LOADING_SONG':
-    case 'CLEAR_ENTITIES': {
+    case 'LEAVE_EDITOR': {
       return [];
     }
 
