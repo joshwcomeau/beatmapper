@@ -7,6 +7,15 @@ const getFileReaderMethodName = readAs => {
   }
 };
 
+// Create a simple cache for locally-retrieved files, so that files don't have
+// to be re-retrieved every time from indexeddb.
+// To avoid stale cache issues, we will never simply return what's in the cache.
+// We always check in indexedDb. But, while we're checking, we'll serve up
+// what's in the cache.
+// TODO: If I ensure that filenames are unique, maybe I don't have to worry
+// about stale caches?
+const cache = {};
+
 export default function useLocallyStoredFile(filename, readAs = 'dataUrl') {
   const [output, setOutput] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
@@ -24,6 +33,8 @@ export default function useLocallyStoredFile(filename, readAs = 'dataUrl') {
       fileReader.current.onload = function(e) {
         setOutput(this.result);
         setLoading(false);
+
+        cache[filename] = this.result;
       };
 
       const methodNameToCall = getFileReaderMethodName(readAs);
@@ -45,5 +56,7 @@ export default function useLocallyStoredFile(filename, readAs = 'dataUrl') {
     setLoading(true);
   }, [filename]);
 
-  return [output, loading];
+  const returnedOutput = output || cache[filename];
+
+  return [returnedOutput, loading];
 }

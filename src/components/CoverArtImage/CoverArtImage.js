@@ -7,16 +7,16 @@ import useLocallyStoredFile from '../../hooks/use-locally-stored-file.hook';
 import CenteredSpinner from '../CenteredSpinner';
 
 const CoverArtImage = ({ filename, size }) => {
-  const [coverArtUrl, coverArtUrlLoading] = useLocallyStoredFile(filename);
+  const [coverArtUrl] = useLocallyStoredFile(filename);
   const width = size;
   const height = size;
 
-  return coverArtUrlLoading ? (
+  return coverArtUrl ? (
+    <CoverArt src={coverArtUrl} style={{ width, height }} />
+  ) : (
     <LoadingArtWrapper style={{ width, height }}>
       <CenteredSpinner />
     </LoadingArtWrapper>
-  ) : (
-    <CoverArt src={coverArtUrl} style={{ width, height }} />
   );
 };
 
