@@ -112,6 +112,16 @@ Ceilings are placed the same way, but by clicking on the top row of squares. You
 
 <img src="/docs/img/place-ceiling.gif" style="width: 307px" />
 
+#### Changing obstacle duration
+
+By default, Obstacles will be **4 beats long**. You can resize them after placing the obstacle by clicking and dragging to the left or right:
+
+<img src="/docs/img/obstacle-duration.gif" />
+
+> This control respects the "snapping interval" selected in the bottom-left. If you wish to have more precision around obstacle duration, you can tweak this control.
+
+In the future, I'll be adding additional ways to tweak obstacle duration.
+
 ### Selecting and deleting items
 
 Blocks, mines, and obstacles all work the same way when it comes to selections and deletions.
@@ -152,6 +162,19 @@ There's a bunch of helpful stuff down here:
 - Increase or decrease the spacing between beats
 - Speed up or slow down the audio file
 - Control the song volume
+
+#### Tick sound effect caveats
+
+Among the miscellaneous helpers, you'll notice the ability to toggle a "tick" sound effect for every block:
+
+<img src="/docs/img/tick-toggle.png" style="width: 137px" />
+
+There are **two important caveats** for this control:
+
+- The sound effect will be slightly delayed, anywhere from 20ms to 80ms. As a result, this control _should not_ be used for sychronizing your music to your notes; if you synchronize it to this sound, it will be off-beat in-game.
+- The ticking sound effect only triggers for notes that are a multiple of 1/4 beat notes (so 1/4, 1/2, 1, ...). It will not trigger for 1/3rd notes, nor for more-precise notes like 1/8, 1/16...
+
+These two facts mean that the ticking sound effect isn't super useful right now. It's definitely on the list of things to improve.
 
 ## Events view
 
