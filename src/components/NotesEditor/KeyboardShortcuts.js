@@ -21,12 +21,28 @@ const KeyboardShortcuts = ({
   const handleKeyDown = ev => {
     switch (ev.code) {
       case 'Digit1':
+        // Ignore meta+number, since that's used for snapping intervals
+        if (isMetaKeyPressed(ev)) {
+          return;
+        }
         return selectTool(NOTES_VIEW, 'red-block');
+
       case 'Digit2':
+        if (isMetaKeyPressed(ev)) {
+          return;
+        }
         return selectTool(NOTES_VIEW, 'blue-block');
+
       case 'Digit3':
+        if (isMetaKeyPressed(ev)) {
+          return;
+        }
         return selectTool(NOTES_VIEW, 'mine');
+
       case 'Digit4':
+        if (isMetaKeyPressed(ev)) {
+          return;
+        }
         return selectTool(NOTES_VIEW, 'obstacle');
 
       case 'KeyH': {
