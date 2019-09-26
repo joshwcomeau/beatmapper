@@ -381,6 +381,25 @@ const obstacles = (state = initialState.obstacles, action) => {
       });
     }
 
+    case 'SELECT_ALL': {
+      if (action.view !== NOTES_VIEW) {
+        return state;
+      }
+      return state.map(obstacle => ({
+        ...obstacle,
+        selected: true,
+      }));
+    }
+    case 'DESELECT_ALL': {
+      if (action.view !== NOTES_VIEW) {
+        return state;
+      }
+      return state.map(obstacle => ({
+        ...obstacle,
+        selected: false,
+      }));
+    }
+
     case 'SELECT_ALL_IN_RANGE': {
       const { start, end, view } = action;
 
