@@ -47,35 +47,10 @@ export const createNewSong = (
   createdAt: Date.now(),
   lastOpenedAt: Date.now(),
 });
-export const updateSongDetails = (
-  songId,
-  name,
-  subName,
-  artistName,
-  mapAuthorName,
-  bpm,
-  offset,
-  swingAmount,
-  swingPeriod,
-  previewStartTime,
-  previewDuration,
-  environment,
-  difficultiesById
-) => ({
+export const updateSongDetails = (songId, songData) => ({
   type: 'UPDATE_SONG_DETAILS',
   songId,
-  name,
-  subName,
-  artistName,
-  mapAuthorName,
-  bpm,
-  offset,
-  swingAmount,
-  swingPeriod,
-  previewStartTime,
-  previewDuration,
-  environment,
-  difficultiesById,
+  ...songData,
 });
 
 export const startImportingSong = () => ({

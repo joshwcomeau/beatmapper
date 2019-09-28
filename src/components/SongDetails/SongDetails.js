@@ -40,6 +40,8 @@ const SongDetails = ({
     });
   };
 
+  const [songFile, setSongFile] = React.useState(null);
+
   const [status, setStatus] = React.useState('idle');
 
   const difficultyIds = sortDifficultyIds(
@@ -53,7 +55,7 @@ const SongDetails = ({
     }
 
     getFile(song.songFilename).then(initialSongFile => {
-      setSongProperty('songFile', initialSongFile);
+      setSongFile(initialSongFile);
     });
   });
 
@@ -67,21 +69,7 @@ const SongDetails = ({
     setStatus('working');
 
     // Update our redux state
-    updateSongDetails(
-      song.id,
-      songData.name,
-      songData.subName,
-      songData.artistName,
-      songData.mapAuthorName,
-      songData.bpm,
-      songData.offset,
-      songData.swingAmount,
-      songData.swingPeriod,
-      songData.previewStartTime,
-      songData.previewDuration,
-      songData.environment,
-      songData.difficultiesById
-    );
+    updateSongDetails(song.id, songData);
 
     // Back up our latest data!
     await saveInfoDat(
@@ -163,12 +151,16 @@ const SongDetails = ({
 
         <form onSubmit={handleSubmit}>
           <Row>
-            <SongPicker
-              height={150}
-              songFile={songData.songFile}
-              setSongFile={file => setSongProperty('songFile', file)}
-            />
-            <Spacer size={UNIT * 4} />
+            {songFile && (
+              <>
+                <SongPicker
+                  height={150}
+                  songFile={songFile}
+                  setSongFile={setSongFile}
+                />
+                <Spacer size={UNIT * 4} />
+              </>
+            )}
           </Row>
           <Row>
             <Cell>
