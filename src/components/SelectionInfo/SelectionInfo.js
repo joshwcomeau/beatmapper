@@ -1,12 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { maximize as quickSelectIcon } from 'react-icons-kit/feather/maximize';
 import { maximize2 as swapIcon } from 'react-icons-kit/feather/maximize2';
 
 import * as actions from '../../actions';
 import { COLORS, UNIT, NOTES_VIEW } from '../../constants';
-import { getNumOfSelectedNotes } from '../../reducers/editor-entities.reducer/notes-view.reducer';
 
 import MiniButton from '../MiniButton';
 import Heading from '../Heading';
@@ -42,7 +40,6 @@ const SelectionInfo = ({
   numOfSelectedItems,
   deselectAll,
   swapSelectedNotes,
-  promptSelectAllInRange,
 }) => {
   return (
     <Wrapper>
@@ -50,33 +47,21 @@ const SelectionInfo = ({
       <Spacer size={UNIT * 1.5} />
       <NotesText numOfSelectedItems={numOfSelectedItems} />
       <Spacer size={UNIT * 2} />
-      {numOfSelectedItems === 0 ? (
-        <>
-          <MiniButton onClick={() => promptSelectAllInRange(NOTES_VIEW)}>
-            Select Range
-          </MiniButton>
-        </>
-      ) : (
-        <>
-          <Row>
-            <Spacer size={1} />
-            <IconButton
-              rotation={45}
-              icon={swapIcon}
-              onClick={() => swapSelectedNotes('horizontal')}
-            />
-            <IconButton
-              rotation={-45}
-              icon={swapIcon}
-              onClick={() => swapSelectedNotes('vertical')}
-            />
-          </Row>
-          <Spacer size={UNIT * 2} />
-          <MiniButton onClick={() => deselectAll(NOTES_VIEW)}>
-            Deselect
-          </MiniButton>
-        </>
-      )}
+      <Row>
+        <Spacer size={1} />
+        <IconButton
+          rotation={45}
+          icon={swapIcon}
+          onClick={() => swapSelectedNotes('horizontal')}
+        />
+        <IconButton
+          rotation={-45}
+          icon={swapIcon}
+          onClick={() => swapSelectedNotes('vertical')}
+        />
+      </Row>
+      <Spacer size={UNIT * 2} />
+      <MiniButton onClick={() => deselectAll(NOTES_VIEW)}>Deselect</MiniButton>
     </Wrapper>
   );
 };
@@ -97,17 +82,12 @@ const Highlight = styled.span`
   color: ${COLORS.yellow[500]};
 `;
 
-const mapStateToProps = state => ({
-  numOfSelectedItems: getNumOfSelectedNotes(state),
-});
-
 const mapDispatchToProps = {
   deselectAll: actions.deselectAll,
   swapSelectedNotes: actions.swapSelectedNotes,
-  promptSelectAllInRange: actions.promptSelectAllInRange,
 };
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(SelectionInfo);

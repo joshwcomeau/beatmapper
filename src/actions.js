@@ -381,11 +381,6 @@ export const toggleSelectAll = view => (dispatch, getState) => {
   }
 };
 
-export const promptSelectAllInRange = view => ({
-  type: 'PROMPT_SELECT_ALL_IN_RANGE',
-  view,
-});
-
 export const selectAllInRange = (view, start, end) => ({
   type: 'SELECT_ALL_IN_RANGE',
   view,

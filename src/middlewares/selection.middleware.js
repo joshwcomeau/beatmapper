@@ -76,31 +76,6 @@ export default function createSelectionMiddleware() {
         }
       }
 
-      case 'PROMPT_SELECT_ALL_IN_RANGE': {
-        const { view } = action;
-
-        let beatStr = window.prompt(
-          'Quick-select all entities in a given range of beats. Eg. "16-32" will select everything from beat 16 to 32.'
-        );
-
-        if (!beatStr) {
-          return;
-        }
-
-        beatStr = beatStr.replace(/\s/g, ''); // Remove whitespace
-
-        const startAndEnd = beatStr.split('-');
-        let [start, end] = startAndEnd.map(Number);
-
-        if (typeof end !== 'number') {
-          end = Infinity;
-        }
-
-        // use `store.dispatch` instead of `next` because `SELECT_ALL_IN_RANGE`
-        // should also move the cursor, which happens in song.middleware.js
-        return store.dispatch(selectAllInRange(view, start, end));
-      }
-
       default:
         return next(action);
     }

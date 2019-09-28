@@ -10,6 +10,10 @@ import { connect } from 'react-redux';
 import * as actions from '../../actions';
 import { SNAPPING_INCREMENTS, EVENTS_VIEW, NOTES_VIEW } from '../../constants';
 import { throttle, isMetaKeyPressed } from '../../utils';
+import {
+  promptQuickSelect,
+  promptJumpToBeat,
+} from '../../helpers/prompts.helpers';
 import useMousewheel from '../../hooks/use-mousewheel.hook';
 
 const KeyboardShortcuts = ({
@@ -23,7 +27,7 @@ const KeyboardShortcuts = ({
   selectPreviousTool,
   selectColor,
   deselectAll,
-  promptSelectAllInRange,
+  selectAllInRange,
   copySelection,
   cutSelection,
   pasteSelection,
@@ -146,15 +150,7 @@ const KeyboardShortcuts = ({
       }
 
       case 'KeyJ': {
-        const beatNum = window.prompt(
-          'Enter the beat number you wish to jump to (eg. 16)'
-        );
-
-        if (beatNum === null || beatNum === '') {
-          return;
-        }
-
-        return jumpToBeat(Number(beatNum));
+        return promptJumpToBeat(jumpToBeat);
       }
 
       case 'KeyR': {
@@ -188,7 +184,7 @@ const KeyboardShortcuts = ({
       }
 
       case 'KeyQ': {
-        return promptSelectAllInRange(view);
+        return promptQuickSelect(view, selectAllInRange);
       }
 
       default:
@@ -242,7 +238,7 @@ const mapDispatchToProps = {
   selectPreviousTool: actions.selectPreviousTool,
   selectColor: actions.selectColor,
   deselectAll: actions.deselectAll,
-  promptSelectAllInRange: actions.promptSelectAllInRange,
+  selectAllInRange: actions.selectAllInRange,
   copySelection: actions.copySelection,
   cutSelection: actions.cutSelection,
   pasteSelection: actions.pasteSelection,

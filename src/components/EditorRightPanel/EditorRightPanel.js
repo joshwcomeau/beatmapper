@@ -1,46 +1,56 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import { UNIT } from '../../constants';
-import useWindowDimensions from '../../hooks/use-window-dimensions.hook';
+import { getNumOfSelectedNotes } from '../../reducers/editor-entities.reducer/notes-view.reducer';
 
 import NoteGrid from '../NoteGrid';
 import ItemGrid from '../ItemGrid';
 import SelectionInfo from '../SelectionInfo';
 import Spacer from '../Spacer';
 
-const EditorRightPanel = () => {
-  const windowDimensions = useWindowDimensions();
+import Actions from './Actions';
 
-  let panelHeight = 520;
-  // HACK: This should be a constant somewhere, used to set bottom panel
-  // height!
-  const bottomPanelHeight = 180;
+// HACK: This should be a constant somewhere, used to set bottom panel
+// height!
+const bottomPanelHeight = 180;
 
-  const availableSpace =
-    windowDimensions.height - bottomPanelHeight - panelHeight;
-
-  const top = Math.max(0, availableSpace / 2);
-
-  if (availableSpace < 0) {
-    panelHeight = panelHeight + availableSpace;
-  }
+const EditorRightPanel = ({ numOfSelectedItems }) => {
+  const panelContents =
+    numOfSelectedItems === 0 ? (
+      <>
+        <NoteGrid />
+        <Spacer size={UNIT * 4} />
+        <ItemGrid />
+        <Spacer size={UNIT * 4} />
+        <Actions />
+      </>
+    ) : (
+      <>
+        <SelectionInfo />
+      </>
+    );
 
   return (
-    <Wrapper style={{ height: panelHeight, top }}>
-      <NoteGrid />
-      <Spacer size={UNIT * 4} />
-      <ItemGrid />
-      <Spacer size={UNIT * 4} />
-      <SelectionInfo />
-    </Wrapper>
+    <OuterWrapper>
+      <Wrapper>{panelContents}</Wrapper>
+    </OuterWrapper>
   );
 };
 
-const Wrapper = styled.div`
+const OuterWrapper = styled.div`
   position: absolute;
+  top: 0;
   right: 0;
-  width: 200px; /* TODO: vw? */
+  bottom: ${bottomPanelHeight}px;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
+
+const Wrapper = styled.div`
   color: #fff;
   padding: ${UNIT * 4}px;
   background: rgba(0, 0, 0, 0.45);
@@ -52,4 +62,8 @@ const Wrapper = styled.div`
   overflow: auto;
 `;
 
-export default EditorRightPanel;
+const mapStateToProps = state => ({
+  numOfSelectedItems: getNumOfSelectedNotes(state),
+});
+
+export default connect(mapStateToProps)(EditorRightPanel);
