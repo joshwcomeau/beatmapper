@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { COLORS, UNIT } from '../../constants';
 import * as actions from '../../actions';
 import { createInfoContent } from '../../services/packaging.service';
-import { saveInfoDat } from '../../services/file.service';
+import { getFile, saveInfoDat } from '../../services/file.service';
 import useMount from '../../hooks/use-mount.hook';
 import { sortDifficultyIds } from '../../helpers/song.helpers';
 import { getSelectedSong } from '../../reducers/songs.reducer';
@@ -20,6 +20,9 @@ import Spinner from '../Spinner';
 import Button from '../Button';
 import BeatmapSettings from './BeatmapSettings';
 
+import CoverArtPicker from '../AddSongForm/CoverArtPicker';
+import SongPicker from '../AddSongForm/SongPicker';
+
 const SongDetails = ({
   song,
   isPlaying,
@@ -29,41 +32,33 @@ const SongDetails = ({
   updateBeatmapMetadata,
   history,
 }) => {
-  const [name, setSongName] = React.useState(song.name || '');
-  const [subName, setSongSubName] = React.useState(song.subName || '');
-  const [artistName, setArtistName] = React.useState(song.artistName || '');
-  const [mapAuthorName, setMapAuthorName] = React.useState(
-    song.mapAuthorName || ''
-  );
-  const [bpm, setBpm] = React.useState(song.bpm);
-  const [offset, setOffset] = React.useState(song.offset);
-  const [swingAmount, setSwingAmount] = React.useState(song.swingAmount);
-  const [swingPeriod, setSwingPeriod] = React.useState(song.swingPeriod);
-  const [previewStartTime, setPreviewStartTime] = React.useState(
-    song.previewStartTime
-  );
-  const [previewDuration, setPreviewDuration] = React.useState(
-    song.previewDuration
-  );
-  const [environment, setEnvironment] = React.useState(song.environment);
-  const [difficultiesById, setDifficultiesById] = React.useState(
-    song.difficultiesById
-  );
+  const [songData, setSongData] = React.useState(song);
+  const setSongProperty = (key, value) => {
+    setSongData({
+      ...songData,
+      [key]: value,
+    });
+  };
 
   const [status, setStatus] = React.useState('idle');
 
-  const songId = song.id;
-  const difficultyIds = sortDifficultyIds(Object.keys(difficultiesById));
+  const difficultyIds = sortDifficultyIds(
+    Object.keys(songData.difficultiesById)
+  );
 
   // When this component mounts, if the song is playing, pause it.
   useMount(() => {
     if (isPlaying) {
       pausePlaying();
     }
+
+    getFile(song.songFilename).then(initialSongFile => {
+      setSongProperty('songFile', initialSongFile);
+    });
   });
 
   const handleSubmit = async ev => {
-    if (!name || !artistName || !bpm) {
+    if (!songData.name || !songData.artistName || !songData.bpm) {
       return;
     }
 
@@ -73,43 +68,27 @@ const SongDetails = ({
 
     // Update our redux state
     updateSongDetails(
-      songId,
-      name,
-      subName,
-      artistName,
-      mapAuthorName,
-      bpm,
-      offset,
-      swingAmount,
-      swingPeriod,
-      previewStartTime,
-      previewDuration,
-      environment,
-      difficultiesById
+      song.id,
+      songData.name,
+      songData.subName,
+      songData.artistName,
+      songData.mapAuthorName,
+      songData.bpm,
+      songData.offset,
+      songData.swingAmount,
+      songData.swingPeriod,
+      songData.previewStartTime,
+      songData.previewDuration,
+      songData.environment,
+      songData.difficultiesById
     );
 
     // Back up our latest data!
     await saveInfoDat(
-      songId,
-      createInfoContent(
-        {
-          name,
-          subName,
-          artistName,
-          mapAuthorName,
-          bpm,
-          offset,
-          swingAmount,
-          swingPeriod,
-          previewStartTime,
-          previewDuration,
-          environment,
-          difficultiesById,
-        },
-        {
-          version: 2,
-        }
-      )
+      song.id,
+      createInfoContent(songData, {
+        version: 2,
+      })
     );
 
     // The update happens immediately, but it's disconcerting with no
@@ -136,7 +115,7 @@ const SongDetails = ({
     }
 
     // Delete our working state
-    let mutableDifficultiesCopy = { ...difficultiesById };
+    let mutableDifficultiesCopy = { ...songData.difficultiesById };
     delete mutableDifficultiesCopy[id];
 
     // Don't let the user delete the last difficulty!
@@ -152,17 +131,19 @@ const SongDetails = ({
     // delete, let's redirect them to the next difficulty.
     const nextDifficultyId = remainingDifficultyIds[0];
 
-    setDifficultiesById(mutableDifficultiesCopy);
+    setSongProperty('difficultiesById', mutableDifficultiesCopy);
 
-    deleteBeatmap(songId, id);
+    deleteBeatmap(song.id, id);
 
-    history.push(`/edit/${songId}/${nextDifficultyId}/details`);
+    history.push(`/edit/${song.id}/${nextDifficultyId}/details`);
   };
 
   const handleSaveBeatmap = (ev, difficulty) => {
-    const { noteJumpSpeed, startBeatOffset } = difficultiesById[difficulty];
+    const { noteJumpSpeed, startBeatOffset } = songData.difficultiesById[
+      difficulty
+    ];
     updateBeatmapMetadata(
-      songId,
+      song.id,
       difficulty,
       Number(noteJumpSpeed),
       Number(startBeatOffset)
@@ -182,22 +163,30 @@ const SongDetails = ({
 
         <form onSubmit={handleSubmit}>
           <Row>
+            <SongPicker
+              height={150}
+              songFile={songData.songFile}
+              setSongFile={file => setSongProperty('songFile', file)}
+            />
+            <Spacer size={UNIT * 4} />
+          </Row>
+          <Row>
             <Cell>
               <TextInput
                 required
                 label="Song name"
-                value={name}
+                value={songData.name}
                 placeholder="Radar"
-                onChange={ev => setSongName(ev.target.value)}
+                onChange={ev => setSongProperty('name', ev.target.value)}
               />
             </Cell>
             <Spacer size={UNIT * 4} />
             <Cell>
               <TextInput
                 label="Song sub-name"
-                value={subName}
+                value={songData.subName}
                 placeholder="Original Mix"
-                onChange={ev => setSongSubName(ev.target.value)}
+                onChange={ev => setSongProperty('subName', ev.target.value)}
               />
             </Cell>
           </Row>
@@ -206,9 +195,9 @@ const SongDetails = ({
               <TextInput
                 required
                 label="Artist name"
-                value={artistName}
+                value={songData.artistName}
                 placeholder="Fox Stevenson"
-                onChange={ev => setArtistName(ev.target.value)}
+                onChange={ev => setSongProperty('artistName', ev.target.value)}
               />
             </Cell>
             <Spacer size={UNIT * 4} />
@@ -216,8 +205,10 @@ const SongDetails = ({
               <TextInput
                 required
                 label="Map author name"
-                value={mapAuthorName}
-                onChange={ev => setMapAuthorName(ev.target.value)}
+                value={songData.mapAuthorName}
+                onChange={ev =>
+                  setSongProperty('mapAuthorName', ev.target.value)
+                }
               />
             </Cell>
           </Row>
@@ -228,9 +219,9 @@ const SongDetails = ({
                 required
                 type="number"
                 label="BPM"
-                value={bpm}
+                value={songData.bpm}
                 placeholder="140"
-                onChange={ev => setBpm(Number(ev.target.value))}
+                onChange={ev => setSongProperty('bpm', Number(ev.target.value))}
               />
             </Cell>
             <Spacer size={UNIT * 4} />
@@ -238,9 +229,11 @@ const SongDetails = ({
               <TextInput
                 type="number"
                 label="Offset"
-                value={offset}
+                value={songData.offset}
                 placeholder="0"
-                onChange={ev => setOffset(Number(ev.target.value))}
+                onChange={ev =>
+                  setSongProperty('offset', Number(ev.target.value))
+                }
               />
             </Cell>
             <Spacer size={UNIT * 4} />
@@ -248,18 +241,22 @@ const SongDetails = ({
             <Cell>
               <TextInput
                 label="Swing amount"
-                value={swingAmount}
+                value={songData.swingAmount}
                 placeholder="0"
-                onChange={ev => setSwingAmount(Number(ev.target.value))}
+                onChange={ev =>
+                  setSongProperty('swingAmount', Number(ev.target.value))
+                }
               />
             </Cell>
             <Spacer size={UNIT * 4} />
             <Cell>
               <TextInput
                 label="Swing period"
-                value={swingPeriod}
+                value={songData.swingPeriod}
                 placeholder="0"
-                onChange={ev => setSwingPeriod(Number(ev.target.value))}
+                onChange={ev =>
+                  setSongProperty('swingPeriod', Number(ev.target.value))
+                }
               />
             </Cell>
           </Row>
@@ -270,9 +267,11 @@ const SongDetails = ({
                 required
                 type="number"
                 label="Preview start time"
-                value={previewStartTime}
+                value={songData.previewStartTime}
                 placeholder="(in seconds)"
-                onChange={ev => setPreviewStartTime(Number(ev.target.value))}
+                onChange={ev =>
+                  setSongProperty('previewStartTime', Number(ev.target.value))
+                }
               />
             </Cell>
             <Spacer size={UNIT * 4} />
@@ -281,9 +280,11 @@ const SongDetails = ({
                 required
                 type="number"
                 label="Preview duration"
-                value={previewDuration}
+                value={songData.previewDuration}
                 placeholder="(in seconds)"
-                onChange={ev => setPreviewDuration(Number(ev.target.value))}
+                onChange={ev =>
+                  setSongProperty('previewDuration', Number(ev.target.value))
+                }
               />
             </Cell>
             <Spacer size={UNIT * 4} />
@@ -291,8 +292,8 @@ const SongDetails = ({
             <Cell>
               <DropdownInput
                 label="Environment"
-                value={environment}
-                onChange={ev => setEnvironment(ev.target.value)}
+                value={songData.environment}
+                onChange={ev => setSongProperty('environment', ev.target.value)}
               >
                 <option value="NiceEnvironment">NiceEnvironment</option>
                 <option value="DefaultEnvironment">DefaultEnvironment</option>
@@ -326,7 +327,10 @@ const SongDetails = ({
         <Spacer size={UNIT * 6} />
         <Row>
           {difficultyIds.map(id => {
-            const { noteJumpSpeed, startBeatOffset } = difficultiesById[id];
+            const {
+              noteJumpSpeed,
+              startBeatOffset,
+            } = songData.difficultiesById[id];
             const savedVersion = song.difficultiesById[id];
 
             return (
@@ -340,19 +344,19 @@ const SongDetails = ({
                 noteJumpSpeed={noteJumpSpeed}
                 startBeatOffset={startBeatOffset}
                 handleChangeNoteJumpSpeed={noteJumpSpeed => {
-                  setDifficultiesById({
-                    ...difficultiesById,
+                  setSongProperty('difficultiesById', {
+                    ...songData.difficultiesById,
                     [id]: {
-                      ...difficultiesById[id],
+                      ...songData.difficultiesById[id],
                       noteJumpSpeed,
                     },
                   });
                 }}
                 handleChangeStartBeatOffset={startBeatOffset => {
-                  setDifficultiesById({
-                    ...difficultiesById,
+                  setSongProperty('difficultiesById', {
+                    ...songData.difficultiesById,
                     [id]: {
-                      ...difficultiesById[id],
+                      ...songData.difficultiesById[id],
                       startBeatOffset,
                     },
                   });
