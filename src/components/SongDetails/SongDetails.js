@@ -6,11 +6,15 @@ import styled from 'styled-components';
 import { COLORS, UNIT } from '../../constants';
 import * as actions from '../../actions';
 import { createInfoContent } from '../../services/packaging.service';
-import { getFile, saveInfoDat } from '../../services/file.service';
+import {
+  getFile,
+  saveInfoDat,
+  saveSongFile,
+  saveLocalCoverArtFile,
+} from '../../services/file.service';
 import useMount from '../../hooks/use-mount.hook';
 import { sortDifficultyIds } from '../../helpers/song.helpers';
 import { getSelectedSong } from '../../reducers/songs.reducer';
-import { getIsPlaying } from '../../reducers/navigation.reducer';
 
 import TextInput from '../TextInput';
 import DropdownInput from '../DropdownInput';
@@ -23,10 +27,11 @@ import BeatmapSettings from './BeatmapSettings';
 import CoverArtPicker from '../AddSongForm/CoverArtPicker';
 import SongPicker from '../AddSongForm/SongPicker';
 
+const MEDIA_ROW_HEIGHT = 150;
+
 const SongDetails = ({
   song,
-  isPlaying,
-  pausePlaying,
+  stopPlaying,
   updateSongDetails,
   deleteBeatmap,
   updateBeatmapMetadata,
@@ -41,6 +46,7 @@ const SongDetails = ({
   };
 
   const [songFile, setSongFile] = React.useState(null);
+  const [coverArtFile, setCoverArtFile] = React.useState(null);
 
   const [status, setStatus] = React.useState('idle');
 
@@ -48,15 +54,24 @@ const SongDetails = ({
     Object.keys(songData.difficultiesById)
   );
 
-  // When this component mounts, if the song is playing, pause it.
   useMount(() => {
-    if (isPlaying) {
-      pausePlaying();
+    // We want to stop & reset the song when the user goes to edit it.
+    // In addition to seeming like a reasonable idea, it helps prevent any
+    // weirdness around editing the audio file when it's in a non-zero
+    // position.
+    stopPlaying(song.offset);
+
+    if (song.songFilename) {
+      getFile(song.songFilename).then(initialSongFile => {
+        setSongFile(initialSongFile);
+      });
     }
 
-    getFile(song.songFilename).then(initialSongFile => {
-      setSongFile(initialSongFile);
-    });
+    if (song.coverArtFilename) {
+      getFile(song.coverArtFilename).then(initialSongFile => {
+        setCoverArtFile(initialSongFile);
+      });
+    }
   });
 
   const handleSubmit = async ev => {
@@ -68,13 +83,32 @@ const SongDetails = ({
 
     setStatus('working');
 
+    let newSongObject = {
+      ...songData,
+    };
+
+    if (coverArtFile) {
+      const [coverArtFilename] = await saveLocalCoverArtFile(
+        song.id,
+        coverArtFile
+      );
+
+      newSongObject.coverArtFilename = coverArtFilename;
+    }
+
+    if (songFile) {
+      const [songFilename] = await saveSongFile(song.id, songFile);
+
+      newSongObject.songFilename = songFilename;
+    }
+
     // Update our redux state
-    updateSongDetails(song.id, songData);
+    updateSongDetails(song.id, newSongObject);
 
     // Back up our latest data!
     await saveInfoDat(
       song.id,
-      createInfoContent(songData, {
+      createInfoContent(newSongObject, {
         version: 2,
       })
     );
@@ -151,17 +185,24 @@ const SongDetails = ({
 
         <form onSubmit={handleSubmit}>
           <Row>
-            {songFile && (
-              <>
-                <SongPicker
-                  height={150}
-                  songFile={songFile}
-                  setSongFile={setSongFile}
-                />
-                <Spacer size={UNIT * 4} />
-              </>
-            )}
+            <div style={{ flex: 1 }}>
+              <SongPicker
+                height={MEDIA_ROW_HEIGHT}
+                songFile={songFile}
+                setSongFile={setSongFile}
+              />
+            </div>
+            <Spacer size={UNIT * 2} />
+            <div style={{ flexBasis: MEDIA_ROW_HEIGHT }}>
+              <CoverArtPicker
+                height={MEDIA_ROW_HEIGHT}
+                coverArtFile={coverArtFile}
+                setCoverArtFile={setCoverArtFile}
+              />
+            </div>
           </Row>
+          <Spacer size={UNIT * 4} />
+
           <Row>
             <Cell>
               <TextInput
@@ -374,7 +415,13 @@ const Wrapper = styled.div`
 const InnerWrapper = styled.div`
   padding-left: ${UNIT * 4}px;
   padding-right: ${UNIT * 4}px;
-  max-width: 700px;
+  /*
+    HACK: These magic numbers are necessary because SongPicker uses
+    ScrubbableWaveform, which assumes a 500px width, and sits beside
+    CoverArtPicker, which is a MEDIA_ROW_HEIGHT-sized square. Plus padding.
+    No clue why the +4 is needed
+  */
+  width: ${500 + MEDIA_ROW_HEIGHT + UNIT * 4 + UNIT * 8 + 4}px;
   margin: auto;
 `;
 
@@ -396,7 +443,6 @@ const Center = styled.div`
 const mapStateToProps = state => {
   return {
     song: getSelectedSong(state),
-    isPlaying: getIsPlaying(state),
   };
 };
 
@@ -404,7 +450,7 @@ const mapDispatchToProps = {
   updateSongDetails: actions.updateSongDetails,
   deleteBeatmap: actions.deleteBeatmap,
   updateBeatmapMetadata: actions.updateBeatmapMetadata,
-  pausePlaying: actions.pausePlaying,
+  stopPlaying: actions.stopPlaying,
 };
 
 export default connect(

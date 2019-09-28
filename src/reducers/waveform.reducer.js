@@ -6,7 +6,8 @@ const initialState = {
 
 export default function songReducer(state = initialState, action) {
   switch (action.type) {
-    case 'FINISH_LOADING_SONG': {
+    case 'FINISH_LOADING_SONG':
+    case 'RELOAD_WAVEFORM': {
       const { waveformData } = action;
 
       return {

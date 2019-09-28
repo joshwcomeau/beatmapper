@@ -1,7 +1,6 @@
 /**
  * This middleware manages playback concerns.
  */
-import webAudioBuilder from 'waveform-data/webaudio';
 import { ActionCreators as ReduxUndoActionCreators } from 'redux-undo';
 
 import {
@@ -10,6 +9,7 @@ import {
   startPlaying,
   pausePlaying,
   loadBeatmapEntities,
+  reloadWaveform,
 } from '../actions';
 import {
   createHtmlAudioElement,
@@ -17,7 +17,6 @@ import {
   convertBeatsToMilliseconds,
   convertMillisecondsToBeats,
 } from '../helpers/audio.helpers';
-import { convertFileToArrayBuffer } from '../helpers/file.helpers';
 import { convertObstaclesToRedux } from '../helpers/obstacles.helpers';
 import {
   convertEventsToRedux,
@@ -50,7 +49,10 @@ import {
 } from '../services/packaging.service.nitty-gritty';
 import { EVENTS_VIEW } from '../constants';
 
-const AudioContext = window.AudioContext || window.webkitAudioContext;
+import {
+  generateWaveformForSongFile,
+  stopAndRewindAudio,
+} from './song.middleware.helpers';
 
 export default function createSongMiddleware() {
   let animationFrameId = null;
@@ -135,24 +137,12 @@ export default function createSongMiddleware() {
         audioElem = createHtmlAudioElement(fileBlobUrl);
         audioElem.volume = volume;
         audioElem.playbackRate = playbackRate;
-        audioElem.currentTime = (song.offset || 0) / 1000;
 
-        // Loading an array buffer consumes it, weirdly. I don't believe that
-        // this is a mistake I'm making, it appears to be a part of the Web
-        // Audio API. So, we need to reload the buffer.
-        const arrayBuffer = await convertFileToArrayBuffer(file);
+        stopAndRewindAudio(audioElem, song.offset);
 
-        // Generate the waveform, for scrubbing:
-        const audioContext = new AudioContext();
-        webAudioBuilder(audioContext, arrayBuffer, (err, waveform) => {
-          if (err) {
-            throw new Error(err);
-          }
+        const waveform = await generateWaveformForSongFile(file);
 
-          const durationInMs = waveform.duration * 1000;
-
-          next(finishLoadingSong(song, durationInMs, waveform));
-        });
+        next(finishLoadingSong(song, waveform));
 
         break;
       }
@@ -265,6 +255,27 @@ export default function createSongMiddleware() {
         // in the audio, so that it is in sync.
         next(adjustCursorPosition(roundedCursorPosition));
         audioElem.currentTime = roundedCursorPosition / 1000;
+
+        break;
+      }
+
+      case 'UPDATE_SONG_DETAILS': {
+        next(action);
+
+        // It's possible we updated the song file.
+        // We should reload it, so that the audio is properly updated.
+        const file = await getFile(action.songFilename);
+
+        // Create an <audio> element, which is the mechanism we use for
+        // playing the track when the user is editing it, keeping the time,
+        // etc.
+        const fileBlobUrl = URL.createObjectURL(file);
+
+        audioElem.src = fileBlobUrl;
+        stopAndRewindAudio(audioElem, action.offset);
+
+        const waveform = await generateWaveformForSongFile(file);
+        next(reloadWaveform(waveform));
 
         break;
       }
@@ -417,14 +428,14 @@ export default function createSongMiddleware() {
       case 'PAUSE_PLAYING': {
         next(action);
 
-        window.cancelAnimationFrame(animationFrameId);
-        audioElem.pause();
-
         // When the song is playing, `cursorPosition` is fluid, moving every 16
         // milliseconds to a new fractional value.
         // Once we stop, we want to snap to the nearest beat.
         const state = store.getState();
         const song = getSelectedSong(state);
+
+        window.cancelAnimationFrame(animationFrameId);
+        audioElem.pause();
 
         const roundedCursorPosition = snapToNearestBeat(
           state.navigation.cursorPosition,
@@ -436,6 +447,20 @@ export default function createSongMiddleware() {
         // in the audio, so that it is in sync.
         next(adjustCursorPosition(roundedCursorPosition));
         audioElem.currentTime = roundedCursorPosition / 1000;
+
+        break;
+      }
+
+      case 'STOP_PLAYING': {
+        next(action);
+
+        window.cancelAnimationFrame(animationFrameId);
+
+        if (audioElem) {
+          audioElem.pause();
+
+          stopAndRewindAudio(audioElem, action.offset);
+        }
 
         break;
       }

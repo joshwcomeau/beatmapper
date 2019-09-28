@@ -20,6 +20,7 @@ export const createAllSharedMiddlewares = persistenceEngine => {
       'REDUX_STORAGE_SAVE',
       'START_PLAYING',
       'PAUSE_PLAYING',
+      'STOP_PLAYING',
       'TOGGLE_PLAYING',
     ],
   });

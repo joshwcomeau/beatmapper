@@ -92,12 +92,16 @@ export const loadBeatmapEntities = (notes, events, obstacles) => ({
   obstacles,
 });
 
-export const finishLoadingSong = (song, duration, waveformData) => ({
+export const finishLoadingSong = (song, waveformData) => ({
   type: 'FINISH_LOADING_SONG',
   song,
-  duration,
   waveformData,
   lastOpenedAt: Date.now(),
+});
+
+export const reloadWaveform = waveformData => ({
+  type: 'RELOAD_WAVEFORM',
+  waveformData,
 });
 
 export const startPlaying = () => ({
@@ -106,6 +110,10 @@ export const startPlaying = () => ({
 
 export const pausePlaying = () => ({
   type: 'PAUSE_PLAYING',
+});
+export const stopPlaying = offset => ({
+  type: 'STOP_PLAYING',
+  offset,
 });
 export const togglePlaying = () => ({
   type: 'TOGGLE_PLAYING',

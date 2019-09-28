@@ -25,13 +25,34 @@ export default function navigationReducer(state = initialState, action) {
     }
 
     case 'FINISH_LOADING_SONG': {
-      const { duration, song } = action;
+      const { waveformData, song } = action;
+      const durationInMs = waveformData.duration * 1000;
 
       return {
         ...state,
         cursorPosition: song.offset,
         isLoading: false,
-        duration: duration,
+        duration: durationInMs,
+      };
+    }
+
+    case 'RELOAD_WAVEFORM': {
+      const { waveformData } = action;
+      const durationInMs = waveformData.duration * 1000;
+
+      return {
+        ...state,
+        isLoading: false,
+        duration: durationInMs,
+      };
+    }
+
+    case 'UPDATE_SONG_DETAILS': {
+      const { offset } = action;
+
+      return {
+        ...state,
+        cursorPosition: offset,
       };
     }
 
@@ -48,6 +69,14 @@ export default function navigationReducer(state = initialState, action) {
         ...state,
         isPlaying: false,
         animateBlockMotion: true,
+      };
+    }
+    case 'STOP_PLAYING': {
+      return {
+        ...state,
+        isPlaying: false,
+        animateBlockMotion: false,
+        cursorPosition: action.offset,
       };
     }
 
