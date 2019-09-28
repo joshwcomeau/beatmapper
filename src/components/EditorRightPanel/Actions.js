@@ -5,7 +5,10 @@ import { Tooltip } from 'react-tippy';
 
 import * as actions from '../../actions';
 import { UNIT, NOTES_VIEW } from '../../constants';
-import { promptQuickSelect } from '../../helpers/prompts.helpers';
+import {
+  promptQuickSelect,
+  promptJumpToBeat,
+} from '../../helpers/prompts.helpers';
 
 import MiniButton from '../MiniButton';
 import Heading from '../Heading';
@@ -28,8 +31,12 @@ const Actions = ({ selectAllInRange, jumpToBeat }) => {
         </MiniButton>
       </Tooltip>
 
+      <Spacer size={UNIT} />
+
       <Tooltip delay={[500, 0]} title="Jump to a specific beat number (J)">
-        <MiniButton onClick={() => jumpToBeat()}>Select Range</MiniButton>
+        <MiniButton onClick={() => promptJumpToBeat(jumpToBeat)}>
+          Jump to Beat
+        </MiniButton>
       </Tooltip>
     </Wrapper>
   );

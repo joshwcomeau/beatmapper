@@ -26,19 +26,16 @@ const KeyboardShortcuts = ({
           return;
         }
         return selectTool(NOTES_VIEW, 'red-block');
-
       case 'Digit2':
         if (isMetaKeyPressed(ev)) {
           return;
         }
         return selectTool(NOTES_VIEW, 'blue-block');
-
       case 'Digit3':
         if (isMetaKeyPressed(ev)) {
           return;
         }
         return selectTool(NOTES_VIEW, 'mine');
-
       case 'Digit4':
         if (isMetaKeyPressed(ev)) {
           return;
@@ -47,6 +44,9 @@ const KeyboardShortcuts = ({
 
       case 'KeyH': {
         return swapSelectedNotes('horizontal');
+      }
+      case 'KeyV': {
+        return swapSelectedNotes('vertical');
       }
 
       case 'KeyW': {

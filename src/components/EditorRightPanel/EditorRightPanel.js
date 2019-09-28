@@ -3,7 +3,10 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import { UNIT } from '../../constants';
-import { getNumOfSelectedNotes } from '../../reducers/editor-entities.reducer/notes-view.reducer';
+import {
+  getSelectedNotes,
+  getSelectedObstacles,
+} from '../../reducers/editor-entities.reducer/notes-view.reducer';
 
 import NoteGrid from '../NoteGrid';
 import ItemGrid from '../ItemGrid';
@@ -16,21 +19,25 @@ import Actions from './Actions';
 // height!
 const bottomPanelHeight = 180;
 
-const EditorRightPanel = ({ numOfSelectedItems }) => {
-  const panelContents =
-    numOfSelectedItems === 0 ? (
-      <>
-        <NoteGrid />
-        <Spacer size={UNIT * 4} />
-        <ItemGrid />
-        <Spacer size={UNIT * 4} />
-        <Actions />
-      </>
-    ) : (
-      <>
-        <SelectionInfo />
-      </>
-    );
+const EditorRightPanel = ({
+  numOfSelectedNotes,
+  numOfSelectedObstacles,
+  isAnythingSelected,
+}) => {
+  const panelContents = isAnythingSelected ? (
+    <SelectionInfo
+      numOfSelectedNotes={numOfSelectedNotes}
+      numOfSelectedObstacles={numOfSelectedObstacles}
+    />
+  ) : (
+    <>
+      <NoteGrid />
+      <Spacer size={UNIT * 4} />
+      <ItemGrid />
+      <Spacer size={UNIT * 4} />
+      <Actions />
+    </>
+  );
 
   return (
     <OuterWrapper>
@@ -62,8 +69,18 @@ const Wrapper = styled.div`
   overflow: auto;
 `;
 
-const mapStateToProps = state => ({
-  numOfSelectedItems: getNumOfSelectedNotes(state),
-});
+const mapStateToProps = state => {
+  const selectedNotes = getSelectedNotes(state);
+  const selectedObstacles = getSelectedObstacles(state);
+
+  const isAnythingSelected =
+    selectedNotes.length > 0 || selectedObstacles.length > 0;
+
+  return {
+    numOfSelectedNotes: selectedNotes.length,
+    numOfSelectedObstacles: selectedObstacles.length,
+    isAnythingSelected,
+  };
+};
 
 export default connect(mapStateToProps)(EditorRightPanel);
