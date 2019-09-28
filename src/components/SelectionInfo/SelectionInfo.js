@@ -12,6 +12,8 @@ import Heading from '../Heading';
 import IconButton from '../IconButton';
 import Spacer from '../Spacer';
 
+import ObstacleTweaks from './ObstacleTweaks';
+
 const SelectionCount = ({ num, label }) => {
   const pluralizedLabel = num === 1 ? label : `${label}s`;
 
@@ -28,6 +30,9 @@ const SelectionInfo = ({
   deselectAll,
   swapSelectedNotes,
 }) => {
+  const shouldShowObstacleTweaks =
+    numOfSelectedObstacles === 1 && numOfSelectedNotes === 0;
+
   let numbers = [];
   if (numOfSelectedNotes) {
     numbers.push(
@@ -56,6 +61,15 @@ const SelectionInfo = ({
       <div>{numbers}</div>
 
       <Spacer size={UNIT * 4} />
+
+      {shouldShowObstacleTweaks && (
+        <>
+          <Heading size={3}>Selected Wall</Heading>
+          <Spacer size={UNIT * 1.5} />
+          <ObstacleTweaks />
+          <Spacer size={UNIT * 4} />
+        </>
+      )}
 
       <Heading size={3}>Actions</Heading>
       <Spacer size={UNIT * 1.5} />

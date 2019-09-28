@@ -35,3 +35,18 @@ export const promptJumpToBeat = wrappedAction => {
 
   return wrappedAction(Number(beatNum));
 };
+
+export const promptChangeObstacleDuration = (obstacle, wrappedAction) => {
+  const { id, beatDuration } = obstacle;
+
+  const newDuration = window.prompt(
+    'Enter the duration for this wall, in beats',
+    beatDuration
+  );
+
+  if (newDuration === null || newDuration === '') {
+    return;
+  }
+
+  return wrappedAction(id, Number(newDuration));
+};

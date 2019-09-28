@@ -40,7 +40,7 @@ const siteConfig = {
   headerLinks: [
     { doc: 'manual', label: 'User Manual' },
     { doc: 'advanced', label: 'Advanced' },
-    { doc: 'keyboard-shortcuts', label: 'Shortcuts' },
+    { page: 'shortcuts', label: 'Shortcuts' },
     { doc: 'migrating', label: 'Migrating' },
   ],
 
