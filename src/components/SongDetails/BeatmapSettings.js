@@ -47,11 +47,11 @@ const BeatmapSettings = ({
         afterCopy={triggerSuccess}
         copyDifficulty={copyDifficulty}
       />
-    ))
-      .then(result => {
-        console.log(result);
-      })
-      .catch(err => console.err(err));
+    )).then(copiedToDifficultyId => {
+      // Redirect the user to this new difficulty, so that when they go to
+      // edit it, they're editing the right difficulty.
+      history.push(`/edit/${song.id}/${copiedToDifficultyId}/details`);
+    });
   };
 
   const handleDeleteBeatmap = ev => {
@@ -143,7 +143,7 @@ const Wrapper = styled.div`
   background: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   padding: ${UNIT * 3}px;
-  margin-right: ${UNIT * 4}px;
+  margin: ${UNIT * 2}px;
 
   &:last-of-type {
     margin-right: 0;

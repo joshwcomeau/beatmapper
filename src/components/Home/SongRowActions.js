@@ -58,6 +58,14 @@ const Select = styled.select`
   height: 100%;
   opacity: 0;
   cursor: pointer;
+
+  /*
+    Reports of invisible text on options on Chrome Windows.
+    Not sure if this is an actual fix tho.
+  */
+  option {
+    color: black;
+  }
 `;
 
 export default connect(

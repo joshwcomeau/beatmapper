@@ -216,7 +216,7 @@ export default function createSongMiddleware() {
         );
 
         if (typeof afterCopy === 'function') {
-          afterCopy();
+          afterCopy(toDifficultyId);
         }
 
         break;

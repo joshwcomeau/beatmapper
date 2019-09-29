@@ -16,9 +16,9 @@ export const renderImperativePrompt = (modalProps, generateChildren) => {
   };
 
   return new Promise(resolve => {
-    const triggerSuccess = () => {
+    const triggerSuccess = data => {
       cleanup();
-      resolve(true);
+      resolve(data);
     };
     const triggerClose = () => {
       cleanup();

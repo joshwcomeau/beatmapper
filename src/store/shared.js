@@ -39,11 +39,18 @@ export const createAllSharedMiddlewares = persistenceEngine => {
     // For unknown reasons, things crash when `stateSyncMiddleware` is further
     // down.
     stateSyncMiddleware,
-    storageMiddleware,
     songMiddleware,
     selectionMiddleware,
     downloadMiddleware,
-    backupMiddleware,
     demoMiddleware,
+    // We have two middlewares related to persistence:
+    // - Storage middleware persists the current redux state to localforage
+    // - Backup middleware saves the editor entities as beatmap files, also
+    //   in localforage.
+    //
+    // It's important that this stuff happens last, after all the other
+    // middlewares have fully affected the state.
+    storageMiddleware,
+    backupMiddleware,
   ];
 };

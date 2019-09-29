@@ -305,8 +305,12 @@ const SongDetails = ({ song, stopPlaying, updateSongDetails }) => {
         <Spacer size={UNIT * 8} />
 
         <Heading size={1}>Edit Beatmaps</Heading>
-        <Spacer size={UNIT * 6} />
-        <Row>
+      </InnerWrapper>
+
+      <Spacer size={UNIT * 6} />
+
+      <BeatmapsWrapper>
+        <WrappedRow>
           {difficultyIds.map(difficultyId => {
             return (
               <BeatmapSettings
@@ -316,9 +320,9 @@ const SongDetails = ({ song, stopPlaying, updateSongDetails }) => {
               />
             );
           })}
-        </Row>
-        <Spacer size={UNIT * 10} />
-      </InnerWrapper>
+        </WrappedRow>
+        <Spacer size={UNIT * 6} />
+      </BeatmapsWrapper>
     </Wrapper>
   );
 };
@@ -341,10 +345,27 @@ const InnerWrapper = styled.div`
   margin: auto;
 `;
 
+const BeatmapsWrapper = styled(InnerWrapper)`
+  /*
+    On larger screens, it looks better if we squeeze more difficulties in per
+    row.
+  */
+  width: auto;
+  max-width: 865px;
+
+  @media (min-width: 1155px) {
+    max-width: 1095px;
+  }
+`;
+
 const Row = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: ${UNIT * 4}px;
+`;
+const WrappedRow = styled(Row)`
+  flex-wrap: wrap;
+  justify-content: center;
 `;
 
 const Cell = styled.div`
