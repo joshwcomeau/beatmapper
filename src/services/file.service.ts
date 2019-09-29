@@ -220,7 +220,13 @@ export const saveBeatmap = (
     difficulty,
   });
 
-  return saveFile(beatmapFilename, beatmapContents);
+  // Make sure we're saving a stringified object.
+  let beatmapContentsString = beatmapContents;
+  if (typeof beatmapContents === 'object') {
+    beatmapContentsString = JSON.stringify(beatmapContents);
+  }
+
+  return saveFile(beatmapFilename, beatmapContentsString);
 };
 
 export const saveInfoDat = (songId: string, infoContent: string) => {

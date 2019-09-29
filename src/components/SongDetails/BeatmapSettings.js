@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { UNIT, COLORS } from '../../constants';
+import { getLabelForDifficulty } from '../../helpers/song.helpers';
 
 import TextInput from '../TextInput';
 import Heading from '../Heading';
@@ -21,7 +22,7 @@ const BeatmapSettings = ({
 }) => {
   return (
     <Wrapper>
-      <Heading size={3}>{id}</Heading>
+      <Heading size={3}>{getLabelForDifficulty(id)}</Heading>
       <Spacer size={UNIT * 3} />
       <TextInput
         type="number"

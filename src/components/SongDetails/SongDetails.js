@@ -14,6 +14,7 @@ import {
 } from '../../services/file.service';
 import useMount from '../../hooks/use-mount.hook';
 import { sortDifficultyIds } from '../../helpers/song.helpers';
+import { renderImperativePrompt } from '../../helpers/modal.helpers';
 import { getSelectedSong } from '../../reducers/songs.reducer';
 
 import TextInput from '../TextInput';
@@ -26,6 +27,7 @@ import BeatmapSettings from './BeatmapSettings';
 
 import CoverArtPicker from '../AddSongForm/CoverArtPicker';
 import SongPicker from '../AddSongForm/SongPicker';
+import CopyDifficultyForm from '../CopyDifficultyForm';
 
 const MEDIA_ROW_HEIGHT = 150;
 
@@ -35,6 +37,7 @@ const SongDetails = ({
   updateSongDetails,
   deleteBeatmap,
   updateBeatmapMetadata,
+  copyDifficulty,
   history,
 }) => {
   const [songData, setSongData] = React.useState(song);
@@ -113,18 +116,35 @@ const SongDetails = ({
       })
     );
 
-    // The update happens immediately, but it's disconcerting with no
-    // appearance of "loading". Fake a delay
+    // It can take a bit of time to update.
+    // HACK: I don't have a simple way to do that since it all happens in a
+    // redux middleware. The right solution is to track it in redux, but that
+    // feels like clutter and I lazy. Waiting a couple secs should suffice.
     window.setTimeout(() => {
       setStatus('idle');
-    }, Math.random() * 200 + 200);
+    }, 2000);
   };
 
   const handleCopyBeatmap = (ev, id) => {
     ev.preventDefault();
 
-    alert('Functionality coming soon!');
+    const modalProps = { width: 400, alignment: 'top' };
+
+    renderImperativePrompt(modalProps, triggerSuccess => (
+      <CopyDifficultyForm
+        songId={song.id}
+        difficultyIds={difficultyIds}
+        idToCopy={id}
+        afterCopy={triggerSuccess}
+        copyDifficulty={copyDifficulty}
+      />
+    ))
+      .then(result => {
+        console.log(result);
+      })
+      .catch(err => console.err(err));
   };
+
   const handleDeleteBeatmap = (ev, id) => {
     ev.preventDefault();
 
@@ -451,6 +471,7 @@ const mapDispatchToProps = {
   deleteBeatmap: actions.deleteBeatmap,
   updateBeatmapMetadata: actions.updateBeatmapMetadata,
   stopPlaying: actions.stopPlaying,
+  copyDifficulty: actions.copyDifficulty,
 };
 
 export default connect(

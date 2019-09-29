@@ -30,6 +30,8 @@ import {
   getBeatmap,
   deleteAllSongFiles,
   getFilenameForThing,
+  saveBeatmap,
+  saveInfoDat,
 } from '../services/file.service';
 import Sfx from '../services/sfx.service';
 import { getSongById, getSelectedSong } from '../reducers/songs.reducer';
@@ -42,7 +44,10 @@ import {
   getPlayNoteTick,
   getCursorPositionInBeats,
 } from '../reducers/navigation.reducer';
-import { createBeatmapContents } from '../services/packaging.service';
+import {
+  createBeatmapContents,
+  createInfoContent,
+} from '../services/packaging.service';
 import {
   shiftEntitiesByOffset,
   unshiftEntitiesByOffset,
@@ -179,6 +184,42 @@ export default function createSongMiddleware() {
             afterCreate(difficulty);
           }
         });
+      }
+
+      case 'COPY_DIFFICULTY': {
+        const { songId, fromDifficultyId, toDifficultyId, afterCopy } = action;
+
+        // First, we need to load the file which contains the notes, events, etc
+        // for the difficulty we want to copy.
+        const sourceDifficultyFileContents = await getBeatmap(
+          songId,
+          fromDifficultyId
+        );
+
+        // Save it to our destination difficulty.
+        await saveBeatmap(songId, toDifficultyId, sourceDifficultyFileContents);
+
+        // Dispatch the original action, which should create the difficulty
+        // in the song reducer
+        next(action);
+
+        // Pull that updated redux state and save it to our info.dat
+        const state = store.getState();
+        const song = getSongById(state, songId);
+
+        // Back up our latest data!
+        await saveInfoDat(
+          song.id,
+          createInfoContent(song, {
+            version: 2,
+          })
+        );
+
+        if (typeof afterCopy === 'function') {
+          afterCopy();
+        }
+
+        break;
       }
 
       case 'TOGGLE_PLAYING': {

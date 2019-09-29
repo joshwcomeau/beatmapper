@@ -79,6 +79,19 @@ export const createDifficulty = (difficulty, afterCreate) => ({
   afterCreate,
 });
 
+export const copyDifficulty = (
+  songId,
+  fromDifficultyId,
+  toDifficultyId,
+  afterCopy
+) => ({
+  type: 'COPY_DIFFICULTY',
+  songId,
+  fromDifficultyId,
+  toDifficultyId,
+  afterCopy,
+});
+
 export const startLoadingSong = (songId, difficulty) => ({
   type: 'START_LOADING_SONG',
   songId,

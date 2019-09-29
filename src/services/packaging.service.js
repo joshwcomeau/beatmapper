@@ -108,6 +108,11 @@ export function createInfoContent(song, meta = { version: 2 }) {
   return JSON.stringify(contents, null, 2);
 }
 
+/**
+ * This method takes JSON-formatted entities and produces a JSON string to be
+ * saved to the persistence system as a file. This is for the beatmap itself,
+ * eg. 'Expert.dat'.
+ */
 export function createBeatmapContents(
   notes,
   obstacles = [],

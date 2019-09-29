@@ -22,6 +22,7 @@ import UnstyledButton from '../UnstyledButton';
 class Modal extends PureComponent {
   static defaultProps = {
     width: 750,
+    alignment: 'center', // top | center
     clickBackdropToDismiss: true,
   };
 
@@ -67,6 +68,7 @@ class Modal extends PureComponent {
       isVisible,
       width,
       height,
+      alignment,
       onDismiss,
       clickBackdropToDismiss,
       children,
@@ -98,6 +100,7 @@ class Modal extends PureComponent {
                   <Wrapper
                     opacity={interpolated.opacity}
                     clickable={!inTransit}
+                    alignment={alignment}
                   >
                     <Backdrop
                       onClick={clickBackdropToDismiss ? onDismiss : undefined}
@@ -106,6 +109,7 @@ class Modal extends PureComponent {
                     <PaneWrapper
                       width={width}
                       height={height}
+                      alignment={alignment}
                       translateY={interpolated.translateY}
                     >
                       <div
@@ -139,6 +143,7 @@ const Wrapper = styled.div.attrs(props => ({
   style: {
     opacity: props.opacity,
     pointerEvents: props.clickable ? 'auto' : 'none',
+    alignItems: props.alignment === 'center' ? 'center' : 'flex-start',
   },
 }))`
   position: fixed;
@@ -173,6 +178,7 @@ const PaneWrapper = styled.div.attrs(props => ({
     width: props.width,
     height: props.height,
     transform: `translateY(${props.translateY}px)`,
+    top: props.alignment === 'top' && '20%',
   },
 }))`
   position: relative;

@@ -215,6 +215,22 @@ export default function songsReducer(state: State = initialState, action: any) {
       });
     }
 
+    case 'COPY_DIFFICULTY': {
+      const { songId, fromDifficultyId, toDifficultyId } = action;
+
+      return produce(state, (draftState: State) => {
+        const song = draftState.byId[songId];
+
+        const newDifficultyObj = {
+          ...song.difficultiesById[fromDifficultyId],
+          id: toDifficultyId,
+        };
+
+        song.selectedDifficulty = toDifficultyId;
+        song.difficultiesById[toDifficultyId] = newDifficultyObj;
+      });
+    }
+
     case 'CHANGE_SELECTED_DIFFICULTY': {
       const { songId, difficulty } = action;
 
