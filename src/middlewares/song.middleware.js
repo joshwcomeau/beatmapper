@@ -22,7 +22,7 @@ import {
   convertEventsToRedux,
   convertEventsToExportableJson,
 } from '../helpers/events.helpers';
-import { clamp, roundToNearest } from '../utils';
+import { clamp, floorToNearest } from '../utils';
 import {
   getFile,
   saveFile,
@@ -239,35 +239,46 @@ export default function createSongMiddleware() {
 
         audioElem.play();
 
-        let roundedRecentBeat = null;
+        let lastBeat = null;
 
         function tick() {
+          const currentTime = audioElem.currentTime * 1000;
+
           const state = store.getState();
+          const song = getSelectedSong(state);
+
           const playNoteTick = getPlayNoteTick(state);
 
+          // TODO: pull from state
+          const processingDelay = 60;
+          const delayInBeats = convertMillisecondsToBeats(
+            processingDelay,
+            song.bpm
+          );
+
+          const currentBeat = convertMillisecondsToBeats(
+            currentTime - song.offset,
+            song.bpm
+          );
+
           if (playNoteTick) {
-            const currentBeat = roundToNearest(
-              getCursorPositionInBeats(state),
-              1 / 4
+            const anyNotesWithinTimespan = getNotes(state).some(
+              note =>
+                note._time - delayInBeats >= lastBeat &&
+                note._time - delayInBeats < currentBeat &&
+                note._type !== 3 // Don't tick for mines
             );
 
-            if (currentBeat !== roundedRecentBeat) {
-              roundedRecentBeat = currentBeat;
-
-              // Check and see if there's at least 1 note on this beat.
-              const shouldTick = getNotes(state).some(
-                note => note._time === currentBeat
-              );
-
-              if (shouldTick) {
-                ticker.trigger();
-              }
+            if (anyNotesWithinTimespan) {
+              ticker.trigger();
             }
           }
 
+          lastBeat = currentBeat;
+
           next({
             type: 'TICK',
-            timeElapsed: audioElem.currentTime * 1000,
+            timeElapsed: currentTime,
           });
 
           animationFrameId = window.requestAnimationFrame(tick);
