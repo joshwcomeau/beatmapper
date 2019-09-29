@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { COLORS, UNIT } from '../../constants';
@@ -14,7 +13,6 @@ import {
 } from '../../services/file.service';
 import useMount from '../../hooks/use-mount.hook';
 import { sortDifficultyIds } from '../../helpers/song.helpers';
-import { renderImperativePrompt } from '../../helpers/modal.helpers';
 import { getSelectedSong } from '../../reducers/songs.reducer';
 
 import TextInput from '../TextInput';
@@ -27,19 +25,10 @@ import BeatmapSettings from './BeatmapSettings';
 
 import CoverArtPicker from '../AddSongForm/CoverArtPicker';
 import SongPicker from '../AddSongForm/SongPicker';
-import CopyDifficultyForm from '../CopyDifficultyForm';
 
 const MEDIA_ROW_HEIGHT = 150;
 
-const SongDetails = ({
-  song,
-  stopPlaying,
-  updateSongDetails,
-  deleteBeatmap,
-  updateBeatmapMetadata,
-  copyDifficulty,
-  history,
-}) => {
+const SongDetails = ({ song, stopPlaying, updateSongDetails }) => {
   const [songData, setSongData] = React.useState(song);
   const setSongProperty = (key, value) => {
     setSongData({
@@ -53,9 +42,7 @@ const SongDetails = ({
 
   const [status, setStatus] = React.useState('idle');
 
-  const difficultyIds = sortDifficultyIds(
-    Object.keys(songData.difficultiesById)
-  );
+  const difficultyIds = sortDifficultyIds(Object.keys(song.difficultiesById));
 
   useMount(() => {
     // We want to stop & reset the song when the user goes to edit it.
@@ -90,7 +77,15 @@ const SongDetails = ({
       ...songData,
     };
 
-    if (coverArtFile) {
+    // When the user selects a file from their local machine, we store a File
+    // object type. BUT, when the user uploads a pre-existing map, the file is
+    // actually a Blob. They're similar in many ways, but they don't have a
+    // filename, and that breaks things. So, we should only try and save the
+    // cover art IF it's a proper file. If it's a blob, it can't have changed
+    // anyway.
+    const shouldSaveCoverArt = coverArtFile && coverArtFile.name;
+
+    if (shouldSaveCoverArt) {
       const [coverArtFilename] = await saveLocalCoverArtFile(
         song.id,
         coverArtFile
@@ -123,73 +118,6 @@ const SongDetails = ({
     window.setTimeout(() => {
       setStatus('idle');
     }, 2000);
-  };
-
-  const handleCopyBeatmap = (ev, id) => {
-    ev.preventDefault();
-
-    const modalProps = { width: 400, alignment: 'top' };
-
-    renderImperativePrompt(modalProps, triggerSuccess => (
-      <CopyDifficultyForm
-        songId={song.id}
-        difficultyIds={difficultyIds}
-        idToCopy={id}
-        afterCopy={triggerSuccess}
-        copyDifficulty={copyDifficulty}
-      />
-    ))
-      .then(result => {
-        console.log(result);
-      })
-      .catch(err => console.err(err));
-  };
-
-  const handleDeleteBeatmap = (ev, id) => {
-    ev.preventDefault();
-
-    const confirmed = window.confirm(
-      'Are you sure you want to do this? This action cannot be undone.'
-    );
-
-    if (!confirmed) {
-      return;
-    }
-
-    // Delete our working state
-    let mutableDifficultiesCopy = { ...songData.difficultiesById };
-    delete mutableDifficultiesCopy[id];
-
-    // Don't let the user delete the last difficulty!
-    const remainingDifficultyIds = Object.keys(mutableDifficultiesCopy);
-    if (remainingDifficultyIds.length === 0) {
-      alert(
-        'Sorry, you cannot delete the only remaining difficulty! Please create another difficulty first.'
-      );
-      return;
-    }
-
-    // If the user is currently editing the difficulty that they're trying to
-    // delete, let's redirect them to the next difficulty.
-    const nextDifficultyId = remainingDifficultyIds[0];
-
-    setSongProperty('difficultiesById', mutableDifficultiesCopy);
-
-    deleteBeatmap(song.id, id);
-
-    history.push(`/edit/${song.id}/${nextDifficultyId}/details`);
-  };
-
-  const handleSaveBeatmap = (ev, difficulty) => {
-    const { noteJumpSpeed, startBeatOffset } = songData.difficultiesById[
-      difficulty
-    ];
-    updateBeatmapMetadata(
-      song.id,
-      difficulty,
-      Number(noteJumpSpeed),
-      Number(startBeatOffset)
-    );
   };
 
   // TODO: I should probably add the SongPicker and CoverArtPicker components.
@@ -379,44 +307,12 @@ const SongDetails = ({
         <Heading size={1}>Edit Beatmaps</Heading>
         <Spacer size={UNIT * 6} />
         <Row>
-          {difficultyIds.map(id => {
-            const {
-              noteJumpSpeed,
-              startBeatOffset,
-            } = songData.difficultiesById[id];
-            const savedVersion = song.difficultiesById[id];
-
+          {difficultyIds.map(difficultyId => {
             return (
               <BeatmapSettings
-                id={id}
-                key={id}
-                dirty={
-                  noteJumpSpeed !== savedVersion.noteJumpSpeed ||
-                  startBeatOffset !== savedVersion.startBeatOffset
-                }
-                noteJumpSpeed={noteJumpSpeed}
-                startBeatOffset={startBeatOffset}
-                handleChangeNoteJumpSpeed={noteJumpSpeed => {
-                  setSongProperty('difficultiesById', {
-                    ...songData.difficultiesById,
-                    [id]: {
-                      ...songData.difficultiesById[id],
-                      noteJumpSpeed,
-                    },
-                  });
-                }}
-                handleChangeStartBeatOffset={startBeatOffset => {
-                  setSongProperty('difficultiesById', {
-                    ...songData.difficultiesById,
-                    [id]: {
-                      ...songData.difficultiesById[id],
-                      startBeatOffset,
-                    },
-                  });
-                }}
-                handleCopyBeatmap={handleCopyBeatmap}
-                handleDeleteBeatmap={handleDeleteBeatmap}
-                handleSaveBeatmap={handleSaveBeatmap}
+                key={difficultyId}
+                difficultyId={difficultyId}
+                song={song}
               />
             );
           })}
@@ -468,13 +364,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
   updateSongDetails: actions.updateSongDetails,
-  deleteBeatmap: actions.deleteBeatmap,
-  updateBeatmapMetadata: actions.updateBeatmapMetadata,
   stopPlaying: actions.stopPlaying,
-  copyDifficulty: actions.copyDifficulty,
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(SongDetails));
+)(SongDetails);

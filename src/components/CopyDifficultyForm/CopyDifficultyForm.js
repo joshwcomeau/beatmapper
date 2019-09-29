@@ -6,7 +6,10 @@ import styled from 'styled-components';
 import { Tooltip } from 'react-tippy';
 
 import { COLORS, UNIT, DIFFICULTIES } from '../../constants';
-import { getLabelForDifficulty } from '../../helpers/song.helpers';
+import {
+  getLabelForDifficulty,
+  sortDifficultyIds,
+} from '../../helpers/song.helpers';
 
 import Heading from '../Heading';
 import Paragraph from '../Paragraph';
@@ -14,13 +17,8 @@ import DifficultyTag from '../DifficultyTag';
 import Spacer from '../Spacer';
 import Button from '../Button';
 
-const CopyDifficultyForm = ({
-  songId,
-  difficultyIds,
-  idToCopy,
-  afterCopy,
-  copyDifficulty,
-}) => {
+const CopyDifficultyForm = ({ song, idToCopy, afterCopy, copyDifficulty }) => {
+  const difficultyIds = sortDifficultyIds(Object.keys(song.difficultiesById));
   const [selectedId, setSelectedId] = React.useState(null);
 
   // If we already have all difficulties, let the user know
@@ -86,7 +84,7 @@ const CopyDifficultyForm = ({
         <Button
           style={{ width: 275, margin: 'auto' }}
           onClick={() => {
-            copyDifficulty(songId, idToCopy, selectedId, afterCopy);
+            copyDifficulty(song.id, idToCopy, selectedId, afterCopy);
           }}
         >
           Copy beatmap

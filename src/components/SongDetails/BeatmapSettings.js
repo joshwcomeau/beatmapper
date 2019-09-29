@@ -1,54 +1,136 @@
 import React from 'react';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
+import * as actions from '../../actions';
 import { UNIT, COLORS } from '../../constants';
 import { getLabelForDifficulty } from '../../helpers/song.helpers';
+import { renderImperativePrompt } from '../../helpers/modal.helpers';
 
 import TextInput from '../TextInput';
 import Heading from '../Heading';
 import Spacer from '../Spacer';
 import MiniButton from '../MiniButton';
+import CopyDifficultyForm from '../CopyDifficultyForm';
 
 const BeatmapSettings = ({
-  id,
-  dirty,
-  noteJumpSpeed,
-  startBeatOffset,
-  handleChangeNoteJumpSpeed,
-  handleChangeStartBeatOffset,
-  handleSaveBeatmap,
-  handleCopyBeatmap,
-  handleDeleteBeatmap,
+  song,
+  difficultyId,
+  updateBeatmapMetadata,
+  copyDifficulty,
+  deleteBeatmap,
+  history,
 }) => {
+  const savedVersion = song.difficultiesById[difficultyId];
+
+  const [noteJumpSpeed, setNoteJumpSpeed] = React.useState(
+    savedVersion.noteJumpSpeed
+  );
+  const [startBeatOffset, setStartBeatOffset] = React.useState(
+    savedVersion.startBeatOffset
+  );
+
+  const dirty =
+    Number(noteJumpSpeed) !== savedVersion.noteJumpSpeed ||
+    Number(startBeatOffset) !== savedVersion.startBeatOffset;
+
+  const handleCopyBeatmap = ev => {
+    ev.preventDefault();
+
+    const modalProps = { width: 400, alignment: 'top' };
+
+    renderImperativePrompt(modalProps, triggerSuccess => (
+      <CopyDifficultyForm
+        song={song}
+        idToCopy={difficultyId}
+        afterCopy={triggerSuccess}
+        copyDifficulty={copyDifficulty}
+      />
+    ))
+      .then(result => {
+        console.log(result);
+      })
+      .catch(err => console.err(err));
+  };
+
+  const handleDeleteBeatmap = ev => {
+    ev.preventDefault();
+
+    const confirmed = window.confirm(
+      'Are you sure you want to do this? This action cannot be undone.'
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    // Delete our working state
+    let mutableDifficultiesCopy = { ...song.difficultiesById };
+    delete mutableDifficultiesCopy[difficultyId];
+
+    // Don't let the user delete the last difficulty!
+    const remainingDifficultyIds = Object.keys(mutableDifficultiesCopy);
+    if (remainingDifficultyIds.length === 0) {
+      alert(
+        'Sorry, you cannot delete the only remaining difficulty! Please create another difficulty first.'
+      );
+      return;
+    }
+
+    // If the user is currently editing the difficulty that they're trying to
+    // delete, let's redirect them to the next difficulty.
+    const nextDifficultyId = remainingDifficultyIds[0];
+
+    deleteBeatmap(song.id, difficultyId);
+
+    history.push(`/edit/${song.id}/${nextDifficultyId}/details`);
+  };
+
+  const handleSaveBeatmap = ev => {
+    // Validate that both values are valid numbers.
+    if (isNaN(noteJumpSpeed)) {
+      window.alert('Note jump speed needs to be a number');
+    } else if (isNaN(startBeatOffset)) {
+      window.alert('Start beat offset needs to be a number');
+    }
+
+    updateBeatmapMetadata(
+      song.id,
+      difficultyId,
+      Number(noteJumpSpeed),
+      Number(startBeatOffset)
+    );
+  };
+
   return (
     <Wrapper>
-      <Heading size={3}>{getLabelForDifficulty(id)}</Heading>
+      <Heading size={3}>{getLabelForDifficulty(difficultyId)}</Heading>
       <Spacer size={UNIT * 3} />
       <TextInput
-        type="number"
         label="Note jump speed"
         value={noteJumpSpeed}
-        onChange={ev => handleChangeNoteJumpSpeed(Number(ev.target.value))}
+        onChange={ev => setNoteJumpSpeed(ev.target.value)}
       />
       <Spacer size={UNIT * 3} />
       <TextInput
-        type="number"
         label="Start beat offset"
         value={startBeatOffset}
-        onChange={ev => handleChangeStartBeatOffset(Number(ev.target.value))}
+        onChange={ev => setStartBeatOffset(ev.target.value)}
       />
       <Spacer size={UNIT * 3} />
+
       <Row>
-        <MiniButton disabled={!dirty} onClick={ev => handleSaveBeatmap(ev, id)}>
+        <MiniButton disabled={!dirty} onClick={handleSaveBeatmap}>
           Save
         </MiniButton>
         <Spacer size={UNIT * 2} />
-        <MiniButton onClick={ev => handleCopyBeatmap(ev, id)}>Copy</MiniButton>
+        <MiniButton onClick={handleCopyBeatmap}>Copy</MiniButton>
         <Spacer size={UNIT * 2} />
         <MiniButton
           color={COLORS.red[700]}
           hoverColor={COLORS.red[500]}
-          onClick={ev => handleDeleteBeatmap(ev, id)}
+          onClick={handleDeleteBeatmap}
         >
           Delete
         </MiniButton>
@@ -73,4 +155,13 @@ const Row = styled.div`
   justify-content: center;
 `;
 
-export default BeatmapSettings;
+const mapDispatchToProps = {
+  updateBeatmapMetadata: actions.updateBeatmapMetadata,
+  copyDifficulty: actions.copyDifficulty,
+  deleteBeatmap: actions.deleteBeatmap,
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(withRouter(BeatmapSettings));
