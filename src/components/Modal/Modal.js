@@ -30,6 +30,10 @@ class Modal extends PureComponent {
     showBackdropX: false,
   };
 
+  componentDidMount() {
+    window.addEventListener('keydown', this.handleKeydown);
+  }
+
   componentWillReceiveProps(nextProps) {
     // When the modal is dismissed, we want to render the "stale" children for
     // a couple hundred milliseconds, until the modal has fully closed.
@@ -43,6 +47,20 @@ class Modal extends PureComponent {
       }
     }
   }
+
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.handleKeydown);
+  }
+
+  handleKeydown = ev => {
+    if (ev.code !== 'Escape') {
+      return;
+    }
+
+    ev.stopPropagation();
+
+    this.props.onDismiss();
+  };
 
   render() {
     const {
