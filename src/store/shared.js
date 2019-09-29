@@ -11,7 +11,15 @@ import createDemoMiddleware from '../middlewares/demo.middleware';
 import createEngine from './persistence-engine';
 
 export const createPersistenceEngine = () =>
-  createEngine(['user', 'editor', ['songs', 'byId']]);
+  createEngine([
+    'user',
+    'editor',
+    ['songs', 'byId'],
+    ['navigation', 'snapTo'],
+    ['navigation', 'beatDepth'],
+    ['navigation', 'volume'],
+    ['navigation', 'playNoteTick'],
+  ]);
 
 export const createAllSharedMiddlewares = persistenceEngine => {
   const stateSyncMiddleware = createStateSyncMiddleware({
