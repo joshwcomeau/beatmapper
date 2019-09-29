@@ -82,7 +82,7 @@ const EventsGrid = ({
     setMouseDownAt(null);
     setMousePosition(null);
     clearSelectionBox();
-  }, [selectedEditMode]);
+  }, [clearSelectionBox, selectedEditMode]);
 
   const handleCompleteSelection = React.useCallback(() => {
     mouseButtonDepressed.current = null;

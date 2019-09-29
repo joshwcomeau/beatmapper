@@ -9,8 +9,6 @@ import { getEventForTrackAtBeat } from '../../reducers/editor-entities.reducer/e
 import useOnChange from '../../hooks/use-on-change.hook';
 import { getSpringConfigForLight } from './Preview.helpers';
 
-import RectAreaLight from '../RectAreaLight';
-import LaserBeam from './LaserBeam';
 import Glow from './Glow';
 
 const ON_PROPS = { emissiveIntensity: 0.75, opacity: 0.75 };
@@ -24,10 +22,6 @@ const PrimaryLight = ({ lastEvent, secondsSinceSongStart }) => {
 
   const color =
     status === 'off' ? LASER_COLORS.off : LASER_COLORS[lastEvent.color];
-  const brightColor =
-    status === 'off'
-      ? LASER_COLORS.off
-      : LASER_COLORS[lastEvent.color + '-bright'];
 
   const springConfig = getSpringConfigForLight(
     [ON_PROPS, OFF_PROPS, BRIGHT_PROPS],

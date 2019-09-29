@@ -22,7 +22,7 @@ import {
   convertEventsToRedux,
   convertEventsToExportableJson,
 } from '../helpers/events.helpers';
-import { clamp, floorToNearest } from '../utils';
+import { clamp } from '../utils';
 import {
   getFile,
   saveFile,
