@@ -3,14 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "concurrently -p \"[{name}]\" -n \"WEBAPP,DOCS\" -c \"bgBlue.bold,bgYellow.bold\" \"PORT=3001 yarn webapp:start\" \"yarn docs:start -- --port 3002\"",
-    "build": "yarn webapp:build && yarn docs:build",
-    "webapp:start": "node scripts/start.js",
-    "webapp:build": "node scripts/build.js",
-    "webapp:test": "node scripts/test.js",
-    "docs:start": "cd documentation && yarn start",
-    "docs:build": "cd documentation && yarn build && mv ./public ../build/docs",
-    "postinstall": "cd documentation && yarn install"
+    "start": "node scripts/start.js",
+    "build": "node scripts/build.js",
+    "test": "node scripts/test.js"
   },
   "dependencies": {
     "@babel/core": "7.4.3",
@@ -56,6 +51,7 @@
     "jest-watch-typeahead": "0.3.0",
     "jszip": "^3.2.2",
     "localforage": "^1.7.3",
+    "mdx.macro": "^0.2.9",
     "mini-css-extract-plugin": "0.5.0",
     "optimize-css-assets-webpack-plugin": "5.0.1",
     "pnp-webpack-plugin": "1.2.1",
