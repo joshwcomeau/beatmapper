@@ -3,14 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "concurrently -p \"[{name}]\" -n \"WEBAPP,DOCS\" -c \"bgBlue.bold,bgYellow.bold\" \"PORT=3001 yarn webapp:start\" \"yarn docs:start --port 3002\"",
+    "start": "concurrently -p \"[{name}]\" -n \"WEBAPP,DOCS\" -c \"bgBlue.bold,bgYellow.bold\" \"PORT=3001 yarn webapp:start\" \"yarn docs:start -- --port 3002\"",
     "build": "yarn webapp:build && yarn docs:build",
     "webapp:start": "node scripts/start.js",
     "webapp:build": "node scripts/build.js",
     "webapp:test": "node scripts/test.js",
-    "docs:start": "cd documentation/website && yarn start",
-    "docs:build": "cd documentation/website && yarn build && mv ./build/docs ../../build/docs",
-    "postinstall": "cd documentation/website && yarn install"
+    "docs:start": "cd documentation && yarn start",
+    "docs:build": "cd documentation && yarn build && mv ./public ../build/docs",
+    "postinstall": "cd documentation && yarn install"
   },
   "dependencies": {
     "@babel/core": "7.4.3",
