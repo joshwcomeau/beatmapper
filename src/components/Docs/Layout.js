@@ -25,13 +25,11 @@ const Wrapper = styled.div`
   min-height: 100vh;
   display: flex;
   background: #fff;
+  color: #000;
 `;
 
 const SidebarWrapper = styled.div`
   width: 300px;
-  height: 100%;
-  background: ${COLORS.blueGray[100]};
-  border-right: 1px solid ${COLORS.blueGray[300]};
 `;
 
 const MainContent = styled.div`
