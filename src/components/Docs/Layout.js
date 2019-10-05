@@ -1,8 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { COLORS } from '../../constants';
-
 import Sidebar from './Sidebar';
 import SearchHeader from './SearchHeader';
 
