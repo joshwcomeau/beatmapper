@@ -1,8 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
+
 import { COLORS } from '../../constants';
 
-const DocPage = ({ title, subtitle, children }) => {
+import MdxWrapper from './MdxWrapper';
+import TableOfContents from './TableOfContents';
+
+const DocPage = ({ title, subtitle, tableOfContents, children }) => {
   return (
     <Wrapper>
       <Title>{title}</Title>
@@ -10,7 +14,12 @@ const DocPage = ({ title, subtitle, children }) => {
 
       <HorizontalRule />
 
-      <DocWrapper>{children}</DocWrapper>
+      <Row>
+        <MainContent>
+          <MdxWrapper>{children}</MdxWrapper>
+        </MainContent>
+        <TableOfContents title={title} toc={tableOfContents} />
+      </Row>
     </Wrapper>
   );
 };
@@ -41,67 +50,13 @@ const HorizontalRule = styled.hr`
   margin: 25px 0;
 `;
 
-const DocWrapper = styled.div`
-  line-height: 1.4;
+const Row = styled.div`
+  display: flex;
+  align-items: flex-start;
+`;
 
-  p {
-    font-size: 18px;
-    color: ${COLORS.blueGray[900]};
-    margin-bottom: 24px;
-  }
-
-  a {
-    color: ${COLORS.blue[700]};
-    text-decoration: none;
-    font-weight: bold;
-
-    &:hover {
-      color: ${COLORS.blue[500]};
-      text-decoration: underline;
-    }
-  }
-
-  strong {
-    font-weight: bold;
-  }
-
-  em {
-    font-style: italic;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4 {
-    margin-top: 36px;
-    margin-bottom: 12px;
-  }
-
-  h1 {
-    font-size: 32px;
-    font-weight: 700;
-  }
-
-  h2 {
-    font-size: 28px;
-    font-weight: 700;
-  }
-
-  h3 {
-    font-size: 24px;
-    font-weight: 700;
-  }
-
-  h4 {
-    font-size: 18px;
-    font-weight: 700;
-  }
-
-  li {
-    margin-left: 20px;
-    list-style-type: circle;
-    margin-bottom: 18px;
-  }
+const MainContent = styled.div`
+  flex: 1;
 `;
 
 export default DocPage;
