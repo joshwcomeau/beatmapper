@@ -63,10 +63,6 @@ const NavLink = styled(NavLinkRaw).attrs(props => ({
   }
 `;
 
-const ActiveNavLink = styled(NavLink)`
-  color: ${COLORS.blue[500]};
-`;
-
 const Header = styled.header`
   height: 80px;
   border-bottom: 1px solid ${COLORS.blueGray[100]};

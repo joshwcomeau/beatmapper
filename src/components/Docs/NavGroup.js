@@ -33,7 +33,7 @@ const NavGroup = ({ title, showByDefault, children }) => {
         </Trigger>
       )}
 
-      {isToggled && <ChildLinks indented={hasTitle}>{children}</ChildLinks>}
+      {isToggled && <ChildLinks animated={hasTitle}>{children}</ChildLinks>}
     </Wrapper>
   );
 };
@@ -56,8 +56,10 @@ const Trigger = styled(UnstyledButton)`
 const Title = styled.div`
   position: relative;
   z-index: 1;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
+  text-transform: uppercase;
+  color: ${COLORS.blueGray[500]};
 `;
 
 const IconWrapper = styled.div`
@@ -93,8 +95,7 @@ from {
 `;
 
 const ChildLinks = styled.div`
-  padding-left: ${p => (p.indented ? 6 : 0)}px;
-  animation: ${p => (p.indented ? accordionKeyframes : '')} 200ms;
+  animation: ${p => (p.animated ? accordionKeyframes : '')} 200ms;
 `;
 
 export default NavGroup;
