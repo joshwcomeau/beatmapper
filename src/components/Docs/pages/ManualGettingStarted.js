@@ -1,14 +1,18 @@
 import React from 'react';
-import { importMDX } from 'mdx.macro';
+
+import Document, {
+  frontMatter,
+  tableOfContents,
+} from '../../../docs/manual-getting-started.mdx';
 
 import DocPage from '../DocPage';
 
-const Doc = importMDX.sync('../../../docs/manual-getting-started.mdx');
+console.log({ frontMatter, tableOfContents });
 
 const Intro = () => {
   return (
     <DocPage title="Getting Started" subtitle="User Manual">
-      <Doc />
+      <Document />
     </DocPage>
   );
 };
