@@ -1,20 +1,17 @@
 import React from 'react';
-
-import Document, {
+import Doc, {
   frontMatter,
   tableOfContents,
 } from '../../../docs/manual-getting-started.mdx';
 
 import DocPage from '../DocPage';
 
-console.log({ frontMatter, tableOfContents });
-
-const Intro = () => {
+const Page = () => {
   return (
-    <DocPage title="Getting Started" subtitle="User Manual">
-      <Document />
+    <DocPage tableOfContents={tableOfContents()} {...frontMatter}>
+      <Doc />
     </DocPage>
   );
 };
 
-export default Intro;
+export default Page;

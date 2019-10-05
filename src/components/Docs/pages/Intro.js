@@ -1,17 +1,14 @@
 import React from 'react';
+import Doc, { frontMatter, tableOfContents } from '../../../docs/intro.mdx';
 
 import DocPage from '../DocPage';
 
-const Doc = React.lazy(() => import('../../../docs/intro.mdx'));
-
-const Intro = ({ docFilename }) => {
+const Page = () => {
   return (
-    <DocPage title="Introduction" subtitle="About Beatmapper">
-      <React.Suspense fallback="Loading...">
-        <Doc />
-      </React.Suspense>
+    <DocPage tableOfContents={tableOfContents()} {...frontMatter}>
+      <Doc />
     </DocPage>
   );
 };
 
-export default Intro;
+export default Page;

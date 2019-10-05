@@ -1,3 +1,8 @@
+---
+title: Getting Started
+subtitle: User Manual
+---
+
 import googleSearchImgSrc from './images/google-image-search.png';
 import unsplashSrc from './images/unsplash.png';
 
@@ -13,7 +18,7 @@ You can also import a map you've downloaded from [Beat Saver](https://beatsaver.
 
 While these options are great for getting a quick look at the editor and playing around, you'll likely want to create your own map. From this point on, we'll assume you're creating a new map from scratch.
 
-## Preparing your song and cover art
+## File prep
 
 Before we can start mapping, we need to get our assets in order. Specifically, we'll need:
 
@@ -22,15 +27,19 @@ Before we can start mapping, we need to get our assets in order. Specifically, w
 
 ### Cover art
 
-For cover art, the image you select needs to be square, with dimensions of at least 250x250 (I generally aim for at least 600x600, to ensure it looks sharp on any display).
+For cover art, the image you select needs to be square, with dimensions of at least 250×250 (I generally aim for at least 600×600, to ensure it looks sharp on any display).
 
 An easy way to tackle this is to grab the song's official cover art, by searching for the song name and tabbing over to "images":
 
-![Google image search for the song title](googleSearchImgSrc)
+<img src={googleSearchImgSrc} alt="Google Images search" />
 
 Depending on the cover art, this may or may not produce a desirable result. Another alternative is to search for a beautiful royalty-free image on a site like Unsplash:
 
-<img src={googleSearchImgSrc} alt="searching on Unsplash" />
+<img
+  src={unsplashSrc}
+  alt="A search on Unsplash.com"
+  caption="Unsplash has many beautiful images"
+/>
 
 Please note that no matter where you get your image from, you'll need to crop that photo to be a square. You won't be able to upload or share your map if your cover art is rectangular.
 
