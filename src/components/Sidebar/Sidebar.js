@@ -80,7 +80,7 @@ const Sidebar = ({ location, match, leaveEditor }) => {
           <SidebarNavItem
             title="Help"
             icon={helpCircle}
-            to="https://beatmapper.app/docs/docs/manual.html"
+            to="/docs"
             isActive={false}
           />
         </SpacedChildren>
