@@ -1,0 +1,155 @@
+---
+title: The “Notes” View
+subtitle: User Manual
+---
+
+import PreviousNextBar from '../components/Docs/PreviousNextBar';
+
+The primary editor view is the **notes view**. This view allows you to add _blocks_, _mines_, and _obstacles_ to your map:
+
+import notesViewSrc from './images/notes-view.png';
+
+<img src={notesViewSrc} />
+
+The main area is taken up by a 3D representation of the notes in your song. You'll see the **placement grid** in the center; these 12 squares represent the possible positions for blocks and other elements. You can **left-click** the square to add a block to a specific square, at the current moment in time.
+
+### Navigating time
+
+There are many ways to move through time in the song:
+
+- You can use the **spacebar** to play/pause the track. You can also hit the play button, in the center of the bottom panel.
+- You can **scrub the waveform** by clicking and dragging to move quickly to another part of the song.
+- You can **scroll with the mousewheel** (or use the fast-forward / rewind buttons by the play button) to jump forwards or backwards.
+
+Scrolling with the mousewheel is the most precise way to select a specific bar/beat for placing blocks. An indicator on the right edge of the bottom panel shows you exactly where you're at:
+
+<img src="/docs/img/time-bars.png" />
+
+By default, every mouse-wheel tick will move you by _half of a beat_ forwards or backwards. You can control this by tweaking the _snapping interval_ on the left edge of the bottom panel:
+
+<img src="/docs/img/snapping-interval.png" />
+
+Clicking on the dropdown will show you all available options, as well as the corresponding keyboard shortcuts:
+
+<img src="/docs/img/snapping-interval-shortcuts.png" />
+
+> You can also shift between snapping intervals by holding `ctrl` (or `⌘` on Mac) and spinning the mousewheel. There are many helpful [keyboard shortcuts](/docs/docs/keyboard-shortcuts) available
+
+### Navigating space
+
+By default, the camera will be facing the placement grid head-on.
+
+You can move the camera by **holding shift** and **using WASD**, as you might in a first-person shooter video game. You can also use **R** to rise up, and **F** to fall down (while still holding shift).
+
+At any point, you can press **backspace** to return to the initial camera position, facing the placement grid.
+
+### Placing blocks
+
+To place a block, click on the corresponding square in the _placement grid_:
+
+<img src="/docs/img/place-block.gif" />
+
+Blocks can be placed in 8 cardinal directions, as well as a directionless "face" block. Blocks also come in two colors, corresponding to which saber they need to be struck with. You can select color and direction using the right sidebar:
+
+<img src="/docs/img/tweak-color-and-direction.gif" />
+
+You'll be changing color and direction quite a lot while mapping, so a number of conveniences are provided. First, you can use **keyboard shortcuts**:
+
+- To switch between red and blue blocks, you can press `1` and `2` respectively. You can also press `tab` to move forward between tools (including mines and obstacles, which we'll learn about shortly), or `shift+tab` to move backwards between tools.
+- To select a block direction, you can use the letters `WASD`. For example, you'd press `W` to select an "up" direction block. For diagonals, you can hold multiple keys: to select a top-left block, press both `W` and `A` at the same time.
+
+You can swap the color of an existing block by clicking on it with the **middle mouse button**:
+
+<img src="/docs/img/swap-block-color.gif" />
+
+Finally, you can **click and drag** to dynamically select a block direction. This is my personal favourite way to place blocks:
+
+<img src="/docs/img/drag-direction.gif" />
+
+### Placing mines and obstacles
+
+There are two other tools we need to familiarize ourselves with: **mines** and **obstacles**.
+
+Mines are meant to be avoided by the sabers. You can select them from the right sidebar, or press `3` to select them. You can also cycle through tools with `tab` and `shift+tab`.
+
+Mines don't have colors or directions, but otherwise they work just like blocks:
+
+<img src="/docs/img/place-mine.gif" />
+
+Obstacles are a bit different - they take up multiple cells at the same time, and come in two variants: **walls** and **ceilings**.
+
+To place a wall, click and drag across the _bottom 2 rows_ in the placement grid:
+
+<img src="/docs/img/place-obstacle.gif" />
+
+> You'll notice that for walls, you're limited to placing walls that are 1 or 2 columns wide, no wider. This is a safety precaution; 3-column-thick walls can be hazardous, as folks try to leap out of the way. If you really want to place a super-wide wall, you'll need to do it in another editor.
+
+Ceilings are placed the same way, but by clicking on the top row of squares. You can flip between ceilings and walls by moving the mouse up and down, before releasing:
+
+<img src="/docs/img/place-ceiling.gif" />
+
+#### Changing obstacle duration
+
+By default, Obstacles will be **4 beats long**. You can resize them after placing the obstacle by clicking and dragging to the left or right:
+
+<img src="/docs/img/obstacle-duration.gif" />
+
+> This control respects the "snapping interval" selected in the bottom-left. If you wish to have more precision around obstacle duration, you can tweak this control.
+
+In the future, I'll be adding additional ways to tweak obstacle duration.
+
+### Selecting and deleting items
+
+Blocks, mines, and obstacles all work the same way when it comes to selections and deletions.
+
+To select items, you can click on them. Selected items turn yellow to indicate that they're selected:
+
+<img src="/docs/img/select-intro.gif" />
+
+> The number of selected items is shown in the sidebar. It's a good idea to keep an eye on this, to make sure you don't "forget" about selected notes you don't need selected anymore.
+
+As a convenience, you can **click and hold** to select (or deselect) many items at once:
+
+<img src="/docs/img/select-all.gif" />
+
+To **clear your selection**, press the `Escape` key on your keyboard. You can also toggle between selecting all notes and no notes with `ctrl+A` (`⌘+A` on Mac)
+
+To **delete selected items**, you can use the `Delete` key. Alternatively, you can also right-click items to delete them.
+
+If you make a mistake deleting items, you can undo with `ctrl+Z` or `⌘+Z`.
+
+You can **copy and paste** using the standard shortcuts for your operating system:
+
+- `ctrl+c` or `⌘+c` to copy
+- `ctrl+v` or `⌘+v` to cut (copies to the clipboard and deletes the blocks)
+- `ctrl+p` or `⌘+p` to paste
+
+### Miscellaneous helpers
+
+At the very bottom of the screen, you'll find some numbers and controls:
+
+![bottom bar](/docs/img/bottom-bar.png)
+
+There's a bunch of helpful stuff down here:
+
+- See how many of each item type you've placed
+- See the "Note density" for the blocks currently on-screen (blocks per second)
+- Play a tick sound-effect for every block
+- Increase or decrease the spacing between beats
+- Speed up or slow down the audio file
+- Control the song volume
+
+#### Tick sound effect caveats
+
+Among the miscellaneous helpers, you'll notice the ability to toggle a "tick" sound effect for every block:
+
+<img src="/docs/img/tick-toggle.png" />
+
+There are **two important caveats** for this control:
+
+- The sound effect will be slightly delayed, anywhere from 20ms to 80ms. As a result, this control _should not_ be used for sychronizing your music to your notes; if you synchronize it to this sound, it will be off-beat in-game.
+- The ticking sound effect only triggers for notes that are a multiple of 1/4 beat notes (so 1/4, 1/2, 1, ...). It will not trigger for 1/3rd notes, nor for more-precise notes like 1/8, 1/16...
+
+These two facts mean that the ticking sound effect isn't super useful right now. It's definitely on the list of things to improve.
+
+<PreviousNextBar currentPageId="notes-view" />

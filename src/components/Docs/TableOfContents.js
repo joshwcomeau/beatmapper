@@ -10,12 +10,13 @@ const useActiveHeading = headings => {
   React.useEffect(() => {
     const handleScroll = throttle(() => {
       // The first heading within the viewport is the one we want to highlight.
-      const firstHeadingInViewport = [...headings].reverse().find(({ id }) => {
-        const elem = document.querySelector(`#${id}`);
-        const bb = elem.getBoundingClientRect();
+      const firstHeadingInViewport =
+        [...headings].reverse().find(({ id }) => {
+          const elem = document.querySelector(`#${id}`);
+          const bb = elem.getBoundingClientRect();
 
-        return bb.bottom < window.innerHeight;
-      });
+          return bb.bottom < window.innerHeight;
+        }) || headings[0];
 
       if (firstHeadingInViewport !== activeHeading) {
         setActiveHeading(firstHeadingInViewport);

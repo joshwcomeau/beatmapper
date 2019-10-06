@@ -23,8 +23,8 @@ const Sidebar = () => {
         </NavGroup>
         <NavGroup title="User Manual" showByDefault>
           <NavLink to="/docs/getting-started">Getting started</NavLink>
-          <NavLink to="/docs/notes">Notes view</NavLink>
-          <NavLink to="/docs/events">Events view</NavLink>
+          <NavLink to="/docs/notes-view">Notes view</NavLink>
+          <NavLink to="/docs/events-view">Events view</NavLink>
           <NavLink to="/docs/packaging">Downloading and publishing</NavLink>
         </NavGroup>
         <NavGroup title="Legal">
