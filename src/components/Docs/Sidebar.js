@@ -18,6 +18,8 @@ const Sidebar = () => {
           <NavLink exact to="/docs">
             About
           </NavLink>
+          <NavLink to="/docs/song-prep">Song prep</NavLink>
+          <NavLink to="/docs/keyboard-shortcuts">Keyboard shortcuts</NavLink>
         </NavGroup>
         <NavGroup title="User Manual" showByDefault>
           <NavLink to="/docs/getting-started">Getting started</NavLink>
@@ -25,8 +27,7 @@ const Sidebar = () => {
           <NavLink to="/docs/events">Events view</NavLink>
           <NavLink to="/docs/packaging">Downloading and publishing</NavLink>
         </NavGroup>
-        <NavGroup>
-          <NavLink to="/docs/keyboard-shortcuts">Keyboard shortcuts</NavLink>
+        <NavGroup title="Legal">
           <NavLink to="/docs/content-policy">Content policy</NavLink>
           <NavLink to="/docs/privacy">Privacy</NavLink>
         </NavGroup>
@@ -36,8 +37,8 @@ const Sidebar = () => {
 };
 
 const Wrapper = styled.div`
-  height: 100%;
-  border-right: 1px solid ${COLORS.blueGray[100]};
+  position: sticky;
+  top: 0;
 `;
 
 const Navigation = styled.nav`

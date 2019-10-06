@@ -1,10 +1,13 @@
 ---
-title: Getting Started
+title: Getting started
 subtitle: User Manual
 ---
 
 import googleSearchImgSrc from './images/google-image-search.png';
 import unsplashSrc from './images/unsplash.png';
+import newSongModalSrc from './images/new-song-modal.png';
+
+import PreviousNextBar from '../components/Docs/PreviousNextBar';
 
 When you first visit [Beatmapper.app](https://beatmapper.app), you'll be presented with 3 options:
 
@@ -61,3 +64,17 @@ To create your first song, select the middle "Create from scratch" option from t
 If you've already loaded the demo track or imported an existing map, you can use the "Create new song" button in the right side-panel:
 
 Either way, you'll be prompted with a modal that asks you for a lot of information:
+
+<img src={newSongModalSrc} alt="New song modal" />
+
+You can drag-and-drop your song and cover art files onto their respective boxes to associate them. You can also click the boxes to select them through the traditional file-picker.
+
+The first three fields—Song name, Song sub-name, and Artist name—are cosmetic. They appear in-game, but have no functional effect. You can fill them with whichever values you'd like.
+
+It's important to get the BPM and Offset values correct. For more information on these values, please consult our [Song Prep](/docs/song-prep) guide.
+
+Finally, a difficulty must be selected. You can create as many difficulties as you'd like, so don't worry too much about this choice! You're selecting the one you'd like to start with.
+
+After submitting this form, you'll be taken to the **notes view**. The next section of our guide covers this view.
+
+<PreviousNextBar currentPageId="getting-started" />
