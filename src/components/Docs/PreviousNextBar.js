@@ -1,12 +1,31 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import { COLORS } from '../../constants';
+
+import BaseLink from '../BaseLink';
+
 const pages = [
-  { id: 'getting-started', label: 'Getting started' },
-  { id: 'notes-view', label: 'Notes View' },
-  { id: 'events-view', label: 'Events View' },
-  { id: 'downloading-and-publishing', label: 'Downloading and publishing' },
+  { id: 'getting-started', title: 'Getting started' },
+  { id: 'notes-view', title: 'Notes View' },
+  { id: 'events-view', title: 'Events View' },
+  { id: 'downloading-and-publishing', title: 'Downloading and publishing' },
 ];
+
+const NavigationBlock = ({ direction, item }) => {
+  const formattedSubtitle = direction === 'previous' ? `« PREVIOUS` : `NEXT »`;
+
+  return (
+    <NavBlockWrapper
+      style={{
+        alignItems: direction === 'previous' ? 'flex-start' : 'flex-end',
+      }}
+    >
+      <Subtitle>{formattedSubtitle}</Subtitle>
+      <BaseLink to={`/docs/${item.id}`}>{item.title}</BaseLink>
+    </NavBlockWrapper>
+  );
+};
 
 const PreviousNextBar = ({ currentPageId }) => {
   const currentIndex = pages.findIndex(page => page.id === currentPageId);
@@ -16,10 +35,10 @@ const PreviousNextBar = ({ currentPageId }) => {
 
   return (
     <Wrapper>
-      <Left>
-        {previous && <a href={`/docs/${previous.id}`}>« {previous.label}</a>}
-      </Left>
-      <Right>{next && <a href={`/docs/${next.id}`}>{next.label} »</a>}</Right>
+      <Side>
+        {previous && <NavigationBlock direction="previous" item={previous} />}
+      </Side>
+      <Side>{next && <NavigationBlock direction="next" item={next} />}</Side>
     </Wrapper>
   );
 };
@@ -29,8 +48,17 @@ const Wrapper = styled.div`
   justify-content: space-between;
 `;
 
-const Left = styled.div``;
+const Side = styled.div``;
 
-const Right = styled.div``;
+const NavBlockWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const Subtitle = styled.div`
+  font-size: 14px;
+  color: ${COLORS.blueGray[500]};
+  margin-bottom: 6px;
+`;
 
 export default PreviousNextBar;
