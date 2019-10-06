@@ -5020,6 +5020,11 @@ hosted-git-info@^2.1.4:
   resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.7.1.tgz#97f236977bd6e125408930ff6de3eec6281ec047"
   integrity sha512-7T/BxH19zbcCTa8XkMlbK5lTo1WtgkFi3GvdWEyNuc4Vex7/9Dqbnpsf4JMydcfj9HCg4zUWFTL3Za6lapg5/w==
 
+howler@2.0.0-beta8:
+  version "2.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/howler/-/howler-2.0.0-beta8.tgz#f65b65df649e98b21cf806e9505697e684c5600f"
+  integrity sha1-9ltl32SemLIc+AbpUFaX5oTFYA8=
+
 hpack.js@^2.1.6:
   version "2.1.6"
   resolved "https://registry.yarnpkg.com/hpack.js/-/hpack.js-2.1.6.tgz#87774c0949e513f42e84575b3c45681fade2a0b2"

@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import { COLORS } from '../../constants';
+
 import Sidebar from './Sidebar';
 import SearchHeader from './SearchHeader';
 
@@ -28,6 +30,7 @@ const Wrapper = styled.div`
 
 const SidebarWrapper = styled.div`
   width: 300px;
+  border-right: 1px solid ${COLORS.blueGray[100]};
 `;
 
 const MainContent = styled.div`

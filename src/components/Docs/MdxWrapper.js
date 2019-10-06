@@ -24,8 +24,14 @@ const Image = props => (
   </ImageWrapper>
 );
 
+const Subtle = styled.span`
+  opacity: 0.5;
+  font-style: italic;
+`;
+
 const components = {
   img: Image,
+  subtle: Subtle,
 };
 
 const MdxWrapper = ({ children }) => {
@@ -120,7 +126,8 @@ const DocumentStyles = styled.div`
     font-weight: 700;
   }
 
-  ul {
+  ul,
+  ol {
     margin-bottom: 40px;
   }
 
@@ -128,6 +135,41 @@ const DocumentStyles = styled.div`
     margin-left: 20px;
     list-style-type: disc;
     margin-bottom: 18px;
+  }
+
+  code {
+    display: inline-block;
+    font-family: monospace;
+    padding: 2px 5px;
+    font-size: 0.9em;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+  }
+
+  table {
+    min-width: 300px;
+    margin-bottom: 25px;
+  }
+
+  th,
+  td {
+    padding: 5px 10px;
+  }
+
+  th {
+    text-align: left;
+    font-weight: bold;
+    border-bottom: 1px solid ${COLORS.blueGray[300]};
+  }
+
+  td {
+    font-size: 15px;
+
+    border-bottom: 1px solid ${COLORS.blueGray[100]};
+  }
+
+  tr:last-of-type td {
+    border-bottom: none;
   }
 `;
 

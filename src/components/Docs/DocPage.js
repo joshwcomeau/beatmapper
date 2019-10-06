@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { COLORS } from '../../constants';
+import { UNIT, COLORS } from '../../constants';
 
 import MdxWrapper from './MdxWrapper';
 import TableOfContents from './TableOfContents';
+import Spacer from '../Spacer';
 
 const DocPage = ({ title, subtitle, tableOfContents, children }) => {
   return (
@@ -17,6 +18,7 @@ const DocPage = ({ title, subtitle, tableOfContents, children }) => {
       <Row>
         <MainContent>
           <MdxWrapper>{children}</MdxWrapper>
+          <Spacer size={UNIT * 8} />
         </MainContent>
         <TableOfContents title={title} toc={tableOfContents} />
       </Row>
