@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { withRouter } from 'react-router-dom';
 
 import { UNIT, COLORS } from '../../constants';
 
@@ -7,7 +8,20 @@ import MdxWrapper from './MdxWrapper';
 import TableOfContents from './TableOfContents';
 import Spacer from '../Spacer';
 
-const DocPage = ({ title, subtitle, tableOfContents, children }) => {
+/**
+ * When loading a new route, we want to scroll the user to the top of the page.
+ * Unless a hash is explicitly provided, in which case we scroll them to the
+ * appropriate section.
+ */
+const useScrollOnLoad = location => {
+  React.useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, [location.pathname]);
+};
+
+const DocPage = ({ title, subtitle, tableOfContents, children, location }) => {
+  useScrollOnLoad(location);
+
   return (
     <Wrapper>
       <Title>{title}</Title>
@@ -61,4 +75,4 @@ const MainContent = styled.div`
   flex: 1;
 `;
 
-export default DocPage;
+export default withRouter(DocPage);
