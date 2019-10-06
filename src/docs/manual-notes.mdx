@@ -5,7 +5,7 @@ subtitle: User Manual
 
 import PreviousNextBar from '../components/Docs/PreviousNextBar';
 
-The primary editor view is the **notes view**. This view allows you to add _blocks_, _mines_, and _obstacles_ to your map:
+After creating a song, or selecting a song from the homescreen, you'll be tossed into the **“Notes” view**. This view allows you to add _blocks_, _mines_, and _obstacles_ to your map (AKA all the stuff you interact with in-game):
 
 import notesViewSrc from './images/notes-view.png';
 
@@ -13,9 +13,37 @@ import notesViewSrc from './images/notes-view.png';
 
 The main area is taken up by a 3D representation of the notes in your song. You'll see the **placement grid** in the center; these 12 squares represent the possible positions for blocks and other elements. You can **left-click** the square to add a block to a specific square, at the current moment in time.
 
-### Navigating time
+## Navigating time
 
 There are many ways to move through time in the song:
+
+#### 1. Playing/pausing
+
+As with many software programs, the **spacebar** can be used to play/pause the track. You can also click the "play" button, in the very center of the bottom control panel.
+
+#### 2. Scrubbing the waveform
+
+At the bottom of the view, you'll see a waveform representation of the loaded audio file:
+
+You can **click and drag** to scrub through this view, or simply click to set the current time to the corresponding point. This is probably the best way to quickly get to a specific area of the song.
+
+#### 3. Jumping
+
+On either side of the "Play" button, you'll find buttons to jump you forwards/backwards by 32 beats, or jump straight to the start/end of the song.
+
+import jumpIconsSrc from './images/jump-icons.png';
+
+<img src={jumpIconsSrc} width={478 / 2} />
+
+Their keyboard shortcuts are `PageDown` /`PageUp` to jump forwards/backwards, and `Home` / `End` to jump to the start / end.
+
+#### 4. Seeking
+
+The most common way to navigate around is known as "seeking". Seeking works by moving the cursor forwards or backwards by a _specific amount of time_, which defaults to 1/2 beat.
+
+You can **scroll the mousewheel** to seek - every tick up will send you forwards by _1 increment_, while mouse-wheeling in the opposite direction will seek backwards.
+
+You can also use the arrow keys! **Up** and **right** are used to go forwards, while **down** and **left** will go backward.
 
 - You can use the **spacebar** to play/pause the track. You can also hit the play button, in the center of the bottom panel.
 - You can **scrub the waveform** by clicking and dragging to move quickly to another part of the song.

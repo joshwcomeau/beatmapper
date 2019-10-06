@@ -18,11 +18,13 @@ import { MDXProvider } from '@mdx-js/react';
 import { COLORS } from '../../constants';
 import BaseLink from '../BaseLink';
 
-const Image = props => (
-  <ImageWrapper>
-    <img {...props} />
-    {props.caption && <ImageCaption>{props.caption}</ImageCaption>}
-  </ImageWrapper>
+const Image = ({ width, ...props }) => (
+  <OuterImageWrapper>
+    <ImageWrapper>
+      <img {...props} style={{ width }} />
+      {props.caption && <ImageCaption>{props.caption}</ImageCaption>}
+    </ImageWrapper>
+  </OuterImageWrapper>
 );
 
 const Subtle = styled.span`
@@ -44,13 +46,19 @@ const MdxWrapper = ({ children }) => {
   );
 };
 
+const OuterImageWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-left: -8px;
+  margin-right: -8px;
+`;
+
 const ImageWrapper = styled.div`
+display: inline-block;
   max-width: 100%;
   padding: 8px;
   border-radius: 6px;
   /* border: 1px solid ${COLORS.blueGray[100]}; */
-  margin-left: -8px;
-  margin-right: -8px;
   margin-bottom: 24px;
 
   &:hover {
