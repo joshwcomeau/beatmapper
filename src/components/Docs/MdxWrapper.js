@@ -16,7 +16,9 @@ import styled from 'styled-components';
 import { MDXProvider } from '@mdx-js/react';
 
 import { COLORS } from '../../constants';
+
 import BaseLink from '../BaseLink';
+import HorizontalRule from './HorizontalRule';
 
 const Image = ({ width, ...props }) => (
   <OuterImageWrapper>
@@ -36,6 +38,7 @@ const components = {
   a: ({ href, ...props }) => <BaseLink {...props} to={href} />,
   img: Image,
   subtle: Subtle,
+  hr: HorizontalRule,
 };
 
 const MdxWrapper = ({ children }) => {
@@ -180,6 +183,19 @@ const DocumentStyles = styled.div`
 
   tr:last-of-type td {
     border-bottom: none;
+  }
+
+  blockquote {
+    padding: 20px;
+    background: hsla(212, 100%, 45%, 0.2);
+    border-left: 3px solid ${COLORS.blue[500]};
+    border-radius: 3px;
+    font-size: 0.9em;
+    margin-bottom: 30px;
+
+    *:last-of-type {
+      margin-bottom: 0;
+    }
   }
 `;
 

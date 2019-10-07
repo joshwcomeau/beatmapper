@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import { COLORS } from '../../constants';
 
 import BaseLink from '../BaseLink';
+import Spacer from '../Spacer';
+import HorizontalRule from './HorizontalRule';
 
 const pages = [
   { id: 'getting-started', title: 'Getting started' },
@@ -34,12 +36,16 @@ const PreviousNextBar = ({ currentPageId }) => {
   const next = pages[currentIndex + 1];
 
   return (
-    <Wrapper>
-      <Side>
-        {previous && <NavigationBlock direction="previous" item={previous} />}
-      </Side>
-      <Side>{next && <NavigationBlock direction="next" item={next} />}</Side>
-    </Wrapper>
+    <>
+      <Spacer size={40} />
+      <HorizontalRule />
+      <Wrapper>
+        <Side>
+          {previous && <NavigationBlock direction="previous" item={previous} />}
+        </Side>
+        <Side>{next && <NavigationBlock direction="next" item={next} />}</Side>
+      </Wrapper>
+    </>
   );
 };
 

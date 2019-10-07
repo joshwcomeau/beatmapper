@@ -27,7 +27,7 @@ const Actions = ({ selectAllInRange, jumpToBeat }) => {
         <MiniButton
           onClick={() => promptQuickSelect(NOTES_VIEW, selectAllInRange)}
         >
-          Select Range
+          Quick-select
         </MiniButton>
       </Tooltip>
 
