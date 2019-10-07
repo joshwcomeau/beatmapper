@@ -1,0 +1,36 @@
+---
+title: Privacy Policy
+---
+
+Beatmapper is proud to be minimally invasive from a privacy standpoint. We collect very little information, and operate in a manner similar to a desktop standalone application.
+
+This document covers the data we collect and how we use it.
+
+**Last modified: October 8 2019**
+
+## Remotely collected data
+
+Beatmapper does not own or operate a database; as such, the information we collect is very limited.
+
+When your computer makes a request to our web server, some basic data is recorded to identify your machine. This information includes the time that you visited, the pages visited, and your IP address.
+
+Beatmapper does not feature any client-side analytics; we don't use Google Analytics or any similar services.
+
+The minimal server-side analytics data collected is used primarily to give the author (Josh Comeau) insight into how many people are using the tool, and how that number changes over time.
+
+Unlike many websites, Beatmapper does not have a user authentication / signup system. As such, I should never handle any personally-identifiable information (PII).
+
+## Locally saved data
+
+Beatmapper doesn't use any cookies, but we do use another form of persistent tracking: IndexedDB.
+
+There are two pertinent differences between these two technologies:
+
+1. Cookies are sent to the server with every request, and so this data is typically used on the backend to track you / perform aggregate calculations. IndexedDB data never leaves your device
+2. IndexedDB supports _much_ larger file-sizes, and it even supports binary file sizes. This allows us to store all the assets you provide - song files and cover art - in this persistent storage.
+
+All of the data (including files) provided when creating songs are stored this way. I also persist local application state, so that settings can be "sticky"; if you lower the editor volume today, I remember that setting and restore that value tomorrow.
+
+All of this is done for your convenience, and is used exclusively by you. Because this data never leaves your device, it serves no purpose for me.
+
+In the future I may wish to collect aggregate analytics about this information, to improve the product. For example, one of the editor controls allows users to increase/decrease the spacing between notes. I have no idea how many people use this feature. If the answer is near-zero, it probably makes sense to remove it, and replace it with something more useful.
