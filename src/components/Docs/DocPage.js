@@ -8,6 +8,8 @@ import MdxWrapper from './MdxWrapper';
 import TableOfContents from './TableOfContents';
 import Spacer from '../Spacer';
 
+import HorizontalRule from './HorizontalRule';
+
 /**
  * When loading a new route, we want to scroll the user to the top of the page.
  * Unless a hash is explicitly provided, in which case we scroll them to the
@@ -57,13 +59,6 @@ const Subtitle = styled.div`
   font-size: 28px;
   color: ${COLORS.blueGray[500]};
   font-weight: 500;
-`;
-
-const HorizontalRule = styled.hr`
-  background: ${COLORS.blueGray[200]};
-  border: none;
-  height: 1px;
-  margin: 25px 0;
 `;
 
 const Row = styled.div`
