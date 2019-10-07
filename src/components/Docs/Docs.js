@@ -8,6 +8,8 @@ import Shortcuts from './pages/Shortcuts';
 import ManualGettingStarted from './pages/ManualGettingStarted';
 import ManualNotes from './pages/ManualNotes';
 import ManualEvents from './pages/ManualEvents';
+import Privacy from './pages/Privacy';
+import ContentPolicy from './pages/ContentPolicy';
 
 const Docs = () => {
   return (
@@ -19,6 +21,8 @@ const Docs = () => {
         <Route path="/docs/getting-started" component={ManualGettingStarted} />
         <Route path="/docs/notes-view" component={ManualNotes} />
         <Route path="/docs/events-view" component={ManualEvents} />
+        <Route path="/docs/privacy" component={Privacy} />
+        <Route path="/docs/content-policy" component={ContentPolicy} />
       </Switch>
     </Layout>
   );
