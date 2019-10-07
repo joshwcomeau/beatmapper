@@ -5,20 +5,21 @@ import { COLORS } from '../../constants';
 import { throttle } from '../../utils';
 
 const useActiveHeading = headings => {
-  const [activeHeading, setActiveHeading] = React.useState(headings[0]);
+  const [activeHeading, setActiveHeading] = React.useState(null);
 
   React.useEffect(() => {
     const handleScroll = throttle(() => {
       // The first heading within the viewport is the one we want to highlight.
-      const firstHeadingInViewport =
-        [...headings].reverse().find(({ id }) => {
-          const elem = document.querySelector(`#${id}`);
-          const bb = elem.getBoundingClientRect();
+      const firstHeadingInViewport = [...headings].reverse().find(({ id }) => {
+        const elem = document.querySelector(`#${id}`);
+        const bb = elem.getBoundingClientRect();
 
-          return bb.bottom < window.innerHeight;
-        }) || headings[0];
+        return bb.bottom < window.innerHeight;
+      });
 
-      if (firstHeadingInViewport !== activeHeading) {
+      if (!firstHeadingInViewport) {
+        setActiveHeading(null);
+      } else if (firstHeadingInViewport !== activeHeading) {
         setActiveHeading(firstHeadingInViewport);
       }
     }, 500);
@@ -42,12 +43,25 @@ const TableOfContents = ({ toc }) => {
     <Wrapper>
       <Title>Table of Contents</Title>
 
+      <HeadingLink
+        href="#"
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        style={{
+          color: activeHeading ? undefined : COLORS.pink[700],
+        }}
+      >
+        Introduction
+      </HeadingLink>
+
       {headings.map(({ title, id }) => (
         <HeadingLink
           key={id}
           href={`#${id}`}
           style={{
-            color: id === activeHeading.id ? COLORS.pink[700] : undefined,
+            color:
+              activeHeading && id === activeHeading.id
+                ? COLORS.pink[700]
+                : undefined,
           }}
         >
           {title}
