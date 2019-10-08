@@ -32,6 +32,7 @@ import audacityIntroSrc from './images/audacity-intro.png';
 <img
   src={audacityIntroSrc}
   caption="This guide was written using MacOS, but the instructions should be the same for any OS"
+  width={2308 / 2}
 />
 
 To save the file as `.ogg`, you can choose `File -> Export -> Export as OGG`:
@@ -102,9 +103,29 @@ Offset offers an elegant solution to this conundrum. In the case of our demo son
 
 What if your song doesn't have an intro? What if you want the blocks to start on the very first sound in the song? A common solution is to generate silence before the track starts. In Audacity, this can be accomplished through the `Generate -> Silence...` menu. You can add 2 seconds of silence to the start of your track, and then add a `2000ms` offset. That way, the origin of the song is where you want it, but the player isn't immediately overwhelmed by blocks.
 
-## Calculating BPM
+## Finding the BPM
 
 BPM is a bit harder to calculate, since Audacity doesn't have any way of determining the song's BPM. Surprisingly, this is a really hard problem for computers to solve; our brains are much better at working out BPM than computers are.
+
+### Letting someone else do it
+
+In many cases, another human has done this work for you already. If your song is house, dubstep, or another EDM genre, it's likely for sale on the online music store [Beatport](http://beatport.com), and Beatport lists the BPM for every song in its inventory. If I was mapping deadmau5's iconic "Not Exactly", I would search "deadmau5 not exactly" and click the first "track" result, to wind up on this page:
+
+import beatportBpmSrc from './images/beatport-bpm.jpg';
+
+<img src={beatportBpmSrc} caption="'BPM' is highlighted under the waveform" />
+
+If the song you're searching for isn't in the EDM realm, you can try googling the track name + "BPM". If I wanted to map Oasis' Wonderwall, a google search reveals that it runs at 87 BPM:
+
+import wonderwallBpmSrc from './images/wonderwall-bpm.png';
+
+<img src={wonderwallBpmSrc} width={830} />
+
+> Note that the internet can be wrong! The more obscure the music, the more likely the information is to be incorrect. If you notice the notes "drifting" in your song, with the first few being relatively on-beat but progressively getting less so, your BPM is wrong.
+
+### Calculating it ourselves
+
+There will be times where the BPM displayed online is wrong, or where it doesn't exist at all! Happily, there are strategies we can take that make the challenge pretty straightforward most of the time.
 
 The simplest method I've found is to tap out the BPM using an online tool like [Beats Per Minute online](http://www.beatsperminuteonline.com/). This tool gives you a big button to press. While playing the song in the background, tap once for every beat:
 
@@ -113,6 +134,18 @@ import bpmSrc from './images/bpm-calc.gif';
 <img src={bpmSrc} width={400} />
 
 This is very much something that gets easier with practice; at first, **don't be scared to tap out 30+ seconds, and to try multiple times**. It's easy to accidentally be off by 1 BPM, which will have a noticeable effect in the quality of your map. If you get to the same number 3 times in a row, tapping for at least 20 seconds each time, you can feel pretty confident you've nailed the BPM.
+
+### Difficult songs
+
+95%+ of songs run at a constant, whole-number BPM like 150 or 128. But what if you want to map a song that doesn't?
+
+If the song changes BPM, unfortunately you're out of luck for now; Beatmapper assumes songs will run at a constant BPM. I hope to add this functionality in the future.
+
+Annoyingly, some songs run at a fractional BPM. For example, I once mapped a song that ran at 140.03 BPM. I purchased the song legally, so it's unlikely to be corrupted; perhaps the artist just wanted to be difficult. A difference of 0.03 bpm doesn't sound like much, but in a 4-minute song, it was very noticeable towards the end.
+
+Calculating BPM to double-digit precision is a harder task, and I solved it using a program called Ableton Live. It's a little outside the scope of this documentation, but Ableton provides [excellent documentation](https://www.ableton.com/en/pages/the_bridge/tour/lesson/the_fastest_way_to_warp_a_track/) on how to do this. Essentially, our goal is to place markers on the waveform at key points so that we can calculate the BPM between them.
+
+> Ableton Live is an expensive piece of software, but you can use the free trial. The trial expires after 30 days, but you can continue using it indefinitely; the software blocks saving and exporting after the trial period, but happily we don't need to save and export! We're only using it to work out a song's BPM.
 
 ## Editing our songs
 
@@ -182,13 +215,45 @@ Finally, choose `Select -> Cursor to Stored Cursor Position`. This will select e
 
 Zoom back out and see how it sounds. It's a common mistake to accidentally delete a little bit too much, or not quite enough, and wind up 1 or 2 beats off. You can undo this deletion and repeat the process until it's perfect.
 
+### Thinking in chunks
+
+Sometimes, you may find yourself in the situation where a song has 45 seconds of material, and you find it drags on a bit long; you want to include the section, you just wish it was shorter.
+
+One of my favourite tricks is to halve the length of sections. The difficulty of this trick varies greatly depending on the song, but the basic strategy is to figure out how many beats a section is. For example, many songs will have a 32-bar (128-beat) drop, where it's comprised of 4 similar 8-bar sections.
+
+> While the number of beats in a bar depends on the song's time signature, it's almost always "4". This guide talks in terms of bars, but you can multiply that number by 4 to get the number of beats.
+
+Let's consider the fantastic song [4Me by Bad Computer](https://open.spotify.com/album/6D4GGf00svu54pPkpe8ma1):
+
+import badComputerWaveformSrc from './images/bad-computer-waveform.png';
+
+<img src={badComputerWaveformSrc} />
+
+This song has 16 bars of intro, and then 32 bars of "drop", with 4 clear similar-sounding sections, before the song's breakdown / buildup / second drop:
+
+import badComputerWaveformAnnotatedSrc from './images/bad-computer-waveform-annotated.png';
+
+<img src={badComputerWaveformAnnotatedSrc} />
+
+> It really helps to think of music in terms of "chunks" like this - it gives you a much clearer understanding of the types of edits that are possible!
+
+While the song is great, in a Beat Saber context I wish the drop wasn't quite so long. So how do we fix this?
+
+The simplest approach would be to snip out Drop sections A+B, or C+D. The thing is, most music has some big sound effect on the drop, at the start of section A. Also, many songs will feature some increasing tension at the end of section D. So the best-sounding edit is to snip out **B and C**, connecting A directly to D:
+
+import badComputerWaveformTweakedSrc from './images/bad-computer-waveform-tweaked.png';
+
+<img src={badComputerWaveformTweakedSrc} />
+
+This edit is absolutely seamless, and it helps guarantee a fun, replayable map. We could repeat this same trick for the second drop, which also looks a bit long, or simply fade out during the buildup!
+
 ### Editing conclusion
 
 These types of edits may seem tedious and time-consuming, but they wind up saving a lot of time in the long run. Especially for newer mappers, mapping a song can take multiple hours for every minute of audio, and so you can save many hours of work by spending a few minutes on the edit beforehand.
 
 You can use these tricks in combination, and there are many other tricks as well. once you get comfortable editing audio, new possibilities emerge: You can stitch together multiple tracks into a unique mix, for example! It's worth experimenting with.
 
-## Creating a song with this information
+## Using this information in your map
 
 Now that you've gotten an appropriate `.ogg` song track, and you know its BPM and offset, it's time to start mapping! Our [User Manual](/docs/getting-started#creating-our-song) picks up from this point.
 

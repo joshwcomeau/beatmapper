@@ -70,7 +70,7 @@ display: inline-block;
 
   img {
     display: block;
-    width: 100%;
+    max-width: 100%;
     border-radius: 4px;
   }
 `;
