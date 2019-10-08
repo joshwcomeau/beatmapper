@@ -1,0 +1,46 @@
+---
+title: Migrating from another editor
+subtitle: Important differences
+---
+
+If you're familiar with another editor like MediocreMapper, Beatmapper might seem weird or counter-intuitive. I started from scratch with the design, after finding myself frustrated with the editing experience in existing editors.
+
+This document exists to highlight some of the differences, and justify why I feel it's worth deviating from the established convention.
+
+### Movement in space
+
+In other mappers, you hold right-click to enable WASD movement, and use shift/space to float up/down. In Beatmapper, you hold `Shift` to enable WASD movement, and use the keys `R` and `F` to rise and fall.
+
+There are two main reasons for this change:
+
+- I wanted to use right-click to delete blocks. Left-click-to-add, right-click-to-remove is a common convention in many programs, and I think it adds a lot of value here.
+- If you wish to add notes while enabling camera movement, you need to hold right click while pressing left-click, an action that is not possible on all mice (eg. Magic Mouse). By using `Shift` to control WASD movement, there is no conflict.
+
+### Different views
+
+In MediocreMapper and other editors, both notes and events are edited in the same screen, and previewed at the same time. In Beatmapper, there are 3 separate views:
+
+- A "Notes" view for editing blocks, mines, and obstacles
+- An "Events" view for editing lights and ring events
+- A "Demo" mode that tries to accurately show what your notes and events look like (still under construction / doesn't really exist yet)
+
+I think that there are advantages to having a dedicated events view, but I'll readily admit that it's not ideal to have the context switching as you tab between views. The main reason for this is around performance - as a web application, Beatmapper incurs a performance penalty, and having everything run at once can drain resources. I have some ideas around how to address this in the future, but it's unavoidable for now.
+
+For what it's worth, I haven't heard any complaints about this.
+
+### Totally different way to add events
+
+In other editors, lighting/events are made to work as similar as possible to notes. It's presented as a parallel track, with similar blocks used to represent events.
+
+Beatmapper opts for a special UI for editing events, described in our ["Events" view](/docs/events-view) documentation. This offers many advantages:
+
+- For high-energy songs, it's common to want to "strobe" lights, having on/off moving quickly (as fast as 1/32 beat!). With chunky blocks, it's impossible to understand information presented this quickly. Beatmapper displays it clearly no matter how quickly you want events to hit
+- Unlike the notes themselves, which exist and move in 3D space, events can easily be represented as 2D data. By having a "grid" representing lighting, you get all kinds of UX wins, such as the ability to quickly select subsets of the data, not having perspective getting in the way, etc. I've taken inspiration from MIDI piano rolls.
+- Two tracks are unlike the others: left laser speed, and right laser speed. These don't trigger new events, they change the speed of other events. I've come up with a custom UI that shows how laser speed changes in a visually significant way. With numbered blocks, a lot more processing is involved to understand how the speed changes over time.
+- Lights are not always single moments in time; "on" and "flash" leave the light on, while "off" and "fade" turn it off. By using colored backgrounds, I'm able to convey at a glance whether the track is on or off at any moment in time.
+
+The TL:DR; of this is that while the events view may seem foreign, I strongly believe that it offers a lot of compelling advantages.
+
+### More coming soon
+
+Am I missing something? Your contributions to this documentation are welcome!
