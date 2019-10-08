@@ -10,11 +10,11 @@ const useActiveHeading = headings => {
   React.useEffect(() => {
     const handleScroll = throttle(() => {
       // The first heading within the viewport is the one we want to highlight.
-      const firstHeadingInViewport = [...headings].reverse().find(({ id }) => {
+      const firstHeadingInViewport = [...headings].find(({ id }) => {
         const elem = document.querySelector(`#${id}`);
         const bb = elem.getBoundingClientRect();
 
-        return bb.bottom < window.innerHeight;
+        return bb.bottom > 0;
       });
 
       if (!firstHeadingInViewport) {
@@ -31,13 +31,25 @@ const useActiveHeading = headings => {
     };
   }, [headings]);
 
-  return activeHeading;
+  return [activeHeading, setActiveHeading];
 };
 
 const TableOfContents = ({ toc }) => {
   const headings = toc.filter(item => item.level <= 4);
 
-  const activeHeading = useActiveHeading(headings);
+  const [activeHeading, manuallySetActiveHeading] = useActiveHeading(headings);
+
+  const handleClickIntro = () => {
+    window.scrollTo({ top: 0 });
+    // HACK: So when the user explicitly clicks the "intro" link, I want
+    // to make that the selected one. Unfortunately, window.scrollTo
+    // triggers the `handleScroll` in `useActiveHeading`, and so in
+    // order for the manual override to work, I need to wait a frame.
+    //
+    // This whole solution feels janky, there's probably a better way
+    // to model this.
+    window.requestAnimationFrame(() => manuallySetActiveHeading(null));
+  };
 
   return (
     <Wrapper>
@@ -45,7 +57,7 @@ const TableOfContents = ({ toc }) => {
 
       <HeadingLink
         href="#"
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onClick={handleClickIntro}
         style={{
           color: activeHeading ? undefined : COLORS.pink[700],
         }}
