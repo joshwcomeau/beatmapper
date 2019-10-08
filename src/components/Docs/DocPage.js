@@ -36,7 +36,7 @@ const DocPage = ({ title, subtitle, tableOfContents, children, location }) => {
           <MdxWrapper>{children}</MdxWrapper>
           <Spacer size={UNIT * 8} />
         </MainContent>
-        <TableOfContents toc={tableOfContents} />
+        <TableOfContents toc={tableOfContents} location={location} />
       </Row>
     </Wrapper>
   );

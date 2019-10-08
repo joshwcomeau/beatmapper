@@ -1,8 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
+import Icon from 'react-icons-kit';
+import { externalLink } from 'react-icons-kit/feather/externalLink';
 
 import { COLORS } from '../../constants';
 import { throttle } from '../../utils';
+
+import Spacer from '../Spacer';
+import BaseLink from '../BaseLink';
 
 const useActiveHeading = headings => {
   const [activeHeading, setActiveHeading] = React.useState(null);
@@ -34,7 +39,7 @@ const useActiveHeading = headings => {
   return [activeHeading, setActiveHeading];
 };
 
-const TableOfContents = ({ toc }) => {
+const TableOfContents = ({ toc, location }) => {
   const headings = toc.filter(item => item.level <= 4);
 
   const [activeHeading, manuallySetActiveHeading] = useActiveHeading(headings);
@@ -50,6 +55,8 @@ const TableOfContents = ({ toc }) => {
     // to model this.
     window.requestAnimationFrame(() => manuallySetActiveHeading(null));
   };
+
+  const ghLink = `https://github.com/joshwcomeau/beatmapper/master${location.pathname}`;
 
   return (
     <Wrapper>
@@ -79,6 +86,13 @@ const TableOfContents = ({ toc }) => {
           {title}
         </HeadingLink>
       ))}
+
+      <Spacer size={30} />
+      <GithubLink to={ghLink}>
+        Suggest an edit
+        <Spacer size={12} />
+        <Icon icon={externalLink} />
+      </GithubLink>
     </Wrapper>
   );
 };
@@ -113,6 +127,15 @@ const HeadingLink = styled.a`
     color: ${COLORS.blueGray[500]};
     text-decoration: underline;
   }
+`;
+
+const GithubLink = styled(BaseLink)`
+  display: flex;
+  align-items: center;
+  color: ${COLORS.blueGray[300]};
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: bold;
 `;
 
 export default TableOfContents;
