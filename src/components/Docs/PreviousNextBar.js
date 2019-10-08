@@ -11,7 +11,7 @@ const pages = [
   { id: 'getting-started', title: 'Getting started' },
   { id: 'notes-view', title: 'Notes View' },
   { id: 'events-view', title: 'Events View' },
-  { id: 'downloading-and-publishing', title: 'Downloading and publishing' },
+  { id: 'publishing', title: 'Downloading and publishing' },
 ];
 
 const NavigationBlock = ({ direction, item }) => {
