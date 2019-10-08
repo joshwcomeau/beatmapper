@@ -8,6 +8,7 @@ import Shortcuts from './pages/Shortcuts';
 import ManualGettingStarted from './pages/ManualGettingStarted';
 import ManualNotes from './pages/ManualNotes';
 import ManualEvents from './pages/ManualEvents';
+import ManualPublishing from './pages/ManualDownloadingPublishing';
 import Migrating from './pages/Migrating';
 import Privacy from './pages/Privacy';
 import ContentPolicy from './pages/ContentPolicy';
@@ -22,6 +23,7 @@ const Docs = () => {
         <Route path="/docs/getting-started" component={ManualGettingStarted} />
         <Route path="/docs/notes-view" component={ManualNotes} />
         <Route path="/docs/events-view" component={ManualEvents} />
+        <Route path="/docs/publishing" component={ManualPublishing} />
         <Route path="/docs/migrating" component={Migrating} />
         <Route path="/docs/privacy" component={Privacy} />
         <Route path="/docs/content-policy" component={ContentPolicy} />
