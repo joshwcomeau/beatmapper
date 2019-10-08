@@ -14,6 +14,13 @@ const useActiveHeading = headings => {
 
   React.useEffect(() => {
     const handleScroll = throttle(() => {
+      // If we're all the way at the top, there is no active heading.
+      // This is done because "Introduction", the first link in the TOC, will
+      // be active if `heading` is `null`.
+      if (window.pageYOffset === 0) {
+        return setActiveHeading(null);
+      }
+
       // The first heading within the viewport is the one we want to highlight.
       const firstHeadingInViewport = [...headings].find(({ id }) => {
         const elem = document.querySelector(`#${id}`);
@@ -34,29 +41,21 @@ const useActiveHeading = headings => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [headings]);
+  }, [activeHeading, headings]);
 
-  return [activeHeading, setActiveHeading];
+  return activeHeading;
 };
 
 const TableOfContents = ({ toc, location }) => {
   const headings = toc.filter(item => item.level <= 4);
 
-  const [activeHeading, manuallySetActiveHeading] = useActiveHeading(headings);
+  const activeHeading = useActiveHeading(headings);
 
   const handleClickIntro = () => {
     window.scrollTo({ top: 0 });
-    // HACK: So when the user explicitly clicks the "intro" link, I want
-    // to make that the selected one. Unfortunately, window.scrollTo
-    // triggers the `handleScroll` in `useActiveHeading`, and so in
-    // order for the manual override to work, I need to wait a frame.
-    //
-    // This whole solution feels janky, there's probably a better way
-    // to model this.
-    window.requestAnimationFrame(() => manuallySetActiveHeading(null));
   };
 
-  const ghLink = `https://github.com/joshwcomeau/beatmapper/master${location.pathname}`;
+  const ghLink = `https://github.com/joshwcomeau/beatmapper/edit/master${location.pathname}`;
 
   return (
     <Wrapper>
