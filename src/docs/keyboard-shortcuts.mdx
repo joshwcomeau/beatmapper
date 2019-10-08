@@ -5,19 +5,219 @@ subtitle: Master the editor
 
 import { Shortcut, ShortcutTable } from '../components/Docs/Shortcut';
 import Mouse from '../components/Docs/Mouse';
-import KeyIcon, {
+import {
+  KeyIcon,
   IconRow,
   Plus,
+  MetaKey,
   InlineIcons,
   Sidenote,
   Or,
-} from '../components/Docs/KeyIcon';
+} from '../components/Docs/ShortcutHelpers';
 
-Beatmapper makes heavy use of keyboard shortcuts, especially for quality-of-life features. You can make maps without learning any of them, but your life will be much easier if you take the time to familiarize yourself with them :)
+Beatmapper makes heavy use of keyboard (and mouse) shortcuts. You can make maps without learning any of them, but your life will be much easier if you take the time to familiarize yourself with them :)
 
 ## General shortcuts
 
 These shortcuts can be used either in the "Notes" view or the "Events" view.
+
+<ShortcutTable>
+  <Shortcut
+    keys={
+      <IconRow>
+        <KeyIcon>
+          <MetaKey />
+        </KeyIcon>
+        <KeyIcon>S</KeyIcon>
+      </IconRow>
+    }
+  >
+    Download map
+    <Sidenote>Save a copy of the current map. Do this frequently!</Sidenote>
+  </Shortcut>
+  <Shortcut
+    keys={
+      <IconRow>
+        <KeyIcon>Space</KeyIcon>
+      </IconRow>
+    }
+  >
+    Play / pause the music.
+    <Sidenote>Will snap to the nearest beat when pausing</Sidenote>
+  </Shortcut>
+  {/*  */}
+  <Shortcut
+    keys={
+      <>
+        <IconRow>
+          <KeyIcon>↑</KeyIcon>
+        </IconRow>
+        <IconRow>
+          <Or />
+        </IconRow>
+        <IconRow>
+          <KeyIcon>→</KeyIcon>
+        </IconRow>
+      </>
+    }
+  >
+    Seek forwards
+    <Sidenote>Advance the cursor by the "Snapping interval" selected.</Sidenote>
+  </Shortcut>
+  <Shortcut
+    keys={
+      <>
+        <IconRow>
+          <KeyIcon>↓</KeyIcon>
+        </IconRow>
+        <IconRow>
+          <Or />
+        </IconRow>
+        <IconRow>
+          <KeyIcon>←</KeyIcon>
+        </IconRow>
+      </>
+    }
+  >
+    Seek backwards
+    <Sidenote>Rewind the cursor by the "Snapping interval" selected.</Sidenote>
+  </Shortcut>
+  {/*  */}
+  <Shortcut
+    keys={
+      <IconRow>
+        <KeyIcon>Q</KeyIcon>
+      </IconRow>
+    }
+  >
+    Quick-select
+    <Sidenote>
+      Select all entities between two beats. Only selects entities in the
+      current view (blocks/mines/obstacles in Notes view, lighting events in
+      Events view)
+    </Sidenote>
+  </Shortcut>
+  <Shortcut
+    keys={
+      <IconRow>
+        <KeyIcon>J</KeyIcon>
+      </IconRow>
+    }
+  >
+    Jump to a specific beat
+  </Shortcut>
+  {/*  */}
+  <Shortcut
+    keys={
+      <IconRow>
+        <KeyIcon>
+          <MetaKey />
+        </KeyIcon>
+        <Plus />
+        <KeyIcon>C</KeyIcon>
+      </IconRow>
+    }
+  >
+    Copy
+    <Sidenote>Copies the active selection to the clipboard</Sidenote>
+  </Shortcut>
+  <Shortcut
+    keys={
+      <IconRow>
+        <KeyIcon>
+          <MetaKey />
+        </KeyIcon>
+        <Plus />
+        <KeyIcon>X</KeyIcon>
+      </IconRow>
+    }
+  >
+    Cut
+    <Sidenote>
+      Copies the active selection to the clipboard, and deletes the selected
+      entities
+    </Sidenote>
+  </Shortcut>
+  {/*  */}
+  <Shortcut
+    keys={
+      <IconRow>
+        <KeyIcon>
+          <MetaKey />
+        </KeyIcon>
+        <Plus />
+        <KeyIcon>V</KeyIcon>
+      </IconRow>
+    }
+  >
+    Paste
+  </Shortcut>
+  <Shortcut
+    keys={
+      <IconRow>
+        <KeyIcon>Esc</KeyIcon>
+      </IconRow>
+    }
+  >
+    Clears the current selection
+  </Shortcut>
+  {/*  */}
+  <Shortcut
+    keys={
+      <IconRow>
+        <KeyIcon>Home</KeyIcon>
+      </IconRow>
+    }
+  >
+    Skip to the start
+  </Shortcut>
+  <Shortcut
+    keys={
+      <IconRow>
+        <KeyIcon>End</KeyIcon>
+      </IconRow>
+    }
+  >
+    Skip to the end
+  </Shortcut>
+  {/*  */}
+  <Shortcut
+    keys={
+      <IconRow>
+        <KeyIcon>
+          <MetaKey />
+        </KeyIcon>
+        <Plus />
+        <KeyIcon>Z</KeyIcon>
+      </IconRow>
+    }
+  >
+    Undo
+    <Sidenote>Undoes the last action</Sidenote>
+  </Shortcut>
+  <Shortcut
+    keys={
+      <>
+        <IconRow>
+          <KeyIcon>Shift</KeyIcon>
+          <Plus />
+          <KeyIcon>
+            <MetaKey />
+          </KeyIcon>
+          <Plus />
+          <KeyIcon>Z</KeyIcon>
+        </IconRow>
+      </>
+    }
+  >
+    Redo
+    <Sidenote>Reverts the last undo</Sidenote>
+  </Shortcut>
+</ShortcutTable>
+
+## Notes view shortcuts
+
+These shortcuts are exclusive to placing blocks, mines, and obstacles in the "Notes" view.
 
 <ShortcutTable>
   <Shortcut

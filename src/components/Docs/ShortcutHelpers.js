@@ -4,10 +4,17 @@ import { Icon } from 'react-icons-kit';
 import { plus } from 'react-icons-kit/feather/plus';
 
 import { COLORS } from '../../constants';
+import { getMetaKeyLabel } from '../../utils';
 
-const KeyIcon = ({ size = 'medium', children }) => {
+export const KeyIcon = ({ size = 'medium', children }) => {
   const isWideKey = typeof children === 'string' && children.length > 1;
-  const Component = isWideKey ? WideKey : SquareKey;
+
+  // prettier-ignore
+  let Component = children === 'Space'
+    ? UltraWideKey
+    : children.length > 1 || typeof children !== 'string'
+      ? WideKey
+      : SquareKey
 
   return <Component size={size}>{children}</Component>;
 };
@@ -18,8 +25,13 @@ export const Plus = () => (
   </PlusWrapper>
 );
 
+export const MetaKey = () => {
+  return getMetaKeyLabel();
+};
+
 export const IconRow = styled.div`
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   margin-bottom: 4px;
@@ -49,20 +61,24 @@ export const Sidenote = styled.div`
   line-height: 1.3;
 `;
 
-export const Or = styled.div`
-  text-align: center;
+export const Or = ({ children = 'or' }) => <OrWrapper>{children}</OrWrapper>;
+
+export const OrWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
   font-size: 12px;
   margin-top: 8px;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
+  width: 48px;
+  text-transform: uppercase;
+  opacity: 0.5;
 
   &::before {
     content: '—';
-    opacity: 0.5;
   }
 
   &::after {
     content: '—';
-    opacity: 0.5;
   }
 `;
 
@@ -85,6 +101,7 @@ const Key = styled.div`
   font-size: ${props => (props.size === 'medium' ? 12 : 10)}px;
   color: ${COLORS.gray[900]};
   cursor: default;
+  margin-bottom: 4px;
 `;
 
 const SquareKey = styled(Key)`
@@ -96,4 +113,7 @@ const WideKey = styled(Key)`
   padding-right: 16px;
 `;
 
-export default KeyIcon;
+const UltraWideKey = styled(Key)`
+  padding-left: 32px;
+  padding-right: 32px;
+`;
