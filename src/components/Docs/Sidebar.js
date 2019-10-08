@@ -27,6 +27,9 @@ const Sidebar = () => {
           <NavLink to="/docs/events-view">Events view</NavLink>
           <NavLink to="/docs/packaging">Downloading and publishing</NavLink>
         </NavGroup>
+        <NavGroup title="Advanced">
+          <NavLink to="/docs/migrating">Migrating from another editor</NavLink>
+        </NavGroup>
         <NavGroup title="Legal">
           <NavLink to="/docs/content-policy">Content policy</NavLink>
           <NavLink to="/docs/privacy">Privacy</NavLink>
