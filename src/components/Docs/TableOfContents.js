@@ -10,7 +10,7 @@ import Spacer from '../Spacer';
 import BaseLink from '../BaseLink';
 
 const useActiveHeading = headings => {
-  const [activeHeading, setActiveHeading] = React.useState(null);
+  const [activeHeadingId, setActiveHeading] = React.useState(null);
 
   React.useEffect(() => {
     const handleScroll = throttle(() => {
@@ -21,18 +21,42 @@ const useActiveHeading = headings => {
         return setActiveHeading(null);
       }
 
-      // The first heading within the viewport is the one we want to highlight.
-      const firstHeadingInViewport = [...headings].find(({ id }) => {
-        const elem = document.querySelector(`#${id}`);
-        const bb = elem.getBoundingClientRect();
+      // There HAS to be a better single-step algorithm for this, but I can't
+      // think of it. So I'm doing this in 2 steps:
+      //
+      // 1. Are there any headings in the viewport right now? If so, pick the
+      //    top one.
+      // 2. If there are no headings in the viewport, are there any above
+      //    the viewport? If so, pick the last one (most recently scrolled out
+      //    of view)
+      //
+      // If neither condition is met, I'll assume I'm still in the intro,
+      // although this would have to be a VERY long intro to ever be true.
 
-        return bb.bottom > 0;
+      let headingBoxes = headings.map(({ id }) => {
+        const elem = document.querySelector(`#${id}`);
+        return { id, box: elem.getBoundingClientRect() };
       });
+
+      // The first heading within the viewport is the one we want to highlight.
+      let firstHeadingInViewport = headingBoxes.find(({ box }) => {
+        return box.bottom > 0 && box.top < window.innerHeight;
+      });
+
+      // If there is no heading in the viewport, check and see if there are any
+      // above the viewport.
+      if (!firstHeadingInViewport) {
+        const reversedBoxes = [...headingBoxes].reverse();
+
+        firstHeadingInViewport = reversedBoxes.find(({ box }) => {
+          return box.bottom < 0;
+        });
+      }
 
       if (!firstHeadingInViewport) {
         setActiveHeading(null);
-      } else if (firstHeadingInViewport !== activeHeading) {
-        setActiveHeading(firstHeadingInViewport);
+      } else if (firstHeadingInViewport.id !== activeHeadingId) {
+        setActiveHeading(firstHeadingInViewport.id);
       }
     }, 500);
 
@@ -41,15 +65,15 @@ const useActiveHeading = headings => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [activeHeading, headings]);
+  }, [activeHeadingId, headings]);
 
-  return activeHeading;
+  return activeHeadingId;
 };
 
 const TableOfContents = ({ toc, location }) => {
   const headings = toc.filter(item => item.level <= 4);
 
-  const activeHeading = useActiveHeading(headings);
+  const activeHeadingId = useActiveHeading(headings);
 
   const handleClickIntro = () => {
     window.scrollTo({ top: 0 });
@@ -65,7 +89,7 @@ const TableOfContents = ({ toc, location }) => {
         href="#"
         onClick={handleClickIntro}
         style={{
-          color: activeHeading ? undefined : COLORS.pink[700],
+          color: activeHeadingId ? undefined : COLORS.pink[700],
         }}
       >
         Introduction
@@ -76,10 +100,7 @@ const TableOfContents = ({ toc, location }) => {
           key={id}
           href={`#${id}`}
           style={{
-            color:
-              activeHeading && id === activeHeading.id
-                ? COLORS.pink[700]
-                : undefined,
+            color: id === activeHeadingId ? COLORS.pink[700] : undefined,
           }}
         >
           {title}
