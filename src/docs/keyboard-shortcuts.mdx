@@ -62,7 +62,7 @@ These shortcuts can be used either in the "Notes" view or the "Events" view.
     }
   >
     Seek forwards
-    <Sidenote>Advance the cursor by the "Snapping interval" selected.</Sidenote>
+    <Sidenote>Advance the cursor by the "Snapping interval" selected</Sidenote>
   </Shortcut>
   <Shortcut
     keys={
@@ -80,7 +80,7 @@ These shortcuts can be used either in the "Notes" view or the "Events" view.
     }
   >
     Seek backwards
-    <Sidenote>Rewind the cursor by the "Snapping interval" selected.</Sidenote>
+    <Sidenote>Rewind the cursor by the "Snapping interval" selected</Sidenote>
   </Shortcut>
   {/*  */}
   <Shortcut
@@ -113,21 +113,6 @@ These shortcuts can be used either in the "Notes" view or the "Events" view.
         <KeyIcon>
           <MetaKey />
         </KeyIcon>
-        <Plus />
-        <KeyIcon>C</KeyIcon>
-      </IconRow>
-    }
-  >
-    Copy
-    <Sidenote>Copies the active selection to the clipboard</Sidenote>
-  </Shortcut>
-  <Shortcut
-    keys={
-      <IconRow>
-        <KeyIcon>
-          <MetaKey />
-        </KeyIcon>
-        <Plus />
         <KeyIcon>X</KeyIcon>
       </IconRow>
     }
@@ -138,6 +123,19 @@ These shortcuts can be used either in the "Notes" view or the "Events" view.
       entities
     </Sidenote>
   </Shortcut>
+  <Shortcut
+    keys={
+      <IconRow>
+        <KeyIcon>
+          <MetaKey />
+        </KeyIcon>
+        <KeyIcon>C</KeyIcon>
+      </IconRow>
+    }
+  >
+    Copy
+    <Sidenote>Copies the active selection to the clipboard</Sidenote>
+  </Shortcut>
   {/*  */}
   <Shortcut
     keys={
@@ -145,21 +143,20 @@ These shortcuts can be used either in the "Notes" view or the "Events" view.
         <KeyIcon>
           <MetaKey />
         </KeyIcon>
-        <Plus />
         <KeyIcon>V</KeyIcon>
       </IconRow>
     }
   >
     Paste
-  </Shortcut>
+  </Shortcut>{' '}
   <Shortcut
     keys={
       <IconRow>
-        <KeyIcon>Esc</KeyIcon>
+        <KeyIcon>Del</KeyIcon>
       </IconRow>
     }
   >
-    Clears the current selection
+    Delete selection
   </Shortcut>
   {/*  */}
   <Shortcut
@@ -187,7 +184,6 @@ These shortcuts can be used either in the "Notes" view or the "Events" view.
         <KeyIcon>
           <MetaKey />
         </KeyIcon>
-        <Plus />
         <KeyIcon>Z</KeyIcon>
       </IconRow>
     }
@@ -200,11 +196,9 @@ These shortcuts can be used either in the "Notes" view or the "Events" view.
       <>
         <IconRow>
           <KeyIcon>Shift</KeyIcon>
-          <Plus />
           <KeyIcon>
             <MetaKey />
           </KeyIcon>
-          <Plus />
           <KeyIcon>Z</KeyIcon>
         </IconRow>
       </>
@@ -221,7 +215,6 @@ These shortcuts can be used either in the "Notes" view or the "Events" view.
           <KeyIcon>
             <MetaKey />
           </KeyIcon>
-          <Plus />
           <KeyIcon>1</KeyIcon>
         </IconRow>
         <IconRow>
@@ -231,7 +224,6 @@ These shortcuts can be used either in the "Notes" view or the "Events" view.
           <KeyIcon>
             <MetaKey />
           </KeyIcon>
-          <Plus />
           <KeyIcon>9</KeyIcon>
         </IconRow>
       </>
@@ -247,7 +239,7 @@ These shortcuts can be used either in the "Notes" view or the "Events" view.
       <code>
         <MetaKey /> + 9
       </code>{' '}
-      for 4 bars.
+      for 4 bars
     </Sidenote>
   </Shortcut>
   <Shortcut
@@ -258,7 +250,7 @@ These shortcuts can be used either in the "Notes" view or the "Events" view.
             <MetaKey />
           </KeyIcon>
           <Plus />
-          <Mouse activeButton="middle" />
+          <Mouse activeButton="scroll" />
         </IconRow>
       </>
     }
@@ -271,6 +263,16 @@ These shortcuts can be used either in the "Notes" view or the "Events" view.
       </code>{' '}
       and spinning the mousewheel
     </Sidenote>
+  </Shortcut>
+  {/*  */}
+  <Shortcut
+    keys={
+      <IconRow>
+        <KeyIcon type="square">Esc</KeyIcon>
+      </IconRow>
+    }
+  >
+    Clears the current selection
   </Shortcut>
 </ShortcutTable>
 
@@ -300,7 +302,7 @@ These shortcuts are exclusive to placing blocks, mines, and obstacles in the "No
         <KeyIcon size="small">W</KeyIcon>
         <KeyIcon size="small">A</KeyIcon>
       </InlineIcons>{' '}
-      for up-left).
+      for up-left)
     </Sidenote>
   </Shortcut>
   <Shortcut
@@ -322,7 +324,7 @@ These shortcuts are exclusive to placing blocks, mines, and obstacles in the "No
         <KeyIcon size="small">D</KeyIcon>
       </InlineIcons>{' '}
       choose cardinal directions, <KeyIcon size="small">F</KeyIcon> resets to a
-      directionless block.
+      directionless block
     </Sidenote>
   </Shortcut>
   {/*  */}
@@ -338,7 +340,7 @@ These shortcuts are exclusive to placing blocks, mines, and obstacles in the "No
     Look around
     <Sidenote>
       Holding shift allows you to pan the camera, like looking around in a
-      first-person video game.
+      first-person video game
     </Sidenote>
   </Shortcut>
   <Shortcut
@@ -346,7 +348,6 @@ These shortcuts are exclusive to placing blocks, mines, and obstacles in the "No
       <>
         <IconRow>
           <KeyIcon>Shift</KeyIcon>
-          <Plus />
         </IconRow>
         <IconRow>
           <KeyIcon>W</KeyIcon>
@@ -382,6 +383,24 @@ These shortcuts are exclusive to placing blocks, mines, and obstacles in the "No
   >
     Reset view
     <Sidenote>Jump back to the original camera position</Sidenote>
+  </Shortcut>
+  <Shortcut
+    keys={
+      <>
+        <IconRow>
+          <KeyIcon>
+            <MetaKey />
+          </KeyIcon>
+          <KeyIcon>A</KeyIcon>
+        </IconRow>
+      </>
+    }
+  >
+    Select / Deselect all
+    <Sidenote>
+      Select all notes/mines/obstacles. Can also be used to deselect everything,
+      if a current selection exists
+    </Sidenote>
   </Shortcut>
   {/*  */}
   <Shortcut
@@ -457,6 +476,103 @@ These shortcuts are exclusive to placing blocks, mines, and obstacles in the "No
     keys={
       <>
         <IconRow>
+          <KeyIcon>Tab</KeyIcon>
+        </IconRow>
+      </>
+    }
+  >
+    Select next tool
+    <Sidenote>
+      Cycles between red block, blue block, mine, and obstacle
+    </Sidenote>
+  </Shortcut>
+  <Shortcut
+    keys={
+      <>
+        <IconRow>
+          <KeyIcon>Shift</KeyIcon>
+          <KeyIcon>Tab</KeyIcon>
+        </IconRow>
+      </>
+    }
+  >
+    Select previous tool
+    <Sidenote>
+      Cycles between red block, blue block, mine, and obstacle
+    </Sidenote>
+  </Shortcut>
+  {/*  */}
+  <Shortcut
+    keys={
+      <>
+        <IconRow>
+          <KeyIcon>H</KeyIcon>
+        </IconRow>
+      </>
+    }
+  >
+    Swap selection horizontally
+    <Sidenote>
+      Mirror the selected blocks/mines/obstacles from left to right
+    </Sidenote>
+  </Shortcut>
+  <Shortcut
+    keys={
+      <>
+        <IconRow>
+          <KeyIcon>V</KeyIcon>
+        </IconRow>
+      </>
+    }
+  >
+    Swap selection vertically
+    <Sidenote>
+      Mirror the selected blocks/mines/obstacles from top to bottom
+    </Sidenote>
+  </Shortcut>
+  {/*  */}
+  <Shortcut
+    keys={
+      <>
+        <IconRow>
+          <KeyIcon>Page Up</KeyIcon>
+        </IconRow>
+      </>
+    }
+  >
+    Jump forward 32 beats
+  </Shortcut>
+  <Shortcut
+    keys={
+      <>
+        <IconRow>
+          <KeyIcon>Page Down</KeyIcon>
+        </IconRow>
+      </>
+    }
+  >
+    Jump backwards 32 beats
+  </Shortcut>
+  {/*  */}
+  <Shortcut
+    keys={
+      <>
+        <IconRow>
+          <Mouse activeButton="scroll" />
+        </IconRow>
+      </>
+    }
+  >
+    Scrub through time
+    <Sidenote>
+      Scroll the mousewheel to scrub through the song. Tweak the "snapping
+      interval" control to change the precision.
+    </Sidenote>
+  </Shortcut>
+  <Shortcut
+    keys={
+      <>
+        <IconRow>
           <Mouse activeButton="left" />
         </IconRow>
       </>
@@ -467,6 +583,7 @@ These shortcuts are exclusive to placing blocks, mines, and obstacles in the "No
       Entities are blocks, mines, and obstacles. Click again to deselect it
     </Sidenote>
   </Shortcut>
+  {/*  */}
   <Shortcut
     keys={
       <>
@@ -493,4 +610,238 @@ These shortcuts are exclusive to placing blocks, mines, and obstacles in the "No
     </Sidenote>
   </Shortcut>
   {/*  */}
+</ShortcutTable>
+
+## Events view shortcuts
+
+These shortcuts are used for placing lighting and ring events in the "Events" view.
+
+<ShortcutTable>
+  <Shortcut
+    keys={
+      <IconRow>
+        <KeyIcon>A</KeyIcon>
+      </IconRow>
+    }
+  >
+    Switch to "Add" mode
+    <Sidenote>
+      There are two edit modes, "Add" and "Select". <br />
+      <br />
+      In "Add" mode, you can click to add events
+    </Sidenote>
+  </Shortcut>
+  <Shortcut
+    keys={
+      <IconRow>
+        <KeyIcon>S</KeyIcon>
+      </IconRow>
+    }
+  >
+    Switch to "Select" mode
+    <Sidenote>
+      There are two edit modes, "Add" and "Select". <br />
+      <br />
+      In "Select" mode, you can quickly batch-select groups of events
+    </Sidenote>
+  </Shortcut>
+  {/*  */}
+  <Shortcut
+    keys={
+      <IconRow>
+        <KeyIcon>R</KeyIcon>
+      </IconRow>
+    }
+  >
+    Set light color to "Red"
+    <Sidenote>Sets the color for new events in lighting tracks</Sidenote>
+  </Shortcut>
+  <Shortcut
+    keys={
+      <IconRow>
+        <KeyIcon>B</KeyIcon>
+      </IconRow>
+    }
+  >
+    Set light color to "Blue"
+    <Sidenote>Sets the color for new events in lighting tracks</Sidenote>
+  </Shortcut>
+  {/*  */}
+  <Shortcut
+    keys={
+      <IconRow>
+        <KeyIcon>1</KeyIcon>
+      </IconRow>
+    }
+  >
+    Select "On" tool
+    <Sidenote>Sets the event type for new events in lighting tracks</Sidenote>
+  </Shortcut>
+  <Shortcut
+    keys={
+      <IconRow>
+        <KeyIcon>2</KeyIcon>
+      </IconRow>
+    }
+  >
+    Select "Off" tool
+    <Sidenote>Sets the event type for new events in lighting tracks</Sidenote>
+  </Shortcut>
+  {/*  */}
+  <Shortcut
+    keys={
+      <IconRow>
+        <KeyIcon>3</KeyIcon>
+      </IconRow>
+    }
+  >
+    Select "Flash" tool
+    <Sidenote>
+      Sets the event type for new events in lighting tracks
+      <br />
+      <br />
+      "Flash" events grow to maximum brightness, and remain on afterwards
+    </Sidenote>
+  </Shortcut>
+  <Shortcut
+    keys={
+      <IconRow>
+        <KeyIcon>4</KeyIcon>
+      </IconRow>
+    }
+  >
+    Select "Fade" tool
+    <Sidenote>
+      Sets the event type for new events in lighting tracks
+      <br />
+      <br />
+      "Fade" events jump to maximum brightness and fade out, remaining off afterwards
+    </Sidenote>
+  </Shortcut>
+  {/*  */}
+  <Shortcut
+    keys={
+      <>
+        <IconRow>
+          <KeyIcon>Tab</KeyIcon>
+        </IconRow>
+      </>
+    }
+  >
+    Select next tool
+    <Sidenote>Cycles between On, Off, Flash, and Fade</Sidenote>
+  </Shortcut>
+  <Shortcut
+    keys={
+      <>
+        <IconRow>
+          <KeyIcon>Shift</KeyIcon>
+          <KeyIcon>Tab</KeyIcon>
+        </IconRow>
+      </>
+    }
+  >
+    Select previous tool
+    <Sidenote>Cycles between On, Off, Flash, and Fade</Sidenote>
+  </Shortcut>
+  {/*  */}
+  <Shortcut
+    keys={
+      <>
+        <IconRow>
+          <KeyIcon>-</KeyIcon>
+        </IconRow>
+      </>
+    }
+  >
+    Zoom out
+    <Sidenote>
+      The Events view shows a window of events, defaulting to 16 beats. You can
+      increase that to 32 beats, for a wider view.
+    </Sidenote>
+  </Shortcut>
+  <Shortcut
+    keys={
+      <>
+        <IconRow>
+          <KeyIcon>+</KeyIcon>
+        </IconRow>
+      </>
+    }
+  >
+    Zoom in
+    <Sidenote>
+      Decrease the number of events shown in the Events window.
+      <br />
+      <br />
+      Note that the shortcut can be typed as <code>shift</code> <code>=</code>, to
+      form the <code>+</code>. Or use the numpad.
+    </Sidenote>
+  </Shortcut>
+  {/*  */}
+  <Shortcut
+    keys={
+      <>
+        <IconRow>
+          <KeyIcon>Page Up</KeyIcon>
+        </IconRow>
+      </>
+    }
+  >
+    Jump to the start of the current window
+    <Sidenote>If you're already right at the start, this jumps to the previous window</Sidenote>
+  </Shortcut>
+  <Shortcut
+    keys={
+      <>
+        <IconRow>
+          <KeyIcon>Page Down</KeyIcon>
+        </IconRow>
+      </>
+    }
+  >
+    Jump to the start of the next window
+  </Shortcut>
+  {/*  */}
+  <Shortcut
+    keys={
+      <>
+        <IconRow>
+          <KeyIcon>
+            <MetaKey />
+          </KeyIcon>
+          <KeyIcon>A</KeyIcon>
+        </IconRow>
+      </>
+    }
+  >
+    Select / deselect all
+    <Sidenote>
+      Select all events <strong>within the current window</strong>. Unlike in
+      "Notes" view, this shortcut only selects what is visible.
+      <br />
+      <br />
+      If any events are selected, this will deselect everything.
+    </Sidenote>
+  </Shortcut>
+  <Shortcut
+    keys={
+      <>
+        <IconRow>
+          <KeyIcon>+</KeyIcon>
+        </IconRow>
+      </>
+    }
+  >
+    Zoom in
+    <Sidenote>
+      Decrease the number of events shown in the Events window.
+      <br />
+      <br />
+      Note that the shortcut can be typed as <code>shift</code> <code>=</code>, to
+      form the <code>+</code>. Or use the numpad.
+    </Sidenote>
+  </Shortcut>
+  {/*  */}
+
 </ShortcutTable>
