@@ -213,6 +213,65 @@ These shortcuts can be used either in the "Notes" view or the "Events" view.
     Redo
     <Sidenote>Reverts the last undo</Sidenote>
   </Shortcut>
+  {/*  */}
+  <Shortcut
+    keys={
+      <>
+        <IconRow>
+          <KeyIcon>
+            <MetaKey />
+          </KeyIcon>
+          <Plus />
+          <KeyIcon>1</KeyIcon>
+        </IconRow>
+        <IconRow>
+          <Or>Through</Or>
+        </IconRow>
+        <IconRow>
+          <KeyIcon>
+            <MetaKey />
+          </KeyIcon>
+          <Plus />
+          <KeyIcon>9</KeyIcon>
+        </IconRow>
+      </>
+    }
+  >
+    Switch snapping interval
+    <Sidenote>
+      Set the snapping interval to a new value, ranging from{' '}
+      <code>
+        <MetaKey /> + 1
+      </code>{' '}
+      for 1/16th beat, to{' '}
+      <code>
+        <MetaKey /> + 9
+      </code>{' '}
+      for 4 bars.
+    </Sidenote>
+  </Shortcut>
+  <Shortcut
+    keys={
+      <>
+        <IconRow>
+          <KeyIcon>
+            <MetaKey />
+          </KeyIcon>
+          <Plus />
+          <Mouse activeButton="middle" />
+        </IconRow>
+      </>
+    }
+  >
+    Scroll through snapping intervals
+    <Sidenote>
+      Sweep through available snapping intervals by holding{' '}
+      <code>
+        <MetaKey />
+      </code>{' '}
+      and spinning the mousewheel
+    </Sidenote>
+  </Shortcut>
 </ShortcutTable>
 
 ## Notes view shortcuts
@@ -242,14 +301,31 @@ These shortcuts are exclusive to placing blocks, mines, and obstacles in the "No
         <KeyIcon size="small">A</KeyIcon>
       </InlineIcons>{' '}
       for up-left).
-      <br />
-      For face blocks, you can press{' '}
-      <InlineIcons>
-        <KeyIcon size="small">F</KeyIcon>
-      </InlineIcons>
-      .
     </Sidenote>
   </Shortcut>
+  <Shortcut
+    keys={
+      <>
+        <IconRow>
+          <KeyIcon>F</KeyIcon>
+        </IconRow>
+      </>
+    }
+  >
+    Set the note direction to a "face" block
+    <Sidenote>
+      While{' '}
+      <InlineIcons>
+        <KeyIcon size="small">W</KeyIcon>
+        <KeyIcon size="small">A</KeyIcon>
+        <KeyIcon size="small">S</KeyIcon>
+        <KeyIcon size="small">D</KeyIcon>
+      </InlineIcons>{' '}
+      choose cardinal directions, <KeyIcon size="small">F</KeyIcon> resets to a
+      directionless block.
+    </Sidenote>
+  </Shortcut>
+  {/*  */}
   <Shortcut
     keys={
       <IconRow>
@@ -259,24 +335,162 @@ These shortcuts are exclusive to placing blocks, mines, and obstacles in the "No
       </IconRow>
     }
   >
-    THe mouse and the letter A do something
+    Look around
+    <Sidenote>
+      Holding shift allows you to pan the camera, like looking around in a
+      first-person video game.
+    </Sidenote>
   </Shortcut>
   <Shortcut
     keys={
-      <IconRow>
-        <Mouse />+<KeyIcon>A</KeyIcon>
-      </IconRow>
+      <>
+        <IconRow>
+          <KeyIcon>Shift</KeyIcon>
+          <Plus />
+        </IconRow>
+        <IconRow>
+          <KeyIcon>W</KeyIcon>
+          <KeyIcon>A</KeyIcon>
+          <KeyIcon>S</KeyIcon>
+          <KeyIcon>D</KeyIcon>
+        </IconRow>
+      </>
     }
   >
-    THe mouse and the letter A do something
+    Move around
+    <Sidenote>
+      Like Unreal Tournament!
+      <br />
+      You can also rise straight up with{' '}
+      <InlineIcons>
+        <KeyIcon size="small">R</KeyIcon>
+      </InlineIcons>
+      , or fall straight down with <InlineIcons>
+        <KeyIcon size="small">F</KeyIcon>
+      </InlineIcons>
+    </Sidenote>
+  </Shortcut>
+  {/*  */}
+  <Shortcut
+    keys={
+      <>
+        <IconRow>
+          <KeyIcon>Backspace</KeyIcon>
+        </IconRow>
+      </>
+    }
+  >
+    Reset view
+    <Sidenote>Jump back to the original camera position</Sidenote>
+  </Shortcut>
+  {/*  */}
+  <Shortcut
+    keys={
+      <>
+        <IconRow>
+          <KeyIcon>R</KeyIcon>
+        </IconRow>
+        <IconRow>
+          <Or />
+        </IconRow>
+        <IconRow>
+          <KeyIcon>1</KeyIcon>
+        </IconRow>
+      </>
+    }
+  >
+    Set tool to Red block
+    <Sidenote>
+      So that clicking on the placement grid creates red blocks
+    </Sidenote>
   </Shortcut>
   <Shortcut
     keys={
-      <IconRow>
-        <Mouse />+<KeyIcon>A</KeyIcon>
-      </IconRow>
+      <>
+        <IconRow>
+          <KeyIcon>B</KeyIcon>
+        </IconRow>
+        <IconRow>
+          <Or />
+        </IconRow>
+        <IconRow>
+          <KeyIcon>2</KeyIcon>
+        </IconRow>
+      </>
     }
   >
-    THe mouse and the letter A do something
+    Set tool to Blue block
+    <Sidenote>
+      So that clicking on the placement grid creates blue blocks
+    </Sidenote>
   </Shortcut>
+  {/*  */}
+  <Shortcut
+    keys={
+      <>
+        <IconRow>
+          <KeyIcon>3</KeyIcon>
+        </IconRow>
+      </>
+    }
+  >
+    Set tool to Mine
+    <Sidenote>So that clicking on the placement grid creates mines</Sidenote>
+  </Shortcut>
+  <Shortcut
+    keys={
+      <>
+        <IconRow>
+          <KeyIcon>4</KeyIcon>
+        </IconRow>
+      </>
+    }
+  >
+    Set tool to Obstacles
+    <Sidenote>
+      So that clicking on the placement grid creates obstacles (walls and
+      ceilings)
+    </Sidenote>
+  </Shortcut>
+  {/*  */}
+  <Shortcut
+    keys={
+      <>
+        <IconRow>
+          <Mouse activeButton="left" />
+        </IconRow>
+      </>
+    }
+  >
+    Click an entity to select it
+    <Sidenote>
+      Entities are blocks, mines, and obstacles. Click again to deselect it
+    </Sidenote>
+  </Shortcut>
+  <Shortcut
+    keys={
+      <>
+        <IconRow>
+          <Mouse activeButton="right" />
+        </IconRow>
+      </>
+    }
+  >
+    Right-click an entity to delete it
+  </Shortcut>
+  <Shortcut
+    keys={
+      <>
+        <IconRow>
+          <Mouse activeButton="middle" />
+        </IconRow>
+      </>
+    }
+  >
+    Middle-click a block to toggle color
+    <Sidenote>
+      Turn a blue block red, or vice versa. Has no effect on mines and obstacles
+    </Sidenote>
+  </Shortcut>
+  {/*  */}
 </ShortcutTable>

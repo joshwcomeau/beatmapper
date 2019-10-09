@@ -14,13 +14,13 @@ const Mouse = ({ width = 18, height = 27, activeButton }) => {
         <path
           d="M3 2.5C0.499984 5 0.999987 9 0.999987 9H8.99999V0C8.99999 0 5.50002 0 3 2.5Z"
           fill={
-            activeButton === 'left' ? COLORS.yellow[500] : COLORS.blueGray[300]
+            activeButton === 'left' ? COLORS.pink[500] : COLORS.blueGray[300]
           }
         />
         <path
           d="M15.9695 2.5C18.4569 5 17.9594 9 17.9594 9H10V0C10 0 13.4822 0 15.9695 2.5Z"
           fill={
-            activeButton === 'right' ? COLORS.yellow[500] : COLORS.blueGray[300]
+            activeButton === 'right' ? COLORS.pink[500] : COLORS.blueGray[300]
           }
         />
         {activeButton === 'scroll' && (
@@ -31,21 +31,21 @@ const Mouse = ({ width = 18, height = 27, activeButton }) => {
             height={8}
             rx={2}
             ry={2}
-            fill={COLORS.yellow[500]}
+            fill={COLORS.pink[500]}
             stroke={COLORS.blueGray[1000]}
             strokeWidth={2}
           />
         )}
         {activeButton === 'middle' && (
           <rect
-            x={7}
+            x={6}
             y={7}
-            width={5}
-            height={5}
+            width={7}
+            height={7}
             rx={2}
             ry={2}
-            fill={COLORS.yellow[500]}
-            stroke={COLORS.blueGray[1000]}
+            fill={COLORS.pink[500]}
+            stroke="white"
             strokeWidth={2}
           />
         )}
