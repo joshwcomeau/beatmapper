@@ -194,13 +194,7 @@ class PlayButton extends React.Component {
   }
 
   renderMainCircle() {
-    const {
-      size,
-      progressCircleWidth,
-      progressCircleColor,
-      idleBackgroundColor,
-      activeBackgroundColor,
-    } = this.props;
+    const { size, idleBackgroundColor, activeBackgroundColor } = this.props;
 
     const radius = size / 2;
 
@@ -218,13 +212,7 @@ class PlayButton extends React.Component {
   }
 
   renderProgressBar() {
-    const {
-      size,
-      progressCircleWidth,
-      progressCircleColor,
-      idleBackgroundColor,
-      activeBackgroundColor,
-    } = this.props;
+    const { size, progressCircleWidth, progressCircleColor } = this.props;
 
     const center = size / 2;
     const diameter = size - progressCircleWidth;

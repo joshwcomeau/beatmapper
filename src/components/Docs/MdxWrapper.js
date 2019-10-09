@@ -20,11 +20,11 @@ import { COLORS } from '../../constants';
 import BaseLink from '../BaseLink';
 import HorizontalRule from './HorizontalRule';
 
-const Image = ({ width, ...props }) => (
+const Image = ({ width, caption, ...props }) => (
   <OuterImageWrapper>
     <ImageWrapper>
-      <img {...props} style={{ width }} />
-      {props.caption && <ImageCaption>{props.caption}</ImageCaption>}
+      <img {...props} alt={caption} style={{ width }} />
+      {caption && <ImageCaption>{caption}</ImageCaption>}
     </ImageWrapper>
   </OuterImageWrapper>
 );
