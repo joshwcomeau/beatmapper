@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 import { UNIT, COLORS } from '../../constants';
 
@@ -25,20 +26,25 @@ const DocPage = ({ title, subtitle, tableOfContents, children, location }) => {
   useScrollOnLoad(location);
 
   return (
-    <Wrapper>
-      <Title>{title}</Title>
-      {subtitle && <Subtitle>{subtitle}</Subtitle>}
+    <>
+      <Helmet>
+        <title>Beatmapper docs - {title}</title>
+      </Helmet>
+      <Wrapper>
+        <Title>{title}</Title>
+        {subtitle && <Subtitle>{subtitle}</Subtitle>}
 
-      <HorizontalRule />
+        <HorizontalRule />
 
-      <Row>
-        <MainContent>
-          <MdxWrapper>{children}</MdxWrapper>
-          <Spacer size={UNIT * 8} />
-        </MainContent>
-        <TableOfContents toc={tableOfContents} location={location} />
-      </Row>
-    </Wrapper>
+        <Row>
+          <MainContent>
+            <MdxWrapper>{children}</MdxWrapper>
+            <Spacer size={UNIT * 8} />
+          </MainContent>
+          <TableOfContents toc={tableOfContents} location={location} />
+        </Row>
+      </Wrapper>
+    </>
   );
 };
 
