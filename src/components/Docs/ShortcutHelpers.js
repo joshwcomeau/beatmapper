@@ -7,8 +7,6 @@ import { COLORS } from '../../constants';
 import { getMetaKeyLabel } from '../../utils';
 
 export const KeyIcon = ({ size = 'medium', children }) => {
-  const isWideKey = typeof children === 'string' && children.length > 1;
-
   // prettier-ignore
   let Component = children === 'Space'
     ? UltraWideKey
@@ -42,6 +40,7 @@ export const IconRow = styled.div`
 
   & > * {
     margin-right: 4px;
+    margin-bottom: 4px;
 
     &:last-of-type {
       margin-right: 0;
@@ -61,7 +60,9 @@ export const Sidenote = styled.div`
   line-height: 1.3;
 `;
 
-export const Or = ({ children = 'or' }) => <OrWrapper>{children}</OrWrapper>;
+export const Or = ({ children = 'or' }) => (
+  <OrWrapper>— {children} —</OrWrapper>
+);
 
 export const OrWrapper = styled.div`
   display: flex;
@@ -69,17 +70,8 @@ export const OrWrapper = styled.div`
   font-size: 12px;
   margin-top: 8px;
   margin-bottom: 8px;
-  width: 48px;
   text-transform: uppercase;
   opacity: 0.5;
-
-  &::before {
-    content: '—';
-  }
-
-  &::after {
-    content: '—';
-  }
 `;
 
 const PlusWrapper = styled.div`
@@ -101,7 +93,6 @@ const Key = styled.div`
   font-size: ${props => (props.size === 'medium' ? 12 : 10)}px;
   color: ${COLORS.gray[900]};
   cursor: default;
-  margin-bottom: 4px;
 `;
 
 const SquareKey = styled(Key)`
