@@ -25,14 +25,14 @@ const Mouse = ({ width = 18, height = 27, activeButton }) => {
         />
         {activeButton === 'scroll' && (
           <rect
-            x={7}
+            x={7.5}
             y={3}
             width={4}
             height={8}
             rx={2}
             ry={2}
             fill={COLORS.pink[500]}
-            stroke={COLORS.blueGray[1000]}
+            stroke="white"
             strokeWidth={2}
           />
         )}

@@ -6,15 +6,35 @@ import { plus } from 'react-icons-kit/feather/plus';
 import { COLORS } from '../../constants';
 import { getMetaKeyLabel } from '../../utils';
 
-export const KeyIcon = ({ size = 'medium', children }) => {
-  // prettier-ignore
-  let Component = children === 'Space'
-    ? UltraWideKey
-    : children.length > 1 || typeof children !== 'string'
-      ? WideKey
-      : SquareKey
+export const KeyIcon = ({ size = 'medium', type, children }) => {
+  const componentTypeMap = {
+    square: SquareKey,
+    wide: WideKey,
+    spacebar: UltraWideKey,
+  };
 
-  return <Component size={size}>{children}</Component>;
+  let derivedType = type;
+  if (!derivedType) {
+    // prettier-ignore
+    derivedType = children === 'Space'
+      ? 'spacebar'
+      : children.length > 1 || typeof children !== 'string'
+        ? 'wide'
+        : 'square'
+  }
+
+  let Component = componentTypeMap[derivedType];
+
+  let shrinkRatio = 1;
+  if (type === 'square' && children.length > 2) {
+    shrinkRatio = 0.75;
+  }
+
+  return (
+    <Component size={size}>
+      <div style={{ transform: `scale(${shrinkRatio})` }}>{children}</div>
+    </Component>
+  );
 };
 
 export const Plus = () => (
