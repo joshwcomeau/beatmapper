@@ -46,6 +46,10 @@ const KeyboardShortcuts = ({
         return swapSelectedNotes('horizontal');
       }
       case 'KeyV': {
+        // If the user is pasting with Meta+V, ignore.
+        if (isMetaKeyPressed(ev)) {
+          return;
+        }
         return swapSelectedNotes('vertical');
       }
 
