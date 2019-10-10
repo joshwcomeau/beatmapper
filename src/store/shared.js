@@ -30,6 +30,7 @@ export const createAllSharedMiddlewares = persistenceEngine => {
       'PAUSE_PLAYING',
       'STOP_PLAYING',
       'TOGGLE_PLAYING',
+      'DOWNLOAD_MAP_FILES',
     ],
   });
 
