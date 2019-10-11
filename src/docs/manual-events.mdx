@@ -19,7 +19,7 @@ The Events view takes inspiration from MIDI piano rolls in audio editing softwar
 
 import eventsViewSrc from './images/events-view.png';
 
-<img src={eventsViewSrc} />
+<img src={eventsViewSrc} width={1415} />
 
 > This view can look a little weird/overwhelming, especially if you're coming from another mapping editor like MediocreMapper. Once you get the hang of it, though, this interface will let you create beautiful, advanced lighting patterns really quickly and easily. Give it a chance!
 
@@ -45,11 +45,19 @@ Unlike the "placement grid" in the notes view, however, events are not placed ba
 
 import cursorLineSrc from './images/cursor-line.gif';
 
-<img src={eventsYellowBarSrc} />
+<img src={cursorLineSrc} width={706} />
 
-To place events, click within the events view. You can also click and drag to place multiple notes, according to the snapping interval.
+This white bar tracks the mouse position, but it snaps to the nearest "snapping interval". This is the same snapping interval from the notes view, located in the bottom left corner of the screen:
 
-As with
+import snappingIntervalSrc from './images/snapping-interval.png';
+
+<img src={snappingIntervalSrc} width={388 / 2} />
+
+Finally, above the tracks you'll find a suite of **controls**. These controls change what happens when you interact with the tracks. We'll learn more about them below.
+
+import eventToolsSrc from './images/event-tools.png';
+
+<img src={eventToolsSrc} />
 
 ## Track types
 
@@ -57,7 +65,9 @@ There are 3 distinct track types, and they're a little distinct in how they func
 
 ### Lighting tracks
 
-IMAGE
+import lightTrackSrc from './images/light-track.png';
+
+<img src={lightTrackSrc} />
 
 5 of the 9 tracks are lighting tracks. These tracks support the full range of options, including color (red, blue) and effects (on, off, flash, fade).
 
@@ -65,7 +75,9 @@ When adding events to this track, the vertical boxes representing events take on
 
 One last unique feature of these tracks: Background colors indicate the current track status. For example, below you can see a translucent red background between the on and off events:
 
-IMAGE
+import trackBgSrc from './images/track-bg.png';
+
+<img src={trackBgSrc} width={298 / 2} />
 
 The 5 lighting tracks are:
 
@@ -76,5 +88,59 @@ The 5 lighting tracks are:
 - **Track neons** - a set of strips on the larger outer rings
 
 > Note that these descriptions cover the "default" environment. Different environments lay the lights out differently, but there is always the same number of tracks with roughly-similar roles.
+
+### Ring tracks
+
+import ringTrackSrc from './images/ring-track.png';
+
+<img src={ringTrackSrc} />
+
+At the bottom of the table, you'll find two ring tracks, _Large ring_ and _small ring_.
+
+In Beat Saber's default environment, there are two sets of rings that extend into the distance. These events will trigger rotation and zoom events on those structures.
+
+In terms of the Beatmapper tracks, they work like limited subsets of the lighting tracks. Instead of supporting a range of event types and colors, they only support being triggered. You can think of it like having a single button. You can press that button whenever you like, but that's the extent of the controls you have.
+
+### Laser speed tracks
+
+import speedTrackSrc from './images/speed-track.png';
+
+<img src={speedTrackSrc} />
+
+By default in Beat Saber, the left and right lasers stay fixed in place, criss-crossing into a large "X" in the distance. The final set of tracks allows you to cause these lasers to sweep through the environment.
+
+Laser speed is controlled with a number, and the numbers 0 through 8 are supported, where 0 means that they don't move at all, and 8 means they sweep rapidly through the screen. Decimals are not supported; you have 9 options in total for laser speed (0 through 8 inclusively), and that's it.
+
+Unlike the other track types, where events are represented as vertical bars, speed tracks show events as green dots. This gives you a quick visual representation as to how fast the lasers are moving at any given moment in time; the taller the green area, the faster the laser is moving.
+
+## Placing and modifying events
+
+Clicking on a track will place an event at the current cursor position (the white vertical line that follows the mouse and snaps to the nearest increment).
+
+Right clicking an event will delete it, similar to the Notes view.
+
+Different tracks support different event types. For speed tracks and ring tracks, only a single type of event exists, and so you can simply click to add events without worrying about anything else.
+
+For lighting tracks, you can select the _color_ and _type_ of the lighting event. By default, clicking a lighting track will turn a red light on, but you can modify the color and type through the controls at the top:
+
+import lightTrackControlsSrc from './images/light-track-controls.png';
+
+<img
+  src={lightTrackControlsSrc}
+  width={520 / 2}
+  caption="In this case, blue flash events will be created on click"
+/>
+
+For laser and ring tracks, you can quickly place multiple events by clicking and dragging:
+
+import bulkPlaceEventsSrc from './images/bulk-place-events.gif';
+
+<img src={bulkPlaceEventsSrc} width={532} />
+
+Note that the rate at which events are placed depends on the current _snapping interval_. By tweaking this value, you can quickly create strobes and other effects:
+
+import strobePlaceSrc from './images/strobe-place.gif';
+
+<img src={strobePlaceSrc} width={515} />
 
 <PreviousNextBar currentPageId="events-view" />

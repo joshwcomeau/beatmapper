@@ -51,6 +51,7 @@ const DocPage = ({ title, subtitle, tableOfContents, children, location }) => {
 const Wrapper = styled.div`
   padding: 45px 60px;
   font-family: 'system';
+  max-width: 1250px;
 `;
 
 const Title = styled.div`
