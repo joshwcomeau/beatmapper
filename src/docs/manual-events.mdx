@@ -59,6 +59,26 @@ import eventToolsSrc from './images/event-tools.png';
 
 <img src={eventToolsSrc} />
 
+## Navigating time
+
+As you play the song, the _window_ automatically advances when the song's position passes the current window. There are much more convenient ways to jump around though!
+
+First, many of the tricks you learned in the Notes view will carry over. You can scrub the waveform, use the `J` key to jump to a specific point, and scroll with the mousewheel or arrow keys to seek forwards and backwards.
+
+The media keys on either side of the "play" button take on a slightly different role in this view, though. The fast-forward button will automatically jump to the next window; If you're looking at beats 0-16, one press of the button will show you beats 16-32. The rewind button rewinds to the start of the current window, and repeated presses will jump to previous windows.
+
+Finally, you can click within the beat numbers along the top to scrub the current window:
+
+IMAGE
+
+### Zooming
+
+You can also change the size of the window using the **zoom buttons**. These are found on the right edge of the controls:
+
+IMAGE
+
+This changes the number of beats that fit in the window. You can zoom out to fit 32 beats, or zoom in to fit as few as 4 beats in the window. You can use the keyboard shortcuts `-` and `+`.
+
 ## Track types
 
 There are 3 distinct track types, and they're a little distinct in how they function.
@@ -119,7 +139,9 @@ Clicking on a track will place an event at the current cursor position (the whit
 
 Right clicking an event will delete it, similar to the Notes view.
 
-Different tracks support different event types. For speed tracks and ring tracks, only a single type of event exists, and so you can simply click to add events without worrying about anything else.
+Different tracks support different event types. For speed tracks and ring tracks, only a single type of event exists, and so you can simply click to add events without worrying about anything else. But lighting tracks support a couple different options.
+
+### Customizing lighting events
 
 For lighting tracks, you can select the _color_ and _type_ of the lighting event. By default, clicking a lighting track will turn a red light on, but you can modify the color and type through the controls at the top:
 
@@ -130,6 +152,15 @@ import lightTrackControlsSrc from './images/light-track-controls.png';
   width={520 / 2}
   caption="In this case, blue flash events will be created on click"
 />
+
+Manually clicking the controls is tedious, so it is recommended to use the keyboard shortcuts:
+
+- For color, you can use `R` to select red lighting, and `B` to select blue lighting.
+- For event types, you can use the numbers `1-4` (`1` for on, `2` for off, etc), or you can use `Tab` and `Shift+Tab` to toggle between tools.
+
+> More information about shortcuts can be found on the [keyboard shortcuts](/docs/keyboard-shortcuts) page.
+
+### Bulk placement
 
 For laser and ring tracks, you can quickly place multiple events by clicking and dragging:
 
@@ -142,5 +173,43 @@ Note that the rate at which events are placed depends on the current _snapping i
 import strobePlaceSrc from './images/strobe-place.gif';
 
 <img src={strobePlaceSrc} width={515} />
+
+### Placing speed events
+
+Because there are 9 possible speeds, it can be difficult to click precisely on the speed you're looking for. To make this process easier, you can click and drag to select the exact speed you desire:
+
+IMAGE
+
+## Edit modes
+
+There are two editing modes: **Add** and **Select**. So far, we've been using Add mode.
+
+Add mode works great for quickly placing events, but it's not so great for making bulk edits. While you _can_ click on events one at a time to select them, or right-click to delete, it's not the most expedient.
+
+**Select mode** turns your cursor into a crosshair, and it lets you draw boxes to select all events within its perimeter:
+
+IMAGE
+
+As in the notes view, events can be selected, and selected events glow yellow to indicate their status.
+
+You can toggle between Add and Select mode through the "Edit Mode" control, or through their keyboard shortcuts: `A` for Add mode, `S` for Select mode.
+
+## Managing selections
+
+Armed with the Select mode box tool, we can quickly select groups of events. Let's look at how we can use selections to our advantage.
+
+Sometimes we simply want to erase a section. We can do this by pressing `Delete` - all selected notes will be removed.
+
+We can also cut, copy, and paste selections using the typical shortcuts. This is an effective way to move groups of events around (cut -> paste), or repeat a set of events (copy -> paste).
+
+> Pasting is based on the mouse's cursor position, the thin white line, and _not_ the thick yellow line indicating the song's position. This gives you much greater control to quickly paste repeated sections.
+
+If you want to un-select all events, you can press the `Escape` key. You can also select all _visible_ notes by using `ctrl+A` or `⌘+A`.
+
+> Note that the "Select all" shortcut is slightly different from the Notes view; in Notes, "Select all" selects all entities across the entire map, whilst in the Events view, it only selects events within the current window, visible on-screen.
+
+## Previewing your work
+
+One downside to Beatmapper's approach for events is that you don't get any immediate feedback. You can't tell immediately what effect the blocks have
 
 <PreviousNextBar currentPageId="events-view" />
