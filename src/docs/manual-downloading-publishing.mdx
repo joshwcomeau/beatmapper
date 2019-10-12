@@ -11,15 +11,29 @@ This section of the guide covers how to export from Beatmapper.
 
 While you added some basic details during the map creation process, there are some other things we'll want to set up before finishing up. Let's head over to the next tab in our left sidebar, the "Song Details" tab:
 
-IMAGE
+import songDetailsView from './images/song-details-view.png';
 
-This tab lets you tweak a few more things, including the name you'd like to be credited under for your map, the environment you'd like your map to use, and which parts of the song should constitute the preview.
+<img src={songDetailsView} width={1400 / 2} />
+
+When you created your map, you were asked for the minimal set of details. This view makes available the full suite of configuration options.
+
+Some noteworthy settings:
+
+- **Map author name**: Enter the name you'd like to be known as! This value is shown on Beat Saver.
+- **Swing amount** / **Swing period**: Certain styles of music (commonly Jazz) tweak the distance between each beat so that music has a galloping rhythm, "1... 2,3... 4,1...". These two controls let you map to that. _Swing amount_ controls how dramatic the effect should be, and _Swing period_ controls which notes should be affected (the default value, 0.5, means that every _second_ beat is delayed). Note that this effect is **not** used in Beatmapper, you'll only notice it in-game.
+- **Preview start time** / **Preview duration**: When browsing songs in-game, a short preview of the song is played. These values let you control when the preview starts, in seconds, and how long the preview should run for.
+- **Environment**: Environments control the lighting and events, the aesthetics of the space the game is played in.
 
 If you scroll down, you can also see settings for the beatmap you've been working on:
 
-IMAGE
+import editBeatmapsSrc from './images/edit-beatmaps.png';
 
-Note Jump Speed and Start Beat Offset are outside the scope of this guide, but I hope to add information soon!
+<img src={editBeatmapsSrc} width={1400 / 2} />
+
+- **Note jump speed**: This controls how fast blocks move towards the player. In general, higher difficulties feature higher values, so that the blocks aren't clustered too tightly together.
+- **Start beat offset**: This is the number of beats that blocks spawn away from the player. Larger numbers make the blocks spawn further away, which can help with visibility.
+
+> Because Note Jump Speed can't easily be tweaked in-game, it's recommended that you pick values that are accessible to all players. Choosing values in the mid-20s means that your notes will whiz by too quickly for some players to make sense of them. In my personal opinion, you should never exceed 20 or 21 Note Jump Speed, unless your song's BPM is very low.
 
 ## Downloading your map
 
@@ -27,7 +41,7 @@ Finally, the last main tab in the left sidebar is the "Download" tab.
 
 The large pink button will download a .zip that includes all relevant files, in a format ready to be consumed.
 
-**Protip:** You can download your map at any time using `ctrl + S` (or `⌘ + S`). **It's recommended that you save often**; while not super common, the browser may occasionally decide to empty out the locally-persisted data, which includes all your work on your maps!
+You can download your map at any time using `ctrl + S` (or `⌘ + S`). **It's recommended that you save often**; while not super common, the browser may occasionally decide to empty out the locally-persisted data, which includes all your work on your maps!
 
 > You'll also see a smaller button to download "legacy" files. These files are formatted for an older version of the game. This option remains relevant only because other editors like MediocreMapper were never updated to use the new file format. Use this only if you plan to move between editors.
 

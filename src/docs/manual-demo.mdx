@@ -1,0 +1,22 @@
+---
+title: The “Demo” View
+subtitle: User Manual
+---
+
+import PreviousNextBar from '../components/Docs/PreviousNextBar';
+
+While editing notes and events in the previous two views, it can be hard to get a sense for what the final product is like, how the map will play.
+
+While there is no substitute for trying your map in-game, I'm currently working on a new view that will come as close as possible. This view will showcase all of your lighting and ring events, as well as feature blocks spawning in a fashion similar to the game, taking things like Note Jump Speed and Start Beat Offset into account.
+
+This is an ambitious feature, and my time is limited, so it may be a while. A super-early preview is available, with support for some events:
+
+import demoPreviewSrc from './videos/demo-preview.mp4';
+
+<video controls src={demoPreviewSrc} style={{ width: '100%' }} />
+
+> WARNING: This video features flashing, strobing lights.
+
+If you're comfortable with Three.js and wish to contribute to this functionality, your help would be **greatly** appreciated! You can [email me](mailto:joshwcomeau@gmail.com) and I'll get you up to speed on the codebase :)
+
+<PreviousNextBar currentPageId="demo-view" />

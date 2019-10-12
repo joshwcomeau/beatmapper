@@ -25,6 +25,7 @@ const Sidebar = () => {
           <NavLink to="/docs/getting-started">Getting started</NavLink>
           <NavLink to="/docs/notes-view">Notes view</NavLink>
           <NavLink to="/docs/events-view">Events view</NavLink>
+          <NavLink to="/docs/demo-view">Demo view</NavLink>
           <NavLink to="/docs/publishing">Downloading and publishing</NavLink>
         </NavGroup>
         <NavGroup title="Advanced">

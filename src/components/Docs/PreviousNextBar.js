@@ -11,6 +11,7 @@ const pages = [
   { id: 'getting-started', title: 'Getting started' },
   { id: 'notes-view', title: 'Notes View' },
   { id: 'events-view', title: 'Events View' },
+  { id: 'demo-view', title: 'Demo View' },
   { id: 'publishing', title: 'Downloading and publishing' },
 ];
 

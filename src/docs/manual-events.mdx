@@ -61,21 +61,27 @@ import eventToolsSrc from './images/event-tools.png';
 
 ## Navigating time
 
-As you play the song, the _window_ automatically advances when the song's position passes the current window. There are much more convenient ways to jump around though!
+As you play the song, the window automatically advances when the song's position passes the current window. There are much more convenient ways to jump around though!
 
-First, many of the tricks you learned in the Notes view will carry over. You can scrub the waveform, use the `J` key to jump to a specific point, and scroll with the mousewheel or arrow keys to seek forwards and backwards.
+First, many of the tricks you learned in the Notes view will carry over. You can scrub the waveform, scroll with the mousewheel or arrow keys to seek forwards and backwards, and use the `J` key to jump to a specific point.
 
-The media keys on either side of the "play" button take on a slightly different role in this view, though. The fast-forward button will automatically jump to the next window; If you're looking at beats 0-16, one press of the button will show you beats 16-32. The rewind button rewinds to the start of the current window, and repeated presses will jump to previous windows.
+The media keys on either side of the "play" button take on a slightly different role in this view, though. The "next" button will automatically jump to the next window; If you're looking at beats 0-16, one press of the button will show you beats 16-32. The "previous" button rewinds to the start of the current window, and repeated presses will jump to previous windows.
+
+> For those of us old enough to remember how CD players work, it works the same way; the "previous" button rewinds the current window, or jumps to the previous one if you're close to the beginning already.
 
 Finally, you can click within the beat numbers along the top to scrub the current window:
 
-IMAGE
+import topScrubSrc from './images/top-scrub.gif';
+
+<img src={topScrubSrc} />
 
 ### Zooming
 
 You can also change the size of the window using the **zoom buttons**. These are found on the right edge of the controls:
 
-IMAGE
+import zoomControlsSrc from './images/zoom-controls.png';
+
+<img src={zoomControlsSrc} width={168 / 2} />
 
 This changes the number of beats that fit in the window. You can zoom out to fit 32 beats, or zoom in to fit as few as 4 beats in the window. You can use the keyboard shortcuts `-` and `+`.
 
@@ -89,15 +95,25 @@ import lightTrackSrc from './images/light-track.png';
 
 <img src={lightTrackSrc} />
 
-5 of the 9 tracks are lighting tracks. These tracks support the full range of options, including color (red, blue) and effects (on, off, flash, fade).
+Lighting tracks control lighting - they're responsible for turning the 5 available lights on and off, and changing their colors. In Beatmapper, you control these lights by adding "lighting events".
 
-When adding events to this track, the vertical boxes representing events take on characteristics to reflect their color and effect. For example, 'off' events are grey to represent the light turning off. A blue "fade" event is colored blue, and features a gradient going from light to dark, to represent the event turning off.
+A lighting event is represented by a vertical box. This box takes on characteristics to show what kind of event it is.
 
 One last unique feature of these tracks: Background colors indicate the current track status. For example, below you can see a translucent red background between the on and off events:
 
 import trackBgSrc from './images/track-bg.png';
 
 <img src={trackBgSrc} width={298 / 2} />
+
+Here's a complete collection of lighting events:
+
+import lightEventTypesSrc from './images/light-event-types.png';
+
+<img
+  src={lightEventTypesSrc}
+  width={1160 / 2}
+  caption="'On' and 'flash' events leave the light on, so they create a background afterwards."
+/>
 
 The 5 lighting tracks are:
 
@@ -174,11 +190,13 @@ import strobePlaceSrc from './images/strobe-place.gif';
 
 <img src={strobePlaceSrc} width={515} />
 
-### Placing speed events
+### Placing events on Speed tracks
 
 Because there are 9 possible speeds, it can be difficult to click precisely on the speed you're looking for. To make this process easier, you can click and drag to select the exact speed you desire:
 
-IMAGE
+import placingSpeedEventSrc from './images/place-speed-event.gif';
+
+<img src={placingSpeedEventSrc} width={488 / 2} />
 
 ## Edit modes
 
@@ -188,7 +206,9 @@ Add mode works great for quickly placing events, but it's not so great for makin
 
 **Select mode** turns your cursor into a crosshair, and it lets you draw boxes to select all events within its perimeter:
 
-IMAGE
+import selectAllEvents from './images/select-all-events.gif';
+
+<img src={selectAllEvents} width={1546 / 2} />
 
 As in the notes view, events can be selected, and selected events glow yellow to indicate their status.
 
@@ -210,6 +230,10 @@ If you want to un-select all events, you can press the `Escape` key. You can als
 
 ## Previewing your work
 
-One downside to Beatmapper's approach for events is that you don't get any immediate feedback. You can't tell immediately what effect the blocks have
+One downside to Beatmapper's approach for events is that you don't get any immediate feedback. You can't immediately tell what effect the events you place have!
+
+This is something that can be solved with practice; after a few hours mapping, you'll develop a good mental picture of what each event does.
+
+Nevertheless, this is an area under active development! While still in its infancy, you can check out [the Demo view](/docs/demo-view) to see the lighting for yourself.
 
 <PreviousNextBar currentPageId="events-view" />

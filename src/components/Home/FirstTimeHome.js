@@ -7,7 +7,9 @@ import { download } from 'react-icons-kit/feather/download';
 import { box } from 'react-icons-kit/feather/box';
 
 import { COLORS, UNIT } from '../../constants';
+import useWindowDimensions from '../../hooks/use-window-dimensions.hook';
 import { getDemoSong } from '../../reducers/songs.reducer';
+import heroVideo from '../../assets/videos/hero-video.mp4';
 
 import Spacer from '../Spacer';
 import Heading from '../Heading';
@@ -15,7 +17,14 @@ import Center from '../Center';
 
 import OptionColumn from './OptionColumn';
 
+const WRAPPER_MAX_WIDTH = 850;
+const WRAPPER_PADDING = UNIT * 2;
+
 const FirstTimeHome = ({ setModal, demoSong, history }) => {
+  const { width: windowWidth } = useWindowDimensions();
+
+  const videoWidth = Math.min(WRAPPER_MAX_WIDTH, windowWidth);
+
   return (
     <MainContent>
       <Center>
@@ -23,12 +32,16 @@ const FirstTimeHome = ({ setModal, demoSong, history }) => {
           Beatmapper is an unofficial web-based editor for Beat Saber™
         </Title>
         <Spacer size={UNIT * 4} />
-        <div
+        <video
+          src={heroVideo}
+          autoPlay
+          muted
+          loop
+          controls
           style={{
-            width: '100%',
-            height: 0,
-            paddingBottom: (9 / 16) * 100 + '%',
-            background: 'rgba(255, 255, 255, 0.1)',
+            width: videoWidth,
+            marginLeft: -WRAPPER_PADDING,
+            marginRight: -WRAPPER_PADDING,
           }}
         />
 
@@ -77,8 +90,8 @@ const FirstTimeHome = ({ setModal, demoSong, history }) => {
 };
 
 const MainContent = styled.div`
-  max-width: 850px;
-  padding: ${UNIT * 2}px;
+  max-width: ${WRAPPER_MAX_WIDTH}px;
+  padding: ${WRAPPER_PADDING}px;
   margin: auto;
 `;
 
@@ -94,6 +107,10 @@ const Title = styled.h1`
 
 const Row = styled.div`
   display: flex;
+
+  @media (max-width: 740px) {
+    flex-direction: column;
+  }
 `;
 
 const Divider = styled.div`

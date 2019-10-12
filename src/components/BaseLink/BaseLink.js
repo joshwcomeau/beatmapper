@@ -2,7 +2,7 @@ import React from 'react';
 import { Link as RRLink } from 'react-router-dom';
 
 export const shouldUseAnchor = to =>
-  !!(to.match(/^https?:\/\//i) || to.match(/^#/));
+  !!(to.match(/^https?:\/\//i) || to.match(/^mailto:/) || to.match(/^#/));
 
 const BaseLink = ({ to = '', children, ...delegated }) => {
   if (shouldUseAnchor(to)) {

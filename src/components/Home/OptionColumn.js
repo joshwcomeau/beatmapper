@@ -35,6 +35,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   color: ${COLORS.blueGray[300]};
+  margin-bottom: ${UNIT * 5}px;
 `;
 
 const Title = styled(Heading)`
