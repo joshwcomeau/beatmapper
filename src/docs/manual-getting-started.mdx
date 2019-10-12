@@ -1,0 +1,81 @@
+---
+title: Getting started
+subtitle: User Manual
+---
+
+import googleSearchImgSrc from './images/google-image-search.png';
+import unsplashSrc from './images/unsplash.png';
+import newSongModalSrc from './images/new-song-modal.png';
+
+import PreviousNextBar from '../components/Docs/PreviousNextBar';
+
+When you first visit [Beatmapper.app](https://beatmapper.app), you'll be presented with 3 options:
+
+- Load a demo track
+- Import an existing map
+- Create a new map
+
+For the quickest start, you can load the demo track, a short 1-minute edit of a public-domain dubstep track: [Only Now - Geoxor](https://soundcloud.com/geoxor_official/only-now). Please note that this map currently only has blocks (no lighting). I plan to add lighting shortly.
+
+You can also import a map you've downloaded from [Beat Saver](https://beatsaver.com/), or created using another mapper. Beatmapper doesn't support mapping extensions, or any other custom mods, but any map that works in vanilla Beat Saber should be loadable and editable.
+
+While these options are great for getting a quick look at the editor and playing around, you'll likely want to create your own map. From this point on, we'll assume you're creating a new map from scratch.
+
+## File prep
+
+Before we can start mapping, we need to get our assets in order. Specifically, we'll need:
+
+1. A square cover art image in `.jpg` format
+2. An audio file in `.ogg` format
+
+### Cover art
+
+For cover art, the image you select needs to be square, with dimensions of at least 250×250 (I generally aim for at least 600×600, to ensure it looks sharp on any display).
+
+An easy way to tackle this is to grab the song's official cover art, by searching for the song name and tabbing over to "images":
+
+<img src={googleSearchImgSrc} alt="Google Images search" width={700} />
+
+Depending on the cover art, this may or may not produce a desirable result. Another alternative is to search for a beautiful royalty-free image on a site like Unsplash:
+
+<img
+  src={unsplashSrc}
+  alt="A search on Unsplash.com"
+  caption="Unsplash has many beautiful images"
+  width={700}
+/>
+
+Please note that no matter where you get your image from, you'll need to crop that photo to be a square. You won't be able to upload or share your map if your cover art is rectangular.
+
+### Song
+
+Beat Saber requires that all songs are in `.ogg` format, an obscure alternative to the more-common `.mp3`.
+
+We'll also need to learn a few pieces of information about our song:
+
+- the song's BPM (beats per minute)
+- the song's offset (the number of milliseconds before the song's first beat).
+
+Our [Song Prep](/docs/song-prep) documentation covers this process in depth. If you're new to mapping, I'd recommend reading that guide in full, and then coming back here armed with a song file and all the info we need.
+
+## Creating our song
+
+To create your first song, select the middle "Create from scratch" option from the Beatmapper homepage:
+
+If you've already loaded the demo track or imported an existing map, you can use the "Create new song" button in the right side-panel:
+
+Either way, you'll be prompted with a modal that asks you for a lot of information:
+
+<img src={newSongModalSrc} alt="New song modal" width={450} />
+
+You can drag-and-drop your song and cover art files onto their respective boxes to associate them. You can also click the boxes to select them through the traditional file-picker.
+
+The first three fields—Song name, Song sub-name, and Artist name—are cosmetic. They appear in-game, but have no functional effect. You can fill them with whichever values you'd like.
+
+It's important to get the BPM and Offset values correct. For more information on these values, please consult our [Song Prep](/docs/song-prep) guide.
+
+Finally, a difficulty must be selected. You can create as many difficulties as you'd like, so don't worry too much about this choice! You're selecting the one you'd like to start with.
+
+After submitting this form, you'll be taken to the **notes view**. The next section of our guide covers this view.
+
+<PreviousNextBar currentPageId="getting-started" />

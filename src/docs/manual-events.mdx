@@ -1,0 +1,215 @@
+---
+title: The “Events” View
+subtitle: User Manual
+---
+
+import PreviousNextBar from '../components/Docs/PreviousNextBar';
+
+The "Notes" view covers everything you physically interact with in-game: the blocks you hit, the mines you avoid hitting, and the obstacles you dodge. But there's another big component to individual maps: events!
+
+The Events view lets you customize the lighting and ring motion. These background elements are responsible for a surprisingly big part of the map's look and feel.
+
+To navigate to the Events view, click the sun-shaped icon in the left sidebar:
+
+import eventsViewIconSrc from './images/events-view-icon.png';
+
+<img src={eventsViewIconSrc} width={676 / 2} />
+
+The Events view takes inspiration from MIDI piano rolls in audio editing software. It looks like this:
+
+import eventsViewSrc from './images/events-view.png';
+
+<img src={eventsViewSrc} width={1415} />
+
+> This view can look a little weird/overwhelming, especially if you're coming from another mapping editor like MediocreMapper. Once you get the hang of it, though, this interface will let you create beautiful, advanced lighting patterns really quickly and easily. Give it a chance!
+
+## Understanding the interface
+
+In Beat Saber, maps have control over several "events":
+
+- There are 5 lighting elements, including the track neons.
+- Two lighting elements, the side lasers, can have their speed controlled.
+- There are two ring-related controls, for the two rings in the environment.
+
+In Beatmapper's events view, every event type gets its own **track**. A track is a horizontal row that displays the events over a given period of time. For example, the "Large ring" track shows every "ring rotation" event, represented as a green vertical bar.
+
+The events view collects the 9 tracks in a **table**. The table shows a specific **window** of time, measured in beats. In the screenshot above, we see beats 0 through 16, since we're editing the very first section of the song.
+
+A thick vertical yellow bar represents the song's current position. When you press `Space` to play the song, the yellow bar moves through the window, and will automatically advance to the next window:
+
+import eventsYellowBarSrc from './images/events-yellow-bar.gif';
+
+<img src={eventsYellowBarSrc} width={706} />
+
+Unlike the "placement grid" in the notes view, however, events are not placed based on the yellow bar's position, instead, a thin white bar shows the cursor's current position:
+
+import cursorLineSrc from './images/cursor-line.gif';
+
+<img src={cursorLineSrc} width={706} />
+
+This white bar tracks the mouse position, but it snaps to the nearest "snapping interval". This is the same snapping interval from the notes view, located in the bottom left corner of the screen:
+
+import snappingIntervalSrc from './images/snapping-interval.png';
+
+<img src={snappingIntervalSrc} width={388 / 2} />
+
+Finally, above the tracks you'll find a suite of **controls**. These controls change what happens when you interact with the tracks. We'll learn more about them below.
+
+import eventToolsSrc from './images/event-tools.png';
+
+<img src={eventToolsSrc} />
+
+## Navigating time
+
+As you play the song, the _window_ automatically advances when the song's position passes the current window. There are much more convenient ways to jump around though!
+
+First, many of the tricks you learned in the Notes view will carry over. You can scrub the waveform, use the `J` key to jump to a specific point, and scroll with the mousewheel or arrow keys to seek forwards and backwards.
+
+The media keys on either side of the "play" button take on a slightly different role in this view, though. The fast-forward button will automatically jump to the next window; If you're looking at beats 0-16, one press of the button will show you beats 16-32. The rewind button rewinds to the start of the current window, and repeated presses will jump to previous windows.
+
+Finally, you can click within the beat numbers along the top to scrub the current window:
+
+IMAGE
+
+### Zooming
+
+You can also change the size of the window using the **zoom buttons**. These are found on the right edge of the controls:
+
+IMAGE
+
+This changes the number of beats that fit in the window. You can zoom out to fit 32 beats, or zoom in to fit as few as 4 beats in the window. You can use the keyboard shortcuts `-` and `+`.
+
+## Track types
+
+There are 3 distinct track types, and they're a little distinct in how they function.
+
+### Lighting tracks
+
+import lightTrackSrc from './images/light-track.png';
+
+<img src={lightTrackSrc} />
+
+5 of the 9 tracks are lighting tracks. These tracks support the full range of options, including color (red, blue) and effects (on, off, flash, fade).
+
+When adding events to this track, the vertical boxes representing events take on characteristics to reflect their color and effect. For example, 'off' events are grey to represent the light turning off. A blue "fade" event is colored blue, and features a gradient going from light to dark, to represent the event turning off.
+
+One last unique feature of these tracks: Background colors indicate the current track status. For example, below you can see a translucent red background between the on and off events:
+
+import trackBgSrc from './images/track-bg.png';
+
+<img src={trackBgSrc} width={298 / 2} />
+
+The 5 lighting tracks are:
+
+- **Left laser** - a set of lasers that oscillate on the left edge of the environment
+- **Right laser** - a mirror image of the left laser, but on the right
+- **Back laser** - a mostly-vertical set of centered lasers
+- **Primary light** - The brightest light, a `^`-shaped light in the center of the environment
+- **Track neons** - a set of strips on the larger outer rings
+
+> Note that these descriptions cover the "default" environment. Different environments lay the lights out differently, but there is always the same number of tracks with roughly-similar roles.
+
+### Ring tracks
+
+import ringTrackSrc from './images/ring-track.png';
+
+<img src={ringTrackSrc} />
+
+At the bottom of the table, you'll find two ring tracks, _Large ring_ and _small ring_.
+
+In Beat Saber's default environment, there are two sets of rings that extend into the distance. These events will trigger rotation and zoom events on those structures.
+
+In terms of the Beatmapper tracks, they work like limited subsets of the lighting tracks. Instead of supporting a range of event types and colors, they only support being triggered. You can think of it like having a single button. You can press that button whenever you like, but that's the extent of the controls you have.
+
+### Laser speed tracks
+
+import speedTrackSrc from './images/speed-track.png';
+
+<img src={speedTrackSrc} />
+
+By default in Beat Saber, the left and right lasers stay fixed in place, criss-crossing into a large "X" in the distance. The final set of tracks allows you to cause these lasers to sweep through the environment.
+
+Laser speed is controlled with a number, and the numbers 0 through 8 are supported, where 0 means that they don't move at all, and 8 means they sweep rapidly through the screen. Decimals are not supported; you have 9 options in total for laser speed (0 through 8 inclusively), and that's it.
+
+Unlike the other track types, where events are represented as vertical bars, speed tracks show events as green dots. This gives you a quick visual representation as to how fast the lasers are moving at any given moment in time; the taller the green area, the faster the laser is moving.
+
+## Placing and modifying events
+
+Clicking on a track will place an event at the current cursor position (the white vertical line that follows the mouse and snaps to the nearest increment).
+
+Right clicking an event will delete it, similar to the Notes view.
+
+Different tracks support different event types. For speed tracks and ring tracks, only a single type of event exists, and so you can simply click to add events without worrying about anything else. But lighting tracks support a couple different options.
+
+### Customizing lighting events
+
+For lighting tracks, you can select the _color_ and _type_ of the lighting event. By default, clicking a lighting track will turn a red light on, but you can modify the color and type through the controls at the top:
+
+import lightTrackControlsSrc from './images/light-track-controls.png';
+
+<img
+  src={lightTrackControlsSrc}
+  width={520 / 2}
+  caption="In this case, blue flash events will be created on click"
+/>
+
+Manually clicking the controls is tedious, so it is recommended to use the keyboard shortcuts:
+
+- For color, you can use `R` to select red lighting, and `B` to select blue lighting.
+- For event types, you can use the numbers `1-4` (`1` for on, `2` for off, etc), or you can use `Tab` and `Shift+Tab` to toggle between tools.
+
+> More information about shortcuts can be found on the [keyboard shortcuts](/docs/keyboard-shortcuts) page.
+
+### Bulk placement
+
+For laser and ring tracks, you can quickly place multiple events by clicking and dragging:
+
+import bulkPlaceEventsSrc from './images/bulk-place-events.gif';
+
+<img src={bulkPlaceEventsSrc} width={532} />
+
+Note that the rate at which events are placed depends on the current _snapping interval_. By tweaking this value, you can quickly create strobes and other effects:
+
+import strobePlaceSrc from './images/strobe-place.gif';
+
+<img src={strobePlaceSrc} width={515} />
+
+### Placing speed events
+
+Because there are 9 possible speeds, it can be difficult to click precisely on the speed you're looking for. To make this process easier, you can click and drag to select the exact speed you desire:
+
+IMAGE
+
+## Edit modes
+
+There are two editing modes: **Add** and **Select**. So far, we've been using Add mode.
+
+Add mode works great for quickly placing events, but it's not so great for making bulk edits. While you _can_ click on events one at a time to select them, or right-click to delete, it's not the most expedient.
+
+**Select mode** turns your cursor into a crosshair, and it lets you draw boxes to select all events within its perimeter:
+
+IMAGE
+
+As in the notes view, events can be selected, and selected events glow yellow to indicate their status.
+
+You can toggle between Add and Select mode through the "Edit Mode" control, or through their keyboard shortcuts: `A` for Add mode, `S` for Select mode.
+
+## Managing selections
+
+Armed with the Select mode box tool, we can quickly select groups of events. Let's look at how we can use selections to our advantage.
+
+Sometimes we simply want to erase a section. We can do this by pressing `Delete` - all selected notes will be removed.
+
+We can also cut, copy, and paste selections using the typical shortcuts. This is an effective way to move groups of events around (cut -> paste), or repeat a set of events (copy -> paste).
+
+> Pasting is based on the mouse's cursor position, the thin white line, and _not_ the thick yellow line indicating the song's position. This gives you much greater control to quickly paste repeated sections.
+
+If you want to un-select all events, you can press the `Escape` key. You can also select all _visible_ notes by using `ctrl+A` or `⌘+A`.
+
+> Note that the "Select all" shortcut is slightly different from the Notes view; in Notes, "Select all" selects all entities across the entire map, whilst in the Events view, it only selects events within the current window, visible on-screen.
+
+## Previewing your work
+
+One downside to Beatmapper's approach for events is that you don't get any immediate feedback. You can't tell immediately what effect the blocks have
+
+<PreviousNextBar currentPageId="events-view" />

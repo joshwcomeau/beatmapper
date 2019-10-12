@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { LASER_COLORS } from '../../constants';
-import { range, normalize, convertDegreesToRadians } from '../../utils';
+import { range } from '../../utils';
 import { getCursorPositionInBeats } from '../../reducers/navigation.reducer';
 import { getCursorPosition } from '../../reducers/navigation.reducer';
 import { getEventForTrackAtBeat } from '../../reducers/editor-entities.reducer/events-view.reducer';
@@ -24,7 +24,6 @@ const BackLaser = ({ lastEvent, secondsSinceSongStart }) => {
 
   return sides.map(side => {
     const xOffset = 0;
-    const yOffset = 10;
     const zOffset = -140;
 
     return laserIndices.map(index => {

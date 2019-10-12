@@ -25,7 +25,7 @@ export function Bloom({ children }) {
     bloomPass.radius = 0.75;
 
     composer.current.addPass(bloomPass);
-  }, []);
+  }, []); // eslint-disable-line
 
   React.useEffect(
     () => void composer.current.setSize(size.width, size.height),

@@ -18,7 +18,12 @@ const PROMPTS = [
     title: 'Warning: Alpha Software',
     contents: () => (
       <>
-        <Paragraph>👋 Hi there, new user!</Paragraph>
+        <Paragraph>
+          <span role="img" aria-label="wave">
+            👋
+          </span>{' '}
+          Hi there, new user!
+        </Paragraph>
 
         <Paragraph>
           Just a heads-up: Beatmapper is still under development. It's in
@@ -40,8 +45,15 @@ const PROMPTS = [
 
         <Paragraph>
           Finally, some important context: This is a passion project by 1
-          developer, not a commercial project. It is offered 🌈 for free ✨.
-          Please set your expectations accordingly.
+          developer, not a commercial project. It is offered{' '}
+          <span role="img" aria-label="rainbow">
+            🌈
+          </span>{' '}
+          for free{' '}
+          <span role="img" aria-label="sparkles">
+            ✨
+          </span>
+          . Please set your expectations accordingly.
         </Paragraph>
       </>
     ),

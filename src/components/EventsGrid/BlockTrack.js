@@ -32,7 +32,6 @@ const BlockTrack = props => {
     selectedEditMode,
     initialTrackLightingColor,
     placeEvent,
-    ...delegated
   } = props;
 
   const [mouseButtonDepressed, setMouseButtonDepressed] = React.useState(null);

@@ -1,0 +1,263 @@
+---
+title: The “Notes” View
+subtitle: User Manual
+---
+
+import PreviousNextBar from '../components/Docs/PreviousNextBar';
+
+After creating a song, or selecting a song from the homescreen, you'll be tossed into the **“Notes” view**. This view allows you to add _blocks_, _mines_, and _obstacles_ to your map (AKA all the stuff you interact with in-game):
+
+import notesViewSrc from './images/notes-view.png';
+
+<img src={notesViewSrc} />
+
+The main area is taken up by a 3D representation of the notes in your song. You'll see the **placement grid** in the center; these 12 squares represent the possible positions for blocks and other elements. You can **left-click** the square to add a block to a specific square, at the current moment in time.
+
+## Navigating time
+
+There are many ways to move through time in the song:
+
+#### 1. Media controls
+
+In the center of the bottom control panel, you'll find buttons for playing / pausing the track (shortcut: `Space`), jumping forwards/backwards by 32 beats (`PageUp` / `PageDown`), and jumping straight to the beginning or end (`Home` / `End`).
+
+import jumpIconsSrc from './images/jump-icons.png';
+
+<img src={jumpIconsSrc} width={478 / 2} />
+
+#### 2. Scrubbing the waveform
+
+At the bottom of the view, you'll see a waveform representation of the loaded audio file.
+
+You can **click and drag** to scrub through this view, or simply click to set the current time to the corresponding point. This is probably the best way to quickly get to a specific area of the song.
+
+#### 3. Seeking
+
+The most common way to navigate around is known as "seeking". Seeking works by moving the cursor forwards or backwards by a _specific number of beats_, which defaults to 1/2 beat.
+
+You can **scroll the mousewheel** to seek - every tick up will send you forwards by _1 increment_, while mouse-wheeling in the opposite direction will seek backwards.
+
+You can also use the arrow keys! **Up** and **right** are used to go forwards, while **down** and **left** will go backward.
+
+You can change the "snapping interval", which affects how far each tick takes you.
+
+import snappingIntervalSrc from './images/snapping-interval.png';
+
+<img src={snappingIntervalSrc} width={388 / 2} />
+
+Clicking on the dropdown will show you all available options, as well as the corresponding keyboard shortcuts:
+
+import snappingIntervalShortcutsSrc from './images/snapping-interval-shortcuts.png';
+
+<img src={snappingIntervalShortcutsSrc} width={584 / 2} />
+
+> You can also shift between snapping intervals by holding `ctrl` (or `⌘` on Mac) and spinning the mousewheel.
+
+## Navigating space
+
+By default, the camera will be facing the placement grid head-on. The main benefit of a 3D editor is the ability to move around, though!
+
+You can move the camera by **holding shift** and **using WASD**, while looking around with the mouse, as you might in a first-person shooter video game. You can also use **R** to rise up, and **F** to fall down (while still holding shift).
+
+import movementSrc from './images/movement.gif';
+
+<img
+  src={movementSrc}
+  width={480}
+  caption="Like playing Unreal Tournament, only you can fly"
+/>
+
+At any point, you can press **backspace** to reset the camera's position to the default head-on view.
+
+## Placing blocks
+
+To place a block, click on the corresponding square in the _placement grid_:
+
+import placeBlockSrc from './images/place-block.gif';
+
+<img src={placeBlockSrc} width={480} />
+
+Blocks can be placed in 8 cardinal directions, as well as a directionless "face" block. Blocks also come in two colors, corresponding to which saber they need to be struck with. You can select color and direction using the right sidebar:
+
+import tweakColorSrc from './images/tweak-color-and-direction.gif';
+
+<img src={tweakColorSrc} width={480} />
+
+You'll be changing color and direction quite a lot while mapping, so a number of conveniences are provided. First, you can use **keyboard shortcuts**:
+
+- To switch between red and blue blocks, you can press the `R` and `B` keys (or the `1` and `2` keys). You can also press `tab` to move forward between tools (including mines and obstacles, which we'll learn about shortly), or `shift+tab` to move backwards between tools.
+- To select a block direction, you can use the letters `WASD`. For example, you'd press `W` to select an "up" direction block. For diagonals, you can hold multiple keys: to select a top-left block, press both `W` and `A` at the same time.
+
+You can swap the color of an existing block by clicking on it with the **middle mouse button**:
+
+import swapBlockColorSrc from './images/swap-block-color.gif';
+
+<img
+  src={swapBlockColorSrc}
+  width={474}
+  caption="Clicking the middle mouse button"
+/>
+
+Finally, you can **click and drag** to dynamically select a block direction. This is my personal favourite way to place blocks:
+
+import dragDirectionSrc from './images/drag-direction.gif';
+
+<img src={dragDirectionSrc} width={474} />
+
+## Placing mines and obstacles
+
+There are two other tools we need to familiarize ourselves with: **mines** and **obstacles**.
+
+Mines are meant to be avoided by the sabers. You can select them from the right sidebar, or press `3` to select them. You can also cycle through tools with `tab` and `shift+tab`.
+
+Mines don't have colors or directions, but otherwise they work just like blocks:
+
+import placeMineSrc from './images/place-mine.gif';
+
+<img src={placeMineSrc} width={480} />
+
+Obstacles are a bit different - they take up multiple cells at the same time, and come in two variants: **walls** and **ceilings**.
+
+To place a wall, click and drag across the _bottom 2 rows_ in the placement grid:
+
+import placeObstacleSrc from './images/place-obstacle.gif';
+
+<img src={placeObstacleSrc} width={480} />
+
+> You'll notice that for walls, you're limited to placing walls that are 1 or 2 columns wide, no wider. This is a safety precaution; 3-column-thick walls can be hazardous, as folks try to leap out of the way. If you really want to place a super-wide wall, you'll need to do it in another editor.
+
+Ceilings are placed the same way, but by clicking on the top row of squares. You can flip between ceilings and walls by moving the mouse up and down, before releasing:
+
+import placeCeilingSrc from './images/place-ceiling.gif';
+
+<img src={placeCeilingSrc} width={480} />
+
+### Changing obstacle duration
+
+By default, Obstacles will be **4 beats long**. You can resize them after placing the obstacle by clicking and dragging to the left or right:
+
+import obstacleDurationSrc from './images/obstacle-duration.gif';
+
+<img src={obstacleDurationSrc} width={480} />
+
+> This control respects the "snapping interval" selected in the bottom-left. If you wish to have more precision around obstacle duration, you can tweak this control.
+
+You can also change obstacle duration by clicking to select it, and using the "Change duration" button in the side panel:
+
+import changeDurationBtnSrc from './images/change-duration-btn.gif';
+
+<img src={changeDurationBtnSrc} width={480} />
+
+## Selections for bulk editing
+
+Sometimes, you'll want to perform bulk actions on a collection of blocks/mines/obstacles. You may wish to copy/paste a section of notes, or delete everything after a certain point, or swap a section horizontally or vertically.
+
+Beatmapper's solution for this problem is called "selections". You can add items to the current selection by **left-clicking** them. Clicking again will _deselect_ the item.
+
+import selectionIntroSrc from './images/select-intro.gif';
+
+<img
+  src={selectionIntroSrc}
+  width={480}
+  caption="Selected items are indicated with a yellow glow"
+/>
+
+> Keep an eye on the right side-panel: It updates to reflect the current selection, and offers special actions that can be performed on the current selection.
+
+As a convenience, you can **click and hold** to select (or deselect) many items at once:
+
+import bulkSelectSrc from './images/bulk-select.gif';
+
+<img
+  src={bulkSelectSrc}
+  width={480}
+  caption="Blocks, obstacles, and mines can all be selected"
+/>
+
+To **clear your selection**, press the `Escape` key on your keyboard. You can also toggle between selecting all notes and no notes with `ctrl+A` (`⌘+A` on Mac)
+
+To **delete selected items**, you can use the `Delete` key. Alternatively, you can also right-click items to delete them.
+
+If you make a mistake deleting items, you can undo with `ctrl+Z` or `⌘+Z`.
+
+You can **copy and paste** using the standard shortcuts for your operating system:
+
+- `ctrl+c` or `⌘+c` to copy
+- `ctrl+v` or `⌘+v` to cut (copies to the clipboard and deletes the blocks)
+- `ctrl+p` or `⌘+p` to paste
+
+### Quick-select
+
+It can be tedious to drag your mouse over all notes in a given section. To make life easier, you can use the "Quick-select" button in the right side-panel (Keyboard shortcut `Q`). This will prompt you to enter a _range of beats_ to select:
+
+import quickSelectSrc from './images/quick-select.gif';
+
+<img src={quickSelectSrc} width={480} />
+
+The value you enter must be in the form "start-end":
+
+<table>
+  <thead>
+    <tr>
+      <th>Valid</th>
+      <th>Invalid</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>4-12</td>
+      <td>4 12</td>
+    </tr>
+    <tr>
+      <td>0-100</td>
+      <td>0 to 100</td>
+    </tr>
+    <tr>
+      <td>32-64</td>
+      <td>64-32</td>
+    </tr>
+    <tr>
+      <td>128-256</td>
+      <td>32-64 128-256</td>
+    </tr>
+  </tbody>
+</table>
+
+As a convenience, you can also enter a single number (eg. `64`) to select _everything starting from_ a given beat number.
+
+> When you provide a range, it will _include_ any blocks on the start beat, but _exclude_ any blocks on the end beat. While this behaviour might be a bit confusing at first, it's **much** easier to work with, since it means you can copy/paste selections end-to-end without overlaps.
+
+## Editor controls and information
+
+At the very bottom of the screen, you'll find some numbers and controls:
+
+import bottomBarSrc from './images/bottom-bar.png';
+
+<img src={bottomBarSrc} />
+
+The left side gives you some stats about your map, while the right side offers a few controls:
+
+- Play a tick sound-effect for every block
+- Increase or decrease the spacing between beats
+- Speed up or slow down the audio file
+- Control the song volume
+
+> Note that all these controls affect the editing experience only. They don't affect the map itself, so none of these controls will have any effect in-game.
+
+### Tick sound effect caveat
+
+Among the miscellaneous helpers, you'll notice the ability to toggle a "tick" sound effect for every block:
+
+import tickToggleSrc from './images/tick-toggle.png';
+
+<img src={tickToggleSrc} width={274 / 2} />
+
+The tick sound may be slightly off-beat; I believe this is true for all editors, because having the audio and video perfectly synchronized is a devilishly hard challenge. **It is not recommended for using the tick sound effect to calculate BPM or offset**; I've written an [extensive guide](/docs/song-prep) covering how to accurately come up with BPM and offset. The tick sound effect is designed with a single purpose in mind: to give you a sense of the rhythm of your notes, to make sure they align with key elements in the song.
+
+## Additional learning
+
+This guide has only scratched the surface of what you can do in Beatmapper! After you've had some practice with the editor, it is recommended that you check out the full list of [keyboard shortcuts](/docs/keyboard-shortcuts) to learn the full suite of controls.
+
+Next up, we'll be looking at the **events view**, to learn about creating custom lighting.
+
+<PreviousNextBar currentPageId="notes-view" />

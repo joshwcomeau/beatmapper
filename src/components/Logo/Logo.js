@@ -11,7 +11,7 @@ import Block from '../Block';
 
 const noop = () => {};
 
-const Logo = ({ size = 'full' }) => {
+const Logo = ({ size = 'full', color = '#FFF' }) => {
   const [isHovering, setIsHovering] = React.useState(false);
 
   const spring = useSpring({
@@ -66,7 +66,9 @@ const Logo = ({ size = 'full' }) => {
         />
       </Canvas>
       <Spacer size={UNIT} />
-      <Text style={{ fontSize: size === 'full' ? 24 : 18 }}>Beatmapper</Text>
+      <Text style={{ fontSize: size === 'full' ? 24 : 18, color }}>
+        Beatmapper
+      </Text>
     </Wrapper>
   );
 };
@@ -79,7 +81,6 @@ const Wrapper = styled(Link)`
 
 const Text = styled.div`
   font-size: 24px;
-  color: #fff;
   font-family: 'Raleway', sans-serif;
   font-weight: 700;
 `;

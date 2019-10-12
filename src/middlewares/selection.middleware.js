@@ -11,7 +11,6 @@ import {
   deleteNote,
   bulkDeleteNote,
   toggleNoteColor,
-  selectAllInRange,
 } from '../actions';
 import { findNoteByProperties } from '../helpers/notes.helpers';
 import { getNotes } from '../reducers/editor-entities.reducer/notes-view.reducer';

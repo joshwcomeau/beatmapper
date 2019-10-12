@@ -17,8 +17,8 @@ const Footer = () => {
             <Logo size="mini" />
             <Spacer size={UNIT} />
             <Links>
-              <Link to="/privacy">Privacy</Link> ·{' '}
-              <Link to="/content">Content Policy</Link>
+              <Link to="/docs/privacy">Privacy</Link> ·{' '}
+              <Link to="/docs/content-policy">Content Policy</Link>
             </Links>
           </LogoWrapper>
           <Info>

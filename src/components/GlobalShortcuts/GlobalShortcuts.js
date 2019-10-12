@@ -105,10 +105,10 @@ const KeyboardShortcuts = ({
         return throttledScroller('backwards');
       }
 
-      case 'PageDown': {
+      case 'PageUp': {
         return seekForwards(view);
       }
-      case 'PageUp': {
+      case 'PageDown': {
         return seekBackwards(view);
       }
 

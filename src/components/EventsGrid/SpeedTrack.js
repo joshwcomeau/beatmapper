@@ -52,7 +52,7 @@ const SpeedTrack = ({
     );
 
     setTentativeEvent(INITIAL_TENTATIVE_EVENT);
-  }, [trackId, tentativeEvent]);
+  }, [trackId, tentativeEvent, changeLaserSpeed]);
 
   usePointerUpHandler(tentativeEvent.visible, commitChanges);
 
