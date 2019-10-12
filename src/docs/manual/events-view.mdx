@@ -3,7 +3,7 @@ title: The “Events” View
 subtitle: User Manual
 ---
 
-import PreviousNextBar from '../components/Docs/PreviousNextBar';
+import PreviousNextBar from '../../components/Docs/PreviousNextBar';
 
 The "Notes" view covers everything you physically interact with in-game: the blocks you hit, the mines you avoid hitting, and the obstacles you dodge. But there's another big component to individual maps: events!
 
@@ -11,13 +11,13 @@ The Events view lets you customize the lighting and ring motion. These backgroun
 
 To navigate to the Events view, click the sun-shaped icon in the left sidebar:
 
-import eventsViewIconSrc from './images/events-view-icon.png';
+import eventsViewIconSrc from '../images/events-view-icon.png';
 
 <img src={eventsViewIconSrc} width={676 / 2} />
 
 The Events view takes inspiration from MIDI piano rolls in audio editing software. It looks like this:
 
-import eventsViewSrc from './images/events-view.png';
+import eventsViewSrc from '../images/events-view.png';
 
 <img src={eventsViewSrc} width={1415} />
 
@@ -37,25 +37,25 @@ The events view collects the 9 tracks in a **table**. The table shows a specific
 
 A thick vertical yellow bar represents the song's current position. When you press `Space` to play the song, the yellow bar moves through the window, and will automatically advance to the next window:
 
-import eventsYellowBarSrc from './images/events-yellow-bar.gif';
+import eventsYellowBarSrc from '../images/events-yellow-bar.gif';
 
 <img src={eventsYellowBarSrc} width={706} />
 
 Unlike the "placement grid" in the notes view, however, events are not placed based on the yellow bar's position, instead, a thin white bar shows the cursor's current position:
 
-import cursorLineSrc from './images/cursor-line.gif';
+import cursorLineSrc from '../images/cursor-line.gif';
 
 <img src={cursorLineSrc} width={706} />
 
 This white bar tracks the mouse position, but it snaps to the nearest "snapping interval". This is the same snapping interval from the notes view, located in the bottom left corner of the screen:
 
-import snappingIntervalSrc from './images/snapping-interval.png';
+import snappingIntervalSrc from '../images/snapping-interval.png';
 
 <img src={snappingIntervalSrc} width={388 / 2} />
 
 Finally, above the tracks you'll find a suite of **controls**. These controls change what happens when you interact with the tracks. We'll learn more about them below.
 
-import eventToolsSrc from './images/event-tools.png';
+import eventToolsSrc from '../images/event-tools.png';
 
 <img src={eventToolsSrc} />
 
@@ -71,7 +71,7 @@ The media keys on either side of the "play" button take on a slightly different 
 
 Finally, you can click within the beat numbers along the top to scrub the current window:
 
-import topScrubSrc from './images/top-scrub.gif';
+import topScrubSrc from '../images/top-scrub.gif';
 
 <img src={topScrubSrc} />
 
@@ -79,7 +79,7 @@ import topScrubSrc from './images/top-scrub.gif';
 
 You can also change the size of the window using the **zoom buttons**. These are found on the right edge of the controls:
 
-import zoomControlsSrc from './images/zoom-controls.png';
+import zoomControlsSrc from '../images/zoom-controls.png';
 
 <img src={zoomControlsSrc} width={168 / 2} />
 
@@ -91,7 +91,7 @@ There are 3 distinct track types, and they're a little distinct in how they func
 
 ### Lighting tracks
 
-import lightTrackSrc from './images/light-track.png';
+import lightTrackSrc from '../images/light-track.png';
 
 <img src={lightTrackSrc} />
 
@@ -101,13 +101,13 @@ A lighting event is represented by a vertical box. This box takes on characteris
 
 One last unique feature of these tracks: Background colors indicate the current track status. For example, below you can see a translucent red background between the on and off events:
 
-import trackBgSrc from './images/track-bg.png';
+import trackBgSrc from '../images/track-bg.png';
 
 <img src={trackBgSrc} width={298 / 2} />
 
 Here's a complete collection of lighting events:
 
-import lightEventTypesSrc from './images/light-event-types.png';
+import lightEventTypesSrc from '../images/light-event-types.png';
 
 <img
   src={lightEventTypesSrc}
@@ -127,7 +127,7 @@ The 5 lighting tracks are:
 
 ### Ring tracks
 
-import ringTrackSrc from './images/ring-track.png';
+import ringTrackSrc from '../images/ring-track.png';
 
 <img src={ringTrackSrc} />
 
@@ -139,7 +139,7 @@ In terms of the Beatmapper tracks, they work like limited subsets of the lightin
 
 ### Laser speed tracks
 
-import speedTrackSrc from './images/speed-track.png';
+import speedTrackSrc from '../images/speed-track.png';
 
 <img src={speedTrackSrc} />
 
@@ -161,7 +161,7 @@ Different tracks support different event types. For speed tracks and ring tracks
 
 For lighting tracks, you can select the _color_ and _type_ of the lighting event. By default, clicking a lighting track will turn a red light on, but you can modify the color and type through the controls at the top:
 
-import lightTrackControlsSrc from './images/light-track-controls.png';
+import lightTrackControlsSrc from '../images/light-track-controls.png';
 
 <img
   src={lightTrackControlsSrc}
@@ -180,13 +180,13 @@ Manually clicking the controls is tedious, so it is recommended to use the keybo
 
 For laser and ring tracks, you can quickly place multiple events by clicking and dragging:
 
-import bulkPlaceEventsSrc from './images/bulk-place-events.gif';
+import bulkPlaceEventsSrc from '../images/bulk-place-events.gif';
 
 <img src={bulkPlaceEventsSrc} width={532} />
 
 Note that the rate at which events are placed depends on the current _snapping interval_. By tweaking this value, you can quickly create strobes and other effects:
 
-import strobePlaceSrc from './images/strobe-place.gif';
+import strobePlaceSrc from '../images/strobe-place.gif';
 
 <img src={strobePlaceSrc} width={515} />
 
@@ -194,7 +194,7 @@ import strobePlaceSrc from './images/strobe-place.gif';
 
 Because there are 9 possible speeds, it can be difficult to click precisely on the speed you're looking for. To make this process easier, you can click and drag to select the exact speed you desire:
 
-import placingSpeedEventSrc from './images/place-speed-event.gif';
+import placingSpeedEventSrc from '../images/place-speed-event.gif';
 
 <img src={placingSpeedEventSrc} width={488 / 2} />
 
@@ -206,7 +206,7 @@ Add mode works great for quickly placing events, but it's not so great for makin
 
 **Select mode** turns your cursor into a crosshair, and it lets you draw boxes to select all events within its perimeter:
 
-import selectAllEvents from './images/select-all-events.gif';
+import selectAllEvents from '../images/select-all-events.gif';
 
 <img src={selectAllEvents} width={1546 / 2} />
 

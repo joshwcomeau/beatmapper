@@ -21,11 +21,14 @@ const Docs = () => {
         <Route exact path="/docs" component={Intro} />
         <Route path="/docs/song-prep" component={SongPrep} />
         <Route path="/docs/keyboard-shortcuts" component={Shortcuts} />
-        <Route path="/docs/getting-started" component={ManualGettingStarted} />
-        <Route path="/docs/notes-view" component={ManualNotes} />
-        <Route path="/docs/events-view" component={ManualEvents} />
-        <Route path="/docs/demo-view" component={ManualDemo} />
-        <Route path="/docs/publishing" component={ManualPublishing} />
+        <Route
+          path="/docs/manual/getting-started"
+          component={ManualGettingStarted}
+        />
+        <Route path="/docs/manual/notes-view" component={ManualNotes} />
+        <Route path="/docs/manual/events-view" component={ManualEvents} />
+        <Route path="/docs/manual/demo-view" component={ManualDemo} />
+        <Route path="/docs/manual/publishing" component={ManualPublishing} />
         <Route path="/docs/migrating" component={Migrating} />
         <Route path="/docs/privacy" component={Privacy} />
         <Route path="/docs/content-policy" component={ContentPolicy} />

@@ -2,7 +2,7 @@ import React from 'react';
 import Doc, {
   frontMatter,
   tableOfContents,
-} from '../../../docs/manual-demo.mdx';
+} from '../../../docs/manual/demo-view.mdx';
 
 import DocPage from '../DocPage';
 

@@ -3,11 +3,11 @@ title: The “Notes” View
 subtitle: User Manual
 ---
 
-import PreviousNextBar from '../components/Docs/PreviousNextBar';
+import PreviousNextBar from '../../components/Docs/PreviousNextBar';
 
 After creating a song, or selecting a song from the homescreen, you'll be tossed into the **“Notes” view**. This view allows you to add _blocks_, _mines_, and _obstacles_ to your map (AKA all the stuff you interact with in-game):
 
-import notesViewSrc from './images/notes-view.png';
+import notesViewSrc from '../images/notes-view.png';
 
 <img src={notesViewSrc} />
 
@@ -21,7 +21,7 @@ There are many ways to move through time in the song:
 
 In the center of the bottom control panel, you'll find buttons for playing / pausing the track (shortcut: `Space`), jumping forwards/backwards by 32 beats (`PageUp` / `PageDown`), and jumping straight to the beginning or end (`Home` / `End`).
 
-import jumpIconsSrc from './images/jump-icons.png';
+import jumpIconsSrc from '../images/jump-icons.png';
 
 <img src={jumpIconsSrc} width={478 / 2} />
 
@@ -41,13 +41,13 @@ You can also use the arrow keys! **Up** and **right** are used to go forwards, w
 
 You can change the "snapping interval", which affects how far each tick takes you.
 
-import snappingIntervalSrc from './images/snapping-interval.png';
+import snappingIntervalSrc from '../images/snapping-interval.png';
 
 <img src={snappingIntervalSrc} width={388 / 2} />
 
 Clicking on the dropdown will show you all available options, as well as the corresponding keyboard shortcuts:
 
-import snappingIntervalShortcutsSrc from './images/snapping-interval-shortcuts.png';
+import snappingIntervalShortcutsSrc from '../images/snapping-interval-shortcuts.png';
 
 <img src={snappingIntervalShortcutsSrc} width={584 / 2} />
 
@@ -59,7 +59,7 @@ By default, the camera will be facing the placement grid head-on. The main benef
 
 You can move the camera by **holding shift** and **using WASD**, while looking around with the mouse, as you might in a first-person shooter video game. You can also use **R** to rise up, and **F** to fall down (while still holding shift).
 
-import movementSrc from './images/movement.gif';
+import movementSrc from '../images/movement.gif';
 
 <img
   src={movementSrc}
@@ -73,13 +73,13 @@ At any point, you can press **backspace** to reset the camera's position to the 
 
 To place a block, click on the corresponding square in the _placement grid_:
 
-import placeBlockSrc from './images/place-block.gif';
+import placeBlockSrc from '../images/place-block.gif';
 
 <img src={placeBlockSrc} width={480} />
 
 Blocks can be placed in 8 cardinal directions, as well as a directionless "face" block. Blocks also come in two colors, corresponding to which saber they need to be struck with. You can select color and direction using the right sidebar:
 
-import tweakColorSrc from './images/tweak-color-and-direction.gif';
+import tweakColorSrc from '../images/tweak-color-and-direction.gif';
 
 <img src={tweakColorSrc} width={480} />
 
@@ -90,7 +90,7 @@ You'll be changing color and direction quite a lot while mapping, so a number of
 
 You can swap the color of an existing block by clicking on it with the **middle mouse button**:
 
-import swapBlockColorSrc from './images/swap-block-color.gif';
+import swapBlockColorSrc from '../images/swap-block-color.gif';
 
 <img
   src={swapBlockColorSrc}
@@ -100,7 +100,7 @@ import swapBlockColorSrc from './images/swap-block-color.gif';
 
 Finally, you can **click and drag** to dynamically select a block direction. This is my personal favourite way to place blocks:
 
-import dragDirectionSrc from './images/drag-direction.gif';
+import dragDirectionSrc from '../images/drag-direction.gif';
 
 <img src={dragDirectionSrc} width={474} />
 
@@ -112,7 +112,7 @@ Mines are meant to be avoided by the sabers. You can select them from the right 
 
 Mines don't have colors or directions, but otherwise they work just like blocks:
 
-import placeMineSrc from './images/place-mine.gif';
+import placeMineSrc from '../images/place-mine.gif';
 
 <img src={placeMineSrc} width={480} />
 
@@ -120,7 +120,7 @@ Obstacles are a bit different - they take up multiple cells at the same time, an
 
 To place a wall, click and drag across the _bottom 2 rows_ in the placement grid:
 
-import placeObstacleSrc from './images/place-obstacle.gif';
+import placeObstacleSrc from '../images/place-obstacle.gif';
 
 <img src={placeObstacleSrc} width={480} />
 
@@ -128,7 +128,7 @@ import placeObstacleSrc from './images/place-obstacle.gif';
 
 Ceilings are placed the same way, but by clicking on the top row of squares. You can flip between ceilings and walls by moving the mouse up and down, before releasing:
 
-import placeCeilingSrc from './images/place-ceiling.gif';
+import placeCeilingSrc from '../images/place-ceiling.gif';
 
 <img src={placeCeilingSrc} width={480} />
 
@@ -136,7 +136,7 @@ import placeCeilingSrc from './images/place-ceiling.gif';
 
 By default, Obstacles will be **4 beats long**. You can resize them after placing the obstacle by clicking and dragging to the left or right:
 
-import obstacleDurationSrc from './images/obstacle-duration.gif';
+import obstacleDurationSrc from '../images/obstacle-duration.gif';
 
 <img src={obstacleDurationSrc} width={480} />
 
@@ -144,7 +144,7 @@ import obstacleDurationSrc from './images/obstacle-duration.gif';
 
 You can also change obstacle duration by clicking to select it, and using the "Change duration" button in the side panel:
 
-import changeDurationBtnSrc from './images/change-duration-btn.gif';
+import changeDurationBtnSrc from '../images/change-duration-btn.gif';
 
 <img src={changeDurationBtnSrc} width={480} />
 
@@ -154,7 +154,7 @@ Sometimes, you'll want to perform bulk actions on a collection of blocks/mines/o
 
 Beatmapper's solution for this problem is called "selections". You can add items to the current selection by **left-clicking** them. Clicking again will _deselect_ the item.
 
-import selectionIntroSrc from './images/select-intro.gif';
+import selectionIntroSrc from '../images/select-intro.gif';
 
 <img
   src={selectionIntroSrc}
@@ -166,7 +166,7 @@ import selectionIntroSrc from './images/select-intro.gif';
 
 As a convenience, you can **click and hold** to select (or deselect) many items at once:
 
-import bulkSelectSrc from './images/bulk-select.gif';
+import bulkSelectSrc from '../images/bulk-select.gif';
 
 <img
   src={bulkSelectSrc}
@@ -190,7 +190,7 @@ You can **copy and paste** using the standard shortcuts for your operating syste
 
 It can be tedious to drag your mouse over all notes in a given section. To make life easier, you can use the "Quick-select" button in the right side-panel (Keyboard shortcut `Q`). This will prompt you to enter a _range of beats_ to select:
 
-import quickSelectSrc from './images/quick-select.gif';
+import quickSelectSrc from '../images/quick-select.gif';
 
 <img src={quickSelectSrc} width={480} />
 
@@ -231,7 +231,7 @@ As a convenience, you can also enter a single number (eg. `64`) to select _every
 
 At the very bottom of the screen, you'll find some numbers and controls:
 
-import bottomBarSrc from './images/bottom-bar.png';
+import bottomBarSrc from '../images/bottom-bar.png';
 
 <img src={bottomBarSrc} />
 
@@ -248,7 +248,7 @@ The left side gives you some stats about your map, while the right side offers a
 
 Among the miscellaneous helpers, you'll notice the ability to toggle a "tick" sound effect for every block:
 
-import tickToggleSrc from './images/tick-toggle.png';
+import tickToggleSrc from '../images/tick-toggle.png';
 
 <img src={tickToggleSrc} width={274 / 2} />
 

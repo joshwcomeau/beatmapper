@@ -22,11 +22,13 @@ const Sidebar = () => {
           <NavLink to="/docs/keyboard-shortcuts">Keyboard shortcuts</NavLink>
         </NavGroup>
         <NavGroup title="User Manual" showByDefault>
-          <NavLink to="/docs/getting-started">Getting started</NavLink>
-          <NavLink to="/docs/notes-view">Notes view</NavLink>
-          <NavLink to="/docs/events-view">Events view</NavLink>
-          <NavLink to="/docs/demo-view">Demo view</NavLink>
-          <NavLink to="/docs/publishing">Downloading and publishing</NavLink>
+          <NavLink to="/docs/manual/getting-started">Getting started</NavLink>
+          <NavLink to="/docs/manual/notes-view">Notes view</NavLink>
+          <NavLink to="/docs/manual/events-view">Events view</NavLink>
+          <NavLink to="/docs/manual/demo-view">Demo view</NavLink>
+          <NavLink to="/docs/manual/publishing">
+            Downloading and publishing
+          </NavLink>
         </NavGroup>
         <NavGroup title="Advanced">
           <NavLink to="/docs/migrating">Migrating from another editor</NavLink>

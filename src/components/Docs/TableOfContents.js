@@ -70,6 +70,16 @@ const useActiveHeading = headings => {
   return activeHeadingId;
 };
 
+const getGithubLink = pathname => {
+  const prefix = 'https://github.com/joshwcomeau/beatmapper/edit/master/src';
+
+  if (pathname === '/docs') {
+    return prefix + pathname + '/intro.mdx';
+  }
+
+  return prefix + pathname + '.mdx';
+};
+
 const TableOfContents = ({ toc, location }) => {
   const headings = toc.filter(item => item.level <= 4);
 
@@ -78,8 +88,6 @@ const TableOfContents = ({ toc, location }) => {
   const handleClickIntro = () => {
     window.scrollTo({ top: 0 });
   };
-
-  const ghLink = `https://github.com/joshwcomeau/beatmapper/edit/master${location.pathname}`;
 
   return (
     <Wrapper>
@@ -108,7 +116,7 @@ const TableOfContents = ({ toc, location }) => {
       ))}
 
       <Spacer size={30} />
-      <GithubLink to={ghLink}>
+      <GithubLink to={getGithubLink(location.pathname)}>
         Suggest an edit
         <Spacer size={12} />
         <Icon icon={externalLink} />
