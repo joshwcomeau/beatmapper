@@ -58,6 +58,25 @@ const PROMPTS = [
       </>
     ),
   },
+  {
+    id: 'new-docs',
+    title: 'Brand new documentation!',
+    contents: () => (
+      <>
+        <Paragraph>
+          Exciting news! We just launched{' '}
+          <strong>brand new, in-depth documentation.</strong>
+        </Paragraph>
+
+        <Paragraph>
+          You can check it out at <Link to="/docs">beatmapper.app/docs</Link>.
+          In particular, you might want to check out the{' '}
+          <Link to="/docs/keyboard-shortcuts">Keyboard Shortcuts</Link> page,
+          which lists all of the super-convenient shortcuts in 1 place.
+        </Paragraph>
+      </>
+    ),
+  },
 ];
 
 const EditorPrompts = ({ prompt, dismissPrompt }) => {
