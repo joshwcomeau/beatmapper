@@ -1,0 +1,4 @@
+# Handle direct links to sub-pages
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
