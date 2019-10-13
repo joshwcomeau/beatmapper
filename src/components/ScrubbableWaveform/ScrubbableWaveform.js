@@ -35,6 +35,8 @@ export const ScrubbableWaveform = ({
   const contextRef = React.useRef(null);
   const { style, ...dimensions } = getScaledCanvasProps(width, height);
 
+  const [scrubbing, setScrubbing] = React.useState(false);
+
   const handleClick = React.useCallback(
     ev => {
       if (!canvasRef.current) {
@@ -50,7 +52,7 @@ export const ScrubbableWaveform = ({
 
   const throttledHandler = React.useCallback(
     throttle(ev => {
-      if (ev.buttons !== 1) {
+      if (!scrubbing) {
         return;
       }
 
@@ -58,12 +60,20 @@ export const ScrubbableWaveform = ({
 
       scrubWaveform(newCursorPosition);
     }, 30),
-    [duration, scrubWaveform]
+    [duration, scrubWaveform, scrubbing]
   );
 
   const handleMouseMove = ev => {
     ev.persist();
     throttledHandler(ev);
+  };
+
+  const handleMouseDown = ev => {
+    setScrubbing(true);
+
+    window.addEventListener('mouseup', () => {
+      setScrubbing(false);
+    });
   };
 
   React.useEffect(() => {
@@ -104,6 +114,7 @@ export const ScrubbableWaveform = ({
       <Canvas
         ref={canvasRef}
         onClick={handleClick}
+        onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         style={style}
         {...dimensions}
