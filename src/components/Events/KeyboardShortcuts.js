@@ -13,7 +13,6 @@ const KeyboardShortcuts = ({
   zoomIn,
 }) => {
   const handleKeyDown = ev => {
-    console.log(ev.code);
     switch (ev.code) {
       case 'NumpadSubtract':
       case 'Minus': {

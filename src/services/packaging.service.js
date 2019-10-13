@@ -128,9 +128,22 @@ export function createBeatmapContents(
 
   // We need to sort all notes, obstacles, and events, since the game can be
   // funny when things aren't in order.
-  let sortedNotes = [...notes].sort((a, b) => a._time - b._time);
-  let sortedObstacles = [...obstacles].sort((a, b) => a._time - b._time);
-  let sortedEvents = [...events].sort((a, b) => a._time - b._time);
+  const sortByTime = (a, b) => a._time - b._time;
+  const sortByTimeAndPosition = (a, b) => {
+    if (a._time === b._time && a._lineLayer === b._lineLayer) {
+      return a._lineIndex - b._lineIndex;
+    }
+
+    if (a._time === b._time) {
+      return a._lineLayer - b._lineLayer;
+    }
+
+    return sortByTime(a, b);
+  };
+
+  let sortedNotes = [...notes].sort(sortByTimeAndPosition);
+  let sortedObstacles = [...obstacles].sort(sortByTime);
+  let sortedEvents = [...events].sort(sortByTime);
 
   if (meta.version === 2) {
     contents = {
@@ -166,6 +179,9 @@ export function createBeatmapContentsFromState(state, song) {
   const notes = getNotes(state);
   const events = convertEventsToExportableJson(getAllEventsAsArray(state));
   const obstacles = convertObstaclesToExportableJson(getObstacles(state));
+
+  // It's important that notes are sorted by their _time property primarily,
+  // and then by _lineLayer secondarily.
 
   const shiftedNotes = shiftEntitiesByOffset(notes, song.offset, song.bpm);
   const shiftedEvents = shiftEntitiesByOffset(events, song.offset, song.bpm);
