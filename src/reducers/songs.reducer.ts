@@ -48,6 +48,14 @@ const initialState = {
   processingImport: false,
 };
 
+const DEFAULT_NOTE_JUMP_SPEEDS = {
+  Easy: 10,
+  Normal: 10,
+  Hard: 12,
+  Expert: 15,
+  ExpertPlus: 18,
+};
+
 export default function songsReducer(state: State = initialState, action: any) {
   switch (action.type) {
     case 'START_LOADING_SONG': {
@@ -124,7 +132,8 @@ export default function songsReducer(state: State = initialState, action: any) {
           difficultiesById: {
             [selectedDifficulty]: {
               id: selectedDifficulty,
-              noteJumpSpeed: 10,
+              // @ts-ignore
+              noteJumpSpeed: DEFAULT_NOTE_JUMP_SPEEDS[selectedDifficulty],
               startBeatOffset: 0,
             },
           },
@@ -211,7 +220,8 @@ export default function songsReducer(state: State = initialState, action: any) {
         song.selectedDifficulty = difficulty;
         song.difficultiesById[difficulty] = {
           id: difficulty,
-          noteJumpSpeed: 10,
+          // @ts-ignore
+          noteJumpSpeed: DEFAULT_NOTE_JUMP_SPEEDS[difficulty],
           startBeatOffset: 0,
         };
       });
