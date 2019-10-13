@@ -9,6 +9,8 @@ import { getSelectedEventEditMode } from '../../reducers/editor.reducer';
 import { normalize } from '../../utils';
 import UnstyledButton from '../UnstyledButton';
 
+const BLOCK_WIDTH = 7;
+
 const getBackgroundForEvent = event => {
   // prettier-ignore
   const color = event.color === 'red'
@@ -58,6 +60,7 @@ const getBackgroundForEvent = event => {
 
 const EventBlock = ({
   event,
+  trackWidth,
   startBeat,
   numOfBeatsToShow,
   deleteOnHover,
@@ -73,14 +76,16 @@ const EventBlock = ({
     startBeat,
     numOfBeatsToShow + startBeat,
     0,
-    100
+    trackWidth
   );
+
+  const centeredOffset = offset - BLOCK_WIDTH / 2;
 
   const background = getBackgroundForEvent(event);
 
   return (
     <Wrapper
-      style={{ left: offset + '%', background }}
+      style={{ transform: `translateX(${centeredOffset}px)`, background }}
       onClick={ev => ev.stopPropagation()}
       onContextMenu={ev => ev.preventDefault()}
       onPointerOver={ev => {
@@ -126,11 +131,10 @@ const EventBlock = ({
 };
 
 const Wrapper = styled(UnstyledButton)`
-  width: 7px;
+  width: ${BLOCK_WIDTH}px;
   height: 100%;
   position: absolute;
-  border-radius: 4px;
-  transform: translateX(-50%);
+  border-radius: ${BLOCK_WIDTH / 2}px;
 `;
 
 const SelectedGlow = styled.div`
@@ -143,7 +147,7 @@ const SelectedGlow = styled.div`
   right: 0;
   bottom: 0;
   background-color: ${COLORS.yellow[500]};
-  border-radius: 4px;
+  border-radius: ${BLOCK_WIDTH / 2}px;
   opacity: 0.6;
 `;
 

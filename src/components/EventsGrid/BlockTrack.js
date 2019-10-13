@@ -22,6 +22,7 @@ import { getBackgroundBoxes } from './BlockTrack.helpers';
 const BlockTrack = props => {
   const {
     trackId,
+    width,
     height,
     startBeat,
     numOfBeatsToShow,
@@ -106,6 +107,7 @@ const BlockTrack = props => {
           <EventBlock
             key={event.id}
             event={event}
+            trackWidth={width}
             trackId={trackId}
             startBeat={startBeat}
             numOfBeatsToShow={numOfBeatsToShow}
