@@ -4,6 +4,7 @@
 
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
+import formatDate from 'date-fns/format';
 
 import {
   saveFile,
@@ -250,8 +251,11 @@ export const zipFiles = (song, songFile, coverArtFile, version) => {
     });
 
     zip.generateAsync({ type: 'blob' }).then(function(blob) {
+      const timestamp = formatDate(new Date(), 'YYYYMMDDTHHmm');
       const filename =
-        version === 1 ? `${song.id}.legacy.zip` : `${song.id}.zip`;
+        version === 1
+          ? `${song.id}_${timestamp}.legacy.zip`
+          : `${song.id}_${timestamp}.zip`;
       saveAs(blob, filename);
 
       resolve();
