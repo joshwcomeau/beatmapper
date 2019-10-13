@@ -9,6 +9,7 @@
 const initialState = {
   isNewUser: true,
   seenPrompts: [],
+  stickyMapAuthorName: null,
 };
 
 export default function user(state = initialState, action) {
@@ -32,6 +33,13 @@ export default function user(state = initialState, action) {
       };
     }
 
+    case 'UPDATE_SONG_DETAILS': {
+      return {
+        ...state,
+        stickyMapAuthorName: action.mapAuthorName,
+      };
+    }
+
     case 'DISMISS_PROMPT': {
       return {
         ...state,
@@ -46,3 +54,4 @@ export default function user(state = initialState, action) {
 
 export const getIsNewUser = state => state.user.isNewUser;
 export const getSeenPrompts = state => state.user.seenPrompts;
+export const getStickyMapAuthorName = state => state.user.stickyMapAuthorName;

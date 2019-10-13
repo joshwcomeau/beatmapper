@@ -98,6 +98,7 @@ export default function songsReducer(state: State = initialState, action: any) {
         bpm,
         offset,
         selectedDifficulty,
+        mapAuthorName,
         createdAt,
         lastOpenedAt,
       } = action;
@@ -116,6 +117,7 @@ export default function songsReducer(state: State = initialState, action: any) {
           songFilename,
           coverArtFilename,
           environment: 'DefaultEnvironment',
+          mapAuthorName,
           createdAt,
           lastOpenedAt,
           selectedDifficulty,

@@ -14,6 +14,7 @@ import {
   getSelectedEventBeat,
   getStartAndEndBeat,
 } from './reducers/editor.reducer';
+import { getStickyMapAuthorName } from './reducers/user.reducer';
 
 export const loadDemoSong = () => ({
   type: 'LOAD_DEMO_SONG',
@@ -31,22 +32,30 @@ export const createNewSong = (
   bpm,
   offset,
   selectedDifficulty
-) => ({
-  type: 'CREATE_NEW_SONG',
-  coverArtFilename,
-  coverArtFile,
-  songFilename,
-  songFile,
-  songId,
-  name,
-  subName,
-  artistName,
-  bpm,
-  offset,
-  selectedDifficulty,
-  createdAt: Date.now(),
-  lastOpenedAt: Date.now(),
-});
+) => (dispatch, getState) => {
+  const state = getState();
+
+  const mapAuthorName = getStickyMapAuthorName(state);
+
+  return dispatch({
+    type: 'CREATE_NEW_SONG',
+    coverArtFilename,
+    coverArtFile,
+    songFilename,
+    songFile,
+    songId,
+    name,
+    subName,
+    artistName,
+    bpm,
+    offset,
+    selectedDifficulty,
+    mapAuthorName,
+    createdAt: Date.now(),
+    lastOpenedAt: Date.now(),
+  });
+};
+
 export const updateSongDetails = (songId, songData) => ({
   type: 'UPDATE_SONG_DETAILS',
   songId,
