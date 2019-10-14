@@ -298,10 +298,29 @@ export const extractTypeFromObject = (obj, type) => {
   }, {});
 };
 
-export const shallowCompare = (o1, o2, keys) => {
+const shallowCompareWithKeys = (o1, o2, keys) => {
   return !keys.find(key => {
     return o1[key] !== o2[key];
   });
+};
+
+/**
+ * Compare 1-level deep in objects.
+ * Returns true if the items are identical
+ */
+export const shallowCompare = (o1, o2, keys) => {
+  if (keys) {
+    return shallowCompareWithKeys(o1, o2, keys);
+  }
+
+  // If no keys are provided, we need to derive them
+  const o1Keys = Object.keys(o1);
+  const o2Keys = Object.keys(o2);
+
+  return (
+    shallowCompareWithKeys(o1, o2, o1Keys) ||
+    shallowCompareWithKeys(o1, o2, o2Keys)
+  );
 };
 
 export const smoothScrollTo = selector => {

@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import { Prompt } from 'react-router';
 
 import * as actions from '../../actions';
 import { UNIT, COLORS } from '../../constants';
@@ -31,7 +32,7 @@ const BeatmapSettings = ({
     savedVersion.startBeatOffset
   );
 
-  const dirty =
+  const isDirty =
     Number(noteJumpSpeed) !== savedVersion.noteJumpSpeed ||
     Number(startBeatOffset) !== savedVersion.startBeatOffset;
 
@@ -103,9 +104,15 @@ const BeatmapSettings = ({
     );
   };
 
+  const difficultyLabel = getLabelForDifficulty(difficultyId);
+
   return (
     <Wrapper>
-      <Heading size={3}>{getLabelForDifficulty(difficultyId)}</Heading>
+      <Prompt
+        when={isDirty}
+        message={`You have unsaved changes! Are you sure you want to leave this page?\n\n(You tweaked a value for the ${difficultyLabel} beatmap)`}
+      />
+      <Heading size={3}>{difficultyLabel}</Heading>
       <Spacer size={UNIT * 3} />
       <TextInput
         label="Note jump speed"
@@ -121,7 +128,7 @@ const BeatmapSettings = ({
       <Spacer size={UNIT * 3} />
 
       <Row>
-        <MiniButton disabled={!dirty} onClick={handleSaveBeatmap}>
+        <MiniButton disabled={!isDirty} onClick={handleSaveBeatmap}>
           Save
         </MiniButton>
         <Spacer size={UNIT * 2} />

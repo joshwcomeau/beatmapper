@@ -23,6 +23,8 @@ const ButtonElem = styled(UnstyledButton)`
 
   &:disabled {
     background: ${COLORS.gray[500]};
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 
   &::after {
