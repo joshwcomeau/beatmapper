@@ -16,6 +16,12 @@ There are two main reasons for this change:
 - I wanted to use right-click to delete blocks. Left-click-to-add, right-click-to-remove is a common convention in many programs, and I think it adds a lot of value here.
 - If you wish to add notes while enabling camera movement, you need to hold right click while pressing left-click, an action that is not possible on all mice (eg. Magic Mouse). By using `Shift` to control WASD movement, there is no conflict.
 
+### One lighting map
+
+The way MediocreMapper works (and, in fact, how the game's files work), every difficulty will have its own set of events. When you change difficulties, you get a totally blank slate, and need to create both the notes/obstacles _and_ the lighting events.
+
+Beatmapper uses the same set of lighting events for every difficulty. This makes the assumption that you'll almost always want the same lighting for different difficulties, since the song doesn't change, and it's not like there's such a thing as easy or advanced lighting.
+
 ### Different views
 
 In MediocreMapper and other editors, both notes and events are edited in the same screen, and previewed at the same time. In Beatmapper, there are 3 separate views:
