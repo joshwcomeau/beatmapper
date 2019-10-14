@@ -2,10 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Prompt } from 'react-router';
+import { Tooltip } from 'react-tippy';
 
 import { COLORS, UNIT } from '../../constants';
 import * as actions from '../../actions';
-import { shallowCompare } from '../../utils';
 import { createInfoContent } from '../../services/packaging.service';
 import {
   getFile,
@@ -46,32 +46,23 @@ const ENVIRONMENT_DISPLAY_MAP = {
 const SongDetails = ({ song, stopPlaying, updateSongDetails }) => {
   const [songData, setSongData] = React.useState(song);
   const [isDirty, setIsDirty] = React.useState(false);
-
-  const setSongProperty = (key, value) => {
-    const newSongData = {
-      ...songData,
-      [key]: value,
-    };
-
-    setSongData(newSongData);
-
-    // Do a shallow compare, to see if there are any changed values.
-    // This way, if a user manually resets a value to its original value, the
-    // form isn't considered dirty.
-    const reduxSongCopy = { ...song };
-    const stateSongCopy = { ...newSongData };
-
-    // Songs have a 'lastOpenedAt' property that should not factor into this
-    // comparison
-    delete reduxSongCopy.lastOpenedAt;
-    delete stateSongCopy.lastOpenedAt;
-    let isDirty = !shallowCompare(reduxSongCopy, stateSongCopy);
-
-    setIsDirty(isDirty);
-  };
-
   const [songFile, setSongFile] = React.useState(null);
   const [coverArtFile, setCoverArtFile] = React.useState(null);
+
+  const setSongProperty = (key, value) => {
+    if (key === 'songFile') {
+      setSongFile(value);
+    } else if (key === 'coverArtFile') {
+      setCoverArtFile(value);
+    } else {
+      setSongData({
+        ...songData,
+        [key]: value,
+      });
+    }
+
+    setIsDirty(true);
+  };
 
   const [status, setStatus] = React.useState('idle');
 
@@ -98,11 +89,23 @@ const SongDetails = ({ song, stopPlaying, updateSongDetails }) => {
   });
 
   const handleSubmit = async ev => {
-    if (!songData.name || !songData.artistName || !songData.bpm) {
+    ev.preventDefault();
+    // Should be impossible, because HTML form validation
+    if (
+      !songData.name ||
+      !songData.artistName ||
+      !songData.bpm ||
+      !songData.mapAuthorName
+    ) {
       return;
     }
 
-    ev.preventDefault();
+    // Alert the user if they need to choose a song before saving
+    // TODO: I should go back to the default cover art if they remove the art.
+    if (!songFile) {
+      window.alert('Please select a song file before saving');
+      return;
+    }
 
     setStatus('working');
 
@@ -159,6 +162,8 @@ const SongDetails = ({ song, stopPlaying, updateSongDetails }) => {
   // It's a bit more complicated since I need to allow them to be prepopulated,
   // which the components don't currently support
 
+  const isSaveDisabled = status === 'working';
+
   return (
     <Wrapper>
       <Prompt
@@ -176,7 +181,7 @@ const SongDetails = ({ song, stopPlaying, updateSongDetails }) => {
               <SongPicker
                 height={MEDIA_ROW_HEIGHT}
                 songFile={songFile}
-                setSongFile={setSongFile}
+                setSongFile={file => setSongProperty('songFile', file)}
               />
             </div>
             <Spacer size={UNIT * 2} />
@@ -184,7 +189,7 @@ const SongDetails = ({ song, stopPlaying, updateSongDetails }) => {
               <CoverArtPicker
                 height={MEDIA_ROW_HEIGHT}
                 coverArtFile={coverArtFile}
-                setCoverArtFile={setCoverArtFile}
+                setCoverArtFile={file => setSongProperty('coverArtFile', file)}
               />
             </div>
           </Row>
@@ -327,7 +332,7 @@ const SongDetails = ({ song, stopPlaying, updateSongDetails }) => {
           <Spacer size={UNIT * 2} />
           <Center>
             <Button
-              disabled={status === 'working' || !isDirty}
+              disabled={isSaveDisabled}
               color={status === 'success' && COLORS.green[700]}
             >
               {status === 'working' ? (
