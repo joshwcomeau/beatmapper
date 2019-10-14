@@ -90,15 +90,6 @@ const SongDetails = ({ song, stopPlaying, updateSongDetails }) => {
 
   const handleSubmit = async ev => {
     ev.preventDefault();
-    // Should be impossible, because HTML form validation
-    if (
-      !songData.name ||
-      !songData.artistName ||
-      !songData.bpm ||
-      !songData.mapAuthorName
-    ) {
-      return;
-    }
 
     // Alert the user if they need to choose a song before saving
     // TODO: I should go back to the default cover art if they remove the art.
