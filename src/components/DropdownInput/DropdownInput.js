@@ -8,11 +8,19 @@ import { chevronDown } from 'react-icons-kit/feather/chevronDown';
 
 import { COLORS } from '../../constants';
 
-const DropdownInput = ({ label, children, value, ...delegated }) => {
+const DropdownInput = ({
+  label,
+  children,
+  value,
+  displayValue,
+  ...delegated
+}) => {
+  const displayedText = displayValue || value;
+
   return (
     <Label>
       <LabelText>{label}</LabelText>
-      <Input value={value} onChange={() => {}} />
+      <Input value={displayedText} onChange={() => {}} />
 
       <Caret>
         <Icon icon={chevronDown} size={16} />

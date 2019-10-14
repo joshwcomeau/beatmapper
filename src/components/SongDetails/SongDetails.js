@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { Prompt } from 'react-router';
 
 import { COLORS, UNIT } from '../../constants';
 import * as actions from '../../actions';
@@ -28,13 +29,30 @@ import SongPicker from '../AddSongForm/SongPicker';
 
 const MEDIA_ROW_HEIGHT = 150;
 
+const ENVIRONMENT_DISPLAY_MAP = {
+  DefaultEnvironment: 'The First',
+  Origins: 'Origins',
+  TriangleEnvironment: 'Triangle',
+  BigMirrorEnvironment: 'Big Mirror',
+  NiceEnvironment: 'Nice',
+  KDAEnvironment: 'KDA',
+  MonstercatEnvironment: 'Monstercat',
+  DragonsEnvironment: 'Dragons',
+  CrabRaveEnvironment: 'Crab Rave',
+  PanicEnvironment: 'Panic',
+};
+
 const SongDetails = ({ song, stopPlaying, updateSongDetails }) => {
   const [songData, setSongData] = React.useState(song);
+  const [isDirty, setIsDirty] = React.useState(false);
+
   const setSongProperty = (key, value) => {
     setSongData({
       ...songData,
       [key]: value,
     });
+
+    setIsDirty(true);
   };
 
   const [songFile, setSongFile] = React.useState(null);
@@ -111,6 +129,8 @@ const SongDetails = ({ song, stopPlaying, updateSongDetails }) => {
       })
     );
 
+    setIsDirty(false);
+
     // It can take a bit of time to update.
     // HACK: I don't have a simple way to do that since it all happens in a
     // redux middleware. The right solution is to track it in redux, but that
@@ -126,6 +146,10 @@ const SongDetails = ({ song, stopPlaying, updateSongDetails }) => {
 
   return (
     <Wrapper>
+      <Prompt
+        when={isDirty}
+        message="You have unsaved changes! Are you sure you want to leave this page?"
+      />
       <InnerWrapper>
         <Spacer size={UNIT * 10} />
         <Heading size={1}>Edit Song Details</Heading>
@@ -274,15 +298,14 @@ const SongDetails = ({ song, stopPlaying, updateSongDetails }) => {
               <DropdownInput
                 label="Environment"
                 value={songData.environment}
+                displayValue={ENVIRONMENT_DISPLAY_MAP[songData.environment]}
                 onChange={ev => setSongProperty('environment', ev.target.value)}
               >
-                <option value="NiceEnvironment">NiceEnvironment</option>
-                <option value="DefaultEnvironment">DefaultEnvironment</option>
-                <option value="BigMirrorEnvironment">
-                  BigMirrorEnvironment
-                </option>
-                <option value="TriangleEnvironment">TriangleEnvironment</option>
-                <option value="DragonsEnvironment">DragonsEnvironment</option>
+                {Object.entries(ENVIRONMENT_DISPLAY_MAP).map(([id, label]) => (
+                  <option key={id} value={id}>
+                    {label}
+                  </option>
+                ))}
               </DropdownInput>
             </Cell>
           </Row>
