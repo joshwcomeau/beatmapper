@@ -4,7 +4,7 @@ import { Icon } from 'react-icons-kit';
 import { plus } from 'react-icons-kit/feather/plus';
 
 import { COLORS } from '../../constants';
-import { getMetaKeyLabel } from '../../utils';
+import { getMetaKeyLabel, getOptionKeyLabel } from '../../utils';
 
 export const KeyIcon = ({ size = 'medium', type, children }) => {
   const componentTypeMap = {
@@ -45,6 +45,9 @@ export const Plus = () => (
 
 export const MetaKey = () => {
   return getMetaKeyLabel();
+};
+export const OptionKey = () => {
+  return getOptionKeyLabel();
 };
 
 export const IconRow = styled.div`

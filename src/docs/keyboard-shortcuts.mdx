@@ -10,6 +10,7 @@ import {
   IconRow,
   Plus,
   MetaKey,
+  OptionKey,
   InlineIcons,
   Sidenote,
   Or,
@@ -252,6 +253,16 @@ These shortcuts can be used either in the "Notes" view or the "Events" view.
           <Plus />
           <Mouse activeButton="scroll" />
         </IconRow>
+        <IconRow>
+          <Or />
+        </IconRow>
+        <IconRow>
+          <KeyIcon>
+            <MetaKey />
+          </KeyIcon>
+          <KeyIcon>↓</KeyIcon>
+          <KeyIcon>↑</KeyIcon>
+        </IconRow>
       </>
     }
   >
@@ -261,7 +272,7 @@ These shortcuts can be used either in the "Notes" view or the "Events" view.
       <code>
         <MetaKey />
       </code>{' '}
-      and spinning the mousewheel
+      and either spinning the mousewheel or using the arrow keys
     </Sidenote>
   </Shortcut>
   {/*  */}
@@ -610,6 +621,35 @@ These shortcuts are exclusive to placing blocks, mines, and obstacles in the "No
     </Sidenote>
   </Shortcut>
   {/*  */}
+    <Shortcut
+    keys={
+      <>
+        <IconRow>
+          <KeyIcon>
+            <OptionKey />
+          </KeyIcon>
+          <Plus />
+          <Mouse activeButton="scroll" />
+        </IconRow>
+        <IconRow>
+          <Or />
+        </IconRow>
+        <IconRow>
+          <KeyIcon>
+            <OptionKey />
+          </KeyIcon>
+          <KeyIcon>↓</KeyIcon>
+          <KeyIcon>↑</KeyIcon>
+        </IconRow>
+      </>
+    }
+  >
+    Nudge selected notes
+    <Sidenote>
+      Sometimes, you'll want to shift the selection forwards or backwards a bit. By holding <code><OptionKey /></code> and using the arrow keys or spinning the mousewheel, you can nudge notes. <strong>Respects the snapping interval</strong>.
+    </Sidenote>
+  </Shortcut>
+
 </ShortcutTable>
 
 ## Events view shortcuts
@@ -826,5 +866,33 @@ These shortcuts are used for placing lighting and ring events in the "Events" vi
       If any events are selected, this will deselect everything.
     </Sidenote>
   </Shortcut>
-  {/*  */}
+  <Shortcut
+    keys={
+      <>
+        <IconRow>
+          <KeyIcon>
+            <OptionKey />
+          </KeyIcon>
+          <Plus />
+          <Mouse activeButton="scroll" />
+        </IconRow>
+        <IconRow>
+          <Or />
+        </IconRow>
+        <IconRow>
+          <KeyIcon>
+            <OptionKey />
+          </KeyIcon>
+          <KeyIcon>←</KeyIcon>
+          <KeyIcon>→</KeyIcon>
+        </IconRow>
+      </>
+    }
+  >
+    Nudge selected events
+    <Sidenote>
+      Shift selected events forwards or backwards.{' '}
+      <strong>Respects the snapping interval</strong>.
+    </Sidenote>
+  </Shortcut>
 </ShortcutTable>
