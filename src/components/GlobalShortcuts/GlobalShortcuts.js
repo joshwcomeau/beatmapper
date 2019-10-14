@@ -58,11 +58,11 @@ const KeyboardShortcuts = ({
         : decrementSnapping();
     }
 
-    scrollThroughSong(direction);
-
     if (holdingAlt) {
-      nudgeSelection(direction, view);
+      return nudgeSelection(direction, view);
     }
+
+    scrollThroughSong(direction);
   }, 50);
 
   const handleKeyDown = ev => {

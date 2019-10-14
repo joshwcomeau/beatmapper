@@ -32,6 +32,7 @@ const SelectionInfo = ({
   numOfSelectedObstacles,
   deselectAll,
   swapSelectedNotes,
+  nudgeSelection,
 }) => {
   const shouldShowObstacleTweaks =
     numOfSelectedObstacles === 1 && numOfSelectedNotes === 0;
@@ -104,7 +105,7 @@ const SelectionInfo = ({
         >
           <IconButton
             icon={arrowUp}
-            onClick={() => swapSelectedNotes('horizontal')}
+            onClick={() => nudgeSelection('forwards', NOTES_VIEW)}
           />
         </Tooltip>
         <Spacer size={UNIT} />
@@ -114,7 +115,7 @@ const SelectionInfo = ({
         >
           <IconButton
             icon={arrowDown}
-            onClick={() => swapSelectedNotes('vertical')}
+            onClick={() => nudgeSelection('backwards', NOTES_VIEW)}
           />
         </Tooltip>
       </Row>
@@ -141,6 +142,7 @@ const Highlight = styled.span`
 const mapDispatchToProps = {
   deselectAll: actions.deselectAll,
   swapSelectedNotes: actions.swapSelectedNotes,
+  nudgeSelection: actions.nudgeSelection,
 };
 
 export default connect(
