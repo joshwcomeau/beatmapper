@@ -547,12 +547,13 @@ export const swapSelectedNotes = axis => ({
   type: 'SWAP_SELECTED_NOTES',
   axis,
 });
-export const nudgeSelectedNotes = direction => (dispatch, getState) => {
+export const nudgeSelection = (direction, view) => (dispatch, getState) => {
   const state = getState();
   const snapTo = getSnapTo(state);
 
   dispatch({
-    type: 'NUDGE_SELECTED_NOTES',
+    type: 'NUDGE_SELECTION',
+    view,
     direction,
     amount: snapTo,
   });

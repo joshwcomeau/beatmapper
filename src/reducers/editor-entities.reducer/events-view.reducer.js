@@ -4,6 +4,8 @@ import produce from 'immer';
 
 import { flatten } from '../../utils';
 import { EVENTS_VIEW, EVENT_TRACKS } from '../../constants';
+import { nudgeEvents } from '../../helpers/events.helpers';
+
 import { getStartAndEndBeat } from '../editor.reducer';
 
 const createInitialState = () => ({
@@ -335,6 +337,22 @@ const eventsView = undoable(
                 }
               }
             });
+          });
+        });
+      }
+
+      case 'NUDGE_SELECTION': {
+        const { view, direction, amount } = action;
+
+        if (view !== EVENTS_VIEW) {
+          return state;
+        }
+
+        return produce(state, draftState => {
+          const trackIds = Object.keys(draftState.tracks);
+
+          trackIds.forEach(trackId => {
+            nudgeEvents(direction, amount, draftState.tracks[trackId]);
           });
         });
       }

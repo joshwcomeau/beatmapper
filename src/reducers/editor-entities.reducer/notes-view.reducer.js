@@ -282,8 +282,12 @@ const notes = (state = initialState.notes, action) => {
       return swapNotes(axis, state);
     }
 
-    case 'NUDGE_SELECTED_NOTES': {
-      const { direction, amount } = action;
+    case 'NUDGE_SELECTION': {
+      const { view, direction, amount } = action;
+
+      if (view !== NOTES_VIEW) {
+        return state;
+      }
 
       return nudgeNotes(direction, amount, state);
     }
@@ -430,8 +434,12 @@ const obstacles = (state = initialState.obstacles, action) => {
       return swapObstacles(axis, state);
     }
 
-    case 'NUDGE_SELECTED_NOTES': {
-      const { direction, amount } = action;
+    case 'NUDGE_SELECTION': {
+      const { view, direction, amount } = action;
+
+      if (view !== NOTES_VIEW) {
+        return state;
+      }
 
       return nudgeObstacles(direction, amount, state);
     }

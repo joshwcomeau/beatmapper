@@ -43,7 +43,7 @@ const KeyboardShortcuts = ({
   seekForwards,
   seekBackwards,
   downloadMapFiles,
-  nudgeSelectedNotes,
+  nudgeSelection,
 }) => {
   let keysDepressed = React.useRef({
     space: false,
@@ -60,9 +60,8 @@ const KeyboardShortcuts = ({
 
     scrollThroughSong(direction);
 
-    // If the user is holding alt, we want to
-    if (view === NOTES_VIEW && holdingAlt) {
-      nudgeSelectedNotes(direction);
+    if (holdingAlt) {
+      nudgeSelection(direction, view);
     }
   }, 50);
 
@@ -270,7 +269,7 @@ const mapDispatchToProps = {
   seekForwards: actions.seekForwards,
   seekBackwards: actions.seekBackwards,
   downloadMapFiles: actions.downloadMapFiles,
-  nudgeSelectedNotes: actions.nudgeSelectedNotes,
+  nudgeSelection: actions.nudgeSelection,
 };
 
 export default connect(

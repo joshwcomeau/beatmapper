@@ -63,6 +63,32 @@ const LIGHT_EVENTS_ARRAY = [
   'fade',
 ];
 
+/**
+ * WARNING: This method mutates the `events` array supplied.
+ * This is done because it is called within an Immer `produce` call, which uses
+ * proxies to avoid actually doing mutation.
+ * But, if you call this from a foreign context, you won't get that, so be
+ * wary.
+ *
+ * This is the kind of thing I'm doing only because this isn't a shared
+ * codebase :D
+ */
+export const nudgeEvents = (
+  direction: 'forwards' | 'backwards',
+  amount: number,
+  events: Array<LightingEvent>
+) => {
+  const sign = direction === 'forwards' ? 1 : -1;
+
+  return events.forEach(event => {
+    if (!event.selected) {
+      return;
+    }
+
+    event.beatNum += amount * sign;
+  });
+};
+
 const convertLightingEventToJson = (event: LightingEvent): JsonEvent => {
   // `Off` events have no color attribute, since there is no way to tell when
   // importing whether it was supposed to be red or blue.
