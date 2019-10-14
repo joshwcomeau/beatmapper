@@ -170,6 +170,21 @@ export const swapNotes = (axis, notes) => {
   }
 };
 
+export const nudgeNotes = (direction, amount, notes) => {
+  const sign = direction === 'forwards' ? 1 : -1;
+
+  return notes.map(note => {
+    if (!note.selected) {
+      return note;
+    }
+
+    return {
+      ...note,
+      _time: note._time + amount * sign,
+    };
+  });
+};
+
 export const calculateNoteDensity = (numOfNotes, segmentLengthInBeats, bpm) => {
   if (numOfNotes === 0) {
     return 0;

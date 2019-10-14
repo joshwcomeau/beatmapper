@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Prompt } from 'react-router';
-import { Tooltip } from 'react-tippy';
 
 import { COLORS, UNIT } from '../../constants';
 import * as actions from '../../actions';

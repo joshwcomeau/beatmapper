@@ -357,3 +357,6 @@ export const isMetaKeyPressed = ev => {
 export const getMetaKeyLabel = () => {
   return getIsMac() ? '⌘' : 'ctrl';
 };
+export const getOptionKeyLabel = () => {
+  return getIsMac() ? '⌥' : 'alt';
+};

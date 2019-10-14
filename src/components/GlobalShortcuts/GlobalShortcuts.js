@@ -43,12 +43,28 @@ const KeyboardShortcuts = ({
   seekForwards,
   seekBackwards,
   downloadMapFiles,
+  nudgeSelectedNotes,
 }) => {
   let keysDepressed = React.useRef({
     space: false,
   });
 
-  const throttledScroller = throttle(scrollThroughSong, 50);
+  const throttledScroller = throttle((direction, holdingMeta, holdingAlt) => {
+    // If the user is holding Cmd/ctrl, we should scroll through snapping
+    // increments instead of the song.
+    if (holdingMeta) {
+      return direction === 'forwards'
+        ? incrementSnapping()
+        : decrementSnapping();
+    }
+
+    scrollThroughSong(direction);
+
+    // If the user is holding alt, we want to
+    if (view === NOTES_VIEW && holdingAlt) {
+      nudgeSelectedNotes(direction);
+    }
+  }, 50);
 
   const handleKeyDown = ev => {
     // If the control key and a number is pressed, we want to update snapping.
@@ -98,11 +114,11 @@ const KeyboardShortcuts = ({
 
       case 'ArrowUp':
       case 'ArrowRight': {
-        return throttledScroller('forwards');
+        return throttledScroller('forwards', isMetaKeyPressed(ev), ev.altKey);
       }
       case 'ArrowDown':
       case 'ArrowLeft': {
-        return throttledScroller('backwards');
+        return throttledScroller('backwards', isMetaKeyPressed(ev), ev.altKey);
       }
 
       case 'PageUp': {
@@ -254,6 +270,7 @@ const mapDispatchToProps = {
   seekForwards: actions.seekForwards,
   seekBackwards: actions.seekBackwards,
   downloadMapFiles: actions.downloadMapFiles,
+  nudgeSelectedNotes: actions.nudgeSelectedNotes,
 };
 
 export default connect(

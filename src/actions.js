@@ -9,7 +9,10 @@ import {
 import { getAllEventsAsArray } from './reducers/editor-entities.reducer/events-view.reducer';
 import { getSelectedSong } from './reducers/songs.reducer';
 import { getCopiedData } from './reducers/clipboard.reducer';
-import { getCursorPositionInBeats } from './reducers/navigation.reducer';
+import {
+  getCursorPositionInBeats,
+  getSnapTo,
+} from './reducers/navigation.reducer';
 import {
   getSelectedEventBeat,
   getStartAndEndBeat,
@@ -544,6 +547,16 @@ export const swapSelectedNotes = axis => ({
   type: 'SWAP_SELECTED_NOTES',
   axis,
 });
+export const nudgeSelectedNotes = direction => (dispatch, getState) => {
+  const state = getState();
+  const snapTo = getSnapTo(state);
+
+  dispatch({
+    type: 'NUDGE_SELECTED_NOTES',
+    direction,
+    amount: snapTo,
+  });
+};
 
 export const jumpToBeat = beatNum => ({
   type: 'JUMP_TO_BEAT',

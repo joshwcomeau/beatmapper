@@ -48,3 +48,18 @@ export const swapObstacles = (axis, obstacles) => {
     };
   });
 };
+
+export const nudgeObstacles = (direction, amount, obstacles) => {
+  const sign = direction === 'forwards' ? 1 : -1;
+
+  return obstacles.map(obstacle => {
+    if (!obstacle.selected) {
+      return obstacle;
+    }
+
+    return {
+      ...obstacle,
+      beatStart: obstacle.beatStart + amount * sign,
+    };
+  });
+};

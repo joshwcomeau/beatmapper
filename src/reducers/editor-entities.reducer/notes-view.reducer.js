@@ -7,9 +7,10 @@ import { NOTES_VIEW, SURFACE_DEPTH } from '../../constants';
 import {
   findNoteIndexByProperties,
   swapNotes,
+  nudgeNotes,
   calculateNoteDensity,
 } from '../../helpers/notes.helpers';
-import { swapObstacles } from '../../helpers/obstacles.helpers';
+import { swapObstacles, nudgeObstacles } from '../../helpers/obstacles.helpers';
 import { getCursorPositionInBeats, getBeatDepth } from '../navigation.reducer';
 import { getSelectedSong } from '../songs.reducer';
 
@@ -281,6 +282,12 @@ const notes = (state = initialState.notes, action) => {
       return swapNotes(axis, state);
     }
 
+    case 'NUDGE_SELECTED_NOTES': {
+      const { direction, amount } = action;
+
+      return nudgeNotes(direction, amount, state);
+    }
+
     default:
       return state;
   }
@@ -421,6 +428,12 @@ const obstacles = (state = initialState.obstacles, action) => {
     case 'SWAP_SELECTED_NOTES': {
       const { axis } = action;
       return swapObstacles(axis, state);
+    }
+
+    case 'NUDGE_SELECTED_NOTES': {
+      const { direction, amount } = action;
+
+      return nudgeObstacles(direction, amount, state);
     }
 
     default:
