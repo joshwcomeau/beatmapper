@@ -98,7 +98,7 @@ export default function createSongMiddleware() {
           // See offsets.md for more context, but essentially we need to
           // transform our timing to match the beat, by undoing a
           // transformation previously applied.
-          const unshiftedNotes = unshiftEntitiesByOffset(
+          let unshiftedNotes = unshiftEntitiesByOffset(
             beatmapJson._notes || [],
             song.offset,
             song.bpm
@@ -114,6 +114,17 @@ export default function createSongMiddleware() {
             song.offset,
             song.bpm
           );
+
+          // We also want to deselect all notes.
+          // While this feels like the wrong place to do this, it's maybe the
+          // best place; the alternative is not to persist selection info at
+          // all, but that requires a `.map` on every save.
+          // I could probably move this to a worker so that it isn't blocking...
+          const s = performance.now();
+          unshiftedNotes = unshiftedNotes.map(n => ({
+            ...n,
+            selected: false,
+          }));
 
           // our beatmap comes in a "raw" form, using proprietary fields.
           // At present, I'm using that proprietary structure for notes/mines,
