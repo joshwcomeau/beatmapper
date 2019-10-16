@@ -29,6 +29,7 @@ import {
   getDifficultyRankForDifficulty,
   getArchiveVersion,
   shiftEntitiesByOffset,
+  getFileFromArchive,
 } from './packaging.service.nitty-gritty';
 
 export function createInfoContent(song, meta = { version: 2 }) {
@@ -284,7 +285,9 @@ export const zipFiles = (song, songFile, coverArtFile, version) => {
 export const convertLegacyArchive = async archive => {
   const zip = new JSZip();
 
-  const infoDatString = await archive.files['info.json'].async('string');
+  const infoDatString = await getFileFromArchive(archive, 'info.json').async(
+    'string'
+  );
   const infoDatJson = JSON.parse(infoDatString);
 
   if (infoDatJson.difficultyLevels.length === 0) {
@@ -293,14 +296,15 @@ export const convertLegacyArchive = async archive => {
     );
   }
 
-  const coverImageFile = await archive.files[infoDatJson.coverImagePath].async(
-    'blob'
-  );
+  const coverImageFile = await getFileFromArchive(
+    archive,
+    infoDatJson.coverImagePath
+  ).async('blob');
   // TODO: Support PNG?
   zip.file('cover.jpg', coverImageFile, { binary: true });
 
   const { audioPath, offset } = infoDatJson.difficultyLevels[0];
-  const songFile = await archive.files[audioPath].async('blob');
+  const songFile = await getFileFromArchive(archive, audioPath).async('blob');
   zip.file('song.egg', songFile, { binary: true });
 
   const bpm = infoDatJson.beatsPerMinute;
@@ -308,7 +312,9 @@ export const convertLegacyArchive = async archive => {
   // Create new difficulty files (eg. Expert.dat)
   const loadedDifficultyFiles = await Promise.all(
     infoDatJson.difficultyLevels.map(async level => {
-      const fileContents = await archive.files[level.jsonPath].async('string');
+      const fileContents = await getFileFromArchive(level.jsonPath).async(
+        'string'
+      );
       const fileJson = JSON.parse(fileContents);
 
       const newFileContents = createBeatmapContents(
@@ -358,8 +364,6 @@ export const processImportedMap = async (zipFile, currentSongIds) => {
   // Start by unzipping it
   let archive = await JSZip.loadAsync(zipFile);
 
-  const prefix = getZippedPackagePrefix(archive.files);
-
   const archiveVersion = getArchiveVersion(archive);
 
   if (archiveVersion !== 2) {
@@ -368,7 +372,9 @@ export const processImportedMap = async (zipFile, currentSongIds) => {
 
   // Zipped contents are always treated as binary. We need to convert the
   // info.dat into something readable
-  const infoDatString = await archive.files['info.dat'].async('string');
+  const infoDatString = await getFileFromArchive(archive, 'info.dat').async(
+    'string'
+  );
   const infoDatJson = JSON.parse(infoDatString);
   const songId = getSongIdFromName(infoDatJson._songName);
 
@@ -389,12 +395,14 @@ export const processImportedMap = async (zipFile, currentSongIds) => {
   await saveFile(infoFilename, infoDatString);
 
   // Save the assets - cover art and song file - to our local store
-  const uncompressedSongFile = await archive.files[
+  const uncompressedSongFile = await getFileFromArchive(
+    archive,
     infoDatJson._songFilename
-  ].async('blob');
-  const uncompressedCoverArtFile = await archive.files[
+  ).async('blob');
+  const uncompressedCoverArtFile = await getFileFromArchive(
+    archive,
     infoDatJson._coverImageFilename
-  ].async('blob');
+  ).async('blob');
 
   // TODO: I could parallelize these two processes if I felt like it
   const [songFilename, songFile] = await saveSongFile(
@@ -420,7 +428,7 @@ export const processImportedMap = async (zipFile, currentSongIds) => {
 
   const difficultyFiles = await Promise.all(
     beatmapSet._difficultyBeatmaps.map(beatmap => {
-      return archive.files[beatmap._beatmapFilename]
+      return getFileFromArchive(archive, beatmap._beatmapFilename)
         .async('string')
         .then(fileContents => {
           // TODO: Should I do any cleanup, to verify that the data is legic?
