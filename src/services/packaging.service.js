@@ -192,13 +192,27 @@ export function createBeatmapContentsFromState(state, song) {
     song.bpm
   );
 
-  return createBeatmapContents(shiftedNotes, shiftedObstacles, shiftedEvents, {
-    version: 2,
+  // Deselect all entities before saving, we don't want to persist that info.
+  const deselect = entity => ({
+    ...entity,
+    selected: false,
   });
+  const deselectedNotes = shiftedNotes.map(deselect);
+  const deselectedObstacles = shiftedObstacles.map(deselect);
+  const deselectedEvents = shiftedEvents.map(deselect);
+
+  return createBeatmapContents(
+    deselectedNotes,
+    deselectedObstacles,
+    deselectedEvents,
+    {
+      version: 2,
+    }
+  );
 }
 
 export const zipFiles = (song, songFile, coverArtFile, version) => {
-  return new Promise(async (resolve, reject) => {
+  return new Promise(async resolve => {
     const zip = new JSZip();
 
     const infoContent = createInfoContent(song, { version });
@@ -478,7 +492,7 @@ export const saveEventsToAllDifficulties = state => {
   return Promise.all(
     difficulties.map(
       difficulty =>
-        new Promise((resolve, reject) => {
+        new Promise(resolve => {
           const beatmapFilename = getFilenameForThing(song.id, 'beatmap', {
             difficulty,
           });
