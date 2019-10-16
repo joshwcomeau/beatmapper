@@ -354,20 +354,6 @@ export const convertLegacyArchive = async archive => {
   return zip;
 };
 
-const getZippedPackagePrefix = files => {
-  const filenames = Object.keys(archive.files);
-
-  // It's possible that the file is bundled in another folder.
-  // Let's find a "prefix", if any.
-  // eg. "oasis-wonderwall/info.dat" should have everything before the "/"
-  // as the prefix.
-  let prefix = '';
-  const regex = /.+info.dat/;
-  const fullInfoDatName = filenames.find(name => name.match(regex));
-
-  return prefix;
-};
-
 export const processImportedMap = async (zipFile, currentSongIds) => {
   // Start by unzipping it
   let archive = await JSZip.loadAsync(zipFile);

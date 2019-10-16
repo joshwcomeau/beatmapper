@@ -1,6 +1,31 @@
 import { roundToNearest } from '../utils';
 import { convertMillisecondsToBeats } from '../helpers/audio.helpers';
 
+export const getZippedPackagePrefix = archive => {
+  // It's possible that the file is bundled in another folder.
+  // Let's find a "prefix", if any.
+  // eg. "oasis-wonderwall/info.dat" should have everything before the "/"
+  // as the prefix.
+
+  const filenames = Object.keys(archive.files);
+  const fullInfoDatPath = filenames.find(name => name.includes('info.dat'));
+
+  if (!fullInfoDatPath) {
+    throw new Error('Could not find an "info.dat" in the selected .zip file');
+  }
+
+  const regex = /(.+\/)info\.dat/;
+  const [, prefix] = regex.exec(fullInfoDatPath);
+
+  // Most of the time, there will be no prefix, the file path will just be
+  // 'info.dat'. In this case, return an empty string.
+  if (!prefix) {
+    return '';
+  }
+
+  return prefix;
+};
+
 export const getDifficultyRankForDifficulty = difficulty => {
   // prettier-ignore
   switch (difficulty.id) {
