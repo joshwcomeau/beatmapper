@@ -373,6 +373,7 @@ const eventsView = undoable(
       'CUT_SELECTION',
       'PASTE_SELECTION',
       'SWITCH_EVENT_COLOR',
+      'NUDGE_SELECTION',
     ]),
     groupBy: groupByActionTypes(['BULK_DELETE_EVENT']),
   }

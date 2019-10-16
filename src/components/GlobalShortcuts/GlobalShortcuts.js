@@ -241,7 +241,7 @@ const KeyboardShortcuts = ({
   });
 
   useMousewheel(ev => {
-    const direction = ev.deltaY > 0 ? 'forwards' : 'backwards';
+    const direction = ev.deltaY > 0 ? 'backwards' : 'forwards';
 
     handleScroll(direction, isMetaKeyPressed(ev), ev.altKey);
   });

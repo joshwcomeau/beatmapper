@@ -467,6 +467,7 @@ const notesView = undoable(combineReducers({ notes, obstacles }), {
     'DELETE_OBSTACLE',
     'SWAP_SELECTED_NOTES',
     'TOGGLE_NOTE_COLOR',
+    'NUDGE_SELECTION',
   ]),
   groupBy: groupByActionTypes(['BULK_DELETE_NOTE']),
 });
