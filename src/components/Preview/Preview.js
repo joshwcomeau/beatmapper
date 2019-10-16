@@ -4,7 +4,6 @@ import styled from 'styled-components';
 
 import * as actions from '../../actions';
 import { PREVIEW_VIEW } from '../../constants';
-import useScrollThroughSong from '../../hooks/use-scroll-through-song.hook';
 
 import ReduxForwardingCanvas from '../ReduxForwardingCanvas';
 import EditorBottomPanel from '../EditorBottomPanel';
@@ -14,13 +13,9 @@ import LightingPreview from './LightingPreview';
 import GlobalShortcuts from '../GlobalShortcuts';
 
 const Preview = ({ isPlaying, scrollThroughSong }) => {
-  const canvasRef = React.useRef(null);
-
-  useScrollThroughSong(canvasRef, isPlaying, scrollThroughSong);
-
   return (
     <Wrapper>
-      <ReduxForwardingCanvas ref={canvasRef}>
+      <ReduxForwardingCanvas>
         <LightingPreview />
       </ReduxForwardingCanvas>
 

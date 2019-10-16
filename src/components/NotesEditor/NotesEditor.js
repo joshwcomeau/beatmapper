@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import * as actions from '../../actions';
-import { isMetaKeyPressed } from '../../utils';
-import useMousewheel from '../../hooks/use-mousewheel.hook';
 
 import ReduxForwardingCanvas from '../ReduxForwardingCanvas';
 import MapVisualization from '../MapVisualization';
@@ -16,31 +14,12 @@ import GlobalShortcuts from '../GlobalShortcuts';
 import KeyboardShortcuts from './KeyboardShortcuts';
 import { NOTES_VIEW } from '../../constants';
 
-const NotesEditor = ({ isPlaying, pausePlaying, scrollThroughSong }) => {
-  const canvasRef = React.useRef(null);
-
-  useMousewheel(canvasRef, true, ev => {
-    // Ignore mousewheels when the ctrl key is held.
-    // Those mousewheel events will be captured above, for changing the
-    // snapping.
-    if (isMetaKeyPressed(ev)) {
-      return;
-    }
-
-    ev.preventDefault();
-
-    const direction = ev.deltaY < 0 ? 'forwards' : 'backwards';
-
-    if (!isPlaying) {
-      scrollThroughSong(direction);
-    }
-  });
-
+const NotesEditor = () => {
   return (
     <Wrapper>
       <SongInfo showDifficultySelector />
 
-      <ReduxForwardingCanvas ref={canvasRef}>
+      <ReduxForwardingCanvas>
         <MapVisualization />
       </ReduxForwardingCanvas>
 
@@ -59,16 +38,4 @@ const Wrapper = styled.div`
   height: 100%;
 `;
 
-const mapStateToProps = state => ({
-  isPlaying: state.navigation.isPlaying,
-});
-
-const mapDispatchToProps = {
-  pausePlaying: actions.pausePlaying,
-  scrollThroughSong: actions.scrollThroughSong,
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(NotesEditor);
+export default NotesEditor;

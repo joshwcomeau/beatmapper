@@ -9,28 +9,18 @@ import React from 'react';
 
 import { throttle } from '../utils';
 
-export default function useMousewheel(ref, preventDefault, handleMouseWheel) {
+export default function useMousewheel(handleMouseWheel) {
   const throttledHandler = throttle(handleMouseWheel, 100);
 
-  const wrappedHandler = React.useCallback(
-    ev => {
-      if (preventDefault) {
-        ev.preventDefault();
-      }
+  const wrappedHandler = ev => {
+    ev.preventDefault();
 
-      throttledHandler(ev);
-    },
-    [throttledHandler, preventDefault]
-  );
+    throttledHandler(ev);
+  };
 
   React.useEffect(() => {
-    if (!ref.current) {
-      return;
-    }
+    window.addEventListener('wheel', wrappedHandler, { passive: false });
 
-    const scrollEl = ref.current;
-    scrollEl.addEventListener('wheel', wrappedHandler);
-
-    return () => scrollEl.removeEventListener('wheel', wrappedHandler);
-  }, [handleMouseWheel, ref, wrappedHandler]);
+    return () => window.removeEventListener('wheel', wrappedHandler);
+  }, [handleMouseWheel, wrappedHandler]);
 }

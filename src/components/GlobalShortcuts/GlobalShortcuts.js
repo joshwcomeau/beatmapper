@@ -49,7 +49,9 @@ const KeyboardShortcuts = ({
     space: false,
   });
 
-  const throttledScroller = throttle((direction, holdingMeta, holdingAlt) => {
+  // This handler handles mousewheel events, as well as up/down/left/right
+  // arrow keys.
+  const handleScroll = (direction, holdingMeta, holdingAlt) => {
     // If the user is holding Cmd/ctrl, we should scroll through snapping
     // increments instead of the song.
     if (holdingMeta) {
@@ -63,7 +65,9 @@ const KeyboardShortcuts = ({
     }
 
     scrollThroughSong(direction);
-  }, 50);
+  };
+
+  const handleScrollThrottled = throttle(handleScroll, 50);
 
   const handleKeyDown = ev => {
     // If the control key and a number is pressed, we want to update snapping.
@@ -113,11 +117,19 @@ const KeyboardShortcuts = ({
 
       case 'ArrowUp':
       case 'ArrowRight': {
-        return throttledScroller('forwards', isMetaKeyPressed(ev), ev.altKey);
+        return handleScrollThrottled(
+          'forwards',
+          isMetaKeyPressed(ev),
+          ev.altKey
+        );
       }
       case 'ArrowDown':
       case 'ArrowLeft': {
-        return throttledScroller('backwards', isMetaKeyPressed(ev), ev.altKey);
+        return handleScrollThrottled(
+          'backwards',
+          isMetaKeyPressed(ev),
+          ev.altKey
+        );
       }
 
       case 'PageUp': {
@@ -228,16 +240,10 @@ const KeyboardShortcuts = ({
     };
   });
 
-  // While not a key exactly, we also want to manage the mousewheel+ctrl
-  // action of changing the snapping
-  useMousewheel({ current: window }, false, ev => {
-    if (!isMetaKeyPressed(ev)) {
-      return;
-    }
-
+  useMousewheel(ev => {
     const direction = ev.deltaY > 0 ? 'forwards' : 'backwards';
 
-    direction === 'forwards' ? incrementSnapping() : decrementSnapping();
+    handleScroll(direction, isMetaKeyPressed(ev), ev.altKey);
   });
 
   return null;
