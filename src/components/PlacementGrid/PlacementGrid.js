@@ -3,8 +3,11 @@ import { connect } from 'react-redux';
 import * as THREE from 'three';
 
 import * as actions from '../../actions';
-import { range } from '../../utils';
-import { getCursorPositionInBeats } from '../../reducers/navigation.reducer';
+import { range, roundToNearest } from '../../utils';
+import {
+  getCursorPositionInBeats,
+  getSnapTo,
+} from '../../reducers/navigation.reducer';
 
 import { getDirectionForDrag } from './PlacementGrid.helpers';
 
@@ -12,9 +15,9 @@ import TentativeObstacle from './TentativeObstacle';
 
 const PlacementGrid = ({
   width,
-  height,
   position,
   cursorPositionInBeats,
+  snapTo,
   selectedDirection,
   selectedTool,
   selectionMode,
@@ -151,10 +154,25 @@ const PlacementGrid = ({
                   return;
                 }
 
+                // If the user tries to place blocks while the song is playing,
+                // we want to snap to the nearest snapping interval.
+                // eg. if they're set to snap to 1/2 beats, and they click
+                // when the song is 3.476 beats in, we should round up to 3.5.
+                const roundedCursorPositionInBeats = roundToNearest(
+                  cursorPositionInBeats,
+                  snapTo
+                );
+
+                console.log({
+                  cursorPositionInBeats,
+                  roundedCursorPositionInBeats,
+                  snapTo,
+                });
+
                 clickPlacementGrid(
                   rowIndex,
                   colIndex,
-                  cursorPositionInBeats,
+                  roundedCursorPositionInBeats,
                   selectedDirection,
                   selectedTool
                 );
@@ -250,6 +268,7 @@ const PlacementGrid = ({
 
 const mapStateToProps = state => ({
   cursorPositionInBeats: getCursorPositionInBeats(state),
+  snapTo: getSnapTo(state),
   selectedDirection: state.editor.notes.selectedDirection,
   selectedTool: state.editor.notes.selectedTool,
   selectionMode: state.editor.notes.selectionMode,
