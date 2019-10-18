@@ -47,10 +47,6 @@ export const unshiftEntitiesByOffset = (entities, offset, bpm) => {
 
   return entities.map(entity => ({
     ...entity,
-    // So because we're doing floating-point stuff, we want to avoid any
-    // subtle drift caused by the conversion imprecision.
-    // I never expect to need more granularity than 1/64, so let's round by
-    // that.
-    _time: roundToNearest(entity._time - offsetInBeats, 1 / 64),
+    _time: entity._time - offsetInBeats,
   }));
 };
