@@ -19,6 +19,7 @@ import {
   getStartAndEndBeat,
 } from './reducers/editor.reducer';
 import { getStickyMapAuthorName } from './reducers/user.reducer';
+import { getSortedBookmarksArray } from './reducers/bookmarks.reducer';
 
 export const loadDemoSong = () => ({
   type: 'LOAD_DEMO_SONG',
@@ -210,17 +211,16 @@ export const adjustCursorPosition = newCursorPosition => ({
 export const createBookmark = (name, view) => (dispatch, getState) => {
   const state = getState();
 
-  const existingBookmarks = getBookmarks(state);
+  const existingBookmarks = getSortedBookmarksArray(state);
   const color = getNewBookmarkColor(existingBookmarks);
 
   // For the notes view, we want to use the cursorPosition to figure out when to
   // create the bookmark for.
   // For the events view, we want it to be based on the mouse position.
-  let beatNum;
-  if (view === NOTES_VIEW) {
-    beatNum = getCursorPositionInBeats(state);
-  } else {
-  }
+  const beatNum =
+    view === NOTES_VIEW
+      ? getCursorPositionInBeats(state)
+      : getSelectedEventBeat(state);
 
   return dispatch({
     type: 'CREATE_BOOKMARK',
