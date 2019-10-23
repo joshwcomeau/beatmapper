@@ -188,6 +188,11 @@ const KeyboardShortcuts = ({
         if (isMetaKeyPressed(ev)) {
           // If they're holding cmd, create a bookmark
           const name = window.prompt('Enter a name for this bookmark');
+
+          if (!name) {
+            return;
+          }
+
           return createBookmark(name, view);
         } else {
           // Otherwise, toggle the note color to Blue.

@@ -10,14 +10,11 @@ export const BOOKMARK_COLORS = [
 ];
 
 export const getNewBookmarkColor = bookmarks => {
-  // Most songs will have <6 bookmarks, so I'll have 6 unique colors.
-
-  // If the user has MORE than 6 colors, just pick a random one
-  // TODO: Should I either create new colors, OR pick a color unlike the colors
-  // nearest to it? So that it tries not to have two purple ones in a row or
-  // whatever?
+  // I have 6 unique colors, and it's important that these are the first-used
+  // colors. Beyond that, we can be a little less careful, since most songs
+  // won't get up this high anyway.
   if (bookmarks.length >= 6) {
-    return sample(BOOKMARK_COLORS);
+    return BOOKMARK_COLORS[bookmarks.length % BOOKMARK_COLORS.length];
   }
 
   const firstUnusedColor = BOOKMARK_COLORS.find(color => {

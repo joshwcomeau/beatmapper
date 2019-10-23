@@ -37,7 +37,7 @@ describe('Bookmarks helpers', () => {
       expect(getNewBookmarkColor(bookmarks)).toBe(BOOKMARK_COLORS[1]);
     });
 
-    it('picks a random value for the 7th bookmark', () => {
+    it('picks the first value for the 7th bookmark', () => {
       // This test relies on randomness! This is a hard thing to test.
       // Rather than be 100% definitive, I'm going to be 99.9999% definitive.
       const bookmarks = [
@@ -49,21 +49,7 @@ describe('Bookmarks helpers', () => {
         { name: 'sixth', color: BOOKMARK_COLORS[5] },
       ];
 
-      const seenValues = {};
-
-      for (let i = 0; i < 100; i++) {
-        const randomColor = getNewBookmarkColor(bookmarks);
-        seenValues[randomColor.background] = true;
-      }
-
-      // After 100 random generations, I should have at least 2 different
-      // colors.
-      // For this test to fail (when the code actually works), I'd have to
-      // roll the 6-sided dice 100 times and wind up with the same value
-      // every time.
-      const numOfUniqueSeenColors = Object.keys(seenValues).length;
-
-      expect(numOfUniqueSeenColors).toBeGreaterThan(1);
+      expect(getNewBookmarkColor(bookmarks)).toBe(BOOKMARK_COLORS[0]);
     });
   });
 

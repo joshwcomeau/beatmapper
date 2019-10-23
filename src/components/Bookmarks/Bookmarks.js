@@ -16,7 +16,11 @@ const Bookmarks = ({
   jumpToBeat,
   deleteBookmark,
 }) => {
-  return bookmarks.map(bookmark => {
+  // Add the bookmarks in reverse.
+  // This way, they stack from left to right, so earlier flags sit in front of
+  // later ones. This is important when hovering, to be able to see the flag
+  // name
+  return [...bookmarks].reverse().map(bookmark => {
     const beatNumWithOffset = bookmark.beatNum + offsetInBeats;
     const offsetPercentage = (beatNumWithOffset / durationInBeats) * 100;
 
