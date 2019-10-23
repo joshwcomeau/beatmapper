@@ -3,6 +3,8 @@ import styled from 'styled-components';
 
 import { UNIT } from '../../constants';
 
+import UnstyledButton from '../UnstyledButton';
+
 const TOP_SPILLOVER = 15;
 const BOTTOM_SPILLOVER = UNIT;
 
@@ -22,8 +24,9 @@ const BookmarkFlag = ({ bookmark, offsetPercentage, handleClick }) => {
   return (
     <>
       <ThinStrip style={sharedStyles} />
-      <Flag style={sharedStyles}>
+      <Flag style={sharedStyles} onClick={handleClick}>
         <BeatNum>{bookmark.beatNum} </BeatNum>
+        <Name>{bookmark.name}</Name>
         <FlagDecoration viewBox="0 0 5 10">
           <polygon fill={bookmark.color.background} points="0,0 5,5 0,10" />
         </FlagDecoration>
@@ -47,7 +50,7 @@ const ThinStrip = styled.div`
   pointer-events: none;
 `;
 
-const Flag = styled.div`
+const Flag = styled(UnstyledButton)`
   position: absolute;
   z-index: 2;
   top: ${-TOP_SPILLOVER}px;
@@ -55,6 +58,7 @@ const Flag = styled.div`
   padding-right: 4px;
   height: 20px;
   line-height: 20px;
+  display: flex;
 `;
 
 const BeatNum = styled.div`
@@ -69,6 +73,16 @@ const FlagDecoration = styled.svg`
   bottom: 0;
   transform: translateX(100%);
   height: 100%;
+`;
+
+const Name = styled.div`
+  margin-left: 6px;
+  font-size: 11px;
+  display: none;
+
+  ${Flag}:hover & {
+    display: block;
+  }
 `;
 
 export default BookmarkFlag;

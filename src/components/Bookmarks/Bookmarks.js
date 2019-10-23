@@ -44,9 +44,9 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = state => ({
+const mapDispatchToProps = {
   jumpToBeat: actions.jumpToBeat,
-});
+};
 
 export default connect(
   mapStateToProps,
