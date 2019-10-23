@@ -1,4 +1,3 @@
-import { roundToNearest } from '../utils';
 import { convertMillisecondsToBeats } from '../helpers/audio.helpers';
 
 export const getFileFromArchive = (archive, filename) => {

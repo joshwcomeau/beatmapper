@@ -112,11 +112,12 @@ export const startLoadingSong = (songId, difficulty) => ({
   difficulty,
 });
 
-export const loadBeatmapEntities = (notes, events, obstacles) => ({
+export const loadBeatmapEntities = (notes, events, obstacles, bookmarks) => ({
   type: 'LOAD_BEATMAP_ENTITIES',
   notes,
   events,
   obstacles,
+  bookmarks,
 });
 
 export const finishLoadingSong = (song, waveformData) => ({

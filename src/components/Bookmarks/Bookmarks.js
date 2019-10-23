@@ -2,19 +2,26 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import * as actions from '../../actions';
+import { convertMillisecondsToBeats } from '../../helpers/audio.helpers';
 import { getSortedBookmarksArray } from '../../reducers/bookmarks.reducer';
 import { getDurationInBeats } from '../../reducers/navigation.reducer';
+import { getSelectedSong } from '../../reducers/songs.reducer';
+
 import BookmarkFlag from './BookmarkFlag';
 
-const Bookmarks = ({ bookmarks, durationInBeats, jumpToBeat }) => {
+const Bookmarks = ({
+  bookmarks,
+  durationInBeats,
+  offsetInBeats,
+  jumpToBeat,
+}) => {
   return bookmarks.map(bookmark => {
-    // Our Bookmark component needs to be given its position
-    const offsetPercentage = (bookmark.beatNum / durationInBeats) * 100;
-
-    console.log(bookmark.beatNum, durationInBeats);
+    const beatNumWithOffset = bookmark.beatNum + offsetInBeats;
+    const offsetPercentage = (beatNumWithOffset / durationInBeats) * 100;
 
     return (
       <BookmarkFlag
+        key={bookmark.beatNum}
         bookmark={bookmark}
         offsetPercentage={offsetPercentage}
         handleClick={() => jumpToBeat(bookmark.beatNum)}
@@ -23,10 +30,19 @@ const Bookmarks = ({ bookmarks, durationInBeats, jumpToBeat }) => {
   });
 };
 
-const mapStateToProps = state => ({
-  bookmarks: getSortedBookmarksArray(state),
-  durationInBeats: getDurationInBeats(state),
-});
+const mapStateToProps = state => {
+  const selectedSong = getSelectedSong(state);
+  const offsetInBeats = convertMillisecondsToBeats(
+    selectedSong.offset,
+    selectedSong.bpm
+  );
+
+  return {
+    bookmarks: getSortedBookmarksArray(state),
+    durationInBeats: getDurationInBeats(state),
+    offsetInBeats,
+  };
+};
 
 const mapDispatchToProps = state => ({
   jumpToBeat: actions.jumpToBeat,

@@ -25,7 +25,7 @@ const EditorWaveform = ({
   const [ref, boundingBox] = useBoundingBox();
 
   return (
-    <div ref={ref}>
+    <Wrapper ref={ref}>
       {isLoadingSong && (
         <SpinnerWrapper>
           <CenteredSpinner />
@@ -43,12 +43,16 @@ const EditorWaveform = ({
             cursorPosition={cursorPosition}
             scrubWaveform={scrubWaveform}
           />
-          <Bookmarks />
+          {!isLoadingSong && <Bookmarks />}
         </>
       )}
-    </div>
+    </Wrapper>
   );
 };
+
+const Wrapper = styled.div`
+  position: relative;
+`;
 
 const SpinnerWrapper = styled.div`
   position: absolute;

@@ -16,6 +16,7 @@ import {
 import { getSongIdFromName, sortDifficultyIds } from '../helpers/song.helpers';
 import { convertEventsToExportableJson } from '../helpers/events.helpers';
 import { convertObstaclesToExportableJson } from '../helpers/obstacles.helpers';
+import { convertBookmarksToExportableJson } from '../helpers/bookmarks.helpers';
 import {
   getNotes,
   getObstacles,
@@ -31,6 +32,7 @@ import {
   shiftEntitiesByOffset,
   getFileFromArchive,
 } from './packaging.service.nitty-gritty';
+import { getSortedBookmarksArray } from '../reducers/bookmarks.reducer';
 
 export function createInfoContent(song, meta = { version: 2 }) {
   const difficultyIds = sortDifficultyIds(Object.keys(song.difficultiesById));
@@ -116,9 +118,7 @@ export function createInfoContent(song, meta = { version: 2 }) {
  * eg. 'Expert.dat'.
  */
 export function createBeatmapContents(
-  notes,
-  obstacles = [],
-  events = [],
+  { notes, obstacles = [], events = [], bookmarks = [] },
   meta = { version: 2 },
   // The following fields are only necessary for v1.
   bpm,
@@ -155,8 +155,7 @@ export function createBeatmapContents(
       _events: sortedEvents,
       _notes: sortedNotes,
       _obstacles: sortedObstacles,
-      // Bookmarks not yet supported.
-      _bookmarks: [],
+      _bookmarks: bookmarks,
     };
   } else if (meta.version === 1) {
     contents = {
@@ -181,6 +180,9 @@ export function createBeatmapContentsFromState(state, song) {
   const notes = getNotes(state);
   const events = convertEventsToExportableJson(getAllEventsAsArray(state));
   const obstacles = convertObstaclesToExportableJson(getObstacles(state));
+  const bookmarks = convertBookmarksToExportableJson(
+    getSortedBookmarksArray(state)
+  );
 
   // It's important that notes are sorted by their _time property primarily,
   // and then by _lineLayer secondarily.
@@ -203,9 +205,12 @@ export function createBeatmapContentsFromState(state, song) {
   const deselectedEvents = shiftedEvents.map(deselect);
 
   return createBeatmapContents(
-    deselectedNotes,
-    deselectedObstacles,
-    deselectedEvents,
+    {
+      notes: deselectedNotes,
+      obstacles: deselectedObstacles,
+      events: deselectedEvents,
+      bookmarks,
+    },
     {
       version: 2,
     }
@@ -252,9 +257,12 @@ export const zipFiles = (song, songFile, coverArtFile, version) => {
         const beatmapData = JSON.parse(fileContents);
 
         const legacyFileContents = createBeatmapContents(
-          beatmapData._notes,
-          beatmapData._obstacles,
-          beatmapData._events,
+          {
+            notes: beatmapData._notes,
+            obstacles: beatmapData._obstacles,
+            events: beatmapData._events,
+            bookmarks: beatmapData._bookmarks,
+          },
           { version: 1 },
           song.bpm,
           song.difficultiesById[difficulty].noteJumpSpeed,
@@ -318,9 +326,12 @@ export const convertLegacyArchive = async archive => {
       const fileJson = JSON.parse(fileContents);
 
       const newFileContents = createBeatmapContents(
-        fileJson._notes,
-        fileJson._obstacles,
-        fileJson._events,
+        {
+          notes: fileJson._notes,
+          obstacles: fileJson._obstacles,
+          events: fileJson._events,
+          bookmarks: fileJson._bookmarks,
+        },
         { version: 2 }
       );
 

@@ -3,7 +3,8 @@ import styled from 'styled-components';
 
 import { UNIT } from '../../constants';
 
-const SPILLOVER = 10;
+const TOP_SPILLOVER = 15;
+const BOTTOM_SPILLOVER = UNIT;
 
 const BookmarkFlag = ({ bookmark, offsetPercentage, handleClick }) => {
   // We want to return two sibling pieces:
@@ -23,6 +24,9 @@ const BookmarkFlag = ({ bookmark, offsetPercentage, handleClick }) => {
       <ThinStrip style={sharedStyles} />
       <Flag style={sharedStyles}>
         <BeatNum>{bookmark.beatNum} </BeatNum>
+        <FlagDecoration viewBox="0 0 5 10">
+          <polygon fill={bookmark.color.background} points="0,0 5,5 0,10" />
+        </FlagDecoration>
       </Flag>
     </>
   );
@@ -31,10 +35,11 @@ const BookmarkFlag = ({ bookmark, offsetPercentage, handleClick }) => {
 const ThinStrip = styled.div`
   position: absolute;
   z-index: 2;
-  top: ${-SPILLOVER}px;
-  bottom: ${UNIT * 2 - SPILLOVER};
-  width: 1px;
-  height: 100%;
+  top: ${-TOP_SPILLOVER}px;
+  bottom: ${-BOTTOM_SPILLOVER}px;
+  width: 2px;
+  transform: translateX(-1px);
+  border-radius: 2px 0 2px 2px;
   /*
     Important: no pointer events, since this line overlaps the waveform.
     I don't want to block scrubbing
@@ -45,13 +50,25 @@ const ThinStrip = styled.div`
 const Flag = styled.div`
   position: absolute;
   z-index: 2;
-  top: ${-SPILLOVER}px;
-  padding: 4px;
+  top: ${-TOP_SPILLOVER}px;
+  padding-left: 4px;
+  padding-right: 4px;
+  height: 20px;
+  line-height: 20px;
 `;
 
 const BeatNum = styled.div`
-  font-size: 13px;
+  font-size: 11px;
   font-weight: bold;
+`;
+
+const FlagDecoration = styled.svg`
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  transform: translateX(100%);
+  height: 100%;
 `;
 
 export default BookmarkFlag;

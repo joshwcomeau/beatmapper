@@ -22,6 +22,7 @@ import {
   convertEventsToRedux,
   convertEventsToExportableJson,
 } from '../helpers/events.helpers';
+import { convertBookmarksToRedux } from '../helpers/bookmarks.helpers';
 import { clamp } from '../utils';
 import {
   getFile,
@@ -121,12 +122,16 @@ export default function createSongMiddleware() {
           // So I need to convert the ugly JSON format to something manageable.
           let convertedObstacles = convertObstaclesToRedux(unshiftedObstacles);
           let convertedEvents = convertEventsToRedux(unshiftedEvents);
+          let convertedBookmarks = convertBookmarksToRedux(
+            beatmapJson._bookmarks
+          );
 
           next(
             loadBeatmapEntities(
               unshiftedNotes,
               convertedEvents,
-              convertedObstacles
+              convertedObstacles,
+              convertedBookmarks
             )
           );
 
@@ -167,9 +172,13 @@ export default function createSongMiddleware() {
         );
 
         const beatmapContents = createBeatmapContents(
-          [], // Don't start with any notes or obstacles
-          [],
-          shiftedEvents,
+          {
+            // No notes/obstacles/bookmarks by default, but copy the lighting
+            notes: [],
+            obstacles: [],
+            events: shiftedEvents,
+            bookmarks: [],
+          },
           { version: 2 }
         );
 

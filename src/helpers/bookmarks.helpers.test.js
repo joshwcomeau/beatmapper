@@ -1,4 +1,9 @@
-import { BOOKMARK_COLORS, getNewBookmarkColor } from './bookmarks.helpers';
+import {
+  BOOKMARK_COLORS,
+  getNewBookmarkColor,
+  convertBookmarksToExportableJson,
+  convertBookmarksToRedux,
+} from './bookmarks.helpers';
 
 describe('Bookmarks helpers', () => {
   describe('getNewBookmarkColor', () => {
@@ -59,6 +64,58 @@ describe('Bookmarks helpers', () => {
       const numOfUniqueSeenColors = Object.keys(seenValues).length;
 
       expect(numOfUniqueSeenColors).toBeGreaterThan(1);
+    });
+  });
+
+  describe('convertBookmarksToExportableJson', () => {
+    it('Converts bookmarks correctly', () => {
+      const bookmarks = [
+        {
+          beatNum: 32,
+          name: 'buildup',
+          color: { background: '#F00', text: '#000' },
+        },
+        {
+          beatNum: 128,
+          name: 'drop',
+          color: { background: '#F00', text: '#000' },
+        },
+      ];
+
+      expect(convertBookmarksToExportableJson(bookmarks)).toEqual([
+        {
+          _time: 32,
+          _name: 'buildup',
+          __meta: { color: { background: '#F00', text: '#000' } },
+        },
+        {
+          _time: 128,
+          _name: 'drop',
+          __meta: { color: { background: '#F00', text: '#000' } },
+        },
+      ]);
+    });
+  });
+
+  describe('convertBookmarksToRedux', () => {
+    it('Converts bookmarks correctly', () => {
+      const bookmarks = [
+        { _time: 32, _name: 'buildup' },
+        { _time: 128, _name: 'drop' },
+      ];
+
+      expect(convertBookmarksToRedux(bookmarks)).toEqual([
+        {
+          beatNum: 32,
+          name: 'buildup',
+          color: BOOKMARK_COLORS[0],
+        },
+        {
+          beatNum: 128,
+          name: 'drop',
+          color: BOOKMARK_COLORS[1],
+        },
+      ]);
     });
   });
 });
