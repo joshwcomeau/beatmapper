@@ -231,6 +231,11 @@ export const createBookmark = (name, view) => (dispatch, getState) => {
   });
 };
 
+export const deleteBookmark = beatNum => ({
+  type: 'DELETE_BOOKMARK',
+  beatNum,
+});
+
 export const clickPlacementGrid = (
   rowIndex,
   colIndex,

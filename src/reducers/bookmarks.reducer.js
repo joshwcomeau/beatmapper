@@ -1,4 +1,6 @@
 import { createSelector } from 'reselect';
+import produce from 'immer';
+
 const initialState = {};
 
 export default function bookmarksReducer(state = initialState, action) {
@@ -10,7 +12,13 @@ export default function bookmarksReducer(state = initialState, action) {
     }
 
     case 'LOAD_BEATMAP_ENTITIES': {
-      return action.bookmarks;
+      // The initial data is loaded as an array, we need to convert it to a map.
+      return action.bookmarks.reduce((acc, bookmark) => {
+        return {
+          ...acc,
+          [bookmark.beatNum]: bookmark,
+        };
+      }, {});
     }
 
     case 'CREATE_BOOKMARK': {
@@ -22,6 +30,12 @@ export default function bookmarksReducer(state = initialState, action) {
           color: action.color,
         },
       };
+    }
+
+    case 'DELETE_BOOKMARK': {
+      return produce(state, draftState => {
+        delete draftState[action.beatNum];
+      });
     }
 
     default:

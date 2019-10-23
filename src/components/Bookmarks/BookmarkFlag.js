@@ -8,7 +8,12 @@ import UnstyledButton from '../UnstyledButton';
 const TOP_SPILLOVER = 15;
 const BOTTOM_SPILLOVER = UNIT;
 
-const BookmarkFlag = ({ bookmark, offsetPercentage, handleClick }) => {
+const BookmarkFlag = ({
+  bookmark,
+  offsetPercentage,
+  handleJump,
+  handleDelete,
+}) => {
   // We want to return two sibling pieces:
   // - A thin vertical line that shows where the flag lives in the beat, which
   //   ignores pointer events so that the waveform remains scrubbable
@@ -21,10 +26,28 @@ const BookmarkFlag = ({ bookmark, offsetPercentage, handleClick }) => {
     backgroundColor: bookmark.color.background,
   };
 
+  const handleMouseUp = ev => {
+    ev.preventDefault();
+
+    // Handle right-clicks
+    if (ev.button === 2) {
+      handleDelete();
+    } else {
+      handleJump();
+    }
+  };
+
   return (
     <>
       <ThinStrip style={sharedStyles} />
-      <Flag style={sharedStyles} onClick={handleClick}>
+      <Flag
+        style={sharedStyles}
+        onMouseUp={handleMouseUp}
+        onContextMenu={ev => {
+          // Don't allow context menu to pop on right click.
+          ev.preventDefault();
+        }}
+      >
         <BeatNum>{bookmark.beatNum} </BeatNum>
         <Name>{bookmark.name}</Name>
         <FlagDecoration viewBox="0 0 5 10">

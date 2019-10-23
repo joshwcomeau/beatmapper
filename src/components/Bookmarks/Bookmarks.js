@@ -14,6 +14,7 @@ const Bookmarks = ({
   durationInBeats,
   offsetInBeats,
   jumpToBeat,
+  deleteBookmark,
 }) => {
   return bookmarks.map(bookmark => {
     const beatNumWithOffset = bookmark.beatNum + offsetInBeats;
@@ -24,7 +25,8 @@ const Bookmarks = ({
         key={bookmark.beatNum}
         bookmark={bookmark}
         offsetPercentage={offsetPercentage}
-        handleClick={() => jumpToBeat(bookmark.beatNum)}
+        handleJump={() => jumpToBeat(bookmark.beatNum)}
+        handleDelete={() => deleteBookmark(bookmark.beatNum)}
       />
     );
   });
@@ -46,6 +48,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
   jumpToBeat: actions.jumpToBeat,
+  deleteBookmark: actions.deleteBookmark,
 };
 
 export default connect(
