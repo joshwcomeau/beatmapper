@@ -1,6 +1,7 @@
 import uuid from 'uuid/v1';
 
 import { NOTES_VIEW, EVENTS_VIEW } from './constants';
+import { getNewBookmarkColor } from './helpers/bookmarks.helpers';
 import { getSelection } from './reducers/editor-entities.reducer';
 import {
   getNotes,
@@ -205,6 +206,29 @@ export const adjustCursorPosition = newCursorPosition => ({
   type: 'ADJUST_CURSOR_POSITION',
   newCursorPosition,
 });
+
+export const createBookmark = (name, view) => (dispatch, getState) => {
+  const state = getState();
+
+  const existingBookmarks = getBookmarks(state);
+  const color = getNewBookmarkColor(existingBookmarks);
+
+  // For the notes view, we want to use the cursorPosition to figure out when to
+  // create the bookmark for.
+  // For the events view, we want it to be based on the mouse position.
+  let beatNum;
+  if (view === NOTES_VIEW) {
+    beatNum = getCursorPositionInBeats(state);
+  } else {
+  }
+
+  return dispatch({
+    type: 'CREATE_BOOKMARK',
+    beatNum,
+    name,
+    color,
+  });
+};
 
 export const clickPlacementGrid = (
   rowIndex,
