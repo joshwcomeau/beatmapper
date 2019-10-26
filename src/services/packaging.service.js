@@ -17,6 +17,7 @@ import { getSongIdFromName, sortDifficultyIds } from '../helpers/song.helpers';
 import { convertEventsToExportableJson } from '../helpers/events.helpers';
 import { convertObstaclesToExportableJson } from '../helpers/obstacles.helpers';
 import { convertBookmarksToExportableJson } from '../helpers/bookmarks.helpers';
+import { formatColorForMods } from '../helpers/colors.helpers';
 import {
   getNotes,
   getObstacles,
@@ -105,6 +106,27 @@ export function createInfoContent(song, meta = { version: 2 }) {
         },
       ],
     };
+
+    // If the user has enabled custom colors, we need to include that as well
+    if (song.modSettings.customColors) {
+      const colors = song.modSettings.customColors;
+      const colorData = {
+        _colorLeft: formatColorForMods(colors.colorLeft),
+        _colorRight: formatColorForMods(colors.colorRight),
+        _envColorLeft: formatColorForMods(colors.envColorLeft),
+        _envColorRight: formatColorForMods(colors.envColorRight),
+        _obstacleColor: formatColorForMods(colors.obstacleColor),
+      };
+
+      contents._difficultyBeatmapSets.forEach(set => {
+        set._difficultyBeatmaps.forEach(difficulty => {
+          difficulty._customData = {
+            ...difficulty._customData,
+            ...colorData,
+          };
+        });
+      });
+    }
   } else {
     throw new Error('Unrecognized version: ' + meta.version);
   }

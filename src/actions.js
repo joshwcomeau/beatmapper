@@ -708,3 +708,14 @@ export const dismissPrompt = promptId => ({
   type: 'DISMISS_PROMPT',
   promptId,
 });
+
+export const toggleModForSong = mod => ({
+  type: 'TOGGLE_MOD_FOR_SONG',
+  mod,
+});
+
+export const updateModColor = (element, color) => ({
+  type: 'UPDATE_MOD_COLOR',
+  element,
+  color,
+});

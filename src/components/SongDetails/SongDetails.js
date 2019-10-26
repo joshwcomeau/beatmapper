@@ -22,10 +22,11 @@ import Heading from '../Heading';
 import Spacer from '../Spacer';
 import Spinner from '../Spinner';
 import Button from '../Button';
-import BeatmapDifficultySettings from './BeatmapDifficultySettings';
-
 import CoverArtPicker from '../AddSongForm/CoverArtPicker';
 import SongPicker from '../AddSongForm/SongPicker';
+
+import BeatmapDifficultySettings from './BeatmapDifficultySettings';
+import CustomColorSettings from './CustomColorSettings';
 
 const MEDIA_ROW_HEIGHT = 150;
 
@@ -360,9 +361,11 @@ const SongDetails = ({ song, stopPlaying, updateSongDetails }) => {
 
       <InnerWrapper>
         <Heading size={1}>Advanced Settings</Heading>
+        <Spacer size={UNIT * 6} />
+        <CustomColorSettings />
       </InnerWrapper>
 
-      <Spacer size={UNIT * 12} />
+      <Spacer size={UNIT * 36} />
     </Wrapper>
   );
 };
