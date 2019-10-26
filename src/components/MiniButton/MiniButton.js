@@ -4,12 +4,12 @@ import { Link } from 'react-router-dom';
 
 import { UNIT, COLORS } from '../../constants';
 
-import UnstyledButton from '../UnstyledButton';
+import UnfocusedButton from '../UnfocusedButton';
 import PixelShifter from '../PixelShifter';
 
 const MiniButton = ({ children, color, hoverColor, as, ...delegated }) => {
   let renderAs =
-    as || (typeof delegated.to === 'string' ? Link : UnstyledButton);
+    as || (typeof delegated.to === 'string' ? Link : UnfocusedButton);
 
   return (
     <ButtonElem
@@ -27,7 +27,7 @@ const MiniButton = ({ children, color, hoverColor, as, ...delegated }) => {
   );
 };
 
-const ButtonElem = styled(UnstyledButton)`
+const ButtonElem = styled(UnfocusedButton)`
   position: relative;
   padding: ${UNIT / 2}px ${UNIT * 1.5}px;
   border-radius: ${UNIT}px;

@@ -381,7 +381,10 @@ export default function createSongMiddleware() {
 
         next(adjustCursorPosition(newCursorPosition));
         audioElem.currentTime = newCursorPosition / 1000;
-        audioElem.pause();
+
+        if (action.pauseTrack) {
+          audioElem.pause();
+        }
 
         break;
       }

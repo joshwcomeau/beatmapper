@@ -24,7 +24,7 @@ export const promptQuickSelect = (view, wrappedAction) => {
   wrappedAction(view, start, end);
 };
 
-export const promptJumpToBeat = wrappedAction => {
+export const promptJumpToBeat = (wrappedAction, ...additionalArgs) => {
   const beatNum = window.prompt(
     'Enter the beat number you wish to jump to (eg. 16)'
   );
@@ -33,7 +33,7 @@ export const promptJumpToBeat = wrappedAction => {
     return;
   }
 
-  return wrappedAction(Number(beatNum));
+  return wrappedAction(Number(beatNum), ...additionalArgs);
 };
 
 export const promptChangeObstacleDuration = (obstacle, wrappedAction) => {

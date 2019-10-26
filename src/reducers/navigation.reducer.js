@@ -102,7 +102,14 @@ export default function navigationReducer(state = initialState, action) {
       };
     }
 
-    case 'JUMP_TO_BEAT':
+    case 'JUMP_TO_BEAT': {
+      return {
+        ...state,
+        isPlaying: !action.pauseTrack,
+        animateBlockMotion: false,
+      };
+    }
+
     case 'SELECT_ALL_IN_RANGE': {
       return {
         ...state,

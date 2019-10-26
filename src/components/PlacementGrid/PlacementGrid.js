@@ -163,12 +163,6 @@ const PlacementGrid = ({
                   snapTo
                 );
 
-                console.log({
-                  cursorPositionInBeats,
-                  roundedCursorPositionInBeats,
-                  snapTo,
-                });
-
                 clickPlacementGrid(
                   rowIndex,
                   colIndex,

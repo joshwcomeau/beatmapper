@@ -178,7 +178,7 @@ const KeyboardShortcuts = ({
       }
 
       case 'KeyJ': {
-        return promptJumpToBeat(jumpToBeat);
+        return promptJumpToBeat(jumpToBeat, true);
       }
 
       case 'KeyR': {

@@ -589,9 +589,10 @@ export const nudgeSelection = (direction, view) => (dispatch, getState) => {
   });
 };
 
-export const jumpToBeat = beatNum => ({
+export const jumpToBeat = (beatNum, pauseTrack) => ({
   type: 'JUMP_TO_BEAT',
   beatNum,
+  pauseTrack,
 });
 
 export const seekForwards = view => ({

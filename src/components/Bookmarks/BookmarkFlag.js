@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { UNIT } from '../../constants';
 
-import UnstyledButton from '../UnstyledButton';
+import UnfocusedButton from '../UnfocusedButton';
 
 const TOP_SPILLOVER = 15;
 const BOTTOM_SPILLOVER = UNIT;
@@ -73,7 +73,7 @@ const ThinStrip = styled.div`
   pointer-events: none;
 `;
 
-const Flag = styled(UnstyledButton)`
+const Flag = styled(UnfocusedButton)`
   position: absolute;
   z-index: 2;
   top: ${-TOP_SPILLOVER}px;
