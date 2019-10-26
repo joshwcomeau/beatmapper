@@ -285,6 +285,23 @@ These shortcuts can be used either in the "Notes" view or the "Events" view.
   >
     Clears the current selection
   </Shortcut>
+  <Shortcut
+    keys={
+      <IconRow>
+        <KeyIcon>
+          <MetaKey />
+        </KeyIcon>
+        <KeyIcon>B</KeyIcon>
+      </IconRow>
+    }
+  >
+    Create bookmark
+    <Sidenote>
+      Bookmarks add little flags to the waveform that let you quickly jump to
+      different points in the map. You can right-click to delete existing
+      bookmarks.
+    </Sidenote>
+  </Shortcut>
 </ShortcutTable>
 
 ## Notes view shortcuts
@@ -621,7 +638,7 @@ These shortcuts are exclusive to placing blocks, mines, and obstacles in the "No
     </Sidenote>
   </Shortcut>
   {/*  */}
-    <Shortcut
+  <Shortcut
     keys={
       <>
         <IconRow>
@@ -646,10 +663,15 @@ These shortcuts are exclusive to placing blocks, mines, and obstacles in the "No
   >
     Nudge selected notes
     <Sidenote>
-      Sometimes, you'll want to shift the selection forwards or backwards a bit. By holding <code><OptionKey /></code> and using the arrow keys or spinning the mousewheel, you can nudge notes. <strong>Respects the snapping interval</strong>.
+      Sometimes, you'll want to shift the selection forwards or backwards a bit.
+      By holding{' '}
+      <code>
+        <OptionKey />
+      </code>{' '}
+      and using the arrow keys or spinning the mousewheel, you can nudge notes.{' '}
+      <strong>Respects the snapping interval</strong>.
     </Sidenote>
   </Shortcut>
-
 </ShortcutTable>
 
 ## Events view shortcuts
