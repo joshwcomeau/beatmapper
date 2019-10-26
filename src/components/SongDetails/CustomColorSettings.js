@@ -14,7 +14,8 @@ import Spacer from '../Spacer';
 const ColorPicker = React.lazy(() => import('../ColorPicker'));
 
 const CustomColorSettings = ({ song, toggleModForSong, updateModColor }) => {
-  if (!song) {
+  // Might still be loading, or
+  if (!song || !song.modSettings) {
     return null;
   }
 

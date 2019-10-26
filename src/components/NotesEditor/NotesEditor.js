@@ -1,8 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import styled from 'styled-components';
-
-import * as actions from '../../actions';
 
 import ReduxForwardingCanvas from '../ReduxForwardingCanvas';
 import MapVisualization from '../MapVisualization';

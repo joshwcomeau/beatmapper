@@ -97,6 +97,7 @@ export default function songsReducer(state: State = initialState, action: any) {
 
     case 'FINISH_LOADING_SONG': {
       const { song, lastOpenedAt } = action;
+
       return produce(state, (draftState: State) => {
         const draftSong = draftState.byId[song.id];
 

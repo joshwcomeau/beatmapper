@@ -8,6 +8,8 @@ const Spacer = styled.img.attrs({
   display: block;
   width: ${props => props.size}px;
   height: ${props => props.size}px;
+  pointer-events: none;
+  user-select: none;
 `;
 
 export default Spacer;
