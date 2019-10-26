@@ -22,7 +22,7 @@ import Heading from '../Heading';
 import Spacer from '../Spacer';
 import Spinner from '../Spinner';
 import Button from '../Button';
-import BeatmapSettings from './BeatmapSettings';
+import BeatmapDifficultySettings from './BeatmapDifficultySettings';
 
 import CoverArtPicker from '../AddSongForm/CoverArtPicker';
 import SongPicker from '../AddSongForm/SongPicker';
@@ -30,7 +30,7 @@ import SongPicker from '../AddSongForm/SongPicker';
 const MEDIA_ROW_HEIGHT = 150;
 
 const ENVIRONMENT_DISPLAY_MAP = {
-  DefaultEnvironment: 'The First',
+  DefaultEnvironment: 'The First (default)',
   Origins: 'Origins',
   TriangleEnvironment: 'Triangle',
   BigMirrorEnvironment: 'Big Mirror',
@@ -346,7 +346,7 @@ const SongDetails = ({ song, stopPlaying, updateSongDetails }) => {
         <WrappedRow>
           {difficultyIds.map(difficultyId => {
             return (
-              <BeatmapSettings
+              <BeatmapDifficultySettings
                 key={difficultyId}
                 difficultyId={difficultyId}
                 song={song}
@@ -354,8 +354,15 @@ const SongDetails = ({ song, stopPlaying, updateSongDetails }) => {
             );
           })}
         </WrappedRow>
-        <Spacer size={UNIT * 6} />
       </BeatmapsWrapper>
+
+      <Spacer size={UNIT * 6} />
+
+      <InnerWrapper>
+        <Heading size={1}>Advanced Settings</Heading>
+      </InnerWrapper>
+
+      <Spacer size={UNIT * 12} />
     </Wrapper>
   );
 };
