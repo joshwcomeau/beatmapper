@@ -1,3 +1,4 @@
+import { roundToNearest } from '../utils';
 import { convertMillisecondsToBeats } from '../helpers/audio.helpers';
 
 export const getFileFromArchive = (archive, filename) => {
@@ -46,6 +47,11 @@ export const unshiftEntitiesByOffset = (entities, offset, bpm) => {
 
   return entities.map(entity => ({
     ...entity,
-    _time: entity._time - offsetInBeats,
+    // So because we're doing floating-point stuff, we want to avoid any
+    // subtle drift caused by the conversion imprecision.
+    // Numbers like 31.999999999999996.
+    // At the same time, I want to allow legit repeating values like 1.3333,
+    // Since thirds of time is valid! This rounding value seems to be the sweet spot.
+    _time: roundToNearest(entity._time - offsetInBeats, 1 / 100000000),
   }));
 };

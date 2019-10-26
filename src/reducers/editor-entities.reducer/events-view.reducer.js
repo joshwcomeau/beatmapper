@@ -369,6 +369,7 @@ const eventsView = undoable(
       'PLACE_EVENT',
       'CHANGE_LASER_SPEED',
       'DELETE_EVENT',
+      'DELETE_SELECTED_EVENTS',
       'BULK_DELETE_EVENT',
       'CUT_SELECTION',
       'PASTE_SELECTION',
