@@ -52,7 +52,7 @@ const Sidebar = ({ location, match, leaveEditor }) => {
             isActive={!!location.pathname.match(/\/preview$/)}
           />
           <SidebarNavItem
-            title="Song Details"
+            title="Map Settings"
             icon={sliders}
             to={`/edit/${songId}/${difficulty}/details`}
             isActive={!!location.pathname.match(/\/details$/)}
@@ -68,7 +68,7 @@ const Sidebar = ({ location, match, leaveEditor }) => {
 
       <Bottom>
         <SpacedChildren spacing={UNIT * 2}>
-          <SidebarNavItem
+          {/* <SidebarNavItem
             title="Settings"
             icon={settings}
             onClick={ev => {
@@ -76,7 +76,7 @@ const Sidebar = ({ location, match, leaveEditor }) => {
               alert('click');
             }}
             isActive={false}
-          />
+          /> */}
           <SidebarNavItem
             title="Help"
             icon={helpCircle}

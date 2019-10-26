@@ -1,6 +1,7 @@
 import uuid from 'uuid/v1';
 
 import { NOTES_VIEW, EVENTS_VIEW } from './constants';
+import { getNewBookmarkColor } from './helpers/bookmarks.helpers';
 import { getSelection } from './reducers/editor-entities.reducer';
 import {
   getNotes,
@@ -18,6 +19,7 @@ import {
   getStartAndEndBeat,
 } from './reducers/editor.reducer';
 import { getStickyMapAuthorName } from './reducers/user.reducer';
+import { getSortedBookmarksArray } from './reducers/bookmarks.reducer';
 
 export const loadDemoSong = () => ({
   type: 'LOAD_DEMO_SONG',
@@ -110,11 +112,12 @@ export const startLoadingSong = (songId, difficulty) => ({
   difficulty,
 });
 
-export const loadBeatmapEntities = (notes, events, obstacles) => ({
+export const loadBeatmapEntities = (notes, events, obstacles, bookmarks) => ({
   type: 'LOAD_BEATMAP_ENTITIES',
   notes,
   events,
   obstacles,
+  bookmarks,
 });
 
 export const finishLoadingSong = (song, waveformData) => ({
@@ -204,6 +207,33 @@ export const pasteSelection = view => (dispatch, getState) => {
 export const adjustCursorPosition = newCursorPosition => ({
   type: 'ADJUST_CURSOR_POSITION',
   newCursorPosition,
+});
+
+export const createBookmark = (name, view) => (dispatch, getState) => {
+  const state = getState();
+
+  const existingBookmarks = getSortedBookmarksArray(state);
+  const color = getNewBookmarkColor(existingBookmarks);
+
+  // For the notes view, we want to use the cursorPosition to figure out when to
+  // create the bookmark for.
+  // For the events view, we want it to be based on the mouse position.
+  const beatNum =
+    view === NOTES_VIEW
+      ? getCursorPositionInBeats(state)
+      : getSelectedEventBeat(state);
+
+  return dispatch({
+    type: 'CREATE_BOOKMARK',
+    beatNum,
+    name,
+    color,
+  });
+};
+
+export const deleteBookmark = beatNum => ({
+  type: 'DELETE_BOOKMARK',
+  beatNum,
 });
 
 export const clickPlacementGrid = (
@@ -559,9 +589,10 @@ export const nudgeSelection = (direction, view) => (dispatch, getState) => {
   });
 };
 
-export const jumpToBeat = beatNum => ({
+export const jumpToBeat = (beatNum, pauseTrack) => ({
   type: 'JUMP_TO_BEAT',
   beatNum,
+  pauseTrack,
 });
 
 export const seekForwards = view => ({
@@ -676,4 +707,15 @@ export const commitSelection = () => ({
 export const dismissPrompt = promptId => ({
   type: 'DISMISS_PROMPT',
   promptId,
+});
+
+export const toggleModForSong = mod => ({
+  type: 'TOGGLE_MOD_FOR_SONG',
+  mod,
+});
+
+export const updateModColor = (element, color) => ({
+  type: 'UPDATE_MOD_COLOR',
+  element,
+  color,
 });

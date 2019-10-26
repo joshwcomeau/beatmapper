@@ -22,15 +22,16 @@ import Heading from '../Heading';
 import Spacer from '../Spacer';
 import Spinner from '../Spinner';
 import Button from '../Button';
-import BeatmapSettings from './BeatmapSettings';
-
 import CoverArtPicker from '../AddSongForm/CoverArtPicker';
 import SongPicker from '../AddSongForm/SongPicker';
+
+import BeatmapDifficultySettings from './BeatmapDifficultySettings';
+import CustomColorSettings from './CustomColorSettings';
 
 const MEDIA_ROW_HEIGHT = 150;
 
 const ENVIRONMENT_DISPLAY_MAP = {
-  DefaultEnvironment: 'The First',
+  DefaultEnvironment: 'The First (default)',
   Origins: 'Origins',
   TriangleEnvironment: 'Triangle',
   BigMirrorEnvironment: 'Big Mirror',
@@ -337,7 +338,7 @@ const SongDetails = ({ song, stopPlaying, updateSongDetails }) => {
         </form>
         <Spacer size={UNIT * 8} />
 
-        <Heading size={1}>Edit Beatmaps</Heading>
+        <Heading size={1}>Edit Difficulties</Heading>
       </InnerWrapper>
 
       <Spacer size={UNIT * 6} />
@@ -346,7 +347,7 @@ const SongDetails = ({ song, stopPlaying, updateSongDetails }) => {
         <WrappedRow>
           {difficultyIds.map(difficultyId => {
             return (
-              <BeatmapSettings
+              <BeatmapDifficultySettings
                 key={difficultyId}
                 difficultyId={difficultyId}
                 song={song}
@@ -354,8 +355,17 @@ const SongDetails = ({ song, stopPlaying, updateSongDetails }) => {
             );
           })}
         </WrappedRow>
-        <Spacer size={UNIT * 6} />
       </BeatmapsWrapper>
+
+      <Spacer size={UNIT * 6} />
+
+      <InnerWrapper>
+        <Heading size={1}>Advanced Settings</Heading>
+        <Spacer size={UNIT * 6} />
+        <CustomColorSettings />
+      </InnerWrapper>
+
+      <Spacer size={UNIT * 36} />
     </Wrapper>
   );
 };

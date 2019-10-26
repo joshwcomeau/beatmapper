@@ -1,12 +1,29 @@
 import produce from 'immer';
+import { createSelector } from 'reselect';
 
 import { sortDifficultyIds } from '../helpers/song.helpers';
-import { createSelector } from 'reselect';
+import { DEFAULT_RED, DEFAULT_BLUE } from '../helpers/colors.helpers';
 
 interface Difficulty {
   id: string;
   noteJumpSpeed: number;
   startBeatOffset: number;
+}
+
+interface ModSettings {
+  mappingExtensions?: {
+    numRows: number;
+    numCols: number;
+    cellWidth: number;
+    cellHeight: number;
+  };
+  customColors?: {
+    colorLeft: string;
+    colorRight: string;
+    envColorLeft: string;
+    envColorRight: string;
+    obstacleColor: string;
+  };
 }
 
 interface Song {
@@ -34,6 +51,7 @@ interface Song {
   createdAt: number;
   lastOpenedAt: number;
   demo?: boolean;
+  modSettings: ModSettings;
 }
 
 interface State {
@@ -56,6 +74,16 @@ const DEFAULT_NOTE_JUMP_SPEEDS = {
   ExpertPlus: 18,
 };
 
+const DEFAULT_MOD_SETTINGS = {
+  customColors: {
+    colorLeft: DEFAULT_RED,
+    colorRight: DEFAULT_BLUE,
+    envColorLeft: DEFAULT_RED,
+    envColorRight: DEFAULT_BLUE,
+    obstacleColor: DEFAULT_RED,
+  },
+};
+
 export default function songsReducer(state: State = initialState, action: any) {
   switch (action.type) {
     case 'START_LOADING_SONG': {
@@ -69,8 +97,12 @@ export default function songsReducer(state: State = initialState, action: any) {
 
     case 'FINISH_LOADING_SONG': {
       const { song, lastOpenedAt } = action;
+
       return produce(state, (draftState: State) => {
-        draftState.byId[song.id].lastOpenedAt = lastOpenedAt;
+        const draftSong = draftState.byId[song.id];
+
+        draftSong.lastOpenedAt = lastOpenedAt;
+        draftSong.modSettings = draftSong.modSettings || {};
       });
     }
 
@@ -137,6 +169,7 @@ export default function songsReducer(state: State = initialState, action: any) {
               startBeatOffset: 0,
             },
           },
+          modSettings: {},
         };
       });
     }
@@ -162,6 +195,7 @@ export default function songsReducer(state: State = initialState, action: any) {
           environment,
           difficultiesById,
           demo,
+          modSettings = {},
         },
       } = action;
 
@@ -190,6 +224,7 @@ export default function songsReducer(state: State = initialState, action: any) {
           createdAt,
           lastOpenedAt,
           demo,
+          modSettings,
         };
       });
     }
@@ -279,6 +314,44 @@ export default function songsReducer(state: State = initialState, action: any) {
 
       return produce(state, (draftState: State) => {
         delete draftState.byId[songId];
+      });
+    }
+
+    case 'TOGGLE_MOD_FOR_SONG': {
+      const { mod } = action;
+
+      return produce(state, (draftState: any) => {
+        if (!state.selectedId || !draftState.byId[state.selectedId]) {
+          return state;
+        }
+        const song = draftState.byId[state.selectedId];
+        const isModEnabled = !!song.modSettings[mod];
+        if (isModEnabled) {
+          song.modSettings[mod] = null;
+        } else {
+          // @ts-ignore
+          const defaultSettings = DEFAULT_MOD_SETTINGS[mod];
+          song.modSettings[mod] = defaultSettings;
+        }
+      });
+    }
+
+    case 'UPDATE_MOD_COLOR': {
+      const { element, color } = action;
+
+      return produce(state, (draftState: State) => {
+        if (!state.selectedId || !draftState.byId[state.selectedId]) {
+          return state;
+        }
+
+        const song = draftState.byId[state.selectedId];
+
+        if (!song.modSettings.customColors) {
+          return;
+        }
+
+        // @ts-ignore
+        song.modSettings.customColors[element] = color;
       });
     }
 

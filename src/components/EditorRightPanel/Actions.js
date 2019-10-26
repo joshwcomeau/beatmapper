@@ -34,7 +34,7 @@ const Actions = ({ selectAllInRange, jumpToBeat }) => {
       <Spacer size={UNIT} />
 
       <Tooltip delay={[500, 0]} title="Jump to a specific beat number (J)">
-        <MiniButton onClick={() => promptJumpToBeat(jumpToBeat)}>
+        <MiniButton onClick={() => promptJumpToBeat(jumpToBeat, true)}>
           Jump to Beat
         </MiniButton>
       </Tooltip>

@@ -9,6 +9,7 @@ import useBoundingBox from '../../hooks/use-bounding-box.hook';
 
 import ScrubbableWaveform from '../ScrubbableWaveform';
 import CenteredSpinner from '../CenteredSpinner';
+import Bookmarks from '../Bookmarks';
 
 const EditorWaveform = ({
   height,
@@ -18,32 +19,40 @@ const EditorWaveform = ({
   isLoadingSong,
   duration,
   cursorPosition,
+  bookmarks,
   scrubWaveform,
 }) => {
   const [ref, boundingBox] = useBoundingBox();
 
   return (
-    <div ref={ref}>
+    <Wrapper ref={ref}>
       {isLoadingSong && (
         <SpinnerWrapper>
           <CenteredSpinner />
         </SpinnerWrapper>
       )}
       {boundingBox && song && (
-        <ScrubbableWaveform
-          key={song.id + '-' + song.selectedDifficulty}
-          view={view}
-          width={boundingBox.width}
-          height={height - UNIT * 2}
-          waveformData={waveformData}
-          duration={duration}
-          cursorPosition={cursorPosition}
-          scrubWaveform={scrubWaveform}
-        />
+        <>
+          <ScrubbableWaveform
+            key={song.id + '-' + song.selectedDifficulty}
+            view={view}
+            width={boundingBox.width}
+            height={height - UNIT * 2}
+            waveformData={waveformData}
+            duration={duration}
+            cursorPosition={cursorPosition}
+            scrubWaveform={scrubWaveform}
+          />
+          {!isLoadingSong && <Bookmarks />}
+        </>
       )}
-    </div>
+    </Wrapper>
   );
 };
+
+const Wrapper = styled.div`
+  position: relative;
+`;
 
 const SpinnerWrapper = styled.div`
   position: absolute;

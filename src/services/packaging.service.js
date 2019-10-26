@@ -16,6 +16,8 @@ import {
 import { getSongIdFromName, sortDifficultyIds } from '../helpers/song.helpers';
 import { convertEventsToExportableJson } from '../helpers/events.helpers';
 import { convertObstaclesToExportableJson } from '../helpers/obstacles.helpers';
+import { convertBookmarksToExportableJson } from '../helpers/bookmarks.helpers';
+import { formatColorForMods } from '../helpers/colors.helpers';
 import {
   getNotes,
   getObstacles,
@@ -30,7 +32,9 @@ import {
   getArchiveVersion,
   shiftEntitiesByOffset,
   getFileFromArchive,
+  getModSettingsForBeatmap,
 } from './packaging.service.nitty-gritty';
+import { getSortedBookmarksArray } from '../reducers/bookmarks.reducer';
 
 export function createInfoContent(song, meta = { version: 2 }) {
   const difficultyIds = sortDifficultyIds(Object.keys(song.difficultiesById));
@@ -103,6 +107,27 @@ export function createInfoContent(song, meta = { version: 2 }) {
         },
       ],
     };
+
+    // If the user has enabled custom colors, we need to include that as well
+    if (song.modSettings.customColors) {
+      const colors = song.modSettings.customColors;
+      const colorData = {
+        _colorLeft: formatColorForMods(colors.colorLeft),
+        _colorRight: formatColorForMods(colors.colorRight),
+        _envColorLeft: formatColorForMods(colors.envColorLeft),
+        _envColorRight: formatColorForMods(colors.envColorRight),
+        _obstacleColor: formatColorForMods(colors.obstacleColor),
+      };
+
+      contents._difficultyBeatmapSets.forEach(set => {
+        set._difficultyBeatmaps.forEach(difficulty => {
+          difficulty._customData = {
+            ...difficulty._customData,
+            ...colorData,
+          };
+        });
+      });
+    }
   } else {
     throw new Error('Unrecognized version: ' + meta.version);
   }
@@ -116,9 +141,7 @@ export function createInfoContent(song, meta = { version: 2 }) {
  * eg. 'Expert.dat'.
  */
 export function createBeatmapContents(
-  notes,
-  obstacles = [],
-  events = [],
+  { notes, obstacles = [], events = [], bookmarks = [] },
   meta = { version: 2 },
   // The following fields are only necessary for v1.
   bpm,
@@ -155,8 +178,7 @@ export function createBeatmapContents(
       _events: sortedEvents,
       _notes: sortedNotes,
       _obstacles: sortedObstacles,
-      // Bookmarks not yet supported.
-      _bookmarks: [],
+      _bookmarks: bookmarks,
     };
   } else if (meta.version === 1) {
     contents = {
@@ -181,6 +203,9 @@ export function createBeatmapContentsFromState(state, song) {
   const notes = getNotes(state);
   const events = convertEventsToExportableJson(getAllEventsAsArray(state));
   const obstacles = convertObstaclesToExportableJson(getObstacles(state));
+  const bookmarks = convertBookmarksToExportableJson(
+    getSortedBookmarksArray(state)
+  );
 
   // It's important that notes are sorted by their _time property primarily,
   // and then by _lineLayer secondarily.
@@ -203,9 +228,12 @@ export function createBeatmapContentsFromState(state, song) {
   const deselectedEvents = shiftedEvents.map(deselect);
 
   return createBeatmapContents(
-    deselectedNotes,
-    deselectedObstacles,
-    deselectedEvents,
+    {
+      notes: deselectedNotes,
+      obstacles: deselectedObstacles,
+      events: deselectedEvents,
+      bookmarks,
+    },
     {
       version: 2,
     }
@@ -252,9 +280,12 @@ export const zipFiles = (song, songFile, coverArtFile, version) => {
         const beatmapData = JSON.parse(fileContents);
 
         const legacyFileContents = createBeatmapContents(
-          beatmapData._notes,
-          beatmapData._obstacles,
-          beatmapData._events,
+          {
+            notes: beatmapData._notes,
+            obstacles: beatmapData._obstacles,
+            events: beatmapData._events,
+            bookmarks: beatmapData._bookmarks,
+          },
           { version: 1 },
           song.bpm,
           song.difficultiesById[difficulty].noteJumpSpeed,
@@ -318,9 +349,12 @@ export const convertLegacyArchive = async archive => {
       const fileJson = JSON.parse(fileContents);
 
       const newFileContents = createBeatmapContents(
-        fileJson._notes,
-        fileJson._obstacles,
-        fileJson._events,
+        {
+          notes: fileJson._notes,
+          obstacles: fileJson._obstacles,
+          events: fileJson._events,
+          bookmarks: fileJson._bookmarks,
+        },
         { version: 2 }
       );
 
@@ -450,8 +484,15 @@ export const processImportedMap = async (zipFile, currentSongIds) => {
     })
   );
 
+  // The beatmap might come with mod info, like saber/env colors.
+  // Pluck that out.
+  // Note that it's possible for different difficulties to have different data.
+  // I'm just going to take the last one available, I don't support different
+  // saber colors for different difficulties
+  const modSettings = getModSettingsForBeatmap(beatmapSet);
+
   const difficultiesById = difficultyFiles.reduce(
-    (acc, { id, noteJumpSpeed, startBeatOffset }) => {
+    (acc, { id, noteJumpSpeed, startBeatOffset, ...rest }) => {
       return {
         ...acc,
         [id]: {
@@ -489,6 +530,7 @@ export const processImportedMap = async (zipFile, currentSongIds) => {
     previewDuration: infoDatJson._previewDuration,
     environment: infoDatJson._environmentName,
     difficultiesById,
+    modSettings,
   };
 };
 

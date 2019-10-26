@@ -8,6 +8,7 @@ import navigation from './navigation.reducer';
 import editor from './editor.reducer';
 import global from './global.reducer';
 import user from './user.reducer';
+import bookmarks from './bookmarks.reducer';
 
 export default combineReducers({
   songs,
@@ -18,4 +19,5 @@ export default combineReducers({
   editor,
   global,
   user,
+  bookmarks,
 });

@@ -44,6 +44,7 @@ const KeyboardShortcuts = ({
   seekBackwards,
   downloadMapFiles,
   nudgeSelection,
+  createBookmark,
 }) => {
   let keysDepressed = React.useRef({
     space: false,
@@ -177,14 +178,26 @@ const KeyboardShortcuts = ({
       }
 
       case 'KeyJ': {
-        return promptJumpToBeat(jumpToBeat);
+        return promptJumpToBeat(jumpToBeat, true);
       }
 
       case 'KeyR': {
         return selectColor(view, 'red');
       }
       case 'KeyB': {
-        return selectColor(view, 'blue');
+        if (isMetaKeyPressed(ev)) {
+          // If they're holding cmd, create a bookmark
+          const name = window.prompt('Enter a name for this bookmark');
+
+          if (!name) {
+            return;
+          }
+
+          return createBookmark(name, view);
+        } else {
+          // Otherwise, toggle the note color to Blue.
+          return selectColor(view, 'blue');
+        }
       }
 
       case 'KeyZ': {
@@ -276,6 +289,7 @@ const mapDispatchToProps = {
   seekBackwards: actions.seekBackwards,
   downloadMapFiles: actions.downloadMapFiles,
   nudgeSelection: actions.nudgeSelection,
+  createBookmark: actions.createBookmark,
 };
 
 export default connect(
