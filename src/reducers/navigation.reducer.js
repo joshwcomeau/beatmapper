@@ -103,9 +103,13 @@ export default function navigationReducer(state = initialState, action) {
     }
 
     case 'JUMP_TO_BEAT': {
+      // In some cases, we want to pause the track when jumping.
+      // In others, we inherit whatever the current value is.
+      const isPlaying = action.pauseTrack ? false : state.isPlaying;
+
       return {
         ...state,
-        isPlaying: !action.pauseTrack,
+        isPlaying,
         animateBlockMotion: false,
       };
     }
