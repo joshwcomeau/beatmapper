@@ -132,7 +132,7 @@ const SelectedHeaderGradient = styled.div`
   top: 0;
   left: 0;
   right: 0;
-  height: 60px;
+  height: 80px;
   border-radius: 8px 8px 0 0;
   background: linear-gradient(
     to bottom,
@@ -157,7 +157,7 @@ const SelectedHeaderGradient = styled.div`
   transition: opacity 1000ms;
 
   ${Wrapper}:hover & {
-    opacity: 1;
+    opacity: 0.75;
     transition: opacity 300ms;
   }
 `;
@@ -174,6 +174,7 @@ const Filename = styled.div`
 
 const ClearAction = styled(UnstyledButton)`
   display: flex;
+  align-items: center;
 `;
 
 const PlaceholderWrapper = styled.div`

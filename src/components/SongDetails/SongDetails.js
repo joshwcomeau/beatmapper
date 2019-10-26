@@ -337,7 +337,7 @@ const SongDetails = ({ song, stopPlaying, updateSongDetails }) => {
         </form>
         <Spacer size={UNIT * 8} />
 
-        <Heading size={1}>Edit Beatmaps</Heading>
+        <Heading size={1}>Edit Difficulties</Heading>
       </InnerWrapper>
 
       <Spacer size={UNIT * 6} />
