@@ -195,6 +195,7 @@ export default function songsReducer(state: State = initialState, action: any) {
           environment,
           difficultiesById,
           demo,
+          modSettings = {},
         },
       } = action;
 
@@ -223,7 +224,7 @@ export default function songsReducer(state: State = initialState, action: any) {
           createdAt,
           lastOpenedAt,
           demo,
-          modSettings: {},
+          modSettings,
         };
       });
     }

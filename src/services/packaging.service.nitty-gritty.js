@@ -1,5 +1,6 @@
-import { roundToNearest } from '../utils';
+import { roundToNearest, isEmpty } from '../utils';
 import { convertMillisecondsToBeats } from '../helpers/audio.helpers';
+import { formatColorFromImport } from '../helpers/colors.helpers';
 
 export const getFileFromArchive = (archive, filename) => {
   // Ideally, our .zip archive will just have all the files we need.
@@ -54,4 +55,46 @@ export const unshiftEntitiesByOffset = (entities, offset, bpm) => {
     // Since thirds of time is valid! This rounding value seems to be the sweet spot.
     _time: roundToNearest(entity._time - offsetInBeats, 1 / 100000000),
   }));
+};
+
+export const getModSettingsForBeatmap = beatmapSet => {
+  const modSettings = {};
+
+  beatmapSet._difficultyBeatmaps.forEach(beatmap => {
+    if (!beatmap._customData) {
+      return;
+    }
+
+    // Multiple beatmap difficulties might set custom colors, but Beatmapper
+    // only supports a single set of colors for all difficulties.
+    // If we set any custom colors on previous beatmaps, we can skip this.
+    if (!modSettings.customColors) {
+      let customColors = {};
+      const colorKeys = [
+        'colorLeft',
+        'colorRight',
+        'envColorLeft',
+        'envColorRight',
+        'obstacleColor',
+      ];
+
+      colorKeys.forEach(key => {
+        const _key = `_${key}`;
+
+        if (beatmap._customData[_key]) {
+          customColors[key] = formatColorFromImport(beatmap._customData[_key]);
+        }
+      });
+
+      // Only add `customColors` if we have at least 1 of these fields set.
+      // If this difficulty doesn't set custom settings, we want to do nothing,
+      // since this is how the app knows whether custom colors are enabled
+      // or not.
+      if (!isEmpty(customColors)) {
+        modSettings.customColors = customColors;
+      }
+    }
+  });
+
+  return modSettings;
 };

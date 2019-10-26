@@ -13,3 +13,12 @@ export const formatColorForMods = hex => {
     b: rgb[2] / 255,
   };
 };
+export const formatColorFromImport = rgb => {
+  const normalizedRgb = [
+    Math.round(rgb.r * 255),
+    Math.round(rgb.g * 255),
+    Math.round(rgb.b * 255),
+  ];
+
+  return Color(normalizedRgb).hex();
+};

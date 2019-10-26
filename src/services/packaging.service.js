@@ -32,6 +32,7 @@ import {
   getArchiveVersion,
   shiftEntitiesByOffset,
   getFileFromArchive,
+  getModSettingsForBeatmap,
 } from './packaging.service.nitty-gritty';
 import { getSortedBookmarksArray } from '../reducers/bookmarks.reducer';
 
@@ -483,8 +484,15 @@ export const processImportedMap = async (zipFile, currentSongIds) => {
     })
   );
 
+  // The beatmap might come with mod info, like saber/env colors.
+  // Pluck that out.
+  // Note that it's possible for different difficulties to have different data.
+  // I'm just going to take the last one available, I don't support different
+  // saber colors for different difficulties
+  const modSettings = getModSettingsForBeatmap(beatmapSet);
+
   const difficultiesById = difficultyFiles.reduce(
-    (acc, { id, noteJumpSpeed, startBeatOffset }) => {
+    (acc, { id, noteJumpSpeed, startBeatOffset, ...rest }) => {
       return {
         ...acc,
         [id]: {
@@ -522,6 +530,7 @@ export const processImportedMap = async (zipFile, currentSongIds) => {
     previewDuration: infoDatJson._previewDuration,
     environment: infoDatJson._environmentName,
     difficultiesById,
+    modSettings,
   };
 };
 
