@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import { BLOCK_COLUMN_WIDTH, SONG_OFFSET, COLORS } from '../../constants';
 import * as actions from '../../actions';
+import { getColorForItem } from '../../helpers/colors.helpers';
 import {
   getCursorPositionInBeats,
   getBeatDepth,
@@ -11,19 +12,7 @@ import { getVisibleNotes } from '../../reducers/editor-entities.reducer/notes-vi
 
 import Block from '../Block';
 import Mine from '../Mine';
-
-const getColorForNoteType = type => {
-  switch (type) {
-    case 0:
-      return COLORS.red[500];
-    case 1:
-      return COLORS.blue[500];
-    case 3:
-      return '#687485';
-    default:
-      console.error('Unrecognized block type:', type);
-  }
-};
+import { getSelectedSong } from '../../reducers/songs.reducer';
 
 const getPositionForBlock = (note, beatDepth) => {
   const x = note._lineIndex * BLOCK_COLUMN_WIDTH - BLOCK_COLUMN_WIDTH * 1.5;
@@ -50,6 +39,7 @@ const getPositionForBlock = (note, beatDepth) => {
 };
 
 const SongBlocks = ({
+  song,
   notes,
   cursorPositionInBeats,
   beatDepth,
@@ -104,7 +94,7 @@ const SongBlocks = ({
         lineLayer={note._lineLayer}
         lineIndex={note._lineIndex}
         direction={note._cutDirection}
-        color={getColorForNoteType(note._type)}
+        color={getColorForItem(note._type, song)}
         isTransparent={noteZPosition > -SONG_OFFSET * 2}
         isSelected={note.selected}
         selectionMode={selectionMode}
@@ -118,6 +108,7 @@ const SongBlocks = ({
 
 const mapStateToProps = state => {
   return {
+    song: getSelectedSong(state),
     notes: getVisibleNotes(state),
     cursorPositionInBeats: getCursorPositionInBeats(state),
     beatDepth: getBeatDepth(state),

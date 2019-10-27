@@ -5,6 +5,7 @@ import produce from 'immer';
 import { flatten } from '../../utils';
 import { EVENTS_VIEW, EVENT_TRACKS } from '../../constants';
 import { nudgeEvents } from '../../helpers/events.helpers';
+import { getColorForItem } from '../../helpers/colors.helpers';
 
 import { getStartAndEndBeat } from '../editor.reducer';
 
@@ -436,18 +437,18 @@ const findIndexForNewEvent = (beatNum, relevantEvents) => {
 
 //
 //
+///// SELECTOR HELPERS
+//    (not exported, used purely within the exported selectors)
+//
+const filterEventsBeforeBeat = (tracks, trackId, beforeBeat) => {
+  return tracks[trackId].filter(event => event.beatNum < beforeBeat);
+};
+
+//
+//
 //// SELECTORS
 //
 const getTracks = state => state.editorEntities.eventsView.present.tracks;
-
-const getEventsForTrack = (state, trackId, startBeat, numOfBeatsToShow) => {
-  const tracks = getTracks(state);
-  const endBeat = startBeat + numOfBeatsToShow;
-
-  return tracks[trackId].filter(
-    event => event.beatNum >= startBeat && event.beatNum < endBeat
-  );
-};
 
 export const makeGetEventsForTrack = trackId =>
   createSelector(
@@ -461,7 +462,9 @@ export const makeGetEventsForTrack = trackId =>
   );
 
 export const getEventForTrackAtBeat = (state, trackId, startBeat) => {
-  const relevantEvents = getEventsForTrack(state, trackId, 0, startBeat);
+  const tracks = getTracks(state);
+  const relevantEvents = filterEventsBeforeBeat(tracks, trackId, startBeat);
+
   if (relevantEvents.length === 0) {
     return null;
   }
@@ -469,17 +472,24 @@ export const getEventForTrackAtBeat = (state, trackId, startBeat) => {
   return relevantEvents[relevantEvents.length - 1];
 };
 
-export const getInitialTrackLightingColor = (state, trackId, startBeat) => {
-  const lastEvent = getEventForTrackAtBeat(state, trackId, startBeat);
+export const makeGetInitialTrackLightingColor = trackId =>
+  createSelector(
+    getStartAndEndBeat,
+    getTracks,
+    ({ startBeat }, tracks) => {
+      const eventsInWindow = filterEventsBeforeBeat(tracks, trackId, startBeat);
+      const lastEvent = eventsInWindow[eventsInWindow.length - 1];
 
-  if (!lastEvent) {
-    return null;
-  }
+      if (!lastEvent) {
+        return null;
+      }
 
-  const isLastEventOn = lastEvent.type === 'on' || lastEvent.type === 'flash';
+      const isLastEventOn =
+        lastEvent.type === 'on' || lastEvent.type === 'flash';
 
-  return isLastEventOn ? lastEvent.color : null;
-};
+      return isLastEventOn ? lastEvent.color : null;
+    }
+  );
 
 export const getAllEventsAsArray = createSelector(
   getTracks,
@@ -498,7 +508,8 @@ export const getSelectedEvents = state => {
 };
 
 export const getTrackSpeedAtBeat = (state, trackId, beatNum) => {
-  const events = getEventsForTrack(state, trackId, 0, beatNum).reverse();
+  const tracks = getTracks(state);
+  const events = filterEventsBeforeBeat(tracks, trackId, beatNum).reverse();
 
   if (!events.length) {
     return 0;

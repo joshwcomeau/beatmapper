@@ -28,7 +28,10 @@ const NoteGrid = ({
   selectNoteDirection,
 }) => {
   const isDisabled =
-    selectedNoteTool !== 'red-block' && selectedNoteTool !== 'blue-block';
+    selectedNoteTool !== 'left-block' &&
+    selectedNoteTool !== 'right-block' &&
+    selectedNoteTool !== 'red-block' &&
+    selectedNoteTool !== 'blue-block';
 
   return (
     <Wrapper>

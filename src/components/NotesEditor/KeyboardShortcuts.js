@@ -25,12 +25,12 @@ const KeyboardShortcuts = ({
         if (isMetaKeyPressed(ev)) {
           return;
         }
-        return selectTool(NOTES_VIEW, 'red-block');
+        return selectTool(NOTES_VIEW, 'left-block');
       case 'Digit2':
         if (isMetaKeyPressed(ev)) {
           return;
         }
-        return selectTool(NOTES_VIEW, 'blue-block');
+        return selectTool(NOTES_VIEW, 'right-block');
       case 'Digit3':
         if (isMetaKeyPressed(ev)) {
           return;

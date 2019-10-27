@@ -7,17 +7,14 @@ import { COLORS } from '../../constants';
 import * as actions from '../../actions';
 import { getSelectedEventEditMode } from '../../reducers/editor.reducer';
 import { normalize } from '../../utils';
+
 import UnstyledButton from '../UnstyledButton';
+import { getSelectedSong } from '../../reducers/songs.reducer';
 
 const BLOCK_WIDTH = 7;
 
-const getBackgroundForEvent = event => {
-  // prettier-ignore
-  const color = event.color === 'red'
-    ? COLORS.red[500]
-    : event.color === 'blue'
-      ? COLORS.blue[500]
-      : COLORS.blueGray[400];
+const getBackgroundForEvent = (event, song) => {
+  const { color } = event;
 
   switch (event.type) {
     case 'on':
@@ -59,6 +56,7 @@ const getBackgroundForEvent = event => {
 };
 
 const EventBlock = ({
+  song,
   event,
   trackWidth,
   startBeat,
@@ -81,7 +79,7 @@ const EventBlock = ({
 
   const centeredOffset = offset - BLOCK_WIDTH / 2;
 
-  const background = getBackgroundForEvent(event);
+  const background = getBackgroundForEvent(event, song);
 
   return (
     <Wrapper
@@ -151,10 +149,11 @@ const SelectedGlow = styled.div`
   opacity: 0.6;
 `;
 
-const mapStateToProps = (state, ownProps) => {
-  const selectedEditMode = getSelectedEventEditMode(state);
-
-  return { selectedEditMode };
+const mapStateToProps = state => {
+  return {
+    song: getSelectedSong(state),
+    selectedEditMode: getSelectedEventEditMode(state),
+  };
 };
 
 const mapDispatchToProps = {

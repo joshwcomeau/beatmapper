@@ -46,7 +46,7 @@ const PlacementGrid = ({
     const handleMouseMove = ev => {
       const { rowIndex, colIndex, ...initialPosition } = mouseDownAt;
 
-      if (selectedTool !== 'red-block' && selectedTool !== 'blue-block') {
+      if (selectedTool !== 'left-block' && selectedTool !== 'right-block') {
         return;
       }
 

@@ -10,7 +10,7 @@ import { NOTES_VIEW, EVENTS_VIEW, BEATS_PER_ZOOM_LEVEL } from '../constants';
 import { floorToNearest } from '../utils';
 import { getCursorPositionInBeats } from './navigation.reducer';
 
-const NOTE_TOOLS = ['red-block', 'blue-block', 'mine', 'obstacle'];
+const NOTE_TOOLS = ['left-block', 'right-block', 'mine', 'obstacle'];
 
 const EVENT_TOOLS = ['on', 'off', 'flash', 'fade'];
 
@@ -91,9 +91,9 @@ function notes(state = initialState.notes, action) {
 
       let toolName;
       if (action.color === 'red') {
-        toolName = 'red-block';
+        toolName = 'left-block';
       } else {
-        toolName = 'blue-block';
+        toolName = 'right-block';
       }
 
       return {

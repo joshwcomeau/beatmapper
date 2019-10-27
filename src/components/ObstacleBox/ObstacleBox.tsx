@@ -12,6 +12,7 @@ import { Obstacle } from '../../types';
 
 interface Props {
   obstacle: Obstacle;
+  color: string;
   snapTo: number;
   beatDepth: number;
   handleDelete: (id: string) => void;
@@ -69,6 +70,7 @@ const adjustPositionForObstacle = (
 
 const ObstacleBox: React.FC<Props> = ({
   obstacle,
+  color,
   beatDepth,
   snapTo,
   handleDelete,
@@ -89,7 +91,7 @@ const ObstacleBox: React.FC<Props> = ({
   const mesh = React.useMemo(() => {
     const geometry = new THREE.BoxGeometry(width, height, depth);
     const material = new THREE.MeshPhongMaterial({
-      color: 0xff0000,
+      color,
       transparent: true,
       opacity: tentative ? 0.15 : 0.4,
       polygonOffset: true,

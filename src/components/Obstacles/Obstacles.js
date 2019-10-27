@@ -3,16 +3,19 @@ import { connect } from 'react-redux';
 
 import * as actions from '../../actions';
 import { SURFACE_DEPTH } from '../../constants';
+import { getColorForItem } from '../../helpers/colors.helpers';
 import {
   getCursorPositionInBeats,
   getSnapTo,
   getBeatDepth,
 } from '../../reducers/navigation.reducer';
 import { getObstacles } from '../../reducers/editor-entities.reducer/notes-view.reducer';
+import { getSelectedSong } from '../../reducers/songs.reducer';
 
 import ObstacleBox from '../ObstacleBox';
 
 const Obstacles = ({
+  song,
   obstacles,
   cursorPositionInBeats,
   beatDepth,
@@ -34,10 +37,13 @@ const Obstacles = ({
     );
   });
 
+  const obstacleColor = getColorForItem('obstacle', song);
+
   return visibleObstacles.map(obstacle => (
     <ObstacleBox
       key={obstacle.id}
       obstacle={obstacle}
+      color={obstacleColor}
       beatDepth={beatDepth}
       snapTo={snapTo}
       handleDelete={deleteObstacle}
@@ -62,6 +68,7 @@ const Obstacles = ({
 
 const mapStateToProps = state => {
   return {
+    song: getSelectedSong(state),
     obstacles: getObstacles(state),
     cursorPositionInBeats: getCursorPositionInBeats(state),
     beatDepth: getBeatDepth(state),

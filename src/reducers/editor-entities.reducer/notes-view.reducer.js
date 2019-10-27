@@ -21,9 +21,11 @@ const initialState = {
 
 const getItemType = item => {
   switch (item) {
-    case 'red-block':
+    case 'left-block':
+    case 'red-block': // Legacy value
       return 0;
-    case 'blue-block':
+    case 'right-block':
+    case 'blue-block': // Legacy value
       return 1;
     case 'mine':
       return 3;

@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import { COLORS, UNIT, NOTES_VIEW } from '../../constants';
+import { UNIT, NOTES_VIEW } from '../../constants';
 import * as actions from '../../actions';
 
 import IconButton from '../IconButton';
@@ -12,8 +12,10 @@ import Heading from '../Heading';
 import BlockIcon from './BlockIcon';
 import MineIcon from './MineIcon';
 import ObstacleIcon from './ObstacleIcon';
+import { getSelectedSong } from '../../reducers/songs.reducer';
+import { getColorForItem } from '../../helpers/colors.helpers';
 
-const ItemGrid = ({ selectedTool, selectTool }) => {
+const ItemGrid = ({ song, selectedTool, selectTool }) => {
   const buttonSize = 36;
   return (
     <Wrapper>
@@ -25,18 +27,22 @@ const ItemGrid = ({ selectedTool, selectTool }) => {
         <Row>
           <IconButton
             size={buttonSize}
-            isToggled={selectedTool === 'red-block'}
-            onClick={() => selectTool(NOTES_VIEW, 'red-block')}
+            isToggled={
+              selectedTool === 'left-block' || selectedTool === 'red-block'
+            }
+            onClick={() => selectTool(NOTES_VIEW, 'left-block')}
           >
-            <BlockIcon color={COLORS.red[500]} />
+            <BlockIcon color={getColorForItem('left-block', song)} />
           </IconButton>
           <Spacer size={1} />
           <IconButton
             size={buttonSize}
-            isToggled={selectedTool === 'blue-block'}
-            onClick={() => selectTool(NOTES_VIEW, 'blue-block')}
+            isToggled={
+              selectedTool === 'right-block' || selectedTool === 'blue-block'
+            }
+            onClick={() => selectTool(NOTES_VIEW, 'right-block')}
           >
-            <BlockIcon color={COLORS.blue[500]} />
+            <BlockIcon color={getColorForItem('right-block', song)} />
           </IconButton>
         </Row>
         <Spacer size={1} />
@@ -76,6 +82,7 @@ const Row = styled.div`
 `;
 
 const mapStateToProps = state => ({
+  song: getSelectedSong(state),
   selectedTool: state.editor.notes.selectedTool,
 });
 

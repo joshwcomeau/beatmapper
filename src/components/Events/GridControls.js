@@ -10,21 +10,24 @@ import { plus as placeToolIcon } from 'react-icons-kit/feather/plus';
 
 import * as actions from '../../actions';
 import { UNIT, EVENTS_VIEW, COLORS } from '../../constants';
+import { getColorForItem } from '../../helpers/colors.helpers';
 import {
   getSelectedEventEditMode,
   getSelectedEventTool,
   getSelectedEventColor,
   getZoomLevel,
 } from '../../reducers/editor.reducer';
-import Spacer from '../Spacer';
 
+import Spacer from '../Spacer';
+import UnfocusedButton from '../UnfocusedButton';
 import ControlItem from './ControlItem';
 import ControlItemToggleButton from './ControlItemToggleButton';
 import EventToolIcon from './EventToolIcon';
-import UnfocusedButton from '../UnfocusedButton';
+import { getSelectedSong } from '../../reducers/songs.reducer';
 
 const GridControls = ({
   contentWidth,
+  song,
   selectedEditMode,
   selectedTool,
   selectedColor,
@@ -62,14 +65,14 @@ const GridControls = ({
             isToggled={selectedColor === 'red'}
             onToggle={selectEventColor}
           >
-            <Box color={COLORS.red[500]} />
+            <Box color={getColorForItem('envColorLeft', song)} />
           </ControlItemToggleButton>
           <ControlItemToggleButton
             value="blue"
             isToggled={selectedColor === 'blue'}
             onToggle={selectEventColor}
           >
-            <Box color={COLORS.blue[500]} />
+            <Box color={getColorForItem('envColorRight', song)} />
           </ControlItemToggleButton>
         </ControlItem>
 
@@ -83,9 +86,10 @@ const GridControls = ({
           >
             <EventToolIcon
               tool="on"
-              color={
-                selectedColor === 'red' ? COLORS.red[500] : COLORS.blue[500]
-              }
+              color={getColorForItem(
+                selectedColor === 'red' ? 'envColorLeft' : 'envColorRight',
+                song
+              )}
             />
           </ControlItemToggleButton>
           <ControlItemToggleButton
@@ -93,12 +97,7 @@ const GridControls = ({
             isToggled={selectedTool === 'off'}
             onToggle={() => selectTool(EVENTS_VIEW, 'off')}
           >
-            <EventToolIcon
-              tool="off"
-              color={
-                selectedColor === 'red' ? COLORS.red[500] : COLORS.blue[500]
-              }
-            />
+            <EventToolIcon tool="off" />
           </ControlItemToggleButton>
           <ControlItemToggleButton
             value="flash"
@@ -107,9 +106,10 @@ const GridControls = ({
           >
             <EventToolIcon
               tool="flash"
-              color={
-                selectedColor === 'red' ? COLORS.red[500] : COLORS.blue[500]
-              }
+              color={getColorForItem(
+                selectedColor === 'red' ? 'envColorLeft' : 'envColorRight',
+                song
+              )}
             />
           </ControlItemToggleButton>
           <ControlItemToggleButton
@@ -119,9 +119,10 @@ const GridControls = ({
           >
             <EventToolIcon
               tool="fade"
-              color={
-                selectedColor === 'red' ? COLORS.red[500] : COLORS.blue[500]
-              }
+              color={getColorForItem(
+                selectedColor === 'red' ? 'envColorLeft' : 'envColorRight',
+                song
+              )}
             />
           </ControlItemToggleButton>
         </ControlItem>
@@ -197,6 +198,7 @@ const ZoomBtn = styled(UnfocusedButton)`
 
 const mapStateToProps = state => {
   return {
+    song: getSelectedSong(state),
     selectedEditMode: getSelectedEventEditMode(state),
     selectedTool: getSelectedEventTool(state),
     selectedColor: getSelectedEventColor(state),

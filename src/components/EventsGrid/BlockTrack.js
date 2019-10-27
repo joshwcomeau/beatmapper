@@ -11,7 +11,7 @@ import {
 } from '../../reducers/editor.reducer';
 import {
   makeGetEventsForTrack,
-  getInitialTrackLightingColor,
+  makeGetInitialTrackLightingColor,
 } from '../../reducers/editor-entities.reducer/events-view.reducer';
 import usePointerUpHandler from '../../hooks/use-pointer-up-handler.hook';
 
@@ -132,18 +132,17 @@ const Wrapper = styled.div`
 
 const makeMapStateToProps = (state, { trackId }) => {
   const getEventsForTrack = makeGetEventsForTrack(trackId);
+  const getInitialTrackLightingColor = makeGetInitialTrackLightingColor(
+    trackId
+  );
 
-  const mapStateToProps = (state, ownProps) => {
+  const mapStateToProps = state => {
     const events = getEventsForTrack(state);
     const selectedEditMode = getSelectedEventEditMode(state);
     const selectedTool = getSelectedEventTool(state);
     const selectedColor = getSelectedEventColor(state);
 
-    const initialTrackLightingColor = getInitialTrackLightingColor(
-      state,
-      ownProps.trackId,
-      ownProps.startBeat
-    );
+    const initialTrackLightingColor = getInitialTrackLightingColor(state);
 
     return {
       events,
