@@ -13,6 +13,7 @@ import {
 import { getDirectionForDrag } from './PlacementGrid.helpers';
 
 import TentativeObstacle from './TentativeObstacle';
+import { getMappingExtensions } from '../../reducers/editor.reducer';
 
 const PlacementGrid = ({
   width,
@@ -22,16 +23,16 @@ const PlacementGrid = ({
   selectedDirection,
   selectedTool,
   selectionMode,
+  numRows,
+  numCols,
+  cellSize,
   clickPlacementGrid,
   setBlockByDragging,
   createNewObstacle,
 }) => {
-  const NUM_ROWS = 3;
-  const NUM_COLS = 5;
-  const CELL_SIZE = 1;
   const CELL_SIZE_SCALE = 1.5;
 
-  const renderCellSize = CELL_SIZE * CELL_SIZE_SCALE;
+  const renderCellSize = cellSize * CELL_SIZE_SCALE;
 
   const [mouseDownAt, setMouseDownAt] = React.useState(null);
   const [mouseOverAt, setMouseOverAt] = React.useState(null);
@@ -110,9 +111,9 @@ const PlacementGrid = ({
 
   return (
     <>
-      {range(NUM_ROWS).map(rowIndex =>
-        range(NUM_COLS).map(colIndex => {
-          // All cell squares are CELL_SIZE apart.
+      {range(numRows).map(rowIndex =>
+        range(numCols).map(colIndex => {
+          // All cell squares are cellSize apart.
           // Because we want grids to be centered, the wider the grid, the more
           // each position is pushed further from this position.
           // After sketching out the math, the formula looks like:
@@ -120,8 +121,8 @@ const PlacementGrid = ({
           // x = -0.5T + 0.5 + I       // T = Total Columns (or Rows)
           //                           // I = Index (column or row)
           //
-          const x = (NUM_COLS * -0.5 + 0.5 + colIndex) * renderCellSize;
-          const y = (NUM_ROWS * -0.5 + 0.5 + rowIndex) * renderCellSize;
+          const x = (numCols * -0.5 + 0.5 + colIndex) * renderCellSize;
+          const y = (numRows * -0.5 + 0.5 + rowIndex) * renderCellSize;
 
           const isHovered =
             hoveredCell &&
@@ -180,7 +181,7 @@ const PlacementGrid = ({
                 const [
                   effectiveColIndex,
                   effectiveRowIndex,
-                ] = convertLaneIndices(colIndex, rowIndex, NUM_COLS, NUM_ROWS);
+                ] = convertLaneIndices(colIndex, rowIndex, numCols, numRows);
 
                 clickPlacementGrid(
                   effectiveRowIndex,
@@ -279,13 +280,20 @@ const PlacementGrid = ({
   );
 };
 
-const mapStateToProps = state => ({
-  cursorPositionInBeats: getCursorPositionInBeats(state),
-  snapTo: getSnapTo(state),
-  selectedDirection: state.editor.notes.selectedDirection,
-  selectedTool: state.editor.notes.selectedTool,
-  selectionMode: state.editor.notes.selectionMode,
-});
+const mapStateToProps = state => {
+  const mappingExtensions = getMappingExtensions(state);
+
+  return {
+    cursorPositionInBeats: getCursorPositionInBeats(state),
+    snapTo: getSnapTo(state),
+    selectedDirection: state.editor.notes.selectedDirection,
+    selectedTool: state.editor.notes.selectedTool,
+    selectionMode: state.editor.notes.selectionMode,
+    numRows: mappingExtensions.numRows,
+    numCols: mappingExtensions.numCols,
+    cellSize: mappingExtensions.cellSize,
+  };
+};
 
 export default connect(
   mapStateToProps,
