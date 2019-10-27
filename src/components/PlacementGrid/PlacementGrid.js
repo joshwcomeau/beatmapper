@@ -4,6 +4,7 @@ import * as THREE from 'three';
 
 import * as actions from '../../actions';
 import { range, roundToNearest } from '../../utils';
+import { convertLaneIndices } from '../../helpers/grid.helpers';
 import {
   getCursorPositionInBeats,
   getSnapTo,
@@ -26,7 +27,8 @@ const PlacementGrid = ({
   createNewObstacle,
 }) => {
   const NUM_ROWS = 3;
-  const NUM_COLS = 4;
+  const NUM_COLS = 5;
+  const CELL_SIZE = 1.5;
 
   const [mouseDownAt, setMouseDownAt] = React.useState(null);
   const [mouseOverAt, setMouseOverAt] = React.useState(null);
@@ -101,12 +103,22 @@ const PlacementGrid = ({
     // eslint-disable-next-line
   }, [mouseDownAt, selectedTool]);
 
+  const paddedCellSize = CELL_SIZE - 0.05;
+
   return (
     <>
       {range(NUM_ROWS).map(rowIndex =>
         range(NUM_COLS).map(colIndex => {
-          const cellSize = width / 4;
-          const paddedCellSize = cellSize - width * 0.01;
+          // All cell squares are CELL_SIZE apart.
+          // Because we want grids to be centered, the wider the grid, the more
+          // each position is pushed further from this position.
+          // After sketching out the math, the formula looks like:
+          //
+          // x = -0.5T + 0.5 + I       // T = Total Columns (or Rows)
+          //                           // I = Index (column or row)
+          //
+          const x = (NUM_COLS * -0.5 + 0.5 + colIndex) * CELL_SIZE;
+          const y = (NUM_ROWS * -0.5 + 0.5 + rowIndex) * CELL_SIZE;
 
           const isHovered =
             hoveredCell &&
@@ -116,11 +128,7 @@ const PlacementGrid = ({
           return (
             <mesh
               key={`${rowIndex}-${colIndex}`}
-              position={[
-                position[0] - cellSize * 1.5 + colIndex * cellSize,
-                position[1] - cellSize * 1 + rowIndex * cellSize,
-                position[2],
-              ]}
+              position={[position[0] + x, position[1] + y, position[2]]}
               onClick={ev => {
                 ev.stopPropagation();
 
@@ -163,9 +171,17 @@ const PlacementGrid = ({
                   snapTo
                 );
 
+                // With mapping extensions enabled, it's possible we need to
+                // convert the rowIndex/colIndex to one appropriate for the
+                // current grid!
+                const [
+                  effectiveColIndex,
+                  effectiveRowIndex,
+                ] = convertLaneIndices(colIndex, rowIndex, NUM_COLS, NUM_ROWS);
+
                 clickPlacementGrid(
-                  rowIndex,
-                  colIndex,
+                  effectiveRowIndex,
+                  effectiveColIndex,
                   roundedCursorPositionInBeats,
                   selectedDirection,
                   selectedTool
