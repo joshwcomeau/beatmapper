@@ -123,6 +123,17 @@ function notes(state = initialState.notes, action) {
       };
     }
 
+    case 'UPDATE_GRID': {
+      return {
+        ...state,
+        mappingExtensions: {
+          ...state.mappingExtensions,
+          numRows: action.numRows,
+          numCols: action.numCols,
+        },
+      };
+    }
+
     default:
       return state;
   }
@@ -316,5 +327,8 @@ export const getIsLockedToCurrentWindow = state =>
 export const getAreLasersLocked = state => state.editor.events.areLasersLocked;
 
 export const getSelectedEventBeat = state => state.editor.events.selectedBeat;
+
+export const getMappingExtensions = state =>
+  state.editor.notes.mappingExtensions;
 
 export default combineReducers({ notes, events });

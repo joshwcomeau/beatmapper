@@ -733,3 +733,9 @@ export const updateModColor = (element, color) => ({
   element,
   color,
 });
+
+export const updateGrid = (numCols, numRows) => ({
+  type: 'UPDATE_GRID',
+  numCols,
+  numRows,
+});

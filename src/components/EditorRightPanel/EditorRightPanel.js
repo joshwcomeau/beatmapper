@@ -31,7 +31,9 @@ const EditorRightPanel = ({
   const [showGridConfig, setShowGridConfig] = React.useState(false);
 
   if (showGridConfig) {
-    panelContents = <GridConfig />;
+    panelContents = (
+      <GridConfig finishTweakingGrid={() => setShowGridConfig(false)} />
+    );
   } else if (isAnythingSelected) {
     panelContents = (
       <SelectionInfo
