@@ -3,7 +3,9 @@ title: Mod Support
 subtitle: Enabling and working with Beat Saber mods
 ---
 
-There are a lot of really cool mods for Beat Saber, and I'm starting to add limited support for some of them to Beatmapper. So far, only custom colors is supported, though I'm planning on adding support for others soon.
+There are a lot of really cool mods for Beat Saber, and I'm starting to add limited support for some of them to Beatmapper.
+
+Additional mod support coming soon.
 
 ### Custom colors
 
@@ -18,3 +20,19 @@ The [`SongCore`](https://github.com/Kylemc1413/SongCore) mod allows maps to cust
 You can now overwrite those values in the "Map Settings" tab. Tick the "Enable custom colors" checkbox to show the controls for these 5 values.
 
 > For users who haven't installed the SongCore mod, your map will still load and be playable, it just won't respect the custom colors you've assigned.
+
+### Mapping Extensions
+
+The [Mapping Extensions](https://github.com/Kylemc1413/MappingExtensions) mod grants incredible power to the modder, allowing them to place notes outside the bounds of the typical 4x3 grid.
+
+Beatmapper approaches this mod in a bit of an unconventional way. Rather than simply letting you place notes outside the 4x3 grid, it allows you to _redefine the grid_. Maybe you want a section of the song to be in a 5x5 grid.
+
+To use Mapping Extensions, first you have to enable it for your map in the "Map Settings" tab.
+
+> Note: Ticking this box will mean that only users who have Mapping Extensions enabled will be able to play your map. Many users, especially on the Quest, will not be able to load it.
+
+Once Mapping Extensions has been enabled for your map, a new button appears in the Notes view's right-hand sidebar: `Customize Grid`.
+
+Clicking this button opens a modal that allows you to customize the number of rows and columns in the grid. In a future version, you'll also be able to change the size of each cell (so that you can squeeze 6-lane into the normal 4-lane width, for example).
+
+> Changing the grid doesn't affect notes you've already placed. This means that different sections of your map can use different grids!
