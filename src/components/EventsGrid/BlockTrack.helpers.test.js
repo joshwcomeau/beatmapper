@@ -25,7 +25,7 @@ describe('BlockTrack helpers', () => {
           beatNum: 3,
           id: 'a',
           type: 'on',
-          color: 'red',
+          colorType: 'red',
         },
         {
           trackId,
@@ -34,7 +34,7 @@ describe('BlockTrack helpers', () => {
           type: 'off',
         },
       ];
-      const initialTrackLightingColor = false;
+      const initialTrackLightingColorType = false;
       const startBeat = 0;
       const numOfBeatsToShow = 8;
 
@@ -42,7 +42,7 @@ describe('BlockTrack helpers', () => {
       const actualResult = getBackgroundBoxes(
         events,
         trackId,
-        initialTrackLightingColor,
+        initialTrackLightingColorType,
         startBeat,
         numOfBeatsToShow
       );
@@ -53,7 +53,7 @@ describe('BlockTrack helpers', () => {
     it('handles an empty set of events without initial lighting', () => {
       //  0  [________]
       const events = [];
-      const initialTrackLightingColor = false;
+      const initialTrackLightingColorType = false;
       const startBeat = 0;
       const numOfBeatsToShow = 8;
 
@@ -61,7 +61,7 @@ describe('BlockTrack helpers', () => {
       const actualResult = getBackgroundBoxes(
         events,
         LIGHTING_TRACK_ID,
-        initialTrackLightingColor,
+        initialTrackLightingColorType,
         startBeat,
         numOfBeatsToShow
       );
@@ -69,10 +69,10 @@ describe('BlockTrack helpers', () => {
       expect(actualResult).toEqual(expectedResult);
     });
 
-    it('handles an empty set of events with initial lighting', () => {
+    it('handles an empty set of events WITH initial lighting', () => {
       //  R  [________]
       const events = [];
-      const initialTrackLightingColor = 'red';
+      const initialTrackLightingColorType = 'red';
       const startBeat = 8;
       const numOfBeatsToShow = 8;
 
@@ -81,13 +81,13 @@ describe('BlockTrack helpers', () => {
           id: 'initial-8-8',
           beatNum: 8,
           duration: 8,
-          color: 'red',
+          colorType: 'red',
         },
       ];
       const actualResult = getBackgroundBoxes(
         events,
         LIGHTING_TRACK_ID,
-        initialTrackLightingColor,
+        initialTrackLightingColorType,
         startBeat,
         numOfBeatsToShow
       );
@@ -103,7 +103,7 @@ describe('BlockTrack helpers', () => {
           trackId: 'laserLeft',
           beatNum: 8,
           type: 'on',
-          color: 'red',
+          colorType: 'red',
         },
         {
           id: 'b',
@@ -112,7 +112,7 @@ describe('BlockTrack helpers', () => {
           type: 'off',
         },
       ];
-      const initialTrackLightingColor = false;
+      const initialTrackLightingColorType = false;
       const startBeat = 8;
       const numOfBeatsToShow = 8;
 
@@ -121,13 +121,13 @@ describe('BlockTrack helpers', () => {
           id: 'a',
           beatNum: 8,
           duration: 4,
-          color: 'red',
+          colorType: 'red',
         },
       ];
       const actualResult = getBackgroundBoxes(
         events,
         LIGHTING_TRACK_ID,
-        initialTrackLightingColor,
+        initialTrackLightingColorType,
         startBeat,
         numOfBeatsToShow
       );
@@ -143,10 +143,10 @@ describe('BlockTrack helpers', () => {
           trackId: 'laserLeft',
           beatNum: 12,
           type: 'on',
-          color: 'red',
+          colorType: 'red',
         },
       ];
-      const initialTrackLightingColor = 'red';
+      const initialTrackLightingColorType = 'red';
       const startBeat = 8;
       const numOfBeatsToShow = 8;
 
@@ -156,13 +156,13 @@ describe('BlockTrack helpers', () => {
           id: 'initial-8-8',
           beatNum: 8,
           duration: 8,
-          color: 'red',
+          colorType: 'red',
         },
       ];
       const actualResult = getBackgroundBoxes(
         events,
         LIGHTING_TRACK_ID,
-        initialTrackLightingColor,
+        initialTrackLightingColorType,
         startBeat,
         numOfBeatsToShow
       );
@@ -178,14 +178,14 @@ describe('BlockTrack helpers', () => {
           trackId: 'laserLeft',
           beatNum: 8,
           type: 'on',
-          color: 'red',
+          colorType: 'red',
         },
         {
           id: 'b',
           trackId: 'laserLeft',
           beatNum: 12,
           type: 'on',
-          color: 'blue',
+          colorType: 'blue',
         },
         {
           id: 'b',
@@ -194,7 +194,7 @@ describe('BlockTrack helpers', () => {
           type: 'off',
         },
       ];
-      const initialTrackLightingColor = false;
+      const initialTrackLightingColorType = false;
       const startBeat = 8;
       const numOfBeatsToShow = 8;
 
@@ -203,19 +203,19 @@ describe('BlockTrack helpers', () => {
           id: 'a',
           beatNum: 8,
           duration: 4,
-          color: 'red',
+          colorType: 'red',
         },
         {
           id: 'b',
           beatNum: 12,
           duration: 2,
-          color: 'blue',
+          colorType: 'blue',
         },
       ];
       const actualResult = getBackgroundBoxes(
         events,
         LIGHTING_TRACK_ID,
-        initialTrackLightingColor,
+        initialTrackLightingColorType,
         startBeat,
         numOfBeatsToShow
       );

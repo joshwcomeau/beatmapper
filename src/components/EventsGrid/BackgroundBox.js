@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import { getColorForItem } from '../../helpers/colors.helpers';
 import { normalize } from '../../utils';
 
-const BackgroundBox = ({ box, startBeat, numOfBeatsToShow }) => {
+const BackgroundBox = ({ song, box, startBeat, numOfBeatsToShow }) => {
   const startOffset = normalize(
     box.beatNum,
     startBeat,
@@ -18,7 +19,7 @@ const BackgroundBox = ({ box, startBeat, numOfBeatsToShow }) => {
       style={{
         left: startOffset + '%',
         width: width + '%',
-        background: box.color,
+        background: getColorForItem(box.colorType, song),
       }}
     />
   );

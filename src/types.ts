@@ -19,9 +19,11 @@ export type Action = {
   [x: string]: any;
 };
 
+// NOTE: This type is unused. Planning to migrate to it, but for now I'm using
+// the raw "note" type, with all the underscore-prefixed fields used in-game.
 export type Block = {
   id: string;
-  color: 'red' | 'blue';
+  struckWith: 'left' | 'right';
   direction: Direction;
   beatNum: number;
   rowIndex: number;
@@ -70,7 +72,7 @@ export type EventType =
   | LaserSpeedEventType
   | 'custom-pattern';
 
-export type EventColor = 'red' | 'blue';
+export type EventColorType = 'red' | 'blue';
 
 export interface BaseEvent {
   id: string;
@@ -82,7 +84,7 @@ export interface BaseEvent {
 export interface LightingEvent extends BaseEvent {
   trackId: LightingTrackId;
   type: LightingEventType;
-  color?: EventColor;
+  colorType?: EventColorType;
 }
 
 export interface RingEvent extends BaseEvent {

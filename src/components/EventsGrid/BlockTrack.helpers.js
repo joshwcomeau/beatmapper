@@ -23,7 +23,7 @@ const getIsLightingTrack = trackId => {
 export const getBackgroundBoxes = (
   events,
   trackId,
-  initialTrackLightingColor,
+  initialTrackLightingColorType,
   startBeat,
   numOfBeatsToShow
 ) => {
@@ -39,12 +39,12 @@ export const getBackgroundBoxes = (
   // event. It's simpler if we treat it as an 'on' event at the very first beat
   // of the section.
   const workableEvents = [...events];
-  if (initialTrackLightingColor) {
+  if (initialTrackLightingColorType) {
     const pseudoInitialEvent = {
       id: `initial-${startBeat}-${numOfBeatsToShow}`,
       type: 'on',
       beatNum: startBeat,
-      color: initialTrackLightingColor,
+      colorType: initialTrackLightingColorType,
     };
 
     workableEvents.unshift(pseudoInitialEvent);
@@ -55,7 +55,7 @@ export const getBackgroundBoxes = (
         id: pseudoInitialEvent.id,
         beatNum: pseudoInitialEvent.beatNum,
         duration: numOfBeatsToShow,
-        color: pseudoInitialEvent.color,
+        colorType: pseudoInitialEvent.colorType,
       });
 
       return backgroundBoxes;
@@ -79,7 +79,7 @@ export const getBackgroundBoxes = (
         id: event.id,
         beatNum: event.beatNum,
         duration: undefined,
-        color: event.color,
+        colorType: event.colorType,
       };
       return;
     }
@@ -93,7 +93,11 @@ export const getBackgroundBoxes = (
     }
 
     // 3. Color changed
-    if (tentativeBox && isEventOn && tentativeBox.color !== event.color) {
+    if (
+      tentativeBox &&
+      isEventOn &&
+      tentativeBox.colorType !== event.colorType
+    ) {
       tentativeBox.duration = event.beatNum - tentativeBox.beatNum;
       backgroundBoxes.push(tentativeBox);
 
@@ -101,7 +105,7 @@ export const getBackgroundBoxes = (
         id: event.id,
         beatNum: event.beatNum,
         duration: undefined,
-        color: event.color,
+        colorType: event.colorType,
       };
 
       return;

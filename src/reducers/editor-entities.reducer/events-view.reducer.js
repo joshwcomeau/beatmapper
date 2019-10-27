@@ -74,7 +74,7 @@ const eventsView = undoable(
       }
 
       case 'PLACE_EVENT': {
-        const { id, trackId, beatNum, eventType, eventColor } = action;
+        const { id, trackId, beatNum, eventType, eventColorType } = action;
 
         const newEvent = {
           id,
@@ -84,7 +84,7 @@ const eventsView = undoable(
         };
 
         if (LIGHTING_TRACKS.includes(trackId)) {
-          newEvent.color = eventColor;
+          newEvent.colorType = eventColorType;
         }
 
         const relevantEvents = state.tracks[trackId];
@@ -212,7 +212,7 @@ const eventsView = undoable(
 
           const event = draftState.tracks[trackId][eventIndex];
 
-          event.color = event.color === 'blue' ? 'red' : 'blue';
+          event.colorType = event.colorType === 'blue' ? 'red' : 'blue';
         });
       }
 
@@ -472,7 +472,7 @@ export const getEventForTrackAtBeat = (state, trackId, startBeat) => {
   return relevantEvents[relevantEvents.length - 1];
 };
 
-export const makeGetInitialTrackLightingColor = trackId =>
+export const makeGetInitialTrackLightingColorType = trackId =>
   createSelector(
     getStartAndEndBeat,
     getTracks,
@@ -487,7 +487,7 @@ export const makeGetInitialTrackLightingColor = trackId =>
       const isLastEventOn =
         lastEvent.type === 'on' || lastEvent.type === 'flash';
 
-      return isLastEventOn ? lastEvent.color : null;
+      return isLastEventOn ? lastEvent.colorType : null;
     }
   );
 

@@ -92,8 +92,10 @@ export const nudgeEvents = (
 const convertLightingEventToJson = (event: LightingEvent): JsonEvent => {
   // `Off` events have no color attribute, since there is no way to tell when
   // importing whether it was supposed to be red or blue.
+  const value = event.colorType
+    ? LIGHT_EVENT_TYPES[event.colorType][event.type]
+    : 0;
 
-  const value = event.color ? LIGHT_EVENT_TYPES[event.color][event.type] : 0;
   return {
     _time: event.beatNum,
     _type: TRACK_ID_MAP[event.trackId],

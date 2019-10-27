@@ -5,6 +5,7 @@ import Color from 'color';
 
 import { COLORS } from '../../constants';
 import * as actions from '../../actions';
+import { getColorForItem } from '../../helpers/colors.helpers';
 import { getSelectedEventEditMode } from '../../reducers/editor.reducer';
 import { normalize } from '../../utils';
 
@@ -14,11 +15,12 @@ import { getSelectedSong } from '../../reducers/songs.reducer';
 const BLOCK_WIDTH = 7;
 
 const getBackgroundForEvent = (event, song) => {
-  const { color } = event;
+  const color = getColorForItem(event.colorType || event.type, song);
 
   switch (event.type) {
     case 'on':
-    case 'off': {
+    case 'off':
+    case 'rotate': {
       // On/off are solid colors
       return color;
     }
@@ -44,10 +46,6 @@ const getBackgroundForEvent = (event, song) => {
 
         .rgb();
       return `linear-gradient(-90deg, ${semiTransparentColor}, ${brightColor})`;
-    }
-
-    case 'rotate': {
-      return COLORS.green[500];
     }
 
     default:

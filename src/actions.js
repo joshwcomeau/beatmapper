@@ -608,7 +608,7 @@ export const placeEvent = (
   trackId,
   beatNum,
   eventType,
-  eventColor,
+  eventColorType,
   eventLaserSpeed
 ) => {
   return {
@@ -617,7 +617,7 @@ export const placeEvent = (
     trackId,
     beatNum,
     eventType,
-    eventColor,
+    eventColorType,
     eventLaserSpeed,
   };
 };

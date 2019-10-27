@@ -11,30 +11,30 @@ import {
 } from '../../reducers/editor.reducer';
 import {
   makeGetEventsForTrack,
-  makeGetInitialTrackLightingColor,
+  makeGetInitialTrackLightingColorType,
 } from '../../reducers/editor-entities.reducer/events-view.reducer';
 import usePointerUpHandler from '../../hooks/use-pointer-up-handler.hook';
 
 import EventBlock from './EventBlock';
 import BackgroundBox from './BackgroundBox';
 import { getBackgroundBoxes } from './BlockTrack.helpers';
+import { getSelectedSong } from '../../reducers/songs.reducer';
 
-const BlockTrack = props => {
-  const {
-    trackId,
-    width,
-    height,
-    startBeat,
-    numOfBeatsToShow,
-    cursorAtBeat,
-    events,
-    selectedTool,
-    selectedColor,
-    selectedEditMode,
-    initialTrackLightingColor,
-    placeEvent,
-  } = props;
-
+const BlockTrack = ({
+  song,
+  trackId,
+  width,
+  height,
+  startBeat,
+  numOfBeatsToShow,
+  cursorAtBeat,
+  events,
+  selectedTool,
+  selectedColorType,
+  selectedEditMode,
+  initialTrackLightingColorType,
+  placeEvent,
+}) => {
   const [mouseButtonDepressed, setMouseButtonDepressed] = React.useState(null);
 
   const handlePointerUp = React.useCallback(() => {
@@ -47,12 +47,12 @@ const BlockTrack = props => {
     const isRingEvent = trackId === 'largeRing' || trackId === 'smallRing';
     const eventType = isRingEvent ? 'rotate' : selectedTool;
 
-    let eventColor = selectedColor;
+    let eventColorType = selectedColorType;
     if (isRingEvent || selectedTool === 'off') {
-      eventColor = undefined;
+      eventColorType = undefined;
     }
 
-    return [trackId, cursorAtBeat, eventType, eventColor];
+    return [trackId, cursorAtBeat, eventType, eventColorType];
   };
 
   const handleClickTrack = () => {
@@ -71,7 +71,7 @@ const BlockTrack = props => {
   const backgroundBoxes = getBackgroundBoxes(
     events,
     trackId,
-    initialTrackLightingColor,
+    initialTrackLightingColorType,
     startBeat,
     numOfBeatsToShow
   );
@@ -96,6 +96,7 @@ const BlockTrack = props => {
       {backgroundBoxes.map(box => (
         <BackgroundBox
           key={box.id}
+          song={song}
           box={box}
           startBeat={startBeat}
           numOfBeatsToShow={numOfBeatsToShow}
@@ -132,24 +133,28 @@ const Wrapper = styled.div`
 
 const makeMapStateToProps = (state, { trackId }) => {
   const getEventsForTrack = makeGetEventsForTrack(trackId);
-  const getInitialTrackLightingColor = makeGetInitialTrackLightingColor(
+  const getInitialTrackLightingColorType = makeGetInitialTrackLightingColorType(
     trackId
   );
 
   const mapStateToProps = state => {
+    const song = getSelectedSong(state);
     const events = getEventsForTrack(state);
     const selectedEditMode = getSelectedEventEditMode(state);
     const selectedTool = getSelectedEventTool(state);
-    const selectedColor = getSelectedEventColor(state);
+    const selectedColorType = getSelectedEventColor(state);
 
-    const initialTrackLightingColor = getInitialTrackLightingColor(state);
+    const initialTrackLightingColorType = getInitialTrackLightingColorType(
+      state
+    );
 
     return {
+      song,
       events,
       selectedEditMode,
       selectedTool,
-      selectedColor,
-      initialTrackLightingColor,
+      selectedColorType,
+      initialTrackLightingColorType,
     };
   };
 
