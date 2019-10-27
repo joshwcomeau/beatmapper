@@ -44,7 +44,7 @@ export const COLORS = {
   black: '#000000',
 };
 
-export const DEVTOOLS_ENABLED_IN_DEV = true;
+export const DEVTOOLS_ENABLED_IN_DEV = false;
 
 export const BLOCK_SIZE = 1;
 export const BLOCK_COLUMN_WIDTH = BLOCK_SIZE * 1.5;
