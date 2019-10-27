@@ -8,6 +8,7 @@ import { createSelector } from 'reselect';
 
 import { NOTES_VIEW, EVENTS_VIEW, BEATS_PER_ZOOM_LEVEL } from '../constants';
 import { floorToNearest } from '../utils';
+import { DEFAULT_NUM_COLS, DEFAULT_NUM_ROWS } from '../helpers/grid.helpers';
 import { getCursorPositionInBeats } from './navigation.reducer';
 
 const NOTE_TOOLS = ['left-block', 'right-block', 'mine', 'obstacle'];
@@ -25,6 +26,11 @@ const initialState = {
     selectedTool: NOTE_TOOLS[0],
     selectedDirection: 8,
     selectionMode: null, // null | 'select' | 'deselect' | 'delete'.
+    mappingExtensions: {
+      numCols: DEFAULT_NUM_COLS,
+      numRows: DEFAULT_NUM_ROWS,
+      cellSize: 1,
+    },
   },
   events: {
     zoomLevel: 2,

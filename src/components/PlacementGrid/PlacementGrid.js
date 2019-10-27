@@ -28,7 +28,10 @@ const PlacementGrid = ({
 }) => {
   const NUM_ROWS = 3;
   const NUM_COLS = 5;
-  const CELL_SIZE = 1.5;
+  const CELL_SIZE = 1;
+  const CELL_SIZE_SCALE = 1.5;
+
+  const renderCellSize = CELL_SIZE * CELL_SIZE_SCALE;
 
   const [mouseDownAt, setMouseDownAt] = React.useState(null);
   const [mouseOverAt, setMouseOverAt] = React.useState(null);
@@ -103,7 +106,7 @@ const PlacementGrid = ({
     // eslint-disable-next-line
   }, [mouseDownAt, selectedTool]);
 
-  const paddedCellSize = CELL_SIZE - 0.05;
+  const paddedCellSize = renderCellSize - 0.05;
 
   return (
     <>
@@ -117,8 +120,8 @@ const PlacementGrid = ({
           // x = -0.5T + 0.5 + I       // T = Total Columns (or Rows)
           //                           // I = Index (column or row)
           //
-          const x = (NUM_COLS * -0.5 + 0.5 + colIndex) * CELL_SIZE;
-          const y = (NUM_ROWS * -0.5 + 0.5 + rowIndex) * CELL_SIZE;
+          const x = (NUM_COLS * -0.5 + 0.5 + colIndex) * renderCellSize;
+          const y = (NUM_ROWS * -0.5 + 0.5 + rowIndex) * renderCellSize;
 
           const isHovered =
             hoveredCell &&

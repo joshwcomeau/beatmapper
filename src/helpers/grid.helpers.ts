@@ -1,5 +1,5 @@
-const DEFAULT_NUM_COLS = 4;
-const DEFAULT_NUM_ROWS = 3;
+export const DEFAULT_NUM_COLS = 4;
+export const DEFAULT_NUM_ROWS = 3;
 
 export const convertLaneIndices = (
   colIndex: number,

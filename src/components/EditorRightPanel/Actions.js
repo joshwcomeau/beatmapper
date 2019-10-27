@@ -24,6 +24,8 @@ const ACTION_WIDTH = 110;
 const HALF_ACTION_WIDTH = ACTION_WIDTH / 2 - UNIT / 2;
 
 const Actions = ({
+  handleGridConfigClick,
+
   canUndo,
   canRedo,
   hasCopiedNotes,
@@ -98,6 +100,12 @@ const Actions = ({
         >
           Jump to Beat
         </MiniButton>
+      </Tooltip>
+
+      <Spacer size={UNIT} />
+
+      <Tooltip delay={[500, 0]} title="Change the number of columns/rows">
+        <MiniButton onClick={handleGridConfigClick}>Customize Grid</MiniButton>
       </Tooltip>
     </Wrapper>
   );
