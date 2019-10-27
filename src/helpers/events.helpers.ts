@@ -148,7 +148,7 @@ export const convertEventsToRedux = (events: Array<JsonEvent>) => {
     // Lighting event
     if (event._type <= 4) {
       const lightingType = LIGHT_EVENTS_ARRAY[event._value];
-      const color =
+      const colorType =
         event._value === 0 ? undefined : event._value < 4 ? 'blue' : 'red';
 
       return {
@@ -156,7 +156,7 @@ export const convertEventsToRedux = (events: Array<JsonEvent>) => {
         trackId,
         beatNum,
         type: lightingType,
-        color,
+        colorType,
       };
     } else if (trackId === 'smallRing' || trackId === 'largeRing') {
       return {
