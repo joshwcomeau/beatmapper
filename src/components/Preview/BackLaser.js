@@ -1,15 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { LASER_COLORS } from '../../constants';
-import { range } from '../../utils';
+import { getColorForItem } from '../../helpers/colors.helpers';
 import { getCursorPositionInBeats } from '../../reducers/navigation.reducer';
 import { getCursorPosition } from '../../reducers/navigation.reducer';
 import { getEventForTrackAtBeat } from '../../reducers/editor-entities.reducer/events-view.reducer';
+import { range } from '../../utils';
 
 import LaserBeam from './LaserBeam';
 
-const BackLaser = ({ lastEvent, secondsSinceSongStart }) => {
+const BackLaser = ({ song, lastEvent, secondsSinceSongStart }) => {
   const NUM_OF_BEAMS_PER_SIDE = 5;
   const laserIndices = range(0, NUM_OF_BEAMS_PER_SIDE);
 
@@ -18,7 +18,7 @@ const BackLaser = ({ lastEvent, secondsSinceSongStart }) => {
   const status = lastEvent ? lastEvent.type : 'off';
   const eventId = lastEvent ? lastEvent.id : null;
   const color =
-    status === 'off' ? LASER_COLORS.off : LASER_COLORS[lastEvent.color];
+    status === 'off' ? '#000000' : getColorForItem(lastEvent.colorType, song);
 
   const sides = ['left', 'right'];
 

@@ -8,6 +8,7 @@ import { getCursorPosition } from '../../reducers/navigation.reducer';
 import { getEventForTrackAtBeat } from '../../reducers/editor-entities.reducer/events-view.reducer';
 
 import LaserBeam from './LaserBeam';
+import { getColorForItem } from '../../helpers/colors.helpers';
 
 // We want to use a sin curve to control laser rotation.
 // Math.sin produces a value between -1 and 1, and resets after 2PI, which means
@@ -48,7 +49,8 @@ const getSinRotationValue = (
 };
 
 const SideLaser = ({
-  side = 'left',
+  song,
+  side,
   lastEvent,
   laserSpeed,
   secondsSinceSongStart,
@@ -69,8 +71,9 @@ const SideLaser = ({
 
   const status = lastEvent ? lastEvent.type : 'off';
   const eventId = lastEvent ? lastEvent.id : null;
+
   const color =
-    status === 'off' ? LASER_COLORS.off : LASER_COLORS[lastEvent.color];
+    status === 'off' ? '#000000' : getColorForItem(lastEvent.colorType, song);
 
   const horizontalBeams = laserIndices.map(index => {
     const position = [

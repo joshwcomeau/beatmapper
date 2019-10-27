@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { useSpring, animated } from 'react-spring/three';
 
-import { LASER_COLORS } from '../../constants';
+import { getColorForItem } from '../../helpers/colors.helpers';
 import { getCursorPositionInBeats } from '../../reducers/navigation.reducer';
 import { getCursorPosition } from '../../reducers/navigation.reducer';
 import { getEventForTrackAtBeat } from '../../reducers/editor-entities.reducer/events-view.reducer';
@@ -15,13 +15,13 @@ const ON_PROPS = { emissiveIntensity: 0.75, opacity: 0.75 };
 const OFF_PROPS = { emissiveIntensity: 0, opacity: 0 };
 const BRIGHT_PROPS = { emissiveIntensity: 1, opacity: 1 };
 
-const PrimaryLight = ({ lastEvent, secondsSinceSongStart }) => {
+const PrimaryLight = ({ song, lastEvent, secondsSinceSongStart }) => {
   // TODO: laser beams for along the side and maybe along the bottom too?
   const status = lastEvent ? lastEvent.type : 'off';
   const lastEventId = lastEvent ? lastEvent.id : null;
 
   const color =
-    status === 'off' ? LASER_COLORS.off : LASER_COLORS[lastEvent.color];
+    status === 'off' ? '#000000' : getColorForItem(lastEvent.colorType, song);
 
   const springConfig = getSpringConfigForLight(
     [ON_PROPS, OFF_PROPS, BRIGHT_PROPS],

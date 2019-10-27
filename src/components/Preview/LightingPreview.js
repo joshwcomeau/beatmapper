@@ -7,8 +7,10 @@
  */
 import React from 'react';
 import { useRender } from 'react-three-fiber';
+import { connect } from 'react-redux';
 
 import Controls from '../../controls';
+import { getSelectedSong } from '../../reducers/songs.reducer';
 
 import StaticEnvironment from '../StaticEnvironment';
 import { Bloom, NoBloom } from '../BloomEffect';
@@ -18,7 +20,7 @@ import SmallRings from './SmallRings';
 import PrimaryLight from './PrimaryLight';
 import AmbientLighting from './AmbientLighting';
 
-const LightingPreview = ({ songId }) => {
+const LightingPreview = ({ song }) => {
   const controls = React.useRef(null);
 
   // Controls to move around the space.
@@ -34,14 +36,14 @@ const LightingPreview = ({ songId }) => {
   return (
     <>
       <Bloom>
-        <SideLaser side="left" />
-        <SideLaser side="right" />
+        <SideLaser song={song} side="left" />
+        <SideLaser song={song} side="right" />
 
-        <BackLaser />
+        <BackLaser song={song} />
 
         <SmallRings />
 
-        <PrimaryLight />
+        <PrimaryLight song={song} />
       </Bloom>
 
       <NoBloom>
@@ -54,4 +56,10 @@ const LightingPreview = ({ songId }) => {
   );
 };
 
-export default LightingPreview;
+const mapStateToProps = state => {
+  return {
+    song: getSelectedSong(state),
+  };
+};
+
+export default connect(mapStateToProps)(LightingPreview);
