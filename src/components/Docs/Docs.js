@@ -11,6 +11,7 @@ import ManualEvents from './pages/ManualEvents';
 import ManualDemo from './pages/ManualDemo';
 import ManualPublishing from './pages/ManualDownloadingPublishing';
 import Migrating from './pages/Migrating';
+import Mods from './pages/Mods';
 import Privacy from './pages/Privacy';
 import ContentPolicy from './pages/ContentPolicy';
 
@@ -30,6 +31,7 @@ const Docs = () => {
         <Route path="/docs/manual/demo-view" component={ManualDemo} />
         <Route path="/docs/manual/publishing" component={ManualPublishing} />
         <Route path="/docs/migrating" component={Migrating} />
+        <Route path="/docs/mods" component={Mods} />
         <Route path="/docs/privacy" component={Privacy} />
         <Route path="/docs/content-policy" component={ContentPolicy} />
       </Switch>
