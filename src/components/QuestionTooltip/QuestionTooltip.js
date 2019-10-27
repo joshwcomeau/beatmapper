@@ -7,7 +7,7 @@ import styled from 'styled-components';
 const QuestionTooltip = ({ children }) => {
   return (
     <Wrapper>
-      <Tooltip html={<HelpWrapper>{children}</HelpWrapper>}>
+      <Tooltip interactive html={<HelpWrapper>{children}</HelpWrapper>}>
         <Icon size={14} icon={helpCircle} />
       </Tooltip>
     </Wrapper>

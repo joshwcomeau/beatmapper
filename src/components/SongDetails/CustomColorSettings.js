@@ -14,7 +14,6 @@ import Spacer from '../Spacer';
 const ColorPicker = React.lazy(() => import('../ColorPicker'));
 
 const CustomColorSettings = ({ song, toggleModForSong, updateModColor }) => {
-  // Might still be loading, or
   if (!song || !song.modSettings) {
     return null;
   }
@@ -84,6 +83,7 @@ const CustomColorSettings = ({ song, toggleModForSong, updateModColor }) => {
               <Heading size={3}>Obstacles</Heading>
             </Cell>
           </Row>
+          <Spacer size={UNIT * 4} />
         </React.Suspense>
       )}
     </Wrapper>

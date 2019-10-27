@@ -27,6 +27,7 @@ import SongPicker from '../AddSongForm/SongPicker';
 
 import BeatmapDifficultySettings from './BeatmapDifficultySettings';
 import CustomColorSettings from './CustomColorSettings';
+import MappingExtensionSettings from './MappingExtensionSettings';
 
 const MEDIA_ROW_HEIGHT = 150;
 
@@ -363,6 +364,8 @@ const SongDetails = ({ song, stopPlaying, updateSongDetails }) => {
         <Heading size={1}>Advanced Settings</Heading>
         <Spacer size={UNIT * 6} />
         <CustomColorSettings />
+        <Spacer size={UNIT * 2} />
+        <MappingExtensionSettings />
       </InnerWrapper>
 
       <Spacer size={UNIT * 36} />

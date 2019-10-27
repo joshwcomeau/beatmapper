@@ -12,12 +12,7 @@ interface Difficulty {
 }
 
 interface ModSettings {
-  mappingExtensions?: {
-    numRows: number;
-    numCols: number;
-    cellWidth: number;
-    cellHeight: number;
-  };
+  mappingExtensions?: boolean;
   customColors?: {
     colorLeft: string;
     colorRight: string;
@@ -83,6 +78,7 @@ const DEFAULT_MOD_SETTINGS = {
     envColorRight: DEFAULT_BLUE,
     obstacleColor: DEFAULT_RED,
   },
+  mappingExtensions: true,
 };
 
 export default function songsReducer(state: State = initialState, action: any) {
