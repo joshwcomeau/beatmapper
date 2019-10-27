@@ -14,6 +14,7 @@ import SelectionInfo from '../SelectionInfo';
 import Spacer from '../Spacer';
 
 import Actions from './Actions';
+import GridConfig from './GridConfig';
 
 // HACK: This should be a constant somewhere, used to set bottom panel
 // height!
@@ -24,20 +25,31 @@ const EditorRightPanel = ({
   numOfSelectedObstacles,
   isAnythingSelected,
 }) => {
-  const panelContents = isAnythingSelected ? (
-    <SelectionInfo
-      numOfSelectedNotes={numOfSelectedNotes}
-      numOfSelectedObstacles={numOfSelectedObstacles}
-    />
-  ) : (
-    <>
-      <NoteGrid />
-      <Spacer size={UNIT * 4} />
-      <ItemGrid />
-      <Spacer size={UNIT * 4} />
-      <Actions />
-    </>
-  );
+  // This panel adapts based on the current situation.
+  let panelContents;
+
+  const [showGridConfig, setShowGridConfig] = React.useState(false);
+
+  if (showGridConfig) {
+    panelContents = <GridConfig />;
+  } else if (isAnythingSelected) {
+    panelContents = (
+      <SelectionInfo
+        numOfSelectedNotes={numOfSelectedNotes}
+        numOfSelectedObstacles={numOfSelectedObstacles}
+      />
+    );
+  } else {
+    panelContents = (
+      <>
+        <NoteGrid />
+        <Spacer size={UNIT * 4} />
+        <ItemGrid />
+        <Spacer size={UNIT * 4} />
+        <Actions handleGridConfigClick={() => setShowGridConfig(true)} />
+      </>
+    );
+  }
 
   return (
     <OuterWrapper>

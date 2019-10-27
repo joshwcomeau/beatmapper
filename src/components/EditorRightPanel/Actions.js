@@ -14,7 +14,7 @@ import MiniButton from '../MiniButton';
 import Heading from '../Heading';
 import Spacer from '../Spacer';
 
-const Actions = ({ selectAllInRange, jumpToBeat }) => {
+const Actions = ({ selectAllInRange, jumpToBeat, handleGridConfigClick }) => {
   return (
     <Wrapper>
       <Heading size={3}>Actions</Heading>
@@ -37,6 +37,12 @@ const Actions = ({ selectAllInRange, jumpToBeat }) => {
         <MiniButton onClick={() => promptJumpToBeat(jumpToBeat, true)}>
           Jump to Beat
         </MiniButton>
+      </Tooltip>
+
+      <Spacer size={UNIT} />
+
+      <Tooltip delay={[500, 0]} title="Change the number of columns/rows">
+        <MiniButton onClick={handleGridConfigClick}>Customize Grid</MiniButton>
       </Tooltip>
     </Wrapper>
   );
