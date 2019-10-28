@@ -35,7 +35,7 @@ const MapVisualization = ({ songId }) => {
 
   return (
     <>
-      <StaticEnvironment includeEdgeStrips />
+      <StaticEnvironment includeEdgeStrips trackGridRows={true} />
 
       {/* Fog */}
       <fogExp2 attach="fog" args={[0x000000, 0.02]} />

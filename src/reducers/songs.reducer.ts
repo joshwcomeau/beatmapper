@@ -4,7 +4,7 @@ import get from 'lodash.get';
 
 import { sortDifficultyIds } from '../helpers/song.helpers';
 import { DEFAULT_RED, DEFAULT_BLUE } from '../helpers/colors.helpers';
-import { DEFAULT_NUM_COLS, DEFAULT_NUM_ROWS } from '../helpers/grid.helpers';
+import { DEFAULT_GRID } from '../helpers/grid.helpers';
 import { isEmpty } from '../utils';
 
 interface Difficulty {
@@ -90,9 +90,7 @@ const DEFAULT_MOD_SETTINGS = {
   },
   mappingExtensions: {
     isEnabled: false,
-    numRows: DEFAULT_NUM_ROWS,
-    numCols: DEFAULT_NUM_COLS,
-    cellSize: 1,
+    ...DEFAULT_GRID,
   },
 };
 
@@ -470,22 +468,14 @@ export const getGridSize = (state: any) => {
 
   const mappingExtensions = get(song, 'modSettings.mappingExtensions');
 
-  // Ugh for a brief period, `mappingExtensions` was a boolean.
-  // TODO: Delete this since it never shipped to users
-  if (mappingExtensions === true) {
-    return {
-      numRows: DEFAULT_MOD_SETTINGS.mappingExtensions.numRows,
-      numCols: DEFAULT_MOD_SETTINGS.mappingExtensions.numCols,
-      cellSize: DEFAULT_MOD_SETTINGS.mappingExtensions.cellSize,
-    };
-  }
-
-  if (!mappingExtensions) {
-    return {
-      numRows: DEFAULT_MOD_SETTINGS.mappingExtensions.numRows,
-      numCols: DEFAULT_MOD_SETTINGS.mappingExtensions.numCols,
-      cellSize: DEFAULT_MOD_SETTINGS.mappingExtensions.cellSize,
-    };
+  // In legacy states, `mappingExtensions` was a boolean, and it was possible
+  // to not have the key at all.
+  // Also, if the user has set a custom grid but then disabled the extension,
+  // we should
+  const isLegacy = typeof mappingExtensions === 'boolean' || !mappingExtensions;
+  const isDisabled = get(mappingExtensions, 'isEnabled') === false;
+  if (isLegacy || isDisabled) {
+    return DEFAULT_GRID;
   }
 
   return {
