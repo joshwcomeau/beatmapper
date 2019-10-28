@@ -4,6 +4,7 @@ import get from 'lodash.get';
 
 import { sortDifficultyIds } from '../helpers/song.helpers';
 import { DEFAULT_RED, DEFAULT_BLUE } from '../helpers/colors.helpers';
+import { DEFAULT_NUM_COLS, DEFAULT_NUM_ROWS } from '../helpers/grid.helpers';
 import { isEmpty } from '../utils';
 
 interface Difficulty {
@@ -89,8 +90,8 @@ const DEFAULT_MOD_SETTINGS = {
   },
   mappingExtensions: {
     isEnabled: false,
-    numRows: 3,
-    numCols: 4,
+    numRows: DEFAULT_NUM_ROWS,
+    numCols: DEFAULT_NUM_COLS,
     cellSize: 1,
   },
 };
@@ -353,6 +354,18 @@ export default function songsReducer(state: State = initialState, action: any) {
           song.modSettings = DEFAULT_MOD_SETTINGS;
         }
 
+        // Also for a brief moment, modSettings didn't always have properties
+        // for each mod
+        if (!song.modSettings[mod]) {
+          // @ts-ignore
+          song.modSettings[mod] = DEFAULT_MOD_SETTINGS[mod];
+        }
+
+        // STOPSHIP: Delete this
+        if (song.modSettings.mappingExtensions === true) {
+          song.modSettings = DEFAULT_MOD_SETTINGS;
+        }
+
         const isModEnabled = get(song, `modSettings.${mod}.isEnabled`);
 
         song.modSettings[mod].isEnabled = !isModEnabled;
@@ -375,6 +388,27 @@ export default function songsReducer(state: State = initialState, action: any) {
 
         // @ts-ignore
         song.modSettings.customColors[element] = color;
+      });
+    }
+
+    case 'UPDATE_GRID': {
+      const { numRows, numCols } = action;
+
+      return produce(state, (draftState: State) => {
+        // Should-be-impossible edge-case where no selected song exists
+        if (!state.selectedId || !draftState.byId[state.selectedId]) {
+          return state;
+        }
+
+        const song = draftState.byId[state.selectedId];
+
+        if (!song.modSettings || !song.modSettings.mappingExtensions) {
+          song.modSettings.mappingExtensions =
+            DEFAULT_MOD_SETTINGS.mappingExtensions;
+        }
+
+        song.modSettings.mappingExtensions.numRows = numRows;
+        song.modSettings.mappingExtensions.numCols = numCols;
       });
     }
 
@@ -429,4 +463,34 @@ export const getSelectedSongDifficultyIds = createSelector(
 
 export const getDemoSong = (state: any) => {
   return getAllSongs(state).find(song => song.demo);
+};
+
+export const getGridSize = (state: any) => {
+  const song = getSelectedSong(state);
+
+  const mappingExtensions = get(song, 'modSettings.mappingExtensions');
+
+  // Ugh for a brief period, `mappingExtensions` was a boolean.
+  // TODO: Delete this since it never shipped to users
+  if (mappingExtensions === true) {
+    return {
+      numRows: DEFAULT_MOD_SETTINGS.mappingExtensions.numRows,
+      numCols: DEFAULT_MOD_SETTINGS.mappingExtensions.numCols,
+      cellSize: DEFAULT_MOD_SETTINGS.mappingExtensions.cellSize,
+    };
+  }
+
+  if (!mappingExtensions) {
+    return {
+      numRows: DEFAULT_MOD_SETTINGS.mappingExtensions.numRows,
+      numCols: DEFAULT_MOD_SETTINGS.mappingExtensions.numCols,
+      cellSize: DEFAULT_MOD_SETTINGS.mappingExtensions.cellSize,
+    };
+  }
+
+  return {
+    numRows: mappingExtensions.numRows,
+    numCols: mappingExtensions.numCols,
+    cellSize: mappingExtensions.cellSize,
+  };
 };

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import * as actions from '../../actions';
-import { getMappingExtensions } from '../../reducers/editor.reducer';
+import { getGridSize } from '../../reducers/songs.reducer';
 
 import TextInput from '../TextInput';
 import Spacer from '../Spacer';
@@ -69,11 +69,11 @@ const Buttons = styled.div`
 `;
 
 const mapStateToProps = state => {
-  const mappingExtensions = getMappingExtensions(state);
+  const gridSize = getGridSize(state);
 
   return {
-    numRows: mappingExtensions.numRows,
-    numCols: mappingExtensions.numCols,
+    numRows: gridSize.numRows,
+    numCols: gridSize.numCols,
   };
 };
 
