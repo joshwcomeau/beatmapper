@@ -1,5 +1,12 @@
 export const DEFAULT_NUM_COLS = 4;
 export const DEFAULT_NUM_ROWS = 3;
+export const DEFAULT_CELL_SIZE = 1;
+
+export const DEFAULT_GRID = {
+  numRows: DEFAULT_NUM_ROWS,
+  numCols: DEFAULT_NUM_COLS,
+  cellSize: DEFAULT_CELL_SIZE,
+};
 
 export const convertLaneIndices = (
   colIndex: number,

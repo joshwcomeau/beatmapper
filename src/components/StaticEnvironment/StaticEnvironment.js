@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import {
   SURFACE_WIDTH,
@@ -7,12 +8,16 @@ import {
   BLOCK_COLUMN_WIDTH,
 } from '../../constants';
 import { DEFAULT_NUM_ROWS } from '../../helpers/grid.helpers';
+import { getGridSize } from '../../reducers/songs.reducer';
 
-import RectAreaLight from '../RectAreaLight';
+import EdgeStrip from './EdgeStrip';
 
-const GRID_Y_BASE = BLOCK_COLUMN_WIDTH * -1.5;
+const StaticEnvironment = ({ includeEdgeStrips, gridRows }) => {
+  // TODO: Replace this with redux state
+  const performance = {
+    setting: 'low',
+  };
 
-const StaticEnvironment = ({ includeEdgeStrips, gridRows = 3 }) => {
   const gridYBase = BLOCK_COLUMN_WIDTH * (gridRows * -0.5);
 
   const PEG_WIDTH = 0.5;
@@ -20,30 +25,8 @@ const StaticEnvironment = ({ includeEdgeStrips, gridRows = 3 }) => {
 
   const PEG_X_OFFSET = SURFACE_WIDTH / 2 - PEG_WIDTH;
 
-  const STRIP_HEIGHT = gridYBase + 0.01;
-
-  const pegY = gridYBase - 10;
-
-  const { current: leftRectLightPosition } = React.useRef([
-    -2.95,
-    STRIP_HEIGHT,
-    -30,
-  ]);
-  const { current: leftRectLightLookAt } = React.useRef([
-    -2.95,
-    STRIP_HEIGHT + 10,
-    -30,
-  ]);
-  const { current: rightRectLightPosition } = React.useRef([
-    2.95,
-    STRIP_HEIGHT,
-    -30,
-  ]);
-  const { current: rightRectLightLookAt } = React.useRef([
-    2.95,
-    STRIP_HEIGHT + 10,
-    -30,
-  ]);
+  const pegY = gridYBase - 10.25;
+  const stripY = gridYBase + 0.011;
 
   return (
     <>
@@ -90,20 +73,8 @@ const StaticEnvironment = ({ includeEdgeStrips, gridRows = 3 }) => {
       {/* Edge light strips */}
       {includeEdgeStrips && (
         <>
-          <RectAreaLight
-            intensity={0.8}
-            width={0.1}
-            height={50}
-            position={leftRectLightPosition}
-            lookAt={leftRectLightLookAt}
-          />
-          <RectAreaLight
-            intensity={0.8}
-            width={0.1}
-            height={50}
-            position={rightRectLightPosition}
-            lookAt={rightRectLightLookAt}
-          />
+          <EdgeStrip x={-2.95} y={stripY} z={-30} />
+          <EdgeStrip x={2.95} y={stripY} z={-30} />
         </>
       )}
     </>
@@ -116,6 +87,12 @@ const mapStateToProps = (state, ownProps) => {
       gridRows: DEFAULT_NUM_ROWS,
     };
   }
+
+  const gridSize = getGridSize(state);
+
+  return {
+    gridRows: gridSize.numRows,
+  };
 };
 
-export default React.memo(StaticEnvironment);
+export default connect(mapStateToProps)(StaticEnvironment);
