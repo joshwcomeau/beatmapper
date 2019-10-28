@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import {
   SURFACE_WIDTH,
+  SURFACE_HEIGHT,
   SURFACE_DEPTH,
   SONG_OFFSET,
   BLOCK_COLUMN_WIDTH,
@@ -15,21 +16,32 @@ import EdgeStrip from './EdgeStrip';
 const StaticEnvironment = ({ includeEdgeStrips, gridRows }) => {
   const gridYBase = BLOCK_COLUMN_WIDTH * (gridRows * -0.5);
 
-  const PEG_WIDTH = 0.5;
   const SURFACE_Z_CENTER = SURFACE_DEPTH / 2 + SONG_OFFSET - 1;
 
+  const PEG_WIDTH = 0.5;
+  const PEG_HEIGHT = 20;
+  const PEG_DEPTH = SURFACE_DEPTH - PEG_WIDTH * 4;
   const PEG_X_OFFSET = SURFACE_WIDTH / 2 - PEG_WIDTH;
 
   const pegY = gridYBase - 10.25;
-  const stripY = gridYBase + 0.011;
+
+  const STRIP_PADDING = 0.01;
+  const STRIP_WIDTH = 0.1;
+  const STRIP_DEPTH = 50;
+  const stripY = gridYBase + STRIP_PADDING;
+  const stripX = SURFACE_WIDTH / 2 - STRIP_WIDTH / 2;
+  const stripZ = -30;
 
   return (
     <>
       {/* Surface */}
-      <mesh position={[0, gridYBase - 0.25, -SURFACE_Z_CENTER]} receiveShadow>
+      <mesh
+        position={[0, gridYBase - SURFACE_HEIGHT / 2, -SURFACE_Z_CENTER]}
+        receiveShadow
+      >
         <boxGeometry
           attach="geometry"
-          args={[SURFACE_WIDTH, 0.5, SURFACE_DEPTH]}
+          args={[SURFACE_WIDTH, SURFACE_HEIGHT, SURFACE_DEPTH]}
         />
         <meshStandardMaterial
           metalness={0.5}
@@ -43,7 +55,7 @@ const StaticEnvironment = ({ includeEdgeStrips, gridRows }) => {
       <mesh position={[-PEG_X_OFFSET, pegY, -SURFACE_Z_CENTER]}>
         <boxGeometry
           attach="geometry"
-          args={[0.5, 20, SURFACE_DEPTH - PEG_WIDTH * 4]}
+          args={[PEG_WIDTH, PEG_HEIGHT, PEG_DEPTH]}
         />
         <meshStandardMaterial
           metalness={0.1}
@@ -55,7 +67,7 @@ const StaticEnvironment = ({ includeEdgeStrips, gridRows }) => {
       <mesh position={[PEG_X_OFFSET, pegY, -SURFACE_Z_CENTER]}>
         <boxGeometry
           attach="geometry"
-          args={[0.5, 20, SURFACE_DEPTH - PEG_WIDTH * 4]}
+          args={[PEG_WIDTH, PEG_HEIGHT, PEG_DEPTH]}
         />
         <meshStandardMaterial
           metalness={0.1}
@@ -68,8 +80,20 @@ const StaticEnvironment = ({ includeEdgeStrips, gridRows }) => {
       {/* Edge light strips */}
       {includeEdgeStrips && (
         <>
-          <EdgeStrip x={-2.95} y={stripY} z={-30} />
-          <EdgeStrip x={2.95} y={stripY} z={-30} />
+          <EdgeStrip
+            x={stripX}
+            y={stripY}
+            z={stripZ}
+            width={STRIP_WIDTH}
+            depth={STRIP_DEPTH}
+          />
+          <EdgeStrip
+            x={stripX * -1}
+            y={stripY}
+            z={stripZ}
+            width={STRIP_WIDTH}
+            depth={STRIP_DEPTH}
+          />
         </>
       )}
     </>
