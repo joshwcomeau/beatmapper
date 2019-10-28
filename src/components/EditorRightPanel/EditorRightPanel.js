@@ -15,12 +15,14 @@ import Spacer from '../Spacer';
 
 import Actions from './Actions';
 import GridConfig from './GridConfig';
+import { getSelectedSong } from '../../reducers/songs.reducer';
 
 // HACK: This should be a constant somewhere, used to set bottom panel
 // height!
 const bottomPanelHeight = 180;
 
 const EditorRightPanel = ({
+  song,
   numOfSelectedNotes,
   numOfSelectedObstacles,
   isAnythingSelected,
@@ -48,7 +50,10 @@ const EditorRightPanel = ({
         <Spacer size={UNIT * 4} />
         <ItemGrid />
         <Spacer size={UNIT * 4} />
-        <Actions handleGridConfigClick={() => setShowGridConfig(true)} />
+        <Actions
+          song={song}
+          handleGridConfigClick={() => setShowGridConfig(true)}
+        />
       </>
     );
   }
@@ -91,6 +96,7 @@ const mapStateToProps = state => {
     selectedNotes.length > 0 || selectedObstacles.length > 0;
 
   return {
+    song: getSelectedSong(state),
     numOfSelectedNotes: selectedNotes.length,
     numOfSelectedObstacles: selectedObstacles.length,
     isAnythingSelected,

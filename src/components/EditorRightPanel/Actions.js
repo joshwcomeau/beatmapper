@@ -14,7 +14,15 @@ import MiniButton from '../MiniButton';
 import Heading from '../Heading';
 import Spacer from '../Spacer';
 
-const Actions = ({ selectAllInRange, jumpToBeat, handleGridConfigClick }) => {
+const Actions = ({
+  song,
+  selectAllInRange,
+  jumpToBeat,
+  handleGridConfigClick,
+}) => {
+  const mappingExtensionsEnabled =
+    song && song.modSettings && song.modSettings.mappingExtensions;
+
   return (
     <Wrapper>
       <Heading size={3}>Actions</Heading>
@@ -39,11 +47,17 @@ const Actions = ({ selectAllInRange, jumpToBeat, handleGridConfigClick }) => {
         </MiniButton>
       </Tooltip>
 
-      <Spacer size={UNIT} />
+      {mappingExtensionsEnabled && (
+        <>
+          <Spacer size={UNIT} />
 
-      <Tooltip delay={[500, 0]} title="Change the number of columns/rows">
-        <MiniButton onClick={handleGridConfigClick}>Customize Grid</MiniButton>
-      </Tooltip>
+          <Tooltip delay={[500, 0]} title="Change the number of columns/rows">
+            <MiniButton onClick={handleGridConfigClick}>
+              Customize Grid
+            </MiniButton>
+          </Tooltip>
+        </>
+      )}
     </Wrapper>
   );
 };
