@@ -13,11 +13,6 @@ import { getGridSize } from '../../reducers/songs.reducer';
 import EdgeStrip from './EdgeStrip';
 
 const StaticEnvironment = ({ includeEdgeStrips, gridRows }) => {
-  // TODO: Replace this with redux state
-  const performance = {
-    setting: 'low',
-  };
-
   const gridYBase = BLOCK_COLUMN_WIDTH * (gridRows * -0.5);
 
   const PEG_WIDTH = 0.5;

@@ -12,9 +12,10 @@ const textGeometryOptions = {
   curveSegments: 2,
 };
 
-const HEIGHT = BLOCK_COLUMN_WIDTH * -1.5 + 0.01;
+const Marker = ({ beatNum, offset, type, gridRows }) => {
+  const Y_PADDING = 0.0075;
+  const yOffset = BLOCK_COLUMN_WIDTH * (gridRows * -0.5) + Y_PADDING;
 
-const Marker = ({ beatNum, offset, type }) => {
   const depth = type === 'beat' ? 0.2 : 0.08;
 
   const color = type === 'sub-beat' ? '#AAAAAA' : '#FFFFFF';
@@ -31,14 +32,14 @@ const Marker = ({ beatNum, offset, type }) => {
     <>
       <mesh
         rotation={[-Math.PI / 2, 0, 0]}
-        position={[xOffset, HEIGHT, offset]}
+        position={[xOffset, yOffset, offset]}
       >
         <planeGeometry attach="geometry" args={[lineWidth, depth]} />
         <meshStandardMaterial attach="material" color={color} />
       </mesh>
 
       {typeof beatNum === 'number' && (
-        <mesh position={[SURFACE_WIDTH / 2 + textPadding, HEIGHT, offset]}>
+        <mesh position={[SURFACE_WIDTH / 2 + textPadding, yOffset, offset]}>
           <textGeometry attach="geometry" args={[label, textGeometryOptions]} />
           <meshLambertMaterial attach="material" color="#AAA" />
         </mesh>
