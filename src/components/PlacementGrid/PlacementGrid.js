@@ -74,10 +74,17 @@ const PlacementGrid = ({
           return;
         }
 
+        const [effectiveColIndex, effectiveRowIndex] = convertLaneIndices(
+          colIndex,
+          rowIndex,
+          numCols,
+          numRows
+        );
+
         setBlockByDragging(
           direction,
-          rowIndex,
-          colIndex,
+          effectiveRowIndex,
+          effectiveColIndex,
           cursorPositionInBeats,
           selectedTool
         );

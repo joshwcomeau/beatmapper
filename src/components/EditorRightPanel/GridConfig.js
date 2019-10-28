@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import styled from 'styled-components';
 
 import * as actions from '../../actions';
 import { getMappingExtensions } from '../../reducers/editor.reducer';
@@ -12,40 +13,60 @@ import MiniButton from '../MiniButton';
 const GridConfig = ({ finishTweakingGrid, numRows, numCols, updateGrid }) => {
   return (
     <>
-      <TextInput
-        required
-        type="number"
-        min={1}
-        max={30}
-        label="# of Columns"
-        value={numCols}
-        onKeyDown={ev => {
-          ev.stopPropagation();
-        }}
-        onChange={ev => {
-          updateGrid(ev.target.value, numRows);
-        }}
-      />
-      <Spacer size={UNIT * 2} />
-      <TextInput
-        required
-        type="number"
-        min={1}
-        max={30}
-        label="# of Rows"
-        value={numRows}
-        onKeyDown={ev => {
-          ev.stopPropagation();
-        }}
-        onChange={ev => {
-          updateGrid(numCols, ev.target.value);
-        }}
-      />
+      <Row>
+        <TextInput
+          type="number"
+          min={1}
+          max={30}
+          label="Columns"
+          value={numCols}
+          onKeyDown={ev => {
+            ev.stopPropagation();
+          }}
+          onChange={ev => {
+            updateGrid(ev.target.value, numRows);
+          }}
+        />
+        <Spacer size={UNIT * 4} />
+        <TextInput
+          type="number"
+          min={1}
+          max={30}
+          label="Rows"
+          value={numRows}
+          onKeyDown={ev => {
+            ev.stopPropagation();
+          }}
+          onChange={ev => {
+            updateGrid(numCols, ev.target.value);
+          }}
+        />
+      </Row>
       <Spacer size={UNIT * 4} />
-      <MiniButton onClick={finishTweakingGrid}>Finish</MiniButton>
+      <Buttons>
+        <MiniButton onClick={finishTweakingGrid}>Finish Customizing</MiniButton>
+      </Buttons>
     </>
   );
 };
+
+const Row = styled.div`
+  display: flex;
+
+  label {
+    flex: 1;
+  }
+`;
+
+const Buttons = styled.div`
+  display: flex;
+  justify-content: center;
+
+  i,
+  svg {
+    display: block !important;
+  }
+`;
 
 const mapStateToProps = state => {
   const mappingExtensions = getMappingExtensions(state);

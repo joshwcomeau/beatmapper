@@ -11,13 +11,17 @@ import RectAreaLight from '../RectAreaLight';
 
 const GRID_Y_BASE = BLOCK_COLUMN_WIDTH * -1.5;
 
-const StaticEnvironment = ({ includeEdgeStrips }) => {
+const StaticEnvironment = ({ includeEdgeStrips, numRows = 3 }) => {
+  const gridYBase = BLOCK_COLUMN_WIDTH * (numRows * -0.5);
+
   const PEG_WIDTH = 0.5;
   const SURFACE_Z_CENTER = SURFACE_DEPTH / 2 + SONG_OFFSET - 1;
 
   const PEG_X_OFFSET = SURFACE_WIDTH / 2 - PEG_WIDTH;
 
-  const STRIP_HEIGHT = GRID_Y_BASE + 0.01;
+  const STRIP_HEIGHT = gridYBase + 0.01;
+
+  const pegY = gridYBase - 10;
 
   const { current: leftRectLightPosition } = React.useRef([
     -2.95,
@@ -43,7 +47,7 @@ const StaticEnvironment = ({ includeEdgeStrips }) => {
   return (
     <>
       {/* Surface */}
-      <mesh position={[0, GRID_Y_BASE - 0.25, -SURFACE_Z_CENTER]} receiveShadow>
+      <mesh position={[0, gridYBase - 0.25, -SURFACE_Z_CENTER]} receiveShadow>
         <boxGeometry
           attach="geometry"
           args={[SURFACE_WIDTH, 0.5, SURFACE_DEPTH]}
@@ -57,7 +61,7 @@ const StaticEnvironment = ({ includeEdgeStrips }) => {
       </mesh>
 
       {/* Pegs */}
-      <mesh position={[-PEG_X_OFFSET, -12.7, -SURFACE_Z_CENTER]}>
+      <mesh position={[-PEG_X_OFFSET, pegY, -SURFACE_Z_CENTER]}>
         <boxGeometry
           attach="geometry"
           args={[0.5, 20, SURFACE_DEPTH - PEG_WIDTH * 4]}
@@ -69,7 +73,7 @@ const StaticEnvironment = ({ includeEdgeStrips }) => {
           color="#222222"
         />
       </mesh>
-      <mesh position={[PEG_X_OFFSET, -12.7, -SURFACE_Z_CENTER]}>
+      <mesh position={[PEG_X_OFFSET, pegY, -SURFACE_Z_CENTER]}>
         <boxGeometry
           attach="geometry"
           args={[0.5, 20, SURFACE_DEPTH - PEG_WIDTH * 4]}
