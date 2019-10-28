@@ -6,13 +6,14 @@ import {
   SONG_OFFSET,
   BLOCK_COLUMN_WIDTH,
 } from '../../constants';
+import { DEFAULT_NUM_ROWS } from '../../helpers/grid.helpers';
 
 import RectAreaLight from '../RectAreaLight';
 
 const GRID_Y_BASE = BLOCK_COLUMN_WIDTH * -1.5;
 
-const StaticEnvironment = ({ includeEdgeStrips, numRows = 3 }) => {
-  const gridYBase = BLOCK_COLUMN_WIDTH * (numRows * -0.5);
+const StaticEnvironment = ({ includeEdgeStrips, gridRows = 3 }) => {
+  const gridYBase = BLOCK_COLUMN_WIDTH * (gridRows * -0.5);
 
   const PEG_WIDTH = 0.5;
   const SURFACE_Z_CENTER = SURFACE_DEPTH / 2 + SONG_OFFSET - 1;
@@ -107,6 +108,14 @@ const StaticEnvironment = ({ includeEdgeStrips, numRows = 3 }) => {
       )}
     </>
   );
+};
+
+const mapStateToProps = (state, ownProps) => {
+  if (!ownProps.trackGridRows) {
+    return {
+      gridRows: DEFAULT_NUM_ROWS,
+    };
+  }
 };
 
 export default React.memo(StaticEnvironment);

@@ -20,7 +20,9 @@ const CustomColorSettings = ({ song, toggleModForSong, updateModColor }) => {
 
   const colors = song.modSettings.customColors;
 
-  const isModEnabled = !!colors;
+  const isModEnabled = !!(
+    song.modSettings.customColors && song.modSettings.customColors.isEnabled
+  );
 
   return (
     <Wrapper>

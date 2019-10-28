@@ -1,8 +1,10 @@
 import produce from 'immer';
 import { createSelector } from 'reselect';
+import get from 'lodash.get';
 
 import { sortDifficultyIds } from '../helpers/song.helpers';
 import { DEFAULT_RED, DEFAULT_BLUE } from '../helpers/colors.helpers';
+import { isEmpty } from '../utils';
 
 interface Difficulty {
   id: string;
@@ -12,8 +14,14 @@ interface Difficulty {
 }
 
 interface ModSettings {
-  mappingExtensions?: boolean;
-  customColors?: {
+  mappingExtensions: {
+    isEnabled: boolean;
+    numRows: number;
+    numCols: number;
+    cellSize: number;
+  };
+  customColors: {
+    isEnabled: boolean;
     colorLeft: string;
     colorRight: string;
     envColorLeft: string;
@@ -72,13 +80,19 @@ const DEFAULT_NOTE_JUMP_SPEEDS = {
 
 const DEFAULT_MOD_SETTINGS = {
   customColors: {
+    isEnabled: false,
     colorLeft: DEFAULT_RED,
     colorRight: DEFAULT_BLUE,
     envColorLeft: DEFAULT_RED,
     envColorRight: DEFAULT_BLUE,
     obstacleColor: DEFAULT_RED,
   },
-  mappingExtensions: true,
+  mappingExtensions: {
+    isEnabled: false,
+    numRows: 3,
+    numCols: 4,
+    cellSize: 1,
+  },
 };
 
 export default function songsReducer(state: State = initialState, action: any) {
@@ -167,7 +181,7 @@ export default function songsReducer(state: State = initialState, action: any) {
               customLabel: '',
             },
           },
-          modSettings: {},
+          modSettings: DEFAULT_MOD_SETTINGS,
         };
       });
     }
@@ -326,18 +340,22 @@ export default function songsReducer(state: State = initialState, action: any) {
       const { mod } = action;
 
       return produce(state, (draftState: any) => {
+        // Should-be-impossible edge-case where no selected song exists
         if (!state.selectedId || !draftState.byId[state.selectedId]) {
           return state;
         }
+
         const song = draftState.byId[state.selectedId];
-        const isModEnabled = !!song.modSettings[mod];
-        if (isModEnabled) {
-          song.modSettings[mod] = null;
-        } else {
-          // @ts-ignore
-          const defaultSettings = DEFAULT_MOD_SETTINGS[mod];
-          song.modSettings[mod] = defaultSettings;
+
+        // For a brief moment, modSettings was being set to an empty object,
+        // before the children were required. Update that now, if so.
+        if (!song.modSettings || isEmpty(song.modSettings)) {
+          song.modSettings = DEFAULT_MOD_SETTINGS;
         }
+
+        const isModEnabled = get(song, `modSettings.${mod}.isEnabled`);
+
+        song.modSettings[mod].isEnabled = !isModEnabled;
       });
     }
 
