@@ -37,7 +37,10 @@ const Actions = ({
   pasteSelection,
 }) => {
   const mappingExtensionsEnabled =
-    song && song.modSettings && song.modSettings.mappingExtensions;
+    song &&
+    song.modSettings &&
+    song.modSettings.mappingExtensions &&
+    song.modSettings.mappingExtensions.isEnabled;
 
   return (
     <Wrapper>

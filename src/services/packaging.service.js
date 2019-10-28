@@ -5,6 +5,7 @@
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import formatDate from 'date-fns/format';
+import get from 'lodash.get';
 
 import {
   saveFile,
@@ -109,7 +110,8 @@ export function createInfoContent(song, meta = { version: 2 }) {
     };
 
     // If the user has enabled custom colors, we need to include that as well
-    if (song.modSettings.customColors) {
+    const enabledCustomColors = get(song, 'modSettings.customColors.isEnabled');
+    if (enabledCustomColors) {
       const colors = song.modSettings.customColors;
       const colorData = {
         _colorLeft: formatColorForMods(colors.colorLeft),

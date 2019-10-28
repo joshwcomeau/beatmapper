@@ -19,6 +19,12 @@ const EVENT_EDIT_MODES = ['place', 'select'];
 
 const EVENT_COLORS = ['red', 'blue'];
 
+const defaultMappingExtensions = {
+  numCols: DEFAULT_NUM_COLS,
+  numRows: DEFAULT_NUM_ROWS,
+  cellSize: 1,
+};
+
 const initialState = {
   // `notes` covers everything in the /notes editor view:
   // blocks, mines, obstacles
@@ -26,11 +32,7 @@ const initialState = {
     selectedTool: NOTE_TOOLS[0],
     selectedDirection: 8,
     selectionMode: null, // null | 'select' | 'deselect' | 'delete'.
-    mappingExtensions: {
-      numCols: DEFAULT_NUM_COLS,
-      numRows: DEFAULT_NUM_ROWS,
-      cellSize: 1,
-    },
+    mappingExtensions: defaultMappingExtensions,
   },
   events: {
     zoomLevel: 2,

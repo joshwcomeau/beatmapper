@@ -18,7 +18,9 @@ const MappingExtensionSettings = ({
     return null;
   }
 
-  const isModEnabled = !!song.modSettings.mappingExtensions;
+  const isModEnabled =
+    song.modSettings.mappingExtensions &&
+    song.modSettings.mappingExtensions.isEnabled;
 
   return (
     <Wrapper>
