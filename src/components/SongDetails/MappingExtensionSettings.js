@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
+import get from 'lodash.get';
 
 import * as actions from '../../actions';
 import { getSelectedSong } from '../../reducers/songs.reducer';
@@ -14,13 +15,8 @@ const MappingExtensionSettings = ({
   toggleModForSong,
   updateModColor,
 }) => {
-  if (!song || !song.modSettings) {
-    return null;
-  }
-
   const isModEnabled =
-    song.modSettings.mappingExtensions &&
-    song.modSettings.mappingExtensions.isEnabled;
+    get(song, 'modSettings.mappingExtensions.isEnabled') || false;
 
   return (
     <Wrapper>

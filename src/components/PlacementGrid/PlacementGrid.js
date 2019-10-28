@@ -13,7 +13,7 @@ import {
 import { getDirectionForDrag } from './PlacementGrid.helpers';
 
 import TentativeObstacle from './TentativeObstacle';
-import { getMappingExtensions } from '../../reducers/editor.reducer';
+import { getGridSize } from '../../reducers/songs.reducer';
 
 const PlacementGrid = ({
   width,
@@ -288,7 +288,7 @@ const PlacementGrid = ({
 };
 
 const mapStateToProps = state => {
-  const mappingExtensions = getMappingExtensions(state);
+  const gridSize = getGridSize(state);
 
   return {
     cursorPositionInBeats: getCursorPositionInBeats(state),
@@ -296,9 +296,9 @@ const mapStateToProps = state => {
     selectedDirection: state.editor.notes.selectedDirection,
     selectedTool: state.editor.notes.selectedTool,
     selectionMode: state.editor.notes.selectionMode,
-    numRows: mappingExtensions.numRows,
-    numCols: mappingExtensions.numCols,
-    cellSize: mappingExtensions.cellSize,
+    numRows: gridSize.numRows,
+    numCols: gridSize.numCols,
+    cellSize: gridSize.cellSize,
   };
 };
 
