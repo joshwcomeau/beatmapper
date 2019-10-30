@@ -2,6 +2,7 @@
  * This middleware manages playback concerns.
  */
 import { ActionCreators as ReduxUndoActionCreators } from 'redux-undo';
+import get from 'lodash.get';
 
 import {
   finishLoadingSong,
@@ -17,6 +18,7 @@ import {
   convertBeatsToMilliseconds,
   convertMillisecondsToBeats,
 } from '../helpers/audio.helpers';
+import { convertNotesFromMappingExtensions } from '../helpers/notes.helpers';
 import { convertObstaclesToRedux } from '../helpers/obstacles.helpers';
 import {
   convertEventsToRedux,
@@ -98,12 +100,21 @@ export default function createSongMiddleware() {
         // we may not have any beatmap entities, if this is a new song
         // or new difficulty.
         if (beatmapJson) {
+          let notes = beatmapJson._notes;
+
+          // If this song uses mapping extensions, the note values will be in
+          // the thousands. We need to pull them down to the normal range.
+          if (get(song, 'modSettings.mappingExtensions.isEnabled')) {
+            notes = convertNotesFromMappingExtensions(notes);
+            console.log('converted', beatmapJson, notes);
+          }
+
           // If we do, we need to manage a little dance related to offsets.
           // See offsets.md for more context, but essentially we need to
           // transform our timing to match the beat, by undoing a
           // transformation previously applied.
           let unshiftedNotes = unshiftEntitiesByOffset(
-            beatmapJson._notes || [],
+            notes || [],
             song.offset,
             song.bpm
           );

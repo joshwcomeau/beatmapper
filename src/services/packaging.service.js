@@ -15,6 +15,7 @@ import {
   saveCoverArtFromBlob,
 } from './file.service';
 import { getSongIdFromName, sortDifficultyIds } from '../helpers/song.helpers';
+import { convertNotesToMappingExtensions } from '../helpers/notes.helpers';
 import { convertEventsToExportableJson } from '../helpers/events.helpers';
 import { convertObstaclesToExportableJson } from '../helpers/obstacles.helpers';
 import { convertBookmarksToExportableJson } from '../helpers/bookmarks.helpers';
@@ -45,6 +46,12 @@ export function createInfoContent(song, meta = { version: 2 }) {
   // This SHOULD be done at a higher level, but may not be.
   const bpm = Number(song.bpm);
   const offset = Number(song.offset);
+
+  // Has this song enabled any mod support?
+  let requirements = [];
+  if (get(song, 'modSettings.mappingExtensions.isEnabled')) {
+    requirements.push('Mapping Extensions');
+  }
 
   let contents;
   if (meta.version === 1) {
@@ -94,7 +101,7 @@ export function createInfoContent(song, meta = { version: 2 }) {
               _noteJumpStartBeatOffset: difficulty.startBeatOffset,
               _customData: {
                 _editorOffset: offset,
-                _requirements: [],
+                _requirements: requirements,
               },
             };
 
@@ -237,9 +244,15 @@ export function createBeatmapContentsFromState(state, song) {
     ...entity,
     selected: false,
   });
-  const deselectedNotes = shiftedNotes.map(deselect);
-  const deselectedObstacles = shiftedObstacles.map(deselect);
-  const deselectedEvents = shiftedEvents.map(deselect);
+  let deselectedNotes = shiftedNotes.map(deselect);
+  let deselectedObstacles = shiftedObstacles.map(deselect);
+  let deselectedEvents = shiftedEvents.map(deselect);
+
+  // If the user has mapping extensions enabled, multiply the notes to sit in
+  // the 1000+ range.
+  if (get(song, 'modSettings.mappingExtensions.isEnabled')) {
+    deselectedNotes = convertNotesToMappingExtensions(deselectedNotes);
+  }
 
   return createBeatmapContents(
     {

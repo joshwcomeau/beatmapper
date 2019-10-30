@@ -195,3 +195,59 @@ export const calculateNoteDensity = (numOfNotes, segmentLengthInBeats, bpm) => {
 
   return notesPerSecond;
 };
+
+export const convertNotesToMappingExtensions = notes => {
+  return notes.map(note => {
+    // Normally, notes go from 0 to 3 for lineIndex, and 0 to 2 for lineLayer.
+    // With custom grids, this could be -99 to 99 for both, in theory.
+    // But, because we want to support decimal values, we need to switch to the
+    // alternate format, where the values omit everything from -999 to 999.
+    //
+    // 0 -> 1000
+    // 1 -> 2000
+    // 2 -> 3000
+    // -1 -> -2000
+    const newLineIndex =
+      note._lineIndex < 0
+        ? note._lineIndex * 1000 - 1000
+        : note._lineIndex * 1000 + 1000;
+    const newLineLayer =
+      note._lineLayer < 0
+        ? note._lineLayer * 1000 - 1000
+        : note._lineLayer * 1000 + 1000;
+
+    return {
+      ...note,
+      _lineIndex: newLineIndex,
+      _lineLayer: newLineLayer,
+    };
+  });
+};
+
+export const convertNotesFromMappingExtensions = notes => {
+  return notes.map(note => {
+    // Normally, notes go from 0 to 3 for lineIndex, and 0 to 2 for lineLayer.
+    // With custom grids, this could be -99 to 99 for both, in theory.
+    // But, because we want to support decimal values, we need to switch to the
+    // alternate format, where the values omit everything from -999 to 999.
+    //
+    // 0 -> 1000
+    // 1 -> 2000
+    // 2 -> 3000
+    // -1 -> -2000
+    const newLineIndex =
+      note._lineIndex < 0
+        ? note._lineIndex / 1000 + 1
+        : note._lineIndex / 1000 - 1;
+    const newLineLayer =
+      note._lineLayer < 0
+        ? note._lineLayer / 1000 + 1
+        : note._lineLayer / 1000 - 1;
+
+    return {
+      ...note,
+      _lineIndex: newLineIndex,
+      _lineLayer: newLineLayer,
+    };
+  });
+};
