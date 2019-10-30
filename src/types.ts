@@ -21,7 +21,7 @@ export type Action = {
 
 // NOTE: This type is unused. Planning to migrate to it, but for now I'm using
 // the raw "note" type, with all the underscore-prefixed fields used in-game.
-export type Block = {
+export type BlockNext = {
   id: string;
   struckWith: 'left' | 'right';
   direction: Direction;

@@ -2,6 +2,8 @@ import {
   calculateNoteDensity,
   convertBlocksToRedux,
   convertBlocksToExportableJson,
+  convertNotesToMappingExtensions,
+  convertNotesFromMappingExtensions,
 } from './notes.helpers';
 
 describe('Notes helpers', () => {
@@ -159,6 +161,46 @@ describe('Notes helpers', () => {
         bpm
       );
       const expectedResult = 0;
+
+      expect(actualResult).toEqual(expectedResult);
+    });
+  });
+
+  describe('Mapping Extensions conversions', () => {
+    it('converts to MapEx format', () => {
+      const notes = [
+        { _time: 4, _lineIndex: 0, _lineLayer: 0 },
+        { _time: 4, _lineIndex: 1.5, _lineLayer: 2 },
+        { _time: 6, _lineIndex: -0.5, _lineLayer: 1 },
+        { _time: 8, _lineIndex: 10, _lineLayer: -2.25 },
+      ];
+
+      const actualResult = convertNotesToMappingExtensions(notes);
+      const expectedResult = [
+        { _time: 4, _lineIndex: 1000, _lineLayer: 1000 },
+        { _time: 4, _lineIndex: 2500, _lineLayer: 3000 },
+        { _time: 6, _lineIndex: -1500, _lineLayer: 2000 },
+        { _time: 8, _lineIndex: 11000, _lineLayer: -3250 },
+      ];
+
+      expect(actualResult).toEqual(expectedResult);
+    });
+
+    it('converts from MapEx format', () => {
+      const notes = [
+        { _time: 4, _lineIndex: 1000, _lineLayer: 1000 },
+        { _time: 4, _lineIndex: 2500, _lineLayer: 3000 },
+        { _time: 6, _lineIndex: -1500, _lineLayer: 2000 },
+        { _time: 8, _lineIndex: 11000, _lineLayer: -3250 },
+      ];
+
+      const actualResult = convertNotesFromMappingExtensions(notes);
+      const expectedResult = [
+        { _time: 4, _lineIndex: 0, _lineLayer: 0 },
+        { _time: 4, _lineIndex: 1.5, _lineLayer: 2 },
+        { _time: 6, _lineIndex: -0.5, _lineLayer: 1 },
+        { _time: 8, _lineIndex: 10, _lineLayer: -2.25 },
+      ];
 
       expect(actualResult).toEqual(expectedResult);
     });
