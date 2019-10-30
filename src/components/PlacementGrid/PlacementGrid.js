@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import * as actions from '../../actions';
 import { range, roundToNearest } from '../../utils';
 import { convertLaneIndices } from '../../helpers/grid.helpers';
+import { getColorForItem } from '../../helpers/colors.helpers';
 import {
   getCursorPositionInBeats,
   getSnapTo,
@@ -13,16 +14,22 @@ import {
 import { getDirectionForDrag } from './PlacementGrid.helpers';
 
 import TentativeObstacle from './TentativeObstacle';
-import { getGridSize } from '../../reducers/songs.reducer';
+import {
+  getGridSize,
+  getEnabledMods,
+  getSelectedSong,
+} from '../../reducers/songs.reducer';
 
 const PlacementGrid = ({
   width,
   position,
+  song,
   cursorPositionInBeats,
   snapTo,
   selectedDirection,
   selectedTool,
   selectionMode,
+  enabledMods,
   numRows,
   numCols,
   cellSize,
@@ -280,7 +287,12 @@ const PlacementGrid = ({
         <TentativeObstacle
           mouseDownAt={mouseDownAt}
           mouseOverAt={mouseOverAt}
-          cursorPositionInBeats={cursorPositionInBeats}
+          color={getColorForItem('obstacle', song)}
+          mode={
+            enabledMods.mappingExtensions
+              ? 'with-mapping-extensions'
+              : 'original'
+          }
         />
       )}
     </>
@@ -288,14 +300,17 @@ const PlacementGrid = ({
 };
 
 const mapStateToProps = state => {
+  const song = getSelectedSong(state);
   const gridSize = getGridSize(state);
 
   return {
+    song,
     cursorPositionInBeats: getCursorPositionInBeats(state),
     snapTo: getSnapTo(state),
     selectedDirection: state.editor.notes.selectedDirection,
     selectedTool: state.editor.notes.selectedTool,
     selectionMode: state.editor.notes.selectionMode,
+    enabledMods: getEnabledMods(state),
     numRows: gridSize.numRows,
     numCols: gridSize.numCols,
     cellSize: gridSize.cellSize,
