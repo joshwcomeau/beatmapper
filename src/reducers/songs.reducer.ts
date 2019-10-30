@@ -484,3 +484,18 @@ export const getGridSize = (state: any) => {
     cellSize: mappingExtensions.cellSize,
   };
 };
+
+type EnabledMods = {
+  mappingExtensions: boolean;
+  customColors: boolean;
+};
+
+export const getEnabledMods = createSelector(
+  getSelectedSong,
+  (song): EnabledMods => {
+    return {
+      mappingExtensions: !!get(song, 'modSettings.mappingExtensions.isEnabled'),
+      customColors: !!get(song, 'modSettings.customColors.isEnabled'),
+    };
+  }
+);

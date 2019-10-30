@@ -106,7 +106,6 @@ export default function createSongMiddleware() {
           // the thousands. We need to pull them down to the normal range.
           if (get(song, 'modSettings.mappingExtensions.isEnabled')) {
             notes = convertNotesFromMappingExtensions(notes);
-            console.log('converted', beatmapJson, notes);
           }
 
           // If we do, we need to manage a little dance related to offsets.

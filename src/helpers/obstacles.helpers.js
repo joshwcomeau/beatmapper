@@ -63,3 +63,53 @@ export const nudgeObstacles = (direction, amount, obstacles) => {
     };
   });
 };
+
+export const createTentativeObstacle = (mode, mouseDownAt, mouseOverAt) => {
+  const lane = Math.min(mouseDownAt.colIndex, mouseOverAt.colIndex);
+
+  const colspan = Math.abs(mouseDownAt.colIndex - mouseOverAt.colIndex) + 1;
+
+  // prettier-ignore
+  const obstacleType = mode === 'with-mapping-extensions'
+    ? 'extension'
+    : mouseOverAt.rowIndex === 2
+      ? 'ceiling'
+      : 'wall'
+
+  const tentativeObstacle = {
+    id: 'tentative',
+    lane,
+    type: obstacleType,
+    beatStart: 0,
+    beatDuration: 4,
+    colspan,
+    tentative: true,
+  };
+
+  // 'original' walls need to be clamped, to not cause hazards
+  if (mode === 'original') {
+    if (tentativeObstacle.type === 'wall' && tentativeObstacle.colspan > 2) {
+      const overBy = tentativeObstacle.colspan - 2;
+      tentativeObstacle.colspan = 2;
+
+      const colspanDelta = mouseOverAt.colIndex - mouseDownAt.colIndex;
+
+      if (colspanDelta > 0) {
+        tentativeObstacle.lane += overBy;
+      } else {
+        tentativeObstacle.lane = mouseOverAt.colIndex;
+      }
+    }
+  } else if (mode === 'with-mapping-extensions') {
+    // For mapping extensions, things work a little bit differently.
+    // We need a rowIndex, which works like `lane`, and rowspan, which works
+    // like `colspan`
+    const rowIndex = Math.min(mouseDownAt.rowIndex, mouseOverAt.rowIndex);
+    const rowspan = Math.abs(mouseDownAt.rowIndex - mouseOverAt.rowIndex) + 1;
+
+    tentativeObstacle.rowIndex = rowIndex;
+    tentativeObstacle.rowspan = rowspan;
+  }
+
+  return tentativeObstacle;
+};

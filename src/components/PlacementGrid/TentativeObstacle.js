@@ -1,47 +1,32 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import ObstacleBox from '../ObstacleBox';
+
 import { getBeatDepth } from '../../reducers/navigation.reducer';
+import { createTentativeObstacle } from '../../helpers/obstacles.helpers';
+
+import ObstacleBox from '../ObstacleBox';
 
 const TentativeObstacle = props => {
-  const { mouseDownAt } = props;
+  const { mouseDownAt, mode, color } = props;
+
+  // If no mouseOverAt is provided, it ought to be the same as the mouseDownAt.
+  // They've clicked but haven't moved yet, ergo only one row/col is at play.
   let { mouseOverAt } = props;
-  if (typeof mouseOverAt === 'undefined') {
+  if (!mouseOverAt) {
     mouseOverAt = mouseDownAt;
   }
 
-  const lane = Math.min(mouseDownAt.colIndex, mouseOverAt.colIndex);
-
-  const colspan = Math.abs(mouseDownAt.colIndex - mouseOverAt.colIndex) + 1;
-
-  const tentativeObstacle = {
-    id: 'tentative',
-    lane,
-    type: mouseOverAt.rowIndex === 2 ? 'ceiling' : 'wall',
-    beatStart: 0,
-    beatDuration: 4,
-    colspan,
-    tentative: true,
-  };
-
-  // // Clamp our wall colspan to a max of 2
-  if (tentativeObstacle.type === 'wall' && tentativeObstacle.colspan > 2) {
-    const overBy = tentativeObstacle.colspan - 2;
-    tentativeObstacle.colspan = 2;
-
-    const colspanDelta = mouseOverAt.colIndex - mouseDownAt.colIndex;
-
-    if (colspanDelta > 0) {
-      tentativeObstacle.lane += overBy;
-    } else {
-      tentativeObstacle.lane = mouseOverAt.colIndex;
-    }
-  }
+  const tentativeObstacle = createTentativeObstacle(
+    mode,
+    mouseDownAt,
+    mouseOverAt
+  );
 
   return (
     <ObstacleBox
       obstacle={tentativeObstacle}
       beatDepth={props.beatDepth}
+      color={color}
       snapTo={1} // Doesn't matter
       handleDelete={() => {}}
       handleResize={() => {}}

@@ -9,6 +9,10 @@ import {
 } from '../../constants';
 
 import { Obstacle } from '../../types';
+import {
+  getPositionForObstacle,
+  getDimensionsForObstacle,
+} from './ObstacleBox.helpers';
 
 interface Props {
   obstacle: Obstacle;
@@ -23,35 +27,12 @@ interface Props {
 
 const RESIZE_THRESHOLD = 30;
 
-// This method gets the position in terms of the obstacle's top-left corner!
-// This will need to be adjusted.
-const getPositionForObstacle = (
-  { lane, beatStart }: Obstacle,
-  beatDepth: number
-): [number, number, number] => {
-  // Our `x` parameter is controlled by `lane`. It can be in 1 of 4 places.
-  const x = lane * BLOCK_COLUMN_WIDTH - BLOCK_COLUMN_WIDTH * 2;
-
-  // Our `y` parameter is always the same, because our block always starts
-  // at the top. The type (wallf | ceiling) dictates whether it reaches down
-  // to the floor or not, but given that this method only cares about top-left,
-  // that isn't a concern for now.
-  // The very top of our object is at
-  const y = BLOCK_PLACEMENT_SQUARE_SIZE * 1.75;
-
-  // since, again, we only care about the top-left-front of our shape,
-  // this one is easy: it's `beatStart` number of beats down the pike, plus whatever
-  // offset we have, similar to SongBlocks
-  const z = beatStart * beatDepth * -1 - SONG_OFFSET;
-
-  return [x, y, z];
-};
-
 // in Threejs, objects are always positioned relative to their center.
 // This is tricky when it comes to obstacles, which come in a range of sizes
-// and shapes; it would be much easier to orient them based on their front
+// and shapes; it would be much easier to orient them based on their top/left
 // position. This function works that all out.
 const adjustPositionForObstacle = (
+  type: 'wall' | 'ceiling' | 'extension',
   humanizedPosition: [number, number, number],
   width: number,
   height: number,
@@ -60,9 +41,17 @@ const adjustPositionForObstacle = (
   // For our `x`, if our obstacle's `width` was only 1, we could shift it by
   // 0.5 BLOCK_COLUMN_WIDTH. If our width is 2, we'd need to shift right by 1.
   // 3, and it would be shifted by 1.5
-  const x = humanizedPosition[0] + BLOCK_SIZE * (width / 2);
+  const x = humanizedPosition[0] + width / 2;
 
-  const y = humanizedPosition[1] - height / 2;
+  let y = humanizedPosition[1];
+  if (type === 'wall' || type === 'ceiling') {
+    y = humanizedPosition[1] - height / 2;
+  } else {
+    // HACK: Not sure why the extra BLOCK_COLUMN_WIDTH half-step is required :/
+    // Without it, positions are off by half a cell.
+    y = humanizedPosition[1] + height / 2 - BLOCK_COLUMN_WIDTH / 2;
+  }
+
   const z = humanizedPosition[2] - depth / 2 + 0.1;
 
   return [x, y, z];
@@ -78,22 +67,17 @@ const ObstacleBox: React.FC<Props> = ({
   handleClick,
   handleMouseOver,
 }) => {
-  const { type, colspan, tentative } = obstacle;
-
-  const width = colspan * BLOCK_COLUMN_WIDTH;
-  const height =
-    type === 'wall' ? BLOCK_COLUMN_WIDTH * 3.5 : BLOCK_COLUMN_WIDTH * 1.25;
-  let depth = obstacle.beatDuration * beatDepth;
-  if (depth === 0) {
-    depth = 0.01;
-  }
+  const { width, height, depth } = getDimensionsForObstacle(
+    obstacle,
+    beatDepth
+  );
 
   const mesh = React.useMemo(() => {
     const geometry = new THREE.BoxGeometry(width, height, depth);
     const material = new THREE.MeshPhongMaterial({
       color,
       transparent: true,
-      opacity: tentative ? 0.15 : 0.4,
+      opacity: obstacle.tentative ? 0.15 : 0.4,
       polygonOffset: true,
       polygonOffsetFactor: 1, // positive value pushes polygon further away
       polygonOffsetUnits: 1,
@@ -103,10 +87,11 @@ const ObstacleBox: React.FC<Props> = ({
     });
 
     return new THREE.Mesh(geometry, material);
-  }, [depth, height, tentative, width, obstacle.selected]);
+  }, [depth, height, obstacle.tentative, width, obstacle.selected]);
 
   const humanizedPosition = getPositionForObstacle(obstacle, beatDepth);
   const actualPosition = adjustPositionForObstacle(
+    obstacle.type,
     humanizedPosition,
     width,
     height,
