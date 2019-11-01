@@ -495,46 +495,13 @@ export const updateVolume = volume => ({
   volume,
 });
 
-export const createNewObstacle = (
-  mouseDownAt,
-  mouseOverAt,
-  cursorPositionInBeats
-) => {
-  if (!mouseOverAt) {
-    mouseOverAt = mouseDownAt;
-  }
-
-  // TODO: Dedupe with the code in `TentativeObstacle`
-  const lane = Math.min(mouseDownAt.colIndex, mouseOverAt.colIndex);
-
-  const colspan = Math.abs(mouseDownAt.colIndex - mouseOverAt.colIndex) + 1;
-
-  const obstacle = {
-    id: uuid(),
-    lane,
-    type: mouseOverAt.rowIndex === 2 ? 'ceiling' : 'wall',
-    beatStart: cursorPositionInBeats,
-    beatDuration: 4,
-    colspan,
-  };
-
-  // Clamp our wall colspan to a max of 2
-  if (obstacle.type === 'wall' && obstacle.colspan > 2) {
-    const overBy = obstacle.colspan - 2;
-    obstacle.colspan = 2;
-
-    const colspanDelta = mouseOverAt.colIndex - mouseDownAt.colIndex;
-
-    if (colspanDelta > 0) {
-      obstacle.lane += overBy;
-    } else {
-      obstacle.lane = mouseOverAt.colIndex;
-    }
-  }
-
+export const createNewObstacle = obstacle => {
   return {
     type: 'CREATE_NEW_OBSTACLE',
-    obstacle,
+    obstacle: {
+      ...obstacle,
+      id: uuid(),
+    },
   };
 };
 

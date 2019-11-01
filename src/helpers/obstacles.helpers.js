@@ -64,7 +64,13 @@ export const nudgeObstacles = (direction, amount, obstacles) => {
   });
 };
 
-export const createTentativeObstacle = (mode, mouseDownAt, mouseOverAt) => {
+export const createObstacleFromMouseEvent = (
+  mode,
+  mouseDownAt,
+  mouseOverAt,
+  beatStart,
+  beatDuration = 4
+) => {
   const lane = Math.min(mouseDownAt.colIndex, mouseOverAt.colIndex);
 
   const colspan = Math.abs(mouseDownAt.colIndex - mouseOverAt.colIndex) + 1;
@@ -76,28 +82,26 @@ export const createTentativeObstacle = (mode, mouseDownAt, mouseOverAt) => {
       ? 'ceiling'
       : 'wall'
 
-  const tentativeObstacle = {
-    id: 'tentative',
+  const obstacle = {
     lane,
     type: obstacleType,
-    beatStart: 0,
-    beatDuration: 4,
+    beatStart,
+    beatDuration,
     colspan,
-    tentative: true,
   };
 
   // 'original' walls need to be clamped, to not cause hazards
   if (mode === 'original') {
-    if (tentativeObstacle.type === 'wall' && tentativeObstacle.colspan > 2) {
-      const overBy = tentativeObstacle.colspan - 2;
-      tentativeObstacle.colspan = 2;
+    if (obstacle.type === 'wall' && obstacle.colspan > 2) {
+      const overBy = obstacle.colspan - 2;
+      obstacle.colspan = 2;
 
       const colspanDelta = mouseOverAt.colIndex - mouseDownAt.colIndex;
 
       if (colspanDelta > 0) {
-        tentativeObstacle.lane += overBy;
+        obstacle.lane += overBy;
       } else {
-        tentativeObstacle.lane = mouseOverAt.colIndex;
+        obstacle.lane = mouseOverAt.colIndex;
       }
     }
   } else if (mode === 'with-mapping-extensions') {
@@ -107,9 +111,9 @@ export const createTentativeObstacle = (mode, mouseDownAt, mouseOverAt) => {
     const rowIndex = Math.min(mouseDownAt.rowIndex, mouseOverAt.rowIndex);
     const rowspan = Math.abs(mouseDownAt.rowIndex - mouseOverAt.rowIndex) + 1;
 
-    tentativeObstacle.rowIndex = rowIndex;
-    tentativeObstacle.rowspan = rowspan;
+    obstacle.rowIndex = rowIndex;
+    obstacle.rowspan = rowspan;
   }
 
-  return tentativeObstacle;
+  return obstacle;
 };
