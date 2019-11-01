@@ -6,6 +6,7 @@ import * as actions from '../../actions';
 import { range, roundToNearest } from '../../utils';
 import { convertLaneIndices } from '../../helpers/grid.helpers';
 import { getColorForItem } from '../../helpers/colors.helpers';
+import { createObstacleFromMouseEvent } from '../../helpers/obstacles.helpers';
 import {
   getCursorPositionInBeats,
   getSnapTo,
@@ -44,6 +45,10 @@ const PlacementGrid = ({
   const [mouseDownAt, setMouseDownAt] = React.useState(null);
   const [mouseOverAt, setMouseOverAt] = React.useState(null);
   const cachedDirection = React.useRef(null);
+
+  const mappingMode = enabledMods.mappingExtensions
+    ? 'with-mapping-extensions'
+    : 'original';
 
   // `hoveredCell` is an indication of which square is currently highlighted
   // by the cursor. You might think I could just use `mouseOverAt`, but
@@ -235,11 +240,16 @@ const PlacementGrid = ({
                 ) {
                   ev.stopPropagation();
 
-                  createNewObstacle(
+                  const mouseOverAt = { rowIndex, colIndex };
+
+                  const obstacle = createObstacleFromMouseEvent(
+                    mappingMode,
                     mouseDownAt,
-                    { rowIndex, colIndex },
+                    mouseOverAt,
                     cursorPositionInBeats
                   );
+
+                  createNewObstacle(obstacle);
                 }
               }}
               onPointerOver={ev => {
@@ -288,11 +298,7 @@ const PlacementGrid = ({
           mouseDownAt={mouseDownAt}
           mouseOverAt={mouseOverAt}
           color={getColorForItem('obstacle', song)}
-          mode={
-            enabledMods.mappingExtensions
-              ? 'with-mapping-extensions'
-              : 'original'
-          }
+          mode={mappingMode}
         />
       )}
     </>

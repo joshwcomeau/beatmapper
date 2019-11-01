@@ -2,12 +2,12 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { getBeatDepth } from '../../reducers/navigation.reducer';
-import { createTentativeObstacle } from '../../helpers/obstacles.helpers';
+import { createObstacleFromMouseEvent } from '../../helpers/obstacles.helpers';
 
 import ObstacleBox from '../ObstacleBox';
 
 const TentativeObstacle = props => {
-  const { mouseDownAt, mode, color } = props;
+  const { mouseDownAt, mode, beatDepth, color } = props;
 
   // If no mouseOverAt is provided, it ought to be the same as the mouseDownAt.
   // They've clicked but haven't moved yet, ergo only one row/col is at play.
@@ -16,16 +16,20 @@ const TentativeObstacle = props => {
     mouseOverAt = mouseDownAt;
   }
 
-  const tentativeObstacle = createTentativeObstacle(
+  const tentativeObstacle = createObstacleFromMouseEvent(
     mode,
     mouseDownAt,
-    mouseOverAt
+    mouseOverAt,
+    0
   );
+
+  tentativeObstacle.id = 'tentative';
+  tentativeObstacle.tentative = true;
 
   return (
     <ObstacleBox
       obstacle={tentativeObstacle}
-      beatDepth={props.beatDepth}
+      beatDepth={beatDepth}
       color={color}
       snapTo={1} // Doesn't matter
       handleDelete={() => {}}
