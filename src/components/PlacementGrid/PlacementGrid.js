@@ -11,15 +11,14 @@ import {
   getCursorPositionInBeats,
   getSnapTo,
 } from '../../reducers/navigation.reducer';
-
-import { getDirectionForDrag } from './PlacementGrid.helpers';
-
-import TentativeObstacle from './TentativeObstacle';
 import {
   getGridSize,
-  getEnabledMods,
+  getMappingMode,
   getSelectedSong,
 } from '../../reducers/songs.reducer';
+
+import { getDirectionForDrag } from './PlacementGrid.helpers';
+import TentativeObstacle from './TentativeObstacle';
 
 const PlacementGrid = ({
   width,
@@ -30,7 +29,7 @@ const PlacementGrid = ({
   selectedDirection,
   selectedTool,
   selectionMode,
-  enabledMods,
+  mappingMode,
   numRows,
   numCols,
   cellSize,
@@ -45,10 +44,6 @@ const PlacementGrid = ({
   const [mouseDownAt, setMouseDownAt] = React.useState(null);
   const [mouseOverAt, setMouseOverAt] = React.useState(null);
   const cachedDirection = React.useRef(null);
-
-  const mappingMode = enabledMods.mappingExtensions
-    ? 'with-mapping-extensions'
-    : 'original';
 
   // `hoveredCell` is an indication of which square is currently highlighted
   // by the cursor. You might think I could just use `mouseOverAt`, but
@@ -137,8 +132,8 @@ const PlacementGrid = ({
           // each position is pushed further from this position.
           // After sketching out the math, the formula looks like:
           //
-          // x = -0.5T + 0.5 + I       // T = Total Columns (or Rows)
-          //                           // I = Index (column or row)
+          // x = -0.5T + 0.5 + I       // T = Total Columns
+          //                           // I = Column Index
           //
           const x = (numCols * -0.5 + 0.5 + colIndex) * renderCellSize;
           const y = (numRows * -0.5 + 0.5 + rowIndex) * renderCellSize;
@@ -316,7 +311,7 @@ const mapStateToProps = state => {
     selectedDirection: state.editor.notes.selectedDirection,
     selectedTool: state.editor.notes.selectedTool,
     selectionMode: state.editor.notes.selectionMode,
-    enabledMods: getEnabledMods(state),
+    mappingMode: getMappingMode(state),
     numRows: gridSize.numRows,
     numCols: gridSize.numCols,
     cellSize: gridSize.cellSize,

@@ -6,12 +6,15 @@ import { Obstacle } from '../../types';
 // This will need to be adjusted.
 export const getPositionForObstacle = (
   { lane, beatStart, type, rowIndex }: any,
+  gridRows: number,
+  gridCols: number,
+  gridCellSize: number,
   beatDepth: number
 ): [number, number, number] => {
   // Our `x` parameter is controlled by `lane`. The 0 lane should be 2 notches
   // to the left, since in threejs our [0, 0] position would be the center of
   // the placement grid.
-  const OFFSET_X = BLOCK_COLUMN_WIDTH * 2;
+  const OFFSET_X = BLOCK_COLUMN_WIDTH * (gridCols / 2);
 
   const x = lane * BLOCK_COLUMN_WIDTH - OFFSET_X;
 

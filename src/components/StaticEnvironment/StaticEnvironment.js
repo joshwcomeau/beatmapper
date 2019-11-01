@@ -13,8 +13,8 @@ import { getGridSize } from '../../reducers/songs.reducer';
 
 import EdgeStrip from './EdgeStrip';
 
-const StaticEnvironment = ({ includeEdgeStrips, gridRows }) => {
-  const gridYBase = BLOCK_COLUMN_WIDTH * (gridRows * -0.5);
+const StaticEnvironment = ({ includeEdgeStrips }) => {
+  const gridYBase = BLOCK_COLUMN_WIDTH * (DEFAULT_NUM_ROWS * -0.5);
 
   const SURFACE_Z_CENTER = SURFACE_DEPTH / 2 + SONG_OFFSET - 1;
 

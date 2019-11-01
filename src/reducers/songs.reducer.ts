@@ -499,3 +499,10 @@ export const getEnabledMods = createSelector(
     };
   }
 );
+
+export const getMappingMode = createSelector(
+  getEnabledMods,
+  enabledMods => {
+    return enabledMods.mappingExtensions ? 'mapping-extensions' : 'original';
+  }
+);

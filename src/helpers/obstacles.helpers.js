@@ -21,13 +21,52 @@ export const convertObstaclesToRedux = obstacles => {
 };
 
 export const convertObstaclesToExportableJson = obstacles => {
-  return obstacles.map(o => ({
-    _time: o.beatStart,
-    _duration: o.beatDuration === 0 ? 0.1 : o.beatDuration,
-    _lineIndex: o.lane,
-    _type: o.type === 'wall' ? 0 : 1,
-    _width: o.colspan,
-  }));
+  return obstacles.map(o => {
+    // Normally, type is either 0 or 1, for walls or ceilings.
+    // With Mapping Extensions, type type is used to control both height and
+    // y position @_@
+    //
+    // We can tell if we're managing a MapEx wall by the `type`.
+    //
+    // It works according to this formula:
+    //    wallHeight * 1000 + startHeight + 4001
+
+    let type;
+    switch (o.type) {
+      case 'wall': {
+        type = 0;
+        break;
+      }
+      case 'ceiling': {
+        type = 1;
+        break;
+      }
+      case 'extension': {
+        // `wallHeight` is a value from 1000 to 4000:
+        // - 1000 is flat
+        // - 2000 is normal height (which I think is like 4 rows?)
+        // - 4000 is max
+        //
+        // So, first we need to normalize our rowIndex to be relative to the
+        // normal scale (where 0 is no height and 1 is 4 rows height, so that a
+        // 6-row-high wall is 1.5), and then I can normalize THAT value between
+        // 1000 and 2000.
+        //
+        // TODO
+      }
+
+      default:
+        throw new Error('Unrecognized type: ' + type);
+    }
+
+    return {
+      _time: o.beatStart,
+      _duration: o.beatDuration === 0 ? 0.1 : o.beatDuration,
+      _lineIndex: o.lane,
+      _type: o.type === 'wall' ? 0 : 1,
+      _width: o.colspan,
+    };
+  });
 };
 
 export const swapObstacles = (axis, obstacles) => {
@@ -76,7 +115,7 @@ export const createObstacleFromMouseEvent = (
   const colspan = Math.abs(mouseDownAt.colIndex - mouseOverAt.colIndex) + 1;
 
   // prettier-ignore
-  const obstacleType = mode === 'with-mapping-extensions'
+  const obstacleType = mode === 'mapping-extensions'
     ? 'extension'
     : mouseOverAt.rowIndex === 2
       ? 'ceiling'
@@ -104,7 +143,7 @@ export const createObstacleFromMouseEvent = (
         obstacle.lane = mouseOverAt.colIndex;
       }
     }
-  } else if (mode === 'with-mapping-extensions') {
+  } else if (mode === 'mapping-extensions') {
     // For mapping extensions, things work a little bit differently.
     // We need a rowIndex, which works like `lane`, and rowspan, which works
     // like `colspan`

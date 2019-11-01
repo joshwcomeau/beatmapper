@@ -8,17 +8,11 @@ import {
   getCursorPositionInBeats,
   getBeatDepth,
 } from '../../reducers/navigation.reducer';
-import { getSelectedSong, getGridSize } from '../../reducers/songs.reducer';
+import { getSelectedSong } from '../../reducers/songs.reducer';
 
 import Marker from './Marker';
 
-const BarMarkers = ({
-  duration,
-  bpm,
-  cursorPositionInBeats,
-  beatDepth,
-  gridRows,
-}) => {
+const BarMarkers = ({ duration, bpm, cursorPositionInBeats, beatDepth }) => {
   const numToRender = SURFACE_DEPTH / beatDepth;
   const totalNumOfBeats = Math.ceil(convertMillisecondsToBeats(duration, bpm));
 
@@ -49,7 +43,6 @@ const BarMarkers = ({
         beatNum={isBeat && i / 4}
         offset={-SONG_OFFSET + -i * (beatDepth / 4)}
         type={type}
-        gridRows={gridRows}
       />
     );
   });
@@ -57,14 +50,12 @@ const BarMarkers = ({
 
 const mapStateToProps = state => {
   const song = getSelectedSong(state);
-  const gridSize = getGridSize(state);
 
   return {
     duration: state.navigation.duration,
     bpm: song ? song.bpm : null,
     cursorPositionInBeats: getCursorPositionInBeats(state),
     beatDepth: getBeatDepth(state),
-    gridRows: gridSize.numRows,
   };
 };
 
