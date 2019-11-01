@@ -1,8 +1,9 @@
 import React from 'react';
 import * as THREE from 'three';
 
-import { SURFACE_WIDTH, BLOCK_COLUMN_WIDTH } from '../../constants';
 import oswaldGlyphs from '../../assets/fonts/oswald.json';
+import { SURFACE_WIDTH, BLOCK_COLUMN_WIDTH } from '../../constants';
+import { DEFAULT_NUM_ROWS } from '../../helpers/grid.helpers';
 
 const font = new THREE.Font(oswaldGlyphs);
 const textGeometryOptions = {
@@ -12,9 +13,9 @@ const textGeometryOptions = {
   curveSegments: 2,
 };
 
-const Marker = ({ beatNum, offset, type, gridRows }) => {
+const Marker = ({ beatNum, offset, type }) => {
   const Y_PADDING = 0.0075;
-  const yOffset = BLOCK_COLUMN_WIDTH * (gridRows * -0.5) + Y_PADDING;
+  const yOffset = BLOCK_COLUMN_WIDTH * (DEFAULT_NUM_ROWS * -0.5) + Y_PADDING;
 
   const depth = type === 'beat' ? 0.2 : 0.08;
 

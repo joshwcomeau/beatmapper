@@ -10,7 +10,7 @@ import {
   getBeatDepth,
 } from '../../reducers/navigation.reducer';
 import { getObstacles } from '../../reducers/editor-entities.reducer/notes-view.reducer';
-import { getSelectedSong } from '../../reducers/songs.reducer';
+import { getSelectedSong, getGridSize } from '../../reducers/songs.reducer';
 
 import ObstacleBox from '../ObstacleBox';
 
@@ -21,6 +21,9 @@ const Obstacles = ({
   beatDepth,
   selectionMode,
   snapTo,
+  gridRows,
+  gridCols,
+  gridCellSize,
   deleteObstacle,
   resizeObstacle,
   selectObstacle,
@@ -46,6 +49,9 @@ const Obstacles = ({
       color={obstacleColor}
       beatDepth={beatDepth}
       snapTo={snapTo}
+      gridRows={gridRows}
+      gridCols={gridCols}
+      gridCellSize={gridCellSize}
       handleDelete={deleteObstacle}
       handleResize={resizeObstacle}
       handleClick={() =>
@@ -67,6 +73,8 @@ const Obstacles = ({
 };
 
 const mapStateToProps = state => {
+  const gridSize = getGridSize(state);
+
   return {
     song: getSelectedSong(state),
     obstacles: getObstacles(state),
@@ -74,6 +82,9 @@ const mapStateToProps = state => {
     beatDepth: getBeatDepth(state),
     selectionMode: state.editor.notes.selectionMode,
     snapTo: getSnapTo(state),
+    gridRows: gridSize.numRows,
+    gridCols: gridSize.numCols,
+    gridCellSize: gridSize.cellSize,
   };
 };
 
