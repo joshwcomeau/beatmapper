@@ -84,4 +84,69 @@ describe('Obstacles helpers', () => {
 
     expect(actualResult).toEqual(expectedResult);
   });
+
+  describe('mapping extensions', () => {
+    it('handles an obstacle that includes a custom row index and span', () => {
+      // This test obstacle takes up the top 2 rows in a 4x3 grid
+      //
+      // [X _ _ _]
+      // [X _ _ _]
+      // [_ _ _ _]
+      const obstacle = {
+        id: 'a',
+        type: 'extension',
+        beatStart: 2,
+        beatDuration: 4,
+        lane: 0,
+        colspan: 1,
+        rowIndex: 1,
+        rowspan: 2,
+      };
+
+      const actualResult = convertObstaclesToExportableJson([obstacle]);
+      const expectedResult = [
+        {
+          _time: 2,
+          _lineIndex: 1000,
+          _type: Math.round(
+            1333.3333333333333 * 1000 + 138.88888888888889 + 4001
+          ),
+          _duration: 4,
+          _width: 1,
+        },
+      ];
+
+      expect(actualResult).toEqual(expectedResult);
+    });
+  });
+
+  it('handles an obstacle in a wider 8x3 grid', () => {
+    // X _ [_ _ _ _] _ _
+    // X _ [_ _ _ _] _ _
+    // X _ [_ _ _ _] _ _
+    const gridCols = 8;
+    const obstacle = {
+      id: 'a',
+      type: 'extension',
+      beatStart: 2,
+      beatDuration: 4,
+      lane: 0,
+      colspan: 1,
+      rowIndex: 0,
+      rowspan: 3,
+    };
+
+    const actualResult = convertObstaclesToExportableJson([obstacle], gridCols);
+    const expectedResult = [
+      {
+        _time: 2,
+        _lineIndex: -3000,
+        _type: 1670751,
+        _duration: 4,
+        _width: 1,
+      },
+    ];
+
+    expect(actualResult).toEqual(expectedResult);
+  });
 });

@@ -1,12 +1,64 @@
 import uuid from 'uuid/v1';
 
-export const convertObstaclesToRedux = obstacles => {
+import { DEFAULT_NUM_COLS, convertLaneIndices } from './grid.helpers';
+import { normalize, clamp } from '../utils';
+
+// These constants relate to the conversion to/from MappingExtensions
+// obstacles.
+const FULL_WALL_HEIGHT_IN_ROWS = 5;
+const WALL_HEIGHT_MIN = 0;
+const WALL_HEIGHT_MAX = 1000;
+
+const WALL_START_BASE = 100;
+const WALL_START_MAX = 350;
+
+const RIDICULOUS_MAP_EX_CONSTANT = 4001;
+
+export const convertObstaclesToRedux = (
+  obstacles,
+  gridCols = DEFAULT_NUM_COLS
+) => {
   return obstacles.map(o => {
-    // We want to truncate widths that fall outside the acceptable parameters
-    // (4 columns).
-    let truncatedWidth = o._width;
-    if (truncatedWidth + o._lineIndex > 4) {
-      truncatedWidth = 4 - o._lineIndex;
+    let obstacleData = {};
+    if (o._type <= 1) {
+      obstacleData.type = o._type === 0 ? 'wall' : 'ceiling';
+
+      // We want to truncate widths that fall outside the acceptable parameters
+      // (4 columns).
+      let truncatedColspan = o._width;
+      if (truncatedColspan + o._lineIndex > 4) {
+        truncatedColspan = 4 - o._lineIndex;
+      }
+
+      obstacleData.colspan = truncatedColspan;
+    } else {
+      // If this is a Mapping Extension map, we have some extra work to do.
+      // Annoyingly, the 'type' field conveys information about BOTH the wall
+      // height, and the wall Y offset.
+      const typeValue = o._type - RIDICULOUS_MAP_EX_CONSTANT;
+      const wallHeight = Math.round(typeValue / 1000);
+      const wallStartHeight = typeValue % 1000;
+
+      const rowspan = Math.round(
+        normalize(
+          wallHeight,
+          WALL_HEIGHT_MIN,
+          WALL_HEIGHT_MAX,
+          0,
+          FULL_WALL_HEIGHT_IN_ROWS
+        )
+      );
+
+      const rowIndex = Math.round(
+        normalize(wallStartHeight, WALL_START_BASE, WALL_START_MAX, 0, 2)
+      );
+
+      obstacleData.type = 'extension';
+      obstacleData.rowspan = rowspan;
+      obstacleData.rowIndex = rowIndex;
+      obstacleData.lane =
+        o._lineIndex < 0 ? o._lineIndex / 1000 + 1 : o._lineIndex / 1000 - 1;
+      obstacleData.colspan = o._width;
     }
 
     return {
@@ -14,14 +66,16 @@ export const convertObstaclesToRedux = obstacles => {
       beatStart: o._time,
       beatDuration: o._duration,
       lane: o._lineIndex,
-      type: o._type === 0 ? 'wall' : 'ceiling',
-      colspan: truncatedWidth,
+      ...obstacleData,
     };
   });
 };
 
-export const convertObstaclesToExportableJson = obstacles => {
-  return obstacles.map(o => {
+export const convertObstaclesToExportableJson = (
+  obstacles,
+  gridCols = DEFAULT_NUM_COLS
+) => {
+  return obstacles.map((o, i) => {
     // Normally, type is either 0 or 1, for walls or ceilings.
     // With Mapping Extensions, type type is used to control both height and
     // y position @_@
@@ -42,30 +96,67 @@ export const convertObstaclesToExportableJson = obstacles => {
         break;
       }
       case 'extension': {
-        // `wallHeight` is a value from 1000 to 4000:
-        // - 1000 is flat
-        // - 2000 is normal height (which I think is like 4 rows?)
+        // `wallHeight` is a value from 0 to 4000:
+        // - 0 is flat
+        // - 1000 is normal height (which I think is like 4 rows?)
         // - 4000 is max
-        //
-        // So, first we need to normalize our rowIndex to be relative to the
-        // normal scale (where 0 is no height and 1 is 4 rows height, so that a
-        // 6-row-high wall is 1.5), and then I can normalize THAT value between
-        // 1000 and 2000.
-        //
-        // TODO
+        let normalizedWallHeight = Math.round(
+          normalize(
+            o.rowspan,
+            0,
+            FULL_WALL_HEIGHT_IN_ROWS,
+            WALL_HEIGHT_MIN,
+            WALL_HEIGHT_MAX
+          )
+        );
+        normalizedWallHeight = clamp(normalizedWallHeight, 0, 4000);
+
+        // Wall start height is a number between 0 and 999.
+        // A wall start height of 0 means the bottom of the wall is on the
+        // platform. A wall start height of 1000
+        let normalizedWallStart = Math.round(
+          normalize(o.rowIndex, 0, 2, WALL_START_BASE, WALL_START_MAX)
+        );
+        normalizedWallStart = clamp(normalizedWallStart, 0, 999);
+
+        type =
+          normalizedWallHeight * 1000 +
+          normalizedWallStart +
+          RIDICULOUS_MAP_EX_CONSTANT;
+
+        break;
       }
 
       default:
         throw new Error('Unrecognized type: ' + type);
     }
 
-    return {
+    let lineIndex = o.lane;
+
+    if (o.type === 'extension') {
+      // Normally, lineIndex goes from 0 to 3, for each column.
+      // Our lane goes from 0 to n, where n is the number of columns.
+      // Eg. if our lane is 0 in a 6-lane grid, that should actually be
+      // -1 (since the new range is -1 to 4).
+      const [properlyOffsetLane] = convertLaneIndices(o.lane, null, gridCols);
+
+      lineIndex =
+        properlyOffsetLane < 0
+          ? properlyOffsetLane * 1000 - 1000
+          : properlyOffsetLane * 1000 + 1000;
+      // in a MapEx world, that changes to 1000-4000, with -2000 and lower
+      // for lanes to the left.
+    }
+
+    let data = {
       _time: o.beatStart,
       _duration: o.beatDuration === 0 ? 0.1 : o.beatDuration,
-      _lineIndex: o.lane,
-      _type: o.type === 'wall' ? 0 : 1,
+      _lineIndex: lineIndex,
+      _type: type,
       _width: o.colspan,
     };
+
+    return data;
   });
 };
 
