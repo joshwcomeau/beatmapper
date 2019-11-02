@@ -93,7 +93,7 @@ export function createInfoContent(song, meta = { version: 2 }) {
             _customData: {
               _editorOffset: offset,
               // _difficultyLabel: '', // TODO: Allow a real value!
-              _requirements: requirements,
+              _requirements: [],
             },
           })),
         },

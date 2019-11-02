@@ -123,7 +123,7 @@ export default function createSongMiddleware() {
           let convertedObstacles = convertObstaclesToRedux(unshiftedObstacles);
           let convertedEvents = convertEventsToRedux(unshiftedEvents);
           let convertedBookmarks = convertBookmarksToRedux(
-            beatmapJson._bookmarks
+            beatmapJson._customData && beatmapJson._customData._bookmarks
           );
 
           next(
