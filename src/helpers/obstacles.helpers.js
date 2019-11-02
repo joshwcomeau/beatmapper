@@ -150,9 +150,6 @@ export const convertObstaclesToExportableJson = (
         throw new Error('Unrecognized type: ' + o.type);
     }
 
-    if (o.type === 'extension') {
-    }
-
     let data = {
       _time: o.beatStart,
       _duration: o.beatDuration === 0 ? 0.1 : o.beatDuration,
@@ -231,7 +228,8 @@ export const createObstacleFromMouseEvent = (
 
   // 'original' walls need to be clamped, to not cause hazards
   if (mode === 'original') {
-    obstacle.lane = convertGridIndicesToNaturalGrid(laneIndex, numCols);
+    const [lane] = convertGridIndicesToNaturalGrid(laneIndex, numCols);
+    obstacle.lane = lane;
 
     if (obstacle.type === 'wall' && obstacle.colspan > 2) {
       const overBy = obstacle.colspan - 2;
