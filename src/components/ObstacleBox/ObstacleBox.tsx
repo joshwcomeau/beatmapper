@@ -78,6 +78,8 @@ const ObstacleBox: React.FC<Props> = ({
     beatDepth
   );
 
+  console.log({ obstacle });
+
   const mesh = React.useMemo(() => {
     const geometry = new THREE.BoxGeometry(width, height, depth);
     const material = new THREE.MeshPhongMaterial({
