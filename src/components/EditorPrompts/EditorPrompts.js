@@ -7,14 +7,14 @@ import { UNIT } from '../../constants';
 import { getSeenPrompts } from '../../reducers/user.reducer';
 
 import Heading from '../Heading';
-import Modal from '../Modal';
+import UnobtrusivePrompt from '../UnobtrusivePrompt';
 import Spacer from '../Spacer';
 import Paragraph from '../Paragraph';
 import Link from '../Link';
 
 const PROMPTS = [
   {
-    id: 'alpha-warning',
+    id: 'alpha-warningb',
     title: 'Warning: Alpha Software',
     contents: () => (
       <>
@@ -66,18 +66,12 @@ const EditorPrompts = ({ prompt, dismissPrompt }) => {
   }
 
   return (
-    <Modal
-      isVisible={true}
-      width={500}
+    <UnobtrusivePrompt
+      title={prompt.title}
       onDismiss={() => dismissPrompt(prompt.id)}
-      clickBackdropToDismiss={false}
     >
-      <ModalContents>
-        <Heading size={1}>{prompt.title}</Heading>
-        <Spacer size={UNIT * 5} />
-        {prompt.contents()}
-      </ModalContents>
-    </Modal>
+      {prompt.contents()}
+    </UnobtrusivePrompt>
   );
 };
 
