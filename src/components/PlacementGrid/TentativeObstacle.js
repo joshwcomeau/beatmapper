@@ -26,6 +26,8 @@ const TentativeObstacle = ({
 
   const tentativeObstacle = createObstacleFromMouseEvent(
     mode,
+    gridCols,
+    gridRows,
     mouseDownAt,
     mouseOverAt,
     0

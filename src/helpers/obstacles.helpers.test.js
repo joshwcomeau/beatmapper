@@ -86,7 +86,7 @@ describe('Obstacles helpers', () => {
   });
 
   describe('mapping extensions', () => {
-    it('handles an obstacle that includes a custom row index and span', () => {
+    it('converts an obstacle that includes a custom row index and span', () => {
       // This test obstacle takes up the top 2 rows in a 4x3 grid
       //
       // [X _ _ _]
@@ -108,9 +108,7 @@ describe('Obstacles helpers', () => {
         {
           _time: 2,
           _lineIndex: 1000,
-          _type: Math.round(
-            1333.3333333333333 * 1000 + 138.88888888888889 + 4001
-          ),
+          _type: 404251,
           _duration: 4,
           _width: 1,
         },
@@ -120,7 +118,7 @@ describe('Obstacles helpers', () => {
     });
   });
 
-  it('handles an obstacle in a wider 8x3 grid', () => {
+  it('converts an obstacle in a wider 8x3 grid', () => {
     // X _ [_ _ _ _] _ _
     // X _ [_ _ _ _] _ _
     // X _ [_ _ _ _] _ _
@@ -130,7 +128,7 @@ describe('Obstacles helpers', () => {
       type: 'extension',
       beatStart: 2,
       beatDuration: 4,
-      lane: 0,
+      lane: -2,
       colspan: 1,
       rowIndex: 0,
       rowspan: 3,
@@ -141,12 +139,49 @@ describe('Obstacles helpers', () => {
       {
         _time: 2,
         _lineIndex: -3000,
-        _type: 1670751,
+        _type: 604101,
         _duration: 4,
         _width: 1,
       },
     ];
 
     expect(actualResult).toEqual(expectedResult);
+  });
+
+  it('Converts JSON to redux', () => {
+    const proprietaryData = [
+      {
+        _time: 2,
+        _lineIndex: -3000,
+        _type: 604101,
+        _duration: 4,
+        _width: 1,
+      },
+    ];
+
+    const actualResult = convertObstaclesToRedux(proprietaryData);
+
+    // The method adds random IDs to every entity.
+    // We can't compare them directly since we don't know the IDs.
+    const actualWithoutIds = actualResult.map(r => {
+      const copy = { ...r };
+      delete copy.id;
+
+      return copy;
+    });
+
+    const expectedResult = [
+      {
+        type: 'extension',
+        beatStart: 2,
+        beatDuration: 4,
+        lane: -2,
+        colspan: 1,
+        rowIndex: 0,
+        rowspan: 3,
+      },
+    ];
+
+    expect(actualWithoutIds).toEqual(expectedResult);
   });
 });

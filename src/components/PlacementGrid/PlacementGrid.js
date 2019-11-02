@@ -4,7 +4,7 @@ import * as THREE from 'three';
 
 import * as actions from '../../actions';
 import { range, roundToNearest } from '../../utils';
-import { convertLaneIndices } from '../../helpers/grid.helpers';
+import { convertGridIndicesToNaturalGrid } from '../../helpers/grid.helpers';
 import { getColorForItem } from '../../helpers/colors.helpers';
 import { createObstacleFromMouseEvent } from '../../helpers/obstacles.helpers';
 import {
@@ -81,10 +81,13 @@ const PlacementGrid = ({
           return;
         }
 
-        const [effectiveColIndex, effectiveRowIndex] = convertLaneIndices(
+        const [
+          effectiveColIndex,
+          effectiveRowIndex,
+        ] = convertGridIndicesToNaturalGrid(
           colIndex,
-          rowIndex,
           numCols,
+          rowIndex,
           numRows
         );
 
@@ -195,7 +198,12 @@ const PlacementGrid = ({
                 const [
                   effectiveColIndex,
                   effectiveRowIndex,
-                ] = convertLaneIndices(colIndex, rowIndex, numCols, numRows);
+                ] = convertGridIndicesToNaturalGrid(
+                  colIndex,
+                  numCols,
+                  rowIndex,
+                  numRows
+                );
 
                 clickPlacementGrid(
                   effectiveRowIndex,
@@ -239,6 +247,8 @@ const PlacementGrid = ({
 
                   const obstacle = createObstacleFromMouseEvent(
                     mappingMode,
+                    numCols,
+                    numRows,
                     mouseDownAt,
                     mouseOverAt,
                     cursorPositionInBeats
