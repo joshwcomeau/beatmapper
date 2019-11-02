@@ -34,27 +34,37 @@ export const getArchiveVersion = archive => {
   return getFileFromArchive(archive, 'info.dat') ? 2 : 1;
 };
 
+const roundAwayFloatingPointNonsense = n => roundToNearest(n, 1 / 1000000);
+
+const shiftEntitiesByOffsetInBeats = (entities, offsetInBeats) => {
+  return entities.map(entity => {
+    let time = roundAwayFloatingPointNonsense(entity._time + offsetInBeats);
+
+    // For some reason, with offsets we can end up with a time of -0, which
+    // doesn't really make sense.
+    if (time === -0) {
+      time = 0;
+    }
+    return {
+      ...entity,
+      _time: time,
+    };
+  });
+};
+
 export const shiftEntitiesByOffset = (entities, offset, bpm) => {
   const offsetInBeats = convertMillisecondsToBeats(offset, bpm);
 
-  return entities.map(entity => ({
-    ...entity,
-    _time: entity._time + offsetInBeats,
-  }));
+  return shiftEntitiesByOffsetInBeats(entities, offsetInBeats);
 };
 
 export const unshiftEntitiesByOffset = (entities, offset, bpm) => {
-  const offsetInBeats = convertMillisecondsToBeats(offset, bpm);
+  let offsetInBeats = convertMillisecondsToBeats(offset, bpm);
 
-  return entities.map(entity => ({
-    ...entity,
-    // So because we're doing floating-point stuff, we want to avoid any
-    // subtle drift caused by the conversion imprecision.
-    // Numbers like 31.999999999999996.
-    // At the same time, I want to allow legit repeating values like 1.3333,
-    // Since thirds of time is valid! This rounding value seems to be the sweet spot.
-    _time: roundToNearest(entity._time - offsetInBeats, 1 / 100000000),
-  }));
+  // Because we're UNshifting, we need to invert the offset
+  offsetInBeats *= -1;
+
+  return shiftEntitiesByOffsetInBeats(entities, offsetInBeats);
 };
 
 export const getModSettingsForBeatmap = beatmapSet => {
