@@ -41,6 +41,10 @@ export const roundTo = (number, places = 0) =>
 
 export const roundToNearest = (number, nearest) =>
   Math.round(number / nearest) * nearest;
+
+export const roundAwayFloatingPointNonsense = n =>
+  roundToNearest(n, 1 / 1000000);
+
 export const floorToNearest = (number, nearest) =>
   Math.floor(number / nearest) * nearest;
 

@@ -3,7 +3,11 @@ import { connect } from 'react-redux';
 import * as THREE from 'three';
 
 import * as actions from '../../actions';
-import { range, roundToNearest } from '../../utils';
+import {
+  range,
+  roundToNearest,
+  roundAwayFloatingPointNonsense,
+} from '../../utils';
 import { convertGridIndicesToNaturalGrid } from '../../helpers/grid.helpers';
 import { getColorForItem } from '../../helpers/colors.helpers';
 import { createObstacleFromMouseEvent } from '../../helpers/obstacles.helpers';
@@ -187,7 +191,7 @@ const PlacementGrid = ({
                 // we want to snap to the nearest snapping interval.
                 // eg. if they're set to snap to 1/2 beats, and they click
                 // when the song is 3.476 beats in, we should round up to 3.5.
-                const roundedCursorPositionInBeats = roundToNearest(
+                const roundedCursorPositionInBeats = roundAwayFloatingPointNonsense(
                   cursorPositionInBeats,
                   snapTo
                 );
@@ -208,7 +212,7 @@ const PlacementGrid = ({
                 clickPlacementGrid(
                   effectiveRowIndex,
                   effectiveColIndex,
-                  roundedCursorPositionInBeats,
+                  roundAwayFloatingPointNonsense(roundedCursorPositionInBeats),
                   selectedDirection,
                   selectedTool
                 );
@@ -251,7 +255,7 @@ const PlacementGrid = ({
                     numRows,
                     mouseDownAt,
                     mouseOverAt,
-                    cursorPositionInBeats
+                    roundAwayFloatingPointNonsense(cursorPositionInBeats)
                   );
 
                   createNewObstacle(obstacle);
