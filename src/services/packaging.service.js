@@ -81,11 +81,6 @@ export function createInfoContent(song, meta = { version: 2 }) {
       _songFilename: 'song.egg',
       _coverImageFilename: 'cover.jpg',
       _environmentName: song.environment,
-      _customData: {
-        _contributors: [],
-        _customEnvironment: '',
-        _customEnvironmentHash: '',
-      },
       _difficultyBeatmapSets: [
         {
           _beatmapCharacteristicName: 'Standard',
@@ -97,11 +92,8 @@ export function createInfoContent(song, meta = { version: 2 }) {
             _noteJumpStartBeatOffset: difficulty.startBeatOffset,
             _customData: {
               _editorOffset: offset,
-              _difficultyLabel: '',
-              _warnings: [],
-              _information: [],
-              _suggestions: [],
-              _requirements: [],
+              // _difficultyLabel: '', // TODO: Allow a real value!
+              _requirements: requirements,
             },
           })),
         },
@@ -170,15 +162,27 @@ export function createBeatmapContents(
   let sortedObstacles = [...obstacles].sort(sortByTime);
   let sortedEvents = [...events].sort(sortByTime);
 
+  // Remove 'selected' property
+  const removeSelected = entity => {
+    const copy = { ...entity };
+    delete copy.selected;
+
+    return copy;
+  };
+
+  sortedNotes = sortedNotes.map(removeSelected);
+  sortedObstacles = sortedObstacles.map(removeSelected);
+  sortedEvents = sortedEvents.map(removeSelected);
+
   if (meta.version === 2) {
     contents = {
       _version: '2.0.0',
-      // BPM changes not yet supported.
-      _BPMChanges: [],
       _events: sortedEvents,
       _notes: sortedNotes,
       _obstacles: sortedObstacles,
-      _bookmarks: bookmarks,
+      _customData: {
+        _bookmarks: bookmarks,
+      },
     };
   } else if (meta.version === 1) {
     contents = {

@@ -29,7 +29,7 @@ export const getNewBookmarkColor = bookmarks => {
 };
 
 export const convertBookmarksToExportableJson = bookmarks => {
-  return bookmarks.map(bookmark => {
+  return (bookmarks || []).map(bookmark => {
     return {
       _time: bookmark.beatNum,
       _name: bookmark.name,
@@ -41,7 +41,7 @@ export const convertBookmarksToExportableJson = bookmarks => {
 };
 
 export const convertBookmarksToRedux = bookmarks => {
-  return bookmarks.map((bookmark, i) => {
+  return (bookmarks || []).map((bookmark, i) => {
     let color = bookmark.__meta && bookmark.__meta.color;
 
     // If we're parsing bookmarks created outside of Beatmapper, we won't yet
