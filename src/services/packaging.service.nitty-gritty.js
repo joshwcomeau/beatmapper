@@ -1,6 +1,7 @@
 import { roundToNearest, isEmpty } from '../utils';
 import { convertMillisecondsToBeats } from '../helpers/audio.helpers';
 import { formatColorFromImport } from '../helpers/colors.helpers';
+import { DEFAULT_GRID } from '../helpers/grid.helpers';
 
 export const getFileFromArchive = (archive, filename) => {
   // Ideally, our .zip archive will just have all the files we need.
@@ -75,6 +76,17 @@ export const getModSettingsForBeatmap = beatmapSet => {
       return;
     }
 
+    if (
+      Array.isArray(beatmap._customData._requirements) &&
+      beatmap._customData._requirements.includes('Mapping Extensions')
+    ) {
+      modSettings.mappingExtensions = {
+        isEnabled: true,
+        // TODO: Should I save and restore the grid settings?
+        ...DEFAULT_GRID,
+      };
+    }
+
     // Multiple beatmap difficulties might set custom colors, but Beatmapper
     // only supports a single set of colors for all difficulties.
     // If we set any custom colors on previous beatmaps, we can skip this.
@@ -101,7 +113,10 @@ export const getModSettingsForBeatmap = beatmapSet => {
       // since this is how the app knows whether custom colors are enabled
       // or not.
       if (!isEmpty(customColors)) {
-        modSettings.customColors = customColors;
+        modSettings.customColors = {
+          isEnabled: true,
+          ...customColors,
+        };
       }
     }
   });
