@@ -52,7 +52,7 @@ const adjustPositionForObstacle = (
   } else {
     // HACK: Not sure why the extra BLOCK_COLUMN_WIDTH half-step is required :/
     // Without it, positions are off by half a cell.
-    y = humanizedPosition[1] + height / 2 - BLOCK_COLUMN_WIDTH / 2;
+    y = humanizedPosition[1] + height / 2;
   }
 
   const z = humanizedPosition[2] - depth / 2 + 0.1;
@@ -77,8 +77,6 @@ const ObstacleBox: React.FC<Props> = ({
     obstacle,
     beatDepth
   );
-
-  console.log({ obstacle });
 
   const mesh = React.useMemo(() => {
     const geometry = new THREE.BoxGeometry(width, height, depth);

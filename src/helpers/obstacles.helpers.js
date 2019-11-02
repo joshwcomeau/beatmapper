@@ -1,6 +1,9 @@
 import uuid from 'uuid/v1';
 
-import { DEFAULT_NUM_COLS, convertLaneIndices } from './grid.helpers';
+import {
+  DEFAULT_NUM_COLS,
+  convertGridIndicesToNaturalGrid,
+} from './grid.helpers';
 import { normalize, clamp } from '../utils';
 
 // These constants relate to the conversion to/from MappingExtensions
@@ -134,18 +137,13 @@ export const convertObstaclesToExportableJson = (
     let lineIndex = o.lane;
 
     if (o.type === 'extension') {
-      // Normally, lineIndex goes from 0 to 3, for each column.
-      // Our lane goes from 0 to n, where n is the number of columns.
-      // Eg. if our lane is 0 in a 6-lane grid, that should actually be
-      // -1 (since the new range is -1 to 4).
-      const [properlyOffsetLane] = convertLaneIndices(o.lane, null, gridCols);
-
-      lineIndex =
-        properlyOffsetLane < 0
-          ? properlyOffsetLane * 1000 - 1000
-          : properlyOffsetLane * 1000 + 1000;
-      // in a MapEx world, that changes to 1000-4000, with -2000 and lower
-      // for lanes to the left.
+      // Lanes are values from 0-3 in a standard 4-column grid, but they could
+      // be lower or higher than that in a larger grid (eg. in an 8-col grid,
+      // the range is -2 through 5).
+      //
+      // As with notes, we need to convert them to the thousands-scale used
+      // by MappingExtensions.
+      lineIndex = o.lane < 0 ? o.lane * 1000 - 1000 : o.lane * 1000 + 1000;
     }
 
     let data = {
@@ -196,13 +194,20 @@ export const nudgeObstacles = (direction, amount, obstacles) => {
 
 export const createObstacleFromMouseEvent = (
   mode,
+  numCols,
+  numRows,
   mouseDownAt,
   mouseOverAt,
   beatStart,
   beatDuration = 4
 ) => {
-  const lane = Math.min(mouseDownAt.colIndex, mouseOverAt.colIndex);
+  const laneIndex = Math.min(mouseDownAt.colIndex, mouseOverAt.colIndex);
 
+  // Our colIndex will be a value from 0 to N-1, where N is the num of columns.
+  // Eg in an 8-column grid, the number is 0-7.
+  // The thing is, I want to store lanes as relative to a 4-column "natural"
+  // grid, so column 0 of an 8-column grid should actually be -2 (with a full
+  // range of -2 to 5, with 2 before and 2 after the standard 0-3 range).
   const colspan = Math.abs(mouseDownAt.colIndex - mouseOverAt.colIndex) + 1;
 
   // prettier-ignore
@@ -213,7 +218,6 @@ export const createObstacleFromMouseEvent = (
       : 'wall'
 
   const obstacle = {
-    lane,
     type: obstacleType,
     beatStart,
     beatDuration,
@@ -222,6 +226,8 @@ export const createObstacleFromMouseEvent = (
 
   // 'original' walls need to be clamped, to not cause hazards
   if (mode === 'original') {
+    obstacle.lane = convertGridIndicesToNaturalGrid(laneIndex, numCols);
+
     if (obstacle.type === 'wall' && obstacle.colspan > 2) {
       const overBy = obstacle.colspan - 2;
       obstacle.colspan = 2;
@@ -238,9 +244,16 @@ export const createObstacleFromMouseEvent = (
     // For mapping extensions, things work a little bit differently.
     // We need a rowIndex, which works like `lane`, and rowspan, which works
     // like `colspan`
-    const rowIndex = Math.min(mouseDownAt.rowIndex, mouseOverAt.rowIndex);
+    let rawRowIndex = Math.min(mouseDownAt.rowIndex, mouseOverAt.rowIndex);
+    const [lane, rowIndex] = convertGridIndicesToNaturalGrid(
+      laneIndex,
+      numCols,
+      rawRowIndex,
+      numRows
+    );
     const rowspan = Math.abs(mouseDownAt.rowIndex - mouseOverAt.rowIndex) + 1;
 
+    obstacle.lane = lane;
     obstacle.rowIndex = rowIndex;
     obstacle.rowspan = rowspan;
   }

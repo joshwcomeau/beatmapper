@@ -24,7 +24,7 @@ const GridConfig = ({ finishTweakingGrid, numRows, numCols, updateGrid }) => {
             ev.stopPropagation();
           }}
           onChange={ev => {
-            updateGrid(ev.target.value, numRows);
+            updateGrid(Number(ev.target.value), numRows);
           }}
         />
         <Spacer size={UNIT * 4} />
@@ -38,7 +38,7 @@ const GridConfig = ({ finishTweakingGrid, numRows, numCols, updateGrid }) => {
             ev.stopPropagation();
           }}
           onChange={ev => {
-            updateGrid(numCols, ev.target.value);
+            updateGrid(numCols, Number(ev.target.value));
           }}
         />
       </Row>

@@ -11,12 +11,11 @@ export const getPositionForObstacle = (
   gridCellSize: number,
   beatDepth: number
 ): [number, number, number] => {
-  // Our `x` parameter is controlled by `lane`. The 0 lane should be 2 notches
-  // to the left, since in threejs our [0, 0] position would be the center of
-  // the placement grid.
-  const OFFSET_X = BLOCK_COLUMN_WIDTH * (gridCols / 2);
+  // Our `x` parameter is controlled by `lane`.
+  // TBH I forget why this formula works and I'm too lazy to sort it out rn
+  const OFFSET_X = BLOCK_COLUMN_WIDTH;
 
-  const x = lane * BLOCK_COLUMN_WIDTH - OFFSET_X;
+  const x = (lane - 1) * BLOCK_COLUMN_WIDTH - OFFSET_X;
 
   let y;
   if (type === 'wall' || type === 'ceiling') {
@@ -27,7 +26,7 @@ export const getPositionForObstacle = (
   } else {
     // 'extension' walls can start at any point, and they behave much like lanes
     // do for the opposite axis
-    const OFFSET_Y = BLOCK_COLUMN_WIDTH;
+    const OFFSET_Y = BLOCK_COLUMN_WIDTH * 1.5;
     y = rowIndex * BLOCK_COLUMN_WIDTH - OFFSET_Y;
   }
 
