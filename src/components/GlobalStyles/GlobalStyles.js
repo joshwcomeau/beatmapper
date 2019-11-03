@@ -89,6 +89,14 @@ const GlobalStyles = createGlobalStyle`
     src: local(".SFNSText-Light"), local(".HelveticaNeueDeskInterface-Light"), local(".LucidaGrandeUI"), local("Ubuntu Light"), local("Segoe UI Light"), local("Roboto-Light"), local("DroidSans"), local("Tahoma");
   }
 
+  strong {
+    font-weight: bold;
+  }
+
+  em {
+    font-style: italic
+  }
+
 `;
 
 export default GlobalStyles;

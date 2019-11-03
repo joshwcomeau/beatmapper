@@ -9,6 +9,7 @@ import { getMetaKeyLabel, getOptionKeyLabel } from '../../utils';
 export const KeyIcon = ({ size = 'medium', type, children }) => {
   const componentTypeMap = {
     square: SquareKey,
+    'slightly-wide': SlightlyWideKey,
     wide: WideKey,
     spacebar: UltraWideKey,
   };
@@ -122,6 +123,10 @@ const SquareKey = styled(Key)`
   width: ${props => (props.size === 'medium' ? 24 : 15)}px;
 `;
 
+const SlightlyWideKey = styled(Key)`
+  padding-left: 8px;
+  padding-right: 8px;
+`;
 const WideKey = styled(Key)`
   padding-left: 16px;
   padding-right: 16px;
