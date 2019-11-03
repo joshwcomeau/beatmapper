@@ -61,7 +61,7 @@ export const convertObstaclesToRedux = (
       obstacleData.rowIndex = rowIndex;
       obstacleData.lane =
         o._lineIndex < 0 ? o._lineIndex / 1000 + 1 : o._lineIndex / 1000 - 1;
-      obstacleData.colspan = o._width;
+      obstacleData.colspan = (o._width - 1000) / 1000;
     }
 
     return {
@@ -88,14 +88,19 @@ export const convertObstaclesToExportableJson = (
     // It works according to this formula:
     //    wallHeight * 1000 + startHeight + 4001
 
-    let type;
+    const obstacleData = {};
+
     switch (o.type) {
       case 'wall': {
-        type = 0;
+        obstacleData._type = 0;
+        obstacleData._lineIndex = o.lane;
+        obstacleData._width = o.colspan;
         break;
       }
       case 'ceiling': {
-        type = 1;
+        obstacleData._type = 1;
+        obstacleData._lineIndex = o.lane;
+        obstacleData._width = o.colspan;
         break;
       }
       case 'extension': {
@@ -122,36 +127,36 @@ export const convertObstaclesToExportableJson = (
         );
         normalizedWallStart = clamp(normalizedWallStart, 0, 999);
 
-        type =
+        obstacleData._type =
           normalizedWallHeight * 1000 +
           normalizedWallStart +
           RIDICULOUS_MAP_EX_CONSTANT;
+
+        // Lanes are values from 0-3 in a standard 4-column grid, but they could
+        // be lower or higher than that in a larger grid (eg. in an 8-col grid,
+        // the range is -2 through 5).
+        //
+        // As with notes, we need to convert them to the thousands-scale used
+        // by MappingExtensions.
+        obstacleData._lineIndex =
+          o.lane < 0 ? o.lane * 1000 - 1000 : o.lane * 1000 + 1000;
+
+        obstacleData._width = o.colspan * 1000 + 1000;
 
         break;
       }
 
       default:
-        throw new Error('Unrecognized type: ' + type);
+        throw new Error('Unrecognized type: ' + o.type);
     }
 
-    let lineIndex = o.lane;
-
     if (o.type === 'extension') {
-      // Lanes are values from 0-3 in a standard 4-column grid, but they could
-      // be lower or higher than that in a larger grid (eg. in an 8-col grid,
-      // the range is -2 through 5).
-      //
-      // As with notes, we need to convert them to the thousands-scale used
-      // by MappingExtensions.
-      lineIndex = o.lane < 0 ? o.lane * 1000 - 1000 : o.lane * 1000 + 1000;
     }
 
     let data = {
       _time: o.beatStart,
       _duration: o.beatDuration === 0 ? 0.1 : o.beatDuration,
-      _lineIndex: lineIndex,
-      _type: type,
-      _width: o.colspan,
+      ...obstacleData,
     };
 
     return data;

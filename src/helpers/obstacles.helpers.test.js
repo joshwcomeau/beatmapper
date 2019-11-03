@@ -110,7 +110,7 @@ describe('Obstacles helpers', () => {
           _lineIndex: 1000,
           _type: 404251,
           _duration: 4,
-          _width: 1,
+          _width: 2000,
         },
       ];
 
@@ -119,9 +119,9 @@ describe('Obstacles helpers', () => {
   });
 
   it('converts an obstacle in a wider 8x3 grid', () => {
-    // X _ [_ _ _ _] _ _
-    // X _ [_ _ _ _] _ _
-    // X _ [_ _ _ _] _ _
+    // X X [_ _ _ _] _ _
+    // X X [_ _ _ _] _ _
+    // X X [_ _ _ _] _ _
     const gridCols = 8;
     const obstacle = {
       id: 'a',
@@ -129,7 +129,7 @@ describe('Obstacles helpers', () => {
       beatStart: 2,
       beatDuration: 4,
       lane: -2,
-      colspan: 1,
+      colspan: 2,
       rowIndex: 0,
       rowspan: 3,
     };
@@ -141,7 +141,7 @@ describe('Obstacles helpers', () => {
         _lineIndex: -3000,
         _type: 604101,
         _duration: 4,
-        _width: 1,
+        _width: 3000,
       },
     ];
 
@@ -155,7 +155,7 @@ describe('Obstacles helpers', () => {
         _lineIndex: -3000,
         _type: 604101,
         _duration: 4,
-        _width: 1,
+        _width: 4000,
       },
     ];
 
@@ -176,7 +176,7 @@ describe('Obstacles helpers', () => {
         beatStart: 2,
         beatDuration: 4,
         lane: -2,
-        colspan: 1,
+        colspan: 3,
         rowIndex: 0,
         rowspan: 3,
       },
