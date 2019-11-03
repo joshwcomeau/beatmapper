@@ -485,12 +485,21 @@ export const processImportedMap = async (zipFile, currentSongIds) => {
 
           // Save the file to disk
           return saveFile(beatmapFilename, fileContents).then(() => {
-            return {
+            const beatmapData = {
               id: beatmap._difficulty,
               noteJumpSpeed: beatmap._noteJumpMovementSpeed,
               startBeatOffset: beatmap._noteJumpStartBeatOffset,
+
+              // TODO: Am I actually using `data` for anything?
+              // I don't think I am
               data: JSON.parse(fileContents),
             };
+
+            if (beatmap._customData && beatmap._customData._difficultyLabel) {
+              beatmapData.customLabel = beatmap._customData._difficultyLabel;
+            }
+
+            return beatmapData;
           });
         });
     })
@@ -504,13 +513,14 @@ export const processImportedMap = async (zipFile, currentSongIds) => {
   const modSettings = getModSettingsForBeatmap(beatmapSet);
 
   const difficultiesById = difficultyFiles.reduce(
-    (acc, { id, noteJumpSpeed, startBeatOffset, ...rest }) => {
+    (acc, { id, noteJumpSpeed, startBeatOffset, customLabel, ...rest }) => {
       return {
         ...acc,
         [id]: {
           id,
           noteJumpSpeed,
           startBeatOffset,
+          customLabel: customLabel || '',
         },
       };
     },
