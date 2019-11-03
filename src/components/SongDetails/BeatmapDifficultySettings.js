@@ -33,7 +33,7 @@ const BeatmapSettings = ({
   );
 
   const [customLabel, setCustomLabel] = React.useState(
-    savedVersion.customLabel || ''
+    savedVersion.customLabel
   );
 
   const isDirty =
@@ -134,7 +134,7 @@ const BeatmapSettings = ({
       <Spacer size={UNIT * 3} />
       <TextInput
         label="Custom label"
-        value={customLabel}
+        value={customLabel || ''}
         onChange={ev => setCustomLabel(ev.target.value)}
       />
       <Spacer size={UNIT * 3} />

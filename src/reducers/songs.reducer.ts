@@ -168,6 +168,7 @@ export default function songsReducer(state: State = initialState, action: any) {
               // @ts-ignore
               noteJumpSpeed: DEFAULT_NOTE_JUMP_SPEEDS[selectedDifficulty],
               startBeatOffset: 0,
+              customLabel: '',
             },
           },
           modSettings: {},
@@ -259,6 +260,7 @@ export default function songsReducer(state: State = initialState, action: any) {
           // @ts-ignore
           noteJumpSpeed: DEFAULT_NOTE_JUMP_SPEEDS[difficulty],
           startBeatOffset: 0,
+          customLabel: '',
         };
       });
     }

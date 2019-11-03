@@ -84,18 +84,26 @@ export function createInfoContent(song, meta = { version: 2 }) {
       _difficultyBeatmapSets: [
         {
           _beatmapCharacteristicName: 'Standard',
-          _difficultyBeatmaps: difficulties.map(difficulty => ({
-            _difficulty: difficulty.id,
-            _difficultyRank: getDifficultyRankForDifficulty(difficulty),
-            _beatmapFilename: `${difficulty.id}.dat`,
-            _noteJumpMovementSpeed: difficulty.noteJumpSpeed,
-            _noteJumpStartBeatOffset: difficulty.startBeatOffset,
-            _customData: {
-              _editorOffset: offset,
-              // _difficultyLabel: '', // TODO: Allow a real value!
-              _requirements: [],
-            },
-          })),
+          _difficultyBeatmaps: difficulties.map(difficulty => {
+            const difficultyData = {
+              _difficulty: difficulty.id,
+              _difficultyRank: getDifficultyRankForDifficulty(difficulty),
+              _beatmapFilename: `${difficulty.id}.dat`,
+              _noteJumpMovementSpeed: difficulty.noteJumpSpeed,
+              _noteJumpStartBeatOffset: difficulty.startBeatOffset,
+              _customData: {
+                _editorOffset: offset,
+                _requirements: [],
+              },
+            };
+
+            if (difficulty.customLabel) {
+              difficultyData._customData._difficultyLabel =
+                difficulty.customLabel;
+            }
+
+            return difficultyData;
+          }),
         },
       ],
     };
