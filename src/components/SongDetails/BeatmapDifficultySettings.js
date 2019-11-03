@@ -32,9 +32,14 @@ const BeatmapSettings = ({
     savedVersion.startBeatOffset
   );
 
+  const [customLabel, setCustomLabel] = React.useState(
+    savedVersion.customLabel || ''
+  );
+
   const isDirty =
     Number(noteJumpSpeed) !== savedVersion.noteJumpSpeed ||
-    Number(startBeatOffset) !== savedVersion.startBeatOffset;
+    Number(startBeatOffset) !== savedVersion.startBeatOffset ||
+    customLabel !== savedVersion.customLabel;
 
   const handleCopyBeatmap = ev => {
     ev.preventDefault();
@@ -100,7 +105,8 @@ const BeatmapSettings = ({
       song.id,
       difficultyId,
       Number(noteJumpSpeed),
-      Number(startBeatOffset)
+      Number(startBeatOffset),
+      customLabel
     );
   };
 
@@ -124,6 +130,12 @@ const BeatmapSettings = ({
         label="Start beat offset"
         value={startBeatOffset}
         onChange={ev => setStartBeatOffset(ev.target.value)}
+      />
+      <Spacer size={UNIT * 3} />
+      <TextInput
+        label="Custom label"
+        value={customLabel}
+        onChange={ev => setCustomLabel(ev.target.value)}
       />
       <Spacer size={UNIT * 3} />
 
