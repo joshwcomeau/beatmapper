@@ -466,13 +466,15 @@ export const updateBeatmapMetadata = (
   songId,
   difficulty,
   noteJumpSpeed,
-  startBeatOffset
+  startBeatOffset,
+  customLabel
 ) => ({
   type: 'UPDATE_BEATMAP_METADATA',
   songId,
   difficulty,
   noteJumpSpeed,
   startBeatOffset,
+  customLabel,
 });
 export const deleteBeatmap = (songId, difficulty) => ({
   type: 'DELETE_BEATMAP',

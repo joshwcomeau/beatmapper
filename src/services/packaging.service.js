@@ -84,18 +84,26 @@ export function createInfoContent(song, meta = { version: 2 }) {
       _difficultyBeatmapSets: [
         {
           _beatmapCharacteristicName: 'Standard',
-          _difficultyBeatmaps: difficulties.map(difficulty => ({
-            _difficulty: difficulty.id,
-            _difficultyRank: getDifficultyRankForDifficulty(difficulty),
-            _beatmapFilename: `${difficulty.id}.dat`,
-            _noteJumpMovementSpeed: difficulty.noteJumpSpeed,
-            _noteJumpStartBeatOffset: difficulty.startBeatOffset,
-            _customData: {
-              _editorOffset: offset,
-              // _difficultyLabel: '', // TODO: Allow a real value!
-              _requirements: [],
-            },
-          })),
+          _difficultyBeatmaps: difficulties.map(difficulty => {
+            const difficultyData = {
+              _difficulty: difficulty.id,
+              _difficultyRank: getDifficultyRankForDifficulty(difficulty),
+              _beatmapFilename: `${difficulty.id}.dat`,
+              _noteJumpMovementSpeed: difficulty.noteJumpSpeed,
+              _noteJumpStartBeatOffset: difficulty.startBeatOffset,
+              _customData: {
+                _editorOffset: offset,
+                _requirements: [],
+              },
+            };
+
+            if (difficulty.customLabel) {
+              difficultyData._customData._difficultyLabel =
+                difficulty.customLabel;
+            }
+
+            return difficultyData;
+          }),
         },
       ],
     };
@@ -477,12 +485,21 @@ export const processImportedMap = async (zipFile, currentSongIds) => {
 
           // Save the file to disk
           return saveFile(beatmapFilename, fileContents).then(() => {
-            return {
+            const beatmapData = {
               id: beatmap._difficulty,
               noteJumpSpeed: beatmap._noteJumpMovementSpeed,
               startBeatOffset: beatmap._noteJumpStartBeatOffset,
+
+              // TODO: Am I actually using `data` for anything?
+              // I don't think I am
               data: JSON.parse(fileContents),
             };
+
+            if (beatmap._customData && beatmap._customData._difficultyLabel) {
+              beatmapData.customLabel = beatmap._customData._difficultyLabel;
+            }
+
+            return beatmapData;
           });
         });
     })
@@ -496,13 +513,14 @@ export const processImportedMap = async (zipFile, currentSongIds) => {
   const modSettings = getModSettingsForBeatmap(beatmapSet);
 
   const difficultiesById = difficultyFiles.reduce(
-    (acc, { id, noteJumpSpeed, startBeatOffset, ...rest }) => {
+    (acc, { id, noteJumpSpeed, startBeatOffset, customLabel, ...rest }) => {
       return {
         ...acc,
         [id]: {
           id,
           noteJumpSpeed,
           startBeatOffset,
+          customLabel: customLabel || '',
         },
       };
     },

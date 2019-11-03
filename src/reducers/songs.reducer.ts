@@ -8,6 +8,7 @@ interface Difficulty {
   id: string;
   noteJumpSpeed: number;
   startBeatOffset: number;
+  customLabel?: string;
 }
 
 interface ModSettings {
@@ -167,6 +168,7 @@ export default function songsReducer(state: State = initialState, action: any) {
               // @ts-ignore
               noteJumpSpeed: DEFAULT_NOTE_JUMP_SPEEDS[selectedDifficulty],
               startBeatOffset: 0,
+              customLabel: '',
             },
           },
           modSettings: {},
@@ -258,6 +260,7 @@ export default function songsReducer(state: State = initialState, action: any) {
           // @ts-ignore
           noteJumpSpeed: DEFAULT_NOTE_JUMP_SPEEDS[difficulty],
           startBeatOffset: 0,
+          customLabel: '',
         };
       });
     }
@@ -297,15 +300,21 @@ export default function songsReducer(state: State = initialState, action: any) {
     }
 
     case 'UPDATE_BEATMAP_METADATA': {
-      const { songId, difficulty, noteJumpSpeed, startBeatOffset } = action;
+      const {
+        songId,
+        difficulty,
+        noteJumpSpeed,
+        startBeatOffset,
+        customLabel,
+      } = action;
 
       return produce(state, (draftState: State) => {
-        draftState.byId[songId].difficultiesById[
-          difficulty
-        ].noteJumpSpeed = noteJumpSpeed;
-        draftState.byId[songId].difficultiesById[
-          difficulty
-        ].startBeatOffset = startBeatOffset;
+        const currentBeatmapDifficulty =
+          draftState.byId[songId].difficultiesById[difficulty];
+
+        currentBeatmapDifficulty.noteJumpSpeed = noteJumpSpeed;
+        currentBeatmapDifficulty.startBeatOffset = startBeatOffset;
+        currentBeatmapDifficulty.customLabel = customLabel;
       });
     }
 
