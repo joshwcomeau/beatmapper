@@ -93,6 +93,10 @@ const GlobalStyles = createGlobalStyle`
     font-weight: bold;
   }
 
+  em {
+    font-style: italic
+  }
+
 `;
 
 export default GlobalStyles;

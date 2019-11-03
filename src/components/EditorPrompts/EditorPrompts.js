@@ -11,49 +11,51 @@ import UnobtrusivePrompt from '../UnobtrusivePrompt';
 import Spacer from '../Spacer';
 import Paragraph from '../Paragraph';
 import Link from '../Link';
+import List from '../List';
+import { InlineIcons, KeyIcon, MetaKey } from '../Docs/ShortcutHelpers';
 
 const PROMPTS = [
   {
-    id: 'alpha-warningb',
-    title: 'Warning: Alpha Software',
+    id: 'alpha-warning',
+    title: 'Welcome!',
     contents: () => (
       <>
         <Paragraph>
-          <span role="img" aria-label="wave">
-            👋
-          </span>{' '}
-          Hi there, new user!
+          Hi there, new user! Two important things to know before you get
+          started:
         </Paragraph>
 
-        <Paragraph>
-          Just a heads-up: Beatmapper is still under development. It's in
-          pre-release / alpha. Many core features are missing, and things may
-          break at any time. <strong>Download your work frequently!</strong>
-        </Paragraph>
+        <List>
+          <List.ListItem>
+            Beatmapper is <em>alpha software</em>. That means stuff might break
+            at any moment. <strong>Download your work frequently</strong> using{' '}
+            <InlineIcons>
+              <KeyIcon type="slightly-wide" size="small">
+                <MetaKey />
+              </KeyIcon>
+              <KeyIcon size="small">S</KeyIcon>
+            </InlineIcons>
+          </List.ListItem>
+
+          <List.ListItem>
+            We have really thorough docs! Please{' '}
+            <strong>
+              <Link to="https://beatmapper.app/docs/docs/manual.html">
+                check them out
+              </Link>
+            </strong>
+            , there's lots of good info in there.
+          </List.ListItem>
+        </List>
 
         <Paragraph>
-          This editor makes heavy use of <strong>keyboard shortcuts</strong>.
-          <br />
-          Please{' '}
-          <strong>
-            <Link to="https://beatmapper.app/docs/docs/manual.html">
-              read the docs
-            </Link>
-          </strong>{' '}
-          to get up to speed quickly.
-        </Paragraph>
-
-        <Paragraph>
-          Finally, some important context: This is a passion project by 1
-          developer, not a commercial project. It is offered{' '}
           <span role="img" aria-label="rainbow">
             🌈
           </span>{' '}
-          for free{' '}
+          Have fun!{' '}
           <span role="img" aria-label="sparkles">
             ✨
           </span>
-          . Please set your expectations accordingly.
         </Paragraph>
       </>
     ),

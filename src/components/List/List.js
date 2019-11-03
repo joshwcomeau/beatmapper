@@ -20,6 +20,7 @@ const ListElem = styled.ul`
   font-size: 18px;
   font-weight: 300;
   margin-bottom: 2rem;
+  line-height: 1.4;
 `;
 
 const ListItemElem = styled.li`
