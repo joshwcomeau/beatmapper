@@ -17,7 +17,7 @@ const GridConfig = ({ finishTweakingGrid, numRows, numCols, updateGrid }) => {
         <TextInput
           type="number"
           min={1}
-          max={30}
+          max={40}
           label="Columns"
           value={numCols}
           onKeyDown={ev => {
@@ -31,7 +31,7 @@ const GridConfig = ({ finishTweakingGrid, numRows, numCols, updateGrid }) => {
         <TextInput
           type="number"
           min={1}
-          max={30}
+          max={11}
           label="Rows"
           value={numRows}
           onKeyDown={ev => {
