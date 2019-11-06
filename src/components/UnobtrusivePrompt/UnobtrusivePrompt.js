@@ -23,13 +23,6 @@ const UnobtrusivePrompt = ({ title, children, onDismiss }) => {
   );
 };
 
-console.log(
-  'color',
-  Color(COLORS.blueGray[900])
-    .fade(0.5)
-    .string()
-);
-
 const enterAnimation = keyframes`
   from {
     opacity: 0;

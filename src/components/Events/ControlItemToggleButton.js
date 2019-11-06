@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import UnstyledButton from '../UnstyledButton';
+import UnfocusedButton from '../UnfocusedButton';
 
 const ControlItemToggleButton = ({ value, isToggled, onToggle, children }) => {
   return (
@@ -19,7 +19,7 @@ const ControlItemToggleButton = ({ value, isToggled, onToggle, children }) => {
   );
 };
 
-const Wrapper = styled(UnstyledButton)`
+const Wrapper = styled(UnfocusedButton)`
   padding: 4px;
   border: 1px solid;
   border-radius: 3px;

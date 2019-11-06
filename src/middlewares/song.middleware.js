@@ -284,8 +284,6 @@ export default function createSongMiddleware() {
             beatsPerZoomLevel
           );
 
-          console.log({ startBeatForLastWindow, startBeatForCurrentWindow });
-
           if (
             isLockedToCurrentWindow &&
             startBeatForLastWindow < startBeatForCurrentWindow
