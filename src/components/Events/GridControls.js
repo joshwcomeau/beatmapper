@@ -7,6 +7,9 @@ import { zoomIn as zoomInIcon } from 'react-icons-kit/feather/zoomIn';
 import { zoomOut as zoomOutIcon } from 'react-icons-kit/feather/zoomOut';
 import { maximize as selectToolIcon } from 'react-icons-kit/feather/maximize';
 import { plus as placeToolIcon } from 'react-icons-kit/feather/plus';
+import { repeat as repeatWindowIcon } from 'react-icons-kit/feather/repeat';
+import { lock as lockIcon } from 'react-icons-kit/feather/lock';
+import { Tooltip } from 'react-tippy';
 
 import * as actions from '../../actions';
 import { UNIT, EVENTS_VIEW, COLORS } from '../../constants';
@@ -15,6 +18,7 @@ import {
   getSelectedEventEditMode,
   getSelectedEventTool,
   getSelectedEventColor,
+  getIsLockedToCurrentWindow,
   getZoomLevel,
 } from '../../reducers/editor.reducer';
 
@@ -31,10 +35,12 @@ const GridControls = ({
   selectedEditMode,
   selectedTool,
   selectedColor,
+  isLockedToCurrentWindow,
   zoomLevel,
   selectEventEditMode,
   selectTool,
   selectEventColor,
+  toggleEventWindowLock,
   zoomIn,
   zoomOut,
 }) => {
@@ -128,15 +134,44 @@ const GridControls = ({
         </ControlItem>
       </Left>
 
-      <Right />
-      <ControlItem label="Zoom" align="right">
-        <ZoomBtn onClick={zoomOut} disabled={zoomLevel === 1}>
-          <Icon size={14} icon={zoomOutIcon} />
-        </ZoomBtn>
-        <ZoomBtn onClick={zoomIn} disabled={zoomLevel === 4}>
-          <Icon size={14} icon={zoomInIcon} />
-        </ZoomBtn>
-      </ControlItem>
+      <Right>
+        <ControlItem label="Locks" align="center">
+          <Tooltip
+            delay={[500, 0]}
+            title="Loop playback within the current event window (L)"
+          >
+            <ControlItemToggleButton
+              value={null}
+              isToggled={isLockedToCurrentWindow}
+              onToggle={toggleEventWindowLock}
+            >
+              <Icon icon={repeatWindowIcon} />
+            </ControlItemToggleButton>
+          </Tooltip>
+
+          <Tooltip
+            delay={[500, 0]}
+            title="Pair side lasers for symmetrical left/right events"
+          >
+            <ControlItemToggleButton
+              value={null}
+              isToggled={false}
+              onToggle={() => {}}
+            >
+              <Icon icon={lockIcon} />
+            </ControlItemToggleButton>
+          </Tooltip>
+        </ControlItem>
+        <Spacer size={UNIT * 4} />
+        <ControlItem label="Zoom" align="right">
+          <ZoomBtn onClick={zoomOut} disabled={zoomLevel === 1}>
+            <Icon size={14} icon={zoomOutIcon} />
+          </ZoomBtn>
+          <ZoomBtn onClick={zoomIn} disabled={zoomLevel === 4}>
+            <Icon size={14} icon={zoomInIcon} />
+          </ZoomBtn>
+        </ControlItem>
+      </Right>
     </Wrapper>
   );
 };
@@ -153,10 +188,12 @@ const Wrapper = styled.div`
   padding: 0 ${UNIT * 2}px;
 `;
 
-const Left = styled.div`
+const Side = styled.div`
   display: flex;
 `;
-const Right = styled.div``;
+
+const Left = styled(Side)``;
+const Right = styled(Side)``;
 
 const Box = styled.div`
   width: 16px;
@@ -202,6 +239,7 @@ const mapStateToProps = state => {
     selectedEditMode: getSelectedEventEditMode(state),
     selectedTool: getSelectedEventTool(state),
     selectedColor: getSelectedEventColor(state),
+    isLockedToCurrentWindow: getIsLockedToCurrentWindow(state),
     zoomLevel: getZoomLevel(state),
   };
 };
@@ -210,6 +248,7 @@ const mapDispatchToProps = {
   selectTool: actions.selectTool,
   selectEventColor: actions.selectEventColor,
   selectEventEditMode: actions.selectEventEditMode,
+  toggleEventWindowLock: actions.toggleEventWindowLock,
   zoomIn: actions.zoomIn,
   zoomOut: actions.zoomOut,
 };

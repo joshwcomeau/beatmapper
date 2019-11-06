@@ -23,7 +23,7 @@ import {
   convertEventsToExportableJson,
 } from '../helpers/events.helpers';
 import { convertBookmarksToRedux } from '../helpers/bookmarks.helpers';
-import { clamp } from '../utils';
+import { clamp, floorToNearest } from '../utils';
 import {
   getFile,
   saveFile,
@@ -36,13 +36,14 @@ import {
 } from '../services/file.service';
 import Sfx from '../services/sfx.service';
 import { getSongById, getSelectedSong } from '../reducers/songs.reducer';
-import { getBeatsPerZoomLevel } from '../reducers/editor.reducer';
+import {
+  getBeatsPerZoomLevel,
+  getIsLockedToCurrentWindow,
+} from '../reducers/editor.reducer';
 import { getAllEventsAsArray } from '../reducers/editor-entities.reducer/events-view.reducer';
-import { getNotes } from '../reducers/editor-entities.reducer/notes-view.reducer';
 import {
   getVolume,
   getPlaybackRate,
-  getPlayNoteTick,
   getCursorPositionInBeats,
 } from '../reducers/navigation.reducer';
 import {
@@ -58,6 +59,8 @@ import { EVENTS_VIEW } from '../constants';
 import {
   generateWaveformForSongFile,
   stopAndRewindAudio,
+  triggerTickerIfNecessary,
+  shouldLoopToStartOfWindow,
 } from './song.middleware.helpers';
 
 export default function createSongMiddleware() {
@@ -248,6 +251,9 @@ export default function createSongMiddleware() {
 
         audioElem.play();
 
+        // Keep track of the last beat we saw, so we know which chunk of time
+        // the current tick is accessing (by looking at the delta between last
+        // and current)
         let lastBeat = null;
 
         function tick() {
@@ -256,39 +262,50 @@ export default function createSongMiddleware() {
           const state = store.getState();
           const song = getSelectedSong(state);
 
-          const playNoteTick = getPlayNoteTick(state);
-
-          // TODO: pull from state
-          const processingDelay = 60;
-          const delayInBeats = convertMillisecondsToBeats(
-            processingDelay,
-            song.bpm
-          );
-
           const currentBeat = convertMillisecondsToBeats(
             currentTime - song.offset,
             song.bpm
           );
 
-          if (playNoteTick) {
-            const anyNotesWithinTimespan = getNotes(state).some(
-              note =>
-                note._time - delayInBeats >= lastBeat &&
-                note._time - delayInBeats < currentBeat &&
-                note._type !== 3 // Don't tick for mines
-            );
+          triggerTickerIfNecessary(state, currentBeat, lastBeat, ticker);
 
-            if (anyNotesWithinTimespan) {
-              ticker.trigger();
-            }
+          const isLockedToCurrentWindow = getIsLockedToCurrentWindow(state);
+          const beatsPerZoomLevel = getBeatsPerZoomLevel(state);
+
+          // Alrighty, so we can look at which beat is the start for the last window
+          // vs the current one. If that window has changed, we want to reset the
+          // playback time to the start of that last window.
+          const startBeatForLastWindow = floorToNearest(
+            lastBeat,
+            beatsPerZoomLevel
+          );
+          const startBeatForCurrentWindow = floorToNearest(
+            currentBeat,
+            beatsPerZoomLevel
+          );
+
+          console.log({ startBeatForLastWindow, startBeatForCurrentWindow });
+
+          if (
+            isLockedToCurrentWindow &&
+            startBeatForLastWindow < startBeatForCurrentWindow
+          ) {
+            const song = getSelectedSong(state);
+
+            const newCursorPosition =
+              convertBeatsToMilliseconds(startBeatForLastWindow, song.bpm) +
+              song.offset;
+
+            next(adjustCursorPosition(newCursorPosition));
+            audioElem.currentTime = newCursorPosition / 1000;
+          } else {
+            next({
+              type: 'TICK',
+              timeElapsed: currentTime,
+            });
           }
 
           lastBeat = currentBeat;
-
-          next({
-            type: 'TICK',
-            timeElapsed: currentTime,
-          });
 
           animationFrameId = window.requestAnimationFrame(tick);
         }
