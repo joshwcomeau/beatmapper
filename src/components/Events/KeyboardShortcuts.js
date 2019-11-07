@@ -11,6 +11,8 @@ const KeyboardShortcuts = ({
   toggleSelectAll,
   zoomOut,
   zoomIn,
+  toggleEventWindowLock,
+  toggleLaserLock,
 }) => {
   const handleKeyDown = ev => {
     switch (ev.code) {
@@ -41,6 +43,24 @@ const KeyboardShortcuts = ({
 
       case 'KeyS': {
         return selectEventEditMode('select');
+      }
+
+      case 'KeyZ': {
+        if (isMetaKeyPressed(ev)) {
+          return;
+        }
+
+        ev.stopPropagation();
+        return toggleEventWindowLock();
+      }
+
+      case 'KeyX': {
+        if (isMetaKeyPressed(ev)) {
+          return;
+        }
+
+        ev.stopPropagation();
+        return toggleLaserLock();
       }
 
       case 'Digit1': {
@@ -78,6 +98,8 @@ const mapDispatchToProps = {
   toggleSelectAll: actions.toggleSelectAll,
   zoomOut: actions.zoomOut,
   zoomIn: actions.zoomIn,
+  toggleEventWindowLock: actions.toggleEventWindowLock,
+  toggleLaserLock: actions.toggleLaserLock,
 };
 
 export default connect(

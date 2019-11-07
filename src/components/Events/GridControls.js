@@ -135,10 +135,8 @@ const GridControls = ({
             />
           </ControlItemToggleButton>
         </ControlItem>
-      </Left>
-
-      <Right>
-        <ControlItem label="Locks" align="center">
+        <Spacer size={UNIT * 4} />
+        <ControlItem label="Locks">
           <Tooltip
             delay={[500, 0]}
             title="Loop playback within the current event window (L)"
@@ -165,7 +163,9 @@ const GridControls = ({
             </ControlItemToggleButton>
           </Tooltip>
         </ControlItem>
-        <Spacer size={UNIT * 4} />
+      </Left>
+
+      <Right>
         <ControlItem label="Zoom" align="right">
           <ZoomBtn onClick={zoomOut} disabled={zoomLevel === 1}>
             <Icon size={14} icon={zoomOutIcon} />
@@ -218,8 +218,8 @@ const Box = styled.div`
 `;
 
 const ZoomBtn = styled(UnfocusedButton)`
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   border-radius: 4px;
   background: ${COLORS.blueGray[900]};
   color: ${COLORS.blueGray[100]};

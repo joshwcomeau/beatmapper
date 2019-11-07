@@ -228,6 +228,32 @@ If you want to un-select all events, you can press the `Escape` key. You can als
 
 > Note that the "Select all" shortcut is slightly different from the Notes view; in Notes, "Select all" selects all entities across the entire map, whilst in the Events view, it only selects events within the current window, visible on-screen.
 
+## Locks
+
+After spending dozens of hours lighting maps in Beatmapper, I found two things kept annoying me. Locks are an optional feature you can use to address these situations.
+
+### Locking the current event window
+
+Normally, when playing a song, you want it to advance automatically from one window to the next when the song reaches the end of the current window.
+
+Sometimes, you'll be editing something right at the tail end of the window, and it'll be annoying to constantly jump back to the previous window to re-listen to a section.
+
+The "event window lock" loops playback within the current view of events, so the window no longer automatically advances.
+
+You can toggle it on or off with the `Z` key.
+
+### Symmetrical lasers
+
+Beat Saber features two symmetrical lasers: left and right. Both lasers have their own events, including their own speeds. Often this flexibility is awesome, and allows for some great lighting effects, but sometimes you want to operate on these lasers as if they were 1. It can be tedious recreating laser events and speeds twice for each laser.
+
+The "laser lock" disables the `Right laser` and `Right laser speed` tracks, and copies all actions you make in the left-laser tracks to the corresponding right-laser ones.
+
+import lockLasersSrc from '../images/lock-lasers.gif';
+
+<img src={lockLasersSrc} width={640} />
+
+You can toggle it on or off with the `X` key.
+
 ## Previewing your work
 
 One downside to Beatmapper's approach for events is that you don't get any immediate feedback. You can't immediately tell what effect the events you place have!
