@@ -138,7 +138,7 @@ const eventsView = undoable(
       }
 
       case 'CHANGE_LASER_SPEED': {
-        const { id, trackId, beatNum, speed } = action;
+        const { id, trackId, beatNum, speed, areLasersLocked } = action;
 
         const newEvent = {
           id,
@@ -160,6 +160,29 @@ const eventsView = undoable(
             numToRemove,
             newEvent
           );
+
+          // Repeat all the above stuff for the laserSpeedRight track, if we're
+          // modifying the left track and have locked the lasers together.
+          if (areLasersLocked && trackId === 'laserSpeedLeft') {
+            const symmetricalTrackId = 'laserSpeedRight';
+            const symmetricalEvent = {
+              ...newEvent,
+              id: getSymmetricalId(newEvent.id),
+              trackId: symmetricalTrackId,
+            };
+
+            const relevantEvents = state.tracks[symmetricalTrackId];
+            const [indexToInsertAt, eventOverlaps] = findIndexForNewEvent(
+              beatNum,
+              relevantEvents
+            );
+            const numToRemove = eventOverlaps ? 1 : 0;
+            draftState.tracks[symmetricalTrackId].splice(
+              indexToInsertAt,
+              numToRemove,
+              symmetricalEvent
+            );
+          }
         });
       }
 
@@ -172,8 +195,11 @@ const eventsView = undoable(
             ev => ev.id !== id
           );
 
-          if (areLasersLocked && trackId === 'laserLeft') {
-            const mirroredTrackId = 'laserRight';
+          const mirroredTracks = ['laserLeft', 'laserSpeedLeft'];
+
+          if (areLasersLocked && mirroredTracks.includes(trackId)) {
+            const mirroredTrackId = trackId.replace('Left', 'Right');
+
             draftState.tracks[mirroredTrackId] = draftState.tracks[
               mirroredTrackId
             ].filter(ev => ev.id !== getSymmetricalId(id));

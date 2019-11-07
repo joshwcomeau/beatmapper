@@ -625,13 +625,14 @@ export const placeEvent = (
     areLasersLocked,
   };
 };
-export const changeLaserSpeed = (trackId, beatNum, speed) => {
+export const changeLaserSpeed = (trackId, beatNum, speed, areLasersLocked) => {
   return {
     type: 'CHANGE_LASER_SPEED',
     id: uuid(),
     trackId,
     beatNum,
     speed,
+    areLasersLocked,
   };
 };
 

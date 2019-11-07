@@ -50,11 +50,12 @@ const SpeedTrack = ({
     changeLaserSpeed(
       trackId,
       tentativeEvent.beatNum,
-      tentativeEvent.laserSpeed
+      tentativeEvent.laserSpeed,
+      areLasersLocked
     );
 
     setTentativeEvent(INITIAL_TENTATIVE_EVENT);
-  }, [trackId, tentativeEvent, changeLaserSpeed]);
+  }, [trackId, tentativeEvent, areLasersLocked, changeLaserSpeed]);
 
   usePointerUpHandler(tentativeEvent.visible, commitChanges);
 
