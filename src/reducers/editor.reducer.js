@@ -29,6 +29,7 @@ const initialState = {
   events: {
     zoomLevel: 2,
     isLockedToCurrentWindow: false,
+    areLasersLocked: false,
     selectedEditMode: EVENT_EDIT_MODES[0],
     selectedBeat: null,
     selectedTool: EVENT_TOOLS[0],
@@ -251,6 +252,13 @@ function events(state = initialState.events, action) {
       };
     }
 
+    case 'TOGGLE_LASER_LOCK': {
+      return {
+        ...state,
+        areLasersLocked: !state.areLasersLocked,
+      };
+    }
+
     default:
       return state;
   }
@@ -298,6 +306,8 @@ export const getStartAndEndBeat = createSelector(
 
 export const getIsLockedToCurrentWindow = state =>
   state.editor.events.isLockedToCurrentWindow;
+
+export const getAreLasersLocked = state => state.editor.events.areLasersLocked;
 
 export const getSelectedEventBeat = state => state.editor.events.selectedBeat;
 

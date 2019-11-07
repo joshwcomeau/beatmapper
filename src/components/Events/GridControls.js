@@ -20,6 +20,7 @@ import {
   getSelectedEventColor,
   getIsLockedToCurrentWindow,
   getZoomLevel,
+  getAreLasersLocked,
 } from '../../reducers/editor.reducer';
 
 import Spacer from '../Spacer';
@@ -36,11 +37,13 @@ const GridControls = ({
   selectedTool,
   selectedColor,
   isLockedToCurrentWindow,
+  areLasersLocked,
   zoomLevel,
   selectEventEditMode,
   selectTool,
   selectEventColor,
   toggleEventWindowLock,
+  toggleLaserLock,
   zoomIn,
   zoomOut,
 }) => {
@@ -155,8 +158,8 @@ const GridControls = ({
           >
             <ControlItemToggleButton
               value={null}
-              isToggled={false}
-              onToggle={() => {}}
+              isToggled={areLasersLocked}
+              onToggle={toggleLaserLock}
             >
               <Icon icon={lockIcon} />
             </ControlItemToggleButton>
@@ -240,6 +243,7 @@ const mapStateToProps = state => {
     selectedTool: getSelectedEventTool(state),
     selectedColor: getSelectedEventColor(state),
     isLockedToCurrentWindow: getIsLockedToCurrentWindow(state),
+    areLasersLocked: getAreLasersLocked(state),
     zoomLevel: getZoomLevel(state),
   };
 };
@@ -249,6 +253,7 @@ const mapDispatchToProps = {
   selectEventColor: actions.selectEventColor,
   selectEventEditMode: actions.selectEventEditMode,
   toggleEventWindowLock: actions.toggleEventWindowLock,
+  toggleLaserLock: actions.toggleLaserLock,
   zoomIn: actions.zoomIn,
   zoomOut: actions.zoomOut,
 };

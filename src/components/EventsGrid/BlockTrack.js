@@ -29,6 +29,7 @@ const BlockTrack = ({
   numOfBeatsToShow,
   cursorAtBeat,
   events,
+  isDisabled,
   selectedTool,
   selectedColorType,
   selectedEditMode,
@@ -79,8 +80,9 @@ const BlockTrack = ({
   return (
     <Wrapper
       style={{ height }}
+      isDisabled={isDisabled}
       onPointerDown={ev => {
-        if (selectedEditMode === 'select') {
+        if (isDisabled || selectedEditMode === 'select') {
           return;
         }
 
@@ -125,6 +127,9 @@ const BlockTrack = ({
 const Wrapper = styled.div`
   position: relative;
   border-bottom: 1px solid ${COLORS.blueGray[400]};
+  opacity: ${p => p.isDisabled && 0.5};
+  cursor: ${p => p.isDisabled && 'not-allowed'};
+  background-color: ${p => p.isDisabled && 'rgba(255,255,255,0.2)'};
 
   &:last-of-type {
     border-bottom: none;

@@ -714,6 +714,9 @@ export const dismissPrompt = promptId => ({
 export const toggleEventWindowLock = () => ({
   type: 'TOGGLE_EVENT_WINDOW_LOCK',
 });
+export const toggleLaserLock = () => ({
+  type: 'TOGGLE_LASER_LOCK',
+});
 
 export const toggleModForSong = mod => ({
   type: 'TOGGLE_MOD_FOR_SONG',

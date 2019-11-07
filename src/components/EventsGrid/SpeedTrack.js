@@ -34,6 +34,7 @@ const SpeedTrack = ({
   events,
   startSpeed,
   endSpeed,
+  isDisabled,
   selectedEditMode,
   changeLaserSpeed,
   deleteEvent,
@@ -74,6 +75,10 @@ const SpeedTrack = ({
   });
 
   const handlePointerDown = ev => {
+    if (isDisabled) {
+      return;
+    }
+
     if (ev.button !== 0 || selectedEditMode !== 'place') {
       return;
     }
@@ -134,25 +139,28 @@ const SpeedTrack = ({
     <Wrapper
       ref={ref}
       style={{ height }}
+      isDisabled={isDisabled}
       onPointerDown={handlePointerDown}
       onContextMenu={ev => ev.preventDefault()}
     >
       <Svg width={width} height={height}>
         {/* Background 8 vertical lines, indicating the "levels" */}
-        <Background>
-          {range(NUM_OF_SPEEDS + 1).map(i => (
-            <line
-              key={i}
-              x1={0}
-              y1={getYForSpeed(height, i)}
-              x2={width}
-              y2={getYForSpeed(height, i)}
-              strokeWidth={1}
-              stroke={COLORS.blueGray[700]}
-              style={{ opacity: 0.6 }}
-            />
-          ))}
-        </Background>
+        {!isDisabled && (
+          <Background>
+            {range(NUM_OF_SPEEDS + 1).map(i => (
+              <line
+                key={i}
+                x1={0}
+                y1={getYForSpeed(height, i)}
+                x2={width}
+                y2={getYForSpeed(height, i)}
+                strokeWidth={1}
+                stroke={COLORS.blueGray[700]}
+                style={{ opacity: 0.6 }}
+              />
+            ))}
+          </Background>
+        )}
 
         {/*
           The fill for our graph area, showing easily where the current speed
@@ -203,6 +211,9 @@ const SpeedTrack = ({
 const Wrapper = styled.div`
   position: relative;
   border-bottom: 1px solid ${COLORS.blueGray[400]};
+  opacity: ${p => p.isDisabled && 0.5};
+  cursor: ${p => p.isDisabled && 'not-allowed'};
+  background-color: ${p => p.isDisabled && 'rgba(255,255,255,0.2)'};
 
   &:last-of-type {
     border-bottom: none;

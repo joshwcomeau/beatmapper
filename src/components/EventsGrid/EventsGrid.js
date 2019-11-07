@@ -12,6 +12,7 @@ import {
   getSelectedEventEditMode,
   getSelectedEventBeat,
   getSelectionBox,
+  getAreLasersLocked,
 } from '../../reducers/editor.reducer';
 import useMousePositionOverElement from '../../hooks/use-mouse-position-over-element.hook';
 import usePointerUpHandler from '../../hooks/use-pointer-up-handler.hook';
@@ -59,6 +60,7 @@ const EventsGrid = ({
   selectionBox,
   numOfBeatsToShow,
   isLoading,
+  areLasersLocked,
   snapTo,
   selectedEditMode,
   moveMouseAcrossEventsGrid,
@@ -178,6 +180,14 @@ const EventsGrid = ({
     setMouseDownAt(mousePosition);
   };
 
+  const getIsTrackDisabled = trackId => {
+    if (!areLasersLocked) {
+      return false;
+    }
+
+    return trackId === 'laserRight' || trackId === 'laserSpeedRight';
+  };
+
   return (
     <Wrapper isLoading={isLoading} style={{ width: contentWidth }}>
       <PrefixColumn style={{ width: PREFIX_WIDTH }}>
@@ -186,9 +196,8 @@ const EventsGrid = ({
         {EVENT_TRACKS.map(({ id, type, label }) => (
           <TrackPrefix
             key={id}
-            style={{
-              height: type === 'blocks' ? trackHeight : trackHeight,
-            }}
+            style={{ height: trackHeight }}
+            isDisabled={getIsTrackDisabled(id)}
           >
             {label}
           </TrackPrefix>
@@ -223,6 +232,8 @@ const EventsGrid = ({
               const TrackComponent =
                 type === 'blocks' ? BlockTrack : SpeedTrack;
 
+              const isDisabled = getIsTrackDisabled(id);
+
               return (
                 <TrackComponent
                   key={id}
@@ -232,6 +243,7 @@ const EventsGrid = ({
                   startBeat={startBeat}
                   numOfBeatsToShow={numOfBeatsToShow}
                   cursorAtBeat={selectedBeat}
+                  isDisabled={isDisabled}
                 />
               );
             })}
@@ -307,6 +319,10 @@ const TrackPrefix = styled.div`
   padding: 0 ${UNIT}px;
   border-bottom: 1px solid ${COLORS.blueGray[400]};
 
+  opacity: ${p => p.isDisabled && 0.5};
+  cursor: ${p => p.isDisabled && 'not-allowed'};
+  background-color: ${p => p.isDisabled && 'rgba(255,255,255,0.2)'};
+
   &:last-of-type {
     border-bottom: none;
   }
@@ -344,6 +360,7 @@ const mapStateToProps = (state, ownProps) => {
     numOfBeatsToShow,
     selectedEditMode,
     isLoading: getIsLoading(state),
+    areLasersLocked: getAreLasersLocked(state),
     snapTo: getSnapTo(state),
     selectionBox: getSelectionBox(state),
   };
