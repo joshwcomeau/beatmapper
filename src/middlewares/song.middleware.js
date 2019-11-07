@@ -275,23 +275,36 @@ export default function createSongMiddleware() {
           // Alrighty, so we can look at which beat is the start for the last window
           // vs the current one. If that window has changed, we want to reset the
           // playback time to the start of that last window.
-          const startBeatForLastWindow = floorToNearest(
-            lastBeat,
-            beatsPerZoomLevel
-          );
+
           const startBeatForCurrentWindow = floorToNearest(
             currentBeat,
             beatsPerZoomLevel
           );
 
-          if (
-            isLockedToCurrentWindow &&
-            startBeatForLastWindow < startBeatForCurrentWindow
-          ) {
+          const deltaInMillisecondsBetweenFrames =
+            convertBeatsToMilliseconds(currentBeat, song.bpm) -
+            convertBeatsToMilliseconds(lastBeat, song.bpm);
+
+          console.log(deltaInMillisecondsBetweenFrames);
+          const nextBeat = convertMillisecondsToBeats(
+            currentTime - song.offset + deltaInMillisecondsBetweenFrames,
+            song.bpm
+          );
+
+          const startBeatForNextWindow = floorToNearest(
+            nextBeat,
+            beatsPerZoomLevel
+          );
+
+          const justExceededWindow =
+            startBeatForCurrentWindow < startBeatForNextWindow &&
+            deltaInMillisecondsBetweenFrames < 100;
+
+          if (isLockedToCurrentWindow && justExceededWindow) {
             const song = getSelectedSong(state);
 
             const newCursorPosition =
-              convertBeatsToMilliseconds(startBeatForLastWindow, song.bpm) +
+              convertBeatsToMilliseconds(startBeatForCurrentWindow, song.bpm) +
               song.offset;
 
             next(adjustCursorPosition(newCursorPosition));
