@@ -14,6 +14,7 @@ const SpeedTrackEvent = ({
   endBeat,
   parentWidth,
   parentHeight,
+  areLasersLocked,
   deleteEvent,
 }) => {
   const x = normalize(event.beatNum, startBeat, endBeat, 0, parentWidth);
@@ -31,7 +32,7 @@ const SpeedTrackEvent = ({
       }}
       onPointerDown={ev => {
         if (ev.button === 2) {
-          deleteEvent(event.id, trackId);
+          deleteEvent(event.id, trackId, areLasersLocked);
         }
       }}
     />

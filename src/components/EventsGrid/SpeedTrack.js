@@ -35,6 +35,7 @@ const SpeedTrack = ({
   startSpeed,
   endSpeed,
   isDisabled,
+  areLasersLocked,
   selectedEditMode,
   changeLaserSpeed,
   deleteEvent,
@@ -190,6 +191,7 @@ const SpeedTrack = ({
             endBeat={startBeat + numOfBeatsToShow}
             parentWidth={width}
             parentHeight={height}
+            areLasersLocked={areLasersLocked}
           />
         ))}
 
@@ -201,6 +203,7 @@ const SpeedTrack = ({
             endBeat={startBeat + numOfBeatsToShow}
             parentWidth={width}
             parentHeight={height}
+            areLasersLocked={areLasersLocked}
           />
         )}
       </Svg>

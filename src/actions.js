@@ -611,7 +611,8 @@ export const placeEvent = (
   beatNum,
   eventType,
   eventColorType,
-  eventLaserSpeed
+  eventLaserSpeed,
+  areLasersLocked
 ) => {
   return {
     type: 'PLACE_EVENT',
@@ -621,6 +622,7 @@ export const placeEvent = (
     eventType,
     eventColorType,
     eventLaserSpeed,
+    areLasersLocked,
   };
 };
 export const changeLaserSpeed = (trackId, beatNum, speed) => {
@@ -633,15 +635,17 @@ export const changeLaserSpeed = (trackId, beatNum, speed) => {
   };
 };
 
-export const deleteEvent = (id, trackId) => ({
+export const deleteEvent = (id, trackId, areLasersLocked) => ({
   type: 'DELETE_EVENT',
   id,
   trackId,
+  areLasersLocked,
 });
-export const bulkDeleteEvent = (id, trackId) => ({
+export const bulkDeleteEvent = (id, trackId, areLasersLocked) => ({
   type: 'BULK_DELETE_EVENT',
   id,
   trackId,
+  areLasersLocked,
 });
 export const deleteSelectedEvents = () => ({
   type: 'DELETE_SELECTED_EVENTS',

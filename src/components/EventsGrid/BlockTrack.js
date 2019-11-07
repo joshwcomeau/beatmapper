@@ -29,6 +29,7 @@ const BlockTrack = ({
   numOfBeatsToShow,
   cursorAtBeat,
   events,
+  areLasersLocked,
   isDisabled,
   selectedTool,
   selectedColorType,
@@ -53,7 +54,14 @@ const BlockTrack = ({
       eventColorType = undefined;
     }
 
-    return [trackId, cursorAtBeat, eventType, eventColorType];
+    return [
+      trackId,
+      cursorAtBeat,
+      eventType,
+      eventColorType,
+      undefined,
+      areLasersLocked,
+    ];
   };
 
   const handleClickTrack = () => {
@@ -117,6 +125,7 @@ const BlockTrack = ({
             deleteOnHover={
               selectedEditMode === 'place' && mouseButtonDepressed === 'right'
             }
+            areLasersLocked={areLasersLocked}
           />
         );
       })}

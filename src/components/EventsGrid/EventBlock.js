@@ -60,6 +60,7 @@ const EventBlock = ({
   startBeat,
   numOfBeatsToShow,
   deleteOnHover,
+  areLasersLocked,
   selectedEditMode,
   selectEvent,
   deselectEvent,
@@ -86,7 +87,7 @@ const EventBlock = ({
       onContextMenu={ev => ev.preventDefault()}
       onPointerOver={ev => {
         if (deleteOnHover) {
-          bulkDeleteEvent(event.id, event.trackId);
+          bulkDeleteEvent(event.id, event.trackId, areLasersLocked);
         }
       }}
       onPointerDown={ev => {
@@ -113,11 +114,11 @@ const EventBlock = ({
         } else if (clickType === 'middle') {
           switchEventColor(event.id, event.trackId);
         } else if (clickType === 'right') {
-          deleteEvent(event.id, event.trackId);
+          deleteEvent(event.id, event.trackId, areLasersLocked);
         }
 
         if (ev.buttons === 2) {
-          deleteEvent(event.id, event.trackId);
+          deleteEvent(event.id, event.trackId, areLasersLocked);
         }
       }}
     >

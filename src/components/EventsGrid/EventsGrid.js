@@ -244,6 +244,7 @@ const EventsGrid = ({
                   numOfBeatsToShow={numOfBeatsToShow}
                   cursorAtBeat={selectedBeat}
                   isDisabled={isDisabled}
+                  areLasersLocked={areLasersLocked}
                 />
               );
             })}

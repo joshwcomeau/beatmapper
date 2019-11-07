@@ -5,8 +5,6 @@ import produce from 'immer';
 import { flatten } from '../../utils';
 import { EVENTS_VIEW, EVENT_TRACKS } from '../../constants';
 import { nudgeEvents } from '../../helpers/events.helpers';
-import { getColorForItem } from '../../helpers/colors.helpers';
-
 import { getStartAndEndBeat } from '../editor.reducer';
 
 const createInitialState = () => ({
@@ -74,7 +72,14 @@ const eventsView = undoable(
       }
 
       case 'PLACE_EVENT': {
-        const { id, trackId, beatNum, eventType, eventColorType } = action;
+        const {
+          id,
+          trackId,
+          beatNum,
+          eventType,
+          eventColorType,
+          areLasersLocked,
+        } = action;
 
         const newEvent = {
           id,
@@ -101,6 +106,34 @@ const eventsView = undoable(
 
         return produce(state, draftState => {
           draftState.tracks[trackId].splice(indexToInsertAt, 0, newEvent);
+
+          // Important: if the side lasers are "locked" we need to mimic this
+          // event from the left laser to the right laser.
+          if (areLasersLocked && trackId === 'laserLeft') {
+            const mirrorTrackId = 'laserRight';
+
+            const symmetricalEvent = {
+              ...newEvent,
+              id: getSymmetricalId(newEvent.id),
+              trackId: mirrorTrackId,
+            };
+
+            const relevantEvents = state.tracks[mirrorTrackId];
+            const [indexToInsertAt, eventOverlaps] = findIndexForNewEvent(
+              beatNum,
+              relevantEvents
+            );
+
+            if (eventOverlaps) {
+              return;
+            }
+
+            draftState.tracks[mirrorTrackId].splice(
+              indexToInsertAt,
+              0,
+              symmetricalEvent
+            );
+          }
         });
       }
 
@@ -132,17 +165,20 @@ const eventsView = undoable(
 
       case 'DELETE_EVENT':
       case 'BULK_DELETE_EVENT': {
-        const { id, trackId } = action;
+        const { id, trackId, areLasersLocked } = action;
 
-        const newTrackArray = state.tracks[trackId].filter(ev => ev.id !== id);
+        return produce(state, draftState => {
+          draftState.tracks[trackId] = draftState.tracks[trackId].filter(
+            ev => ev.id !== id
+          );
 
-        return {
-          ...state,
-          tracks: {
-            ...state.tracks,
-            [trackId]: newTrackArray,
-          },
-        };
+          if (areLasersLocked && trackId === 'laserLeft') {
+            const mirroredTrackId = 'laserRight';
+            draftState.tracks[mirroredTrackId] = draftState.tracks[
+              mirroredTrackId
+            ].filter(ev => ev.id !== getSymmetricalId(id));
+          }
+        });
       }
 
       case 'DELETE_SELECTED_EVENTS': {
@@ -434,6 +470,8 @@ const findIndexForNewEvent = (beatNum, relevantEvents) => {
 
   return [indexToInsertAt, eventOverlaps];
 };
+
+const getSymmetricalId = id => `${id}-mirrored`;
 
 //
 //
