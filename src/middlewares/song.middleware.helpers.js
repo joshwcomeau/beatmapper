@@ -71,8 +71,7 @@ export const triggerTickerIfNecessary = (
 };
 
 // TODO: Pull this in from state.
-// It should be some multiple of the state value.
-const PROCESSING_DELAY = 40;
+const PROCESSING_DELAY = 60;
 
 export const calculateIfPlaybackShouldBeCommandeered = (
   state,
@@ -90,29 +89,27 @@ export const calculateIfPlaybackShouldBeCommandeered = (
   const lastBeatTime = convertBeatsToMilliseconds(lastBeat, song.bpm);
   const deltaInMillisecondsBetweenFrames = currentTime - lastBeatTime;
 
-  // Project when the next beat will be, based on the distance between the
-  // last two beats.
-  // (yes this is a hacky approximation but it seems to work).
-  const nextBeat = convertMillisecondsToBeats(
-    currentTime + deltaInMillisecondsBetweenFrames + PROCESSING_DELAY,
+  const processingDelayInBeats = convertMillisecondsToBeats(
+    PROCESSING_DELAY,
     song.bpm
   );
 
-  const startBeatForCurrentWindow = floorToNearest(
-    currentBeat,
+  const windowForCurrentBeat = floorToNearest(
+    currentBeat + processingDelayInBeats,
+    beatsPerZoomLevel
+  );
+  const windowForLastBeat = floorToNearest(
+    lastBeat + processingDelayInBeats,
     beatsPerZoomLevel
   );
 
-  const startBeatForNextWindow = floorToNearest(nextBeat, beatsPerZoomLevel);
-
   const justExceededWindow =
-    startBeatForCurrentWindow < startBeatForNextWindow &&
+    windowForLastBeat < windowForCurrentBeat &&
     deltaInMillisecondsBetweenFrames < 100;
 
   if (isLockedToCurrentWindow && justExceededWindow) {
     const newCursorPosition =
-      convertBeatsToMilliseconds(startBeatForCurrentWindow, song.bpm) +
-      song.offset;
+      convertBeatsToMilliseconds(windowForLastBeat, song.bpm) + song.offset;
 
     return newCursorPosition;
   }
