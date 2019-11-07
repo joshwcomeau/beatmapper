@@ -60,7 +60,7 @@ import {
   generateWaveformForSongFile,
   stopAndRewindAudio,
   triggerTickerIfNecessary,
-  shouldLoopToStartOfWindow,
+  calculateIfPlaybackShouldBeCommandeered,
 } from './song.middleware.helpers';
 
 export default function createSongMiddleware() {
@@ -269,46 +269,21 @@ export default function createSongMiddleware() {
 
           triggerTickerIfNecessary(state, currentBeat, lastBeat, ticker);
 
-          const isLockedToCurrentWindow = getIsLockedToCurrentWindow(state);
-          const beatsPerZoomLevel = getBeatsPerZoomLevel(state);
-
-          // Alrighty, so we can look at which beat is the start for the last window
-          // vs the current one. If that window has changed, we want to reset the
-          // playback time to the start of that last window.
-
-          const startBeatForCurrentWindow = floorToNearest(
+          // Normally, we just want to have one frame after another, with no
+          // overriding behavior. Sometimes, though, we want to commandeer.
+          // Specifically, this can be when the user enables the "Loop" lock
+          // in the event grid. When the time reaches the end of the current
+          // window, it's commandeered and reset to the start of that window.
+          const commandeeredCursorPosition = calculateIfPlaybackShouldBeCommandeered(
+            state,
             currentBeat,
-            beatsPerZoomLevel
+            lastBeat,
+            audioElem
           );
 
-          const deltaInMillisecondsBetweenFrames =
-            convertBeatsToMilliseconds(currentBeat, song.bpm) -
-            convertBeatsToMilliseconds(lastBeat, song.bpm);
-
-          console.log(deltaInMillisecondsBetweenFrames);
-          const nextBeat = convertMillisecondsToBeats(
-            currentTime - song.offset + deltaInMillisecondsBetweenFrames,
-            song.bpm
-          );
-
-          const startBeatForNextWindow = floorToNearest(
-            nextBeat,
-            beatsPerZoomLevel
-          );
-
-          const justExceededWindow =
-            startBeatForCurrentWindow < startBeatForNextWindow &&
-            deltaInMillisecondsBetweenFrames < 100;
-
-          if (isLockedToCurrentWindow && justExceededWindow) {
-            const song = getSelectedSong(state);
-
-            const newCursorPosition =
-              convertBeatsToMilliseconds(startBeatForCurrentWindow, song.bpm) +
-              song.offset;
-
-            next(adjustCursorPosition(newCursorPosition));
-            audioElem.currentTime = newCursorPosition / 1000;
+          if (typeof commandeeredCursorPosition === 'number') {
+            next(adjustCursorPosition(commandeeredCursorPosition));
+            audioElem.currentTime = commandeeredCursorPosition / 1000;
           } else {
             next({
               type: 'TICK',

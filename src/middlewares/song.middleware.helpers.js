@@ -70,28 +70,50 @@ export const triggerTickerIfNecessary = (
   }
 };
 
-export const shouldLoopToStartOfWindow = (
+// TODO: Pull this in from state.
+// It should be some multiple of the state value.
+const PROCESSING_DELAY = 40;
+
+export const calculateIfPlaybackShouldBeCommandeered = (
   state,
   currentBeat,
   lastBeat,
-  audioElem,
-  next
+  audioElem
 ) => {
+  const song = getSelectedSong(state);
+
   const isLockedToCurrentWindow = getIsLockedToCurrentWindow(state);
   const beatsPerZoomLevel = getBeatsPerZoomLevel(state);
 
-  if (!isLockedToCurrentWindow) {
-    return;
-  }
+  // Figure out how much time lasts between frames, on average.
+  const currentTime = convertBeatsToMilliseconds(currentBeat, song.bpm);
+  const lastBeatTime = convertBeatsToMilliseconds(lastBeat, song.bpm);
+  const deltaInMillisecondsBetweenFrames = currentTime - lastBeatTime;
 
-  // Alrighty, so we can look at which beat is the start for the last window
-  // vs the current one. If that window has changed, we want to reset the
-  // playback time to the start of that last window.
-  const startBeatForLastWindow = floorToNearest(lastBeat, beatsPerZoomLevel);
+  // Project when the next beat will be, based on the distance between the
+  // last two beats.
+  // (yes this is a hacky approximation but it seems to work).
+  const nextBeat = convertMillisecondsToBeats(
+    currentTime + deltaInMillisecondsBetweenFrames + PROCESSING_DELAY,
+    song.bpm
+  );
+
   const startBeatForCurrentWindow = floorToNearest(
     currentBeat,
     beatsPerZoomLevel
   );
 
-  return startBeatForLastWindow !== startBeatForCurrentWindow;
+  const startBeatForNextWindow = floorToNearest(nextBeat, beatsPerZoomLevel);
+
+  const justExceededWindow =
+    startBeatForCurrentWindow < startBeatForNextWindow &&
+    deltaInMillisecondsBetweenFrames < 100;
+
+  if (isLockedToCurrentWindow && justExceededWindow) {
+    const newCursorPosition =
+      convertBeatsToMilliseconds(startBeatForCurrentWindow, song.bpm) +
+      song.offset;
+
+    return newCursorPosition;
+  }
 };
