@@ -128,15 +128,7 @@ const SelectionInfo = ({
         </Tooltip>
       </Row>
       <Spacer size={UNIT * 2} />
-      <Tooltip delay={[1000, 0]} title="Clear selection (Escape)">
-        <MiniButton
-          width={ACTION_WIDTH}
-          onClick={() => deselectAll(NOTES_VIEW)}
-        >
-          Deselect
-        </MiniButton>
-      </Tooltip>
-      <Spacer size={UNIT} />
+
       <Row>
         <Tooltip
           delay={[1000, 0]}
@@ -173,6 +165,16 @@ const SelectionInfo = ({
           onClick={() => pasteSelection(NOTES_VIEW)}
         >
           Paste
+        </MiniButton>
+      </Tooltip>
+      <Spacer size={UNIT * 2} />
+
+      <Tooltip delay={[1000, 0]} title="Clear selection (Escape)">
+        <MiniButton
+          width={ACTION_WIDTH}
+          onClick={() => deselectAll(NOTES_VIEW)}
+        >
+          Deselect
         </MiniButton>
       </Tooltip>
     </Wrapper>
