@@ -13,6 +13,7 @@ const MiniButton = ({
   hoverColor,
   as,
   width,
+  style = {},
   ...delegated
 }) => {
   let renderAs =
@@ -24,7 +25,7 @@ const MiniButton = ({
       {...delegated}
       color={color}
       hover-color={hoverColor}
-      style={{ width }}
+      style={{ ...style, width }}
     >
       {typeof children === 'string' ? (
         <PixelShifter y={-1}>{children}</PixelShifter>
