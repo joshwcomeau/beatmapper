@@ -6,6 +6,11 @@
       "src": "favicon.png",
       "sizes": "64x64",
       "type": "image/png"
+    },
+    {
+      "src": "pwa-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
     }
   ],
   "start_url": ".",
