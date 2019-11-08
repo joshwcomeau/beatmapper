@@ -15,6 +15,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "hsl(310, 100%, 50%)",
-  "background_color": "hsl(222, 25%, 12%)"
+  "theme_color": "hsl(222, 25%, 12%)",
+  "background_color": "hsl(222, 30%, 7%)"
 }
