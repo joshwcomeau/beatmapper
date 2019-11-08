@@ -9,6 +9,7 @@ import { Tooltip } from 'react-tippy';
 import * as actions from '../../actions';
 import { COLORS, UNIT, NOTES_VIEW } from '../../constants';
 import { getMetaKeyLabel } from '../../utils';
+import { getHasCopiedNotes } from '../../reducers/clipboard.reducer';
 
 import MiniButton from '../MiniButton';
 import Heading from '../Heading';
@@ -16,6 +17,9 @@ import IconButton from '../IconButton';
 import Spacer from '../Spacer';
 
 import ObstacleTweaks from './ObstacleTweaks';
+
+const ACTION_WIDTH = 110;
+const HALF_ACTION_WIDTH = ACTION_WIDTH / 2 - UNIT / 2;
 
 const SelectionCount = ({ num, label }) => {
   const pluralizedLabel = num === 1 ? label : `${label}s`;
@@ -30,9 +34,13 @@ const SelectionCount = ({ num, label }) => {
 const SelectionInfo = ({
   numOfSelectedNotes,
   numOfSelectedObstacles,
+  hasCopiedNotes,
   deselectAll,
   swapSelectedNotes,
   nudgeSelection,
+  cutSelection,
+  copySelection,
+  pasteSelection,
 }) => {
   const shouldShowObstacleTweaks =
     numOfSelectedObstacles === 1 && numOfSelectedNotes === 0;
@@ -120,7 +128,33 @@ const SelectionInfo = ({
         </Tooltip>
       </Row>
       <Spacer size={UNIT * 2} />
-      <MiniButton onClick={() => deselectAll(NOTES_VIEW)}>Deselect</MiniButton>
+      <MiniButton width={ACTION_WIDTH} onClick={() => deselectAll(NOTES_VIEW)}>
+        Deselect
+      </MiniButton>
+      <Spacer size={UNIT} />
+      <Row>
+        <MiniButton
+          width={HALF_ACTION_WIDTH}
+          onClick={() => cutSelection(NOTES_VIEW)}
+        >
+          Cut
+        </MiniButton>
+        <Spacer size={UNIT} />
+        <MiniButton
+          width={HALF_ACTION_WIDTH}
+          onClick={() => copySelection(NOTES_VIEW)}
+        >
+          Copy
+        </MiniButton>
+      </Row>
+      <Spacer size={UNIT} />
+      <MiniButton
+        width={ACTION_WIDTH}
+        disabled={!hasCopiedNotes}
+        onClick={() => pasteSelection(NOTES_VIEW)}
+      >
+        Paste
+      </MiniButton>
     </Wrapper>
   );
 };
@@ -139,13 +173,22 @@ const Highlight = styled.span`
   color: ${COLORS.yellow[500]};
 `;
 
+const mapStateToProps = state => {
+  return {
+    hasCopiedNotes: getHasCopiedNotes(state),
+  };
+};
+
 const mapDispatchToProps = {
   deselectAll: actions.deselectAll,
   swapSelectedNotes: actions.swapSelectedNotes,
   nudgeSelection: actions.nudgeSelection,
+  cutSelection: actions.cutSelection,
+  copySelection: actions.copySelection,
+  pasteSelection: actions.pasteSelection,
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(SelectionInfo);

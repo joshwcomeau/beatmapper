@@ -520,6 +520,13 @@ export const getNumOfSelectedNotes = state => {
   return getSelectedNotes(state).length + getSelectedObstacles(state).length;
 };
 
+export const getCanUndo = state => {
+  return state.editorEntities.notesView.past.length > 0;
+};
+export const getCanRedo = state => {
+  return state.editorEntities.notesView.future.length > 0;
+};
+
 export const getVisibleNotes = createSelector(
   getNotes,
   getCursorPositionInBeats,

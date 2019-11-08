@@ -44,9 +44,6 @@ const ItemGrid = ({ song, selectedTool, selectTool }) => {
           >
             <BlockIcon color={getColorForItem('right-block', song)} />
           </IconButton>
-        </Row>
-        <Spacer size={1} />
-        <Row>
           <Spacer size={1} />
           <IconButton
             size={buttonSize}

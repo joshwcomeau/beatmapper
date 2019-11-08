@@ -7,7 +7,14 @@ import { UNIT, COLORS } from '../../constants';
 import UnfocusedButton from '../UnfocusedButton';
 import PixelShifter from '../PixelShifter';
 
-const MiniButton = ({ children, color, hoverColor, as, ...delegated }) => {
+const MiniButton = ({
+  children,
+  color,
+  hoverColor,
+  as,
+  width,
+  ...delegated
+}) => {
   let renderAs =
     as || (typeof delegated.to === 'string' ? Link : UnfocusedButton);
 
@@ -17,6 +24,7 @@ const MiniButton = ({ children, color, hoverColor, as, ...delegated }) => {
       {...delegated}
       color={color}
       hover-color={hoverColor}
+      style={{ width }}
     >
       {typeof children === 'string' ? (
         <PixelShifter y={-1}>{children}</PixelShifter>
