@@ -11,8 +11,26 @@ export const DEFAULT_GRID = {
 const convertFromOneGridToAnother = (
   n: number,
   currentTotal: number,
-  desiredTotal: number
-) => n - (currentTotal - desiredTotal) / 2;
+  desiredTotal: number,
+  ratio: number
+) => {
+  // Getting the index is according to this formula.
+  const index = n - (currentTotal - desiredTotal) / 2;
+
+  // Normally, each cell is 1x1 width x height.
+  // If our columns are 0.5 width, the ratio is 0.5.
+  // First we need to find out what that means for the offset of the 0 cell.
+  // The formula for that is y = -1.5x + 1.5, where `y` is the new offset and `x` is the ratio.
+
+  const offset = -1.5 * ratio + 1.5;
+
+  // our formula to find the new x or y position, then, is:
+  // y = ratio * index + offset
+
+  const newValue = ratio * index + offset;
+
+  return newValue;
+};
 
 /**
  * With Mapping Extensions, we need to move between two different grid systems:
@@ -28,21 +46,33 @@ const convertFromOneGridToAnother = (
 export const convertGridIndicesToNaturalGrid = (
   colIndex: number,
   numCols: number,
+  colWidth: number,
   rowIndex?: number,
   numRows?: number,
-  cellSize: number = 1
+  rowHeight?: number
 ) => {
   // Sometimes we only care about columns, not rows.
-  if (typeof rowIndex === 'undefined' || typeof numRows === 'undefined') {
-    return [convertFromOneGridToAnother(colIndex, numCols, DEFAULT_NUM_COLS)];
+  if (
+    typeof rowIndex === 'undefined' ||
+    typeof numRows === 'undefined' ||
+    typeof rowHeight === 'undefined'
+  ) {
+    return [
+      convertFromOneGridToAnother(
+        colIndex,
+        numCols,
+        DEFAULT_NUM_COLS,
+        colWidth
+      ),
+    ];
   }
 
   // Normally, we have 4 columns and 3 rows.
   // If the user has tweaked that grid, we need to convert to the 4x3 system
   // the game actually uses.
   return [
-    convertFromOneGridToAnother(colIndex, numCols, DEFAULT_NUM_COLS),
-    convertFromOneGridToAnother(rowIndex, numRows, DEFAULT_NUM_ROWS),
+    convertFromOneGridToAnother(colIndex, numCols, DEFAULT_NUM_COLS, colWidth),
+    convertFromOneGridToAnother(rowIndex, numRows, DEFAULT_NUM_ROWS, rowHeight),
   ];
 };
 
@@ -58,21 +88,7 @@ export const getCellCoordinates = (
     { index: rowIndex, ratio: rowHeight },
   ];
 
-  const transformedValues = values.map(({ index, ratio }) => {
-    // Normally, each cell is 1x1 width x height.
-    // If our columns are 0.5 width, the ratio is 0.5.
-    // First we need to find out what that means for the offset of the 0 cell.
-    // The formula for that is y = -1.5x + 1.5, where `y` is the new offset and `x` is the ratio.
-
-    const offset = -1.5 * ratio + 1.5;
-
-    // our formula to find the new x or y position, then, is:
-    // y = ratio * index + offset
-
-    const newValue = ratio * index + offset;
-
-    return newValue;
-  });
+  const transformedValues = values.map(({ index, ratio }) => {});
 
   return transformedValues;
 };

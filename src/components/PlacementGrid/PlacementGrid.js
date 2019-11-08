@@ -37,7 +37,7 @@ const PlacementGrid = ({
   numRows,
   numCols,
   cellSize,
-  colWidth = 1,
+  colWidth = 0.5,
   rowHeight = 1,
   clickPlacementGrid,
   setBlockByDragging,
@@ -94,8 +94,10 @@ const PlacementGrid = ({
         ] = convertGridIndicesToNaturalGrid(
           colIndex,
           numCols,
+          colWidth,
           rowIndex,
-          numRows
+          numRows,
+          rowHeight
         );
 
         setBlockByDragging(
@@ -147,8 +149,6 @@ const PlacementGrid = ({
           //
           const x = (numCols * -0.5 + 0.5 + colIndex) * renderColWidth;
           const y = (numRows * -0.5 + 0.5 + rowIndex) * renderRowHeight;
-
-          console.log(x, y);
 
           const isHovered =
             hoveredCell &&
@@ -210,9 +210,13 @@ const PlacementGrid = ({
                 ] = convertGridIndicesToNaturalGrid(
                   colIndex,
                   numCols,
+                  colWidth,
                   rowIndex,
-                  numRows
+                  numRows,
+                  rowHeight
                 );
+
+                // Also with mapping extensions, it's possible that our
 
                 clickPlacementGrid(
                   effectiveRowIndex,

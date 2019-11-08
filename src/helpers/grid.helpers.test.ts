@@ -1,21 +1,27 @@
 import {
   convertGridIndicesToNaturalGrid,
-  convertGridIndicesToCustomGrid,
   getCellCoordinates,
 } from './grid.helpers';
+
+const DEFAULT_NUM_COLS = 4;
+const DEFAULT_NUM_ROWS = 3;
+const DEFAULT_COL_WIDTH = 1;
+const DEFAULT_ROW_HEIGHT = 1;
 
 describe('Grid helpers', () => {
   describe('convertGridIndicesToNaturalGrid', () => {
     it('has no effect on a 4x3 grid', () => {
       const position = [1, 2];
-      const numCols = 4;
-      const numRows = 3;
+      const numCols = DEFAULT_NUM_COLS;
+      const numRows = DEFAULT_NUM_ROWS;
 
       const actualPosition = convertGridIndicesToNaturalGrid(
         position[0],
         numCols,
+        DEFAULT_COL_WIDTH,
         position[1],
-        numRows
+        numRows,
+        DEFAULT_ROW_HEIGHT
       );
       const expectedPosition = [1, 2];
 
@@ -25,13 +31,15 @@ describe('Grid helpers', () => {
     it('converts a 5x3 grid (1 extra col)', () => {
       const position = [1, 2];
       const numCols = 5;
-      const numRows = 3;
+      const numRows = DEFAULT_NUM_ROWS;
 
       const actualPosition = convertGridIndicesToNaturalGrid(
         position[0],
         numCols,
+        DEFAULT_COL_WIDTH,
         position[1],
-        numRows
+        numRows,
+        DEFAULT_ROW_HEIGHT
       );
       const expectedPosition = [0.5, 2];
 
@@ -41,13 +49,15 @@ describe('Grid helpers', () => {
     it('converts an 8x3 grid (2 extra cols on each side)', () => {
       const position = [0, 2];
       const numCols = 8;
-      const numRows = 3;
+      const numRows = DEFAULT_NUM_ROWS;
 
       const actualPosition = convertGridIndicesToNaturalGrid(
         position[0],
         numCols,
+        DEFAULT_COL_WIDTH,
         position[1],
-        numRows
+        numRows,
+        DEFAULT_ROW_HEIGHT
       );
       const expectedPosition = [-2, 2];
 
@@ -62,8 +72,10 @@ describe('Grid helpers', () => {
       const actualPosition = convertGridIndicesToNaturalGrid(
         position[0],
         numCols,
+        DEFAULT_COL_WIDTH,
         position[1],
-        numRows
+        numRows,
+        DEFAULT_ROW_HEIGHT
       );
       const expectedPosition = [0, 1.5];
 
@@ -73,13 +85,15 @@ describe('Grid helpers', () => {
     it('converts a 3x3 grid (less cols)', () => {
       const position = [1, 2];
       const numCols = 3;
-      const numRows = 3;
+      const numRows = DEFAULT_NUM_ROWS;
 
       const actualPosition = convertGridIndicesToNaturalGrid(
         position[0],
         numCols,
+        DEFAULT_COL_WIDTH,
         position[1],
-        numRows
+        numRows,
+        DEFAULT_ROW_HEIGHT
       );
       const expectedPosition = [1.5, 2];
 
@@ -90,77 +104,115 @@ describe('Grid helpers', () => {
       const colIndex = 1;
       const numCols = 3;
 
-      const actualPosition = convertGridIndicesToNaturalGrid(colIndex, numCols);
+      const actualPosition = convertGridIndicesToNaturalGrid(
+        colIndex,
+        numCols,
+        1
+      );
       const expectedPosition = [1.5];
 
       expect(actualPosition).toEqual(expectedPosition);
     });
-  });
 
-  describe('getCellCoordinates', () => {
-    it('calculates the 0,0 cell in a 0.5x1 grid', () => {
+    it('handles a 4x3 grid with half-width columns', () => {
       const colIndex = 0;
       const rowIndex = 0;
+      const numCols = DEFAULT_NUM_COLS;
+      const numRows = DEFAULT_NUM_ROWS;
       const colWidth = 0.5;
-      const rowHeight = 1;
+      const rowHeight = DEFAULT_ROW_HEIGHT;
 
-      const [x, y] = getCellCoordinates(
+      const actualPosition = convertGridIndicesToNaturalGrid(
         colIndex,
-        rowIndex,
+        numCols,
         colWidth,
+        rowIndex,
+        numRows,
         rowHeight
       );
+      const expectedPosition = [0.75, 0];
 
-      expect(y).toEqual(0);
-      expect(x).toEqual(0.75);
+      expect(actualPosition).toEqual(expectedPosition);
     });
-    it('calculates the 2,0 cell in a 0.5x1 grid', () => {
+    it('calculates the 2,0 cell in a half-column-width grid', () => {
       const colIndex = 2;
       const rowIndex = 0;
+      const numCols = DEFAULT_NUM_COLS;
+      const numRows = DEFAULT_NUM_ROWS;
       const colWidth = 0.5;
-      const rowHeight = 1;
+      const rowHeight = DEFAULT_ROW_HEIGHT;
 
-      const [x, y] = getCellCoordinates(
+      const actualPosition = convertGridIndicesToNaturalGrid(
         colIndex,
-        rowIndex,
+        numCols,
         colWidth,
+        rowIndex,
+        numRows,
         rowHeight
       );
+      const expectedPosition = [1.75, 0];
 
-      expect(y).toEqual(0);
-      expect(x).toEqual(1.75);
+      expect(actualPosition).toEqual(expectedPosition);
     });
-    it('calculates the -1,1 cell in a 0.5x0.5 grid', () => {
+    it('calculates the -1,1 cell in a half-size grid', () => {
       const colIndex = -1;
       const rowIndex = 1;
+      const numCols = DEFAULT_NUM_COLS;
+      const numRows = DEFAULT_NUM_ROWS;
       const colWidth = 0.5;
       const rowHeight = 0.5;
 
-      const [x, y] = getCellCoordinates(
+      const actualPosition = convertGridIndicesToNaturalGrid(
         colIndex,
-        rowIndex,
+        numCols,
         colWidth,
+        rowIndex,
+        numRows,
         rowHeight
       );
+      const expectedPosition = [0.25, 1.25];
 
-      expect(y).toEqual(1.25);
-      expect(x).toEqual(0.25);
+      expect(actualPosition).toEqual(expectedPosition);
     });
-    it('calculates the 0,0 cell in a 4x1 grid', () => {
+    it('calculates the 0,0 cell in an oversized 4x-width grid', () => {
       const colIndex = 0;
       const rowIndex = 0;
+      const numCols = DEFAULT_NUM_COLS;
+      const numRows = DEFAULT_NUM_ROWS;
       const colWidth = 4;
-      const rowHeight = 1;
+      const rowHeight = DEFAULT_ROW_HEIGHT;
 
-      const [x, y] = getCellCoordinates(
+      const actualPosition = convertGridIndicesToNaturalGrid(
         colIndex,
-        rowIndex,
+        numCols,
         colWidth,
+        rowIndex,
+        numRows,
         rowHeight
       );
+      const expectedPosition = [-4.5, 0];
 
-      expect(y).toEqual(0);
-      expect(x).toEqual(-4.5);
+      expect(actualPosition).toEqual(expectedPosition);
+    });
+    it('calculates the 0,0 cell in a half-column width 5x3 grid', () => {
+      const colIndex = 0;
+      const rowIndex = 0;
+      const numCols = 5;
+      const numRows = DEFAULT_NUM_ROWS;
+      const colWidth = 0.5;
+      const rowHeight = DEFAULT_ROW_HEIGHT;
+
+      const actualPosition = convertGridIndicesToNaturalGrid(
+        colIndex,
+        numCols,
+        colWidth,
+        rowIndex,
+        numRows,
+        rowHeight
+      );
+      const expectedPosition = [0.5, 0];
+
+      expect(actualPosition).toEqual(expectedPosition);
     });
   });
 });
