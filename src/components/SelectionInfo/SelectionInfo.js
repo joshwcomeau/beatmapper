@@ -89,7 +89,7 @@ const SelectionInfo = ({
       <Spacer size={UNIT * 1.5} />
 
       <Row>
-        <Tooltip delay={[500, 0]} title="Swap horizontally (H)">
+        <Tooltip delay={[1000, 0]} title="Swap horizontally (H)">
           <IconButton
             rotation={45}
             icon={swapIcon}
@@ -97,7 +97,7 @@ const SelectionInfo = ({
           />
         </Tooltip>
         <Spacer size={UNIT} />
-        <Tooltip delay={[500, 0]} title="Swap vertically (V)">
+        <Tooltip delay={[1000, 0]} title="Swap vertically (V)">
           <IconButton
             rotation={-45}
             icon={swapIcon}
@@ -108,7 +108,7 @@ const SelectionInfo = ({
       <Spacer size={UNIT} />
       <Row>
         <Tooltip
-          delay={[500, 0]}
+          delay={[1000, 0]}
           title={`Nudge forwards (${metaKeyLabel} + ↑)`}
         >
           <IconButton
@@ -118,7 +118,7 @@ const SelectionInfo = ({
         </Tooltip>
         <Spacer size={UNIT} />
         <Tooltip
-          delay={[500, 0]}
+          delay={[1000, 0]}
           title={`Nudge backwards (${metaKeyLabel} + ↓)`}
         >
           <IconButton
@@ -128,33 +128,53 @@ const SelectionInfo = ({
         </Tooltip>
       </Row>
       <Spacer size={UNIT * 2} />
-      <MiniButton width={ACTION_WIDTH} onClick={() => deselectAll(NOTES_VIEW)}>
-        Deselect
-      </MiniButton>
+      <Tooltip delay={[1000, 0]} title="Clear selection (Escape)">
+        <MiniButton
+          width={ACTION_WIDTH}
+          onClick={() => deselectAll(NOTES_VIEW)}
+        >
+          Deselect
+        </MiniButton>
+      </Tooltip>
       <Spacer size={UNIT} />
       <Row>
-        <MiniButton
-          width={HALF_ACTION_WIDTH}
-          onClick={() => cutSelection(NOTES_VIEW)}
+        <Tooltip
+          delay={[1000, 0]}
+          title={`copy and remove selection (${getMetaKeyLabel()} + X)`}
         >
-          Cut
-        </MiniButton>
+          <MiniButton
+            width={HALF_ACTION_WIDTH}
+            onClick={() => cutSelection(NOTES_VIEW)}
+          >
+            Cut
+          </MiniButton>
+        </Tooltip>
         <Spacer size={UNIT} />
-        <MiniButton
-          width={HALF_ACTION_WIDTH}
-          onClick={() => copySelection(NOTES_VIEW)}
+        <Tooltip
+          delay={[1000, 0]}
+          title={`Copy selection (${getMetaKeyLabel()} + C)`}
         >
-          Copy
-        </MiniButton>
+          <MiniButton
+            width={HALF_ACTION_WIDTH}
+            onClick={() => copySelection(NOTES_VIEW)}
+          >
+            Copy
+          </MiniButton>
+        </Tooltip>
       </Row>
       <Spacer size={UNIT} />
-      <MiniButton
-        width={ACTION_WIDTH}
-        disabled={!hasCopiedNotes}
-        onClick={() => pasteSelection(NOTES_VIEW)}
+      <Tooltip
+        delay={[1000, 0]}
+        title={`Paste copied notes and obstacles (${getMetaKeyLabel()} + V)`}
       >
-        Paste
-      </MiniButton>
+        <MiniButton
+          width={ACTION_WIDTH}
+          disabled={!hasCopiedNotes}
+          onClick={() => pasteSelection(NOTES_VIEW)}
+        >
+          Paste
+        </MiniButton>
+      </Tooltip>
     </Wrapper>
   );
 };

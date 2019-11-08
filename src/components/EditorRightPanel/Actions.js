@@ -39,27 +39,31 @@ const Actions = ({
       <Spacer size={UNIT * 1.5} />
 
       <Row>
-        <MiniButton
-          width={HALF_ACTION_WIDTH}
-          disabled={!canUndo}
-          onClick={undoNotes}
-        >
-          Undo
-        </MiniButton>
+        <Tooltip delay={[1000, 0]} title={`(${getMetaKeyLabel()} + Z)`}>
+          <MiniButton
+            width={HALF_ACTION_WIDTH}
+            disabled={!canUndo}
+            onClick={undoNotes}
+          >
+            Undo
+          </MiniButton>
+        </Tooltip>
         <Spacer size={UNIT} />
-        <MiniButton
-          width={HALF_ACTION_WIDTH}
-          disabled={!canRedo}
-          onClick={redoNotes}
-        >
-          Redo
-        </MiniButton>
+        <Tooltip delay={[1000, 0]} title={`(Shift + ${getMetaKeyLabel()} + Z)`}>
+          <MiniButton
+            width={HALF_ACTION_WIDTH}
+            disabled={!canRedo}
+            onClick={redoNotes}
+          >
+            Redo
+          </MiniButton>
+        </Tooltip>
       </Row>
 
       <Spacer size={UNIT} />
 
       <Tooltip
-        delay={[500, 0]}
+        delay={[1000, 0]}
         title={`Paste previously-copied notes (${getMetaKeyLabel()} + V)`}
       >
         <MiniButton
@@ -74,7 +78,7 @@ const Actions = ({
       <Spacer size={UNIT} />
 
       <Tooltip
-        delay={[500, 0]}
+        delay={[1000, 0]}
         title="Select everything over a time period (Q)"
       >
         <MiniButton
@@ -87,7 +91,7 @@ const Actions = ({
 
       <Spacer size={UNIT} />
 
-      <Tooltip delay={[500, 0]} title="Jump to a specific beat number (J)">
+      <Tooltip delay={[1000, 0]} title="Jump to a specific beat number (J)">
         <MiniButton
           width={ACTION_WIDTH}
           onClick={() => promptJumpToBeat(jumpToBeat, true)}
