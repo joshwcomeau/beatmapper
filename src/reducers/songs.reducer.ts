@@ -4,7 +4,11 @@ import get from 'lodash.get';
 
 import { sortDifficultyIds } from '../helpers/song.helpers';
 import { DEFAULT_RED, DEFAULT_BLUE } from '../helpers/colors.helpers';
-import { DEFAULT_GRID } from '../helpers/grid.helpers';
+import {
+  DEFAULT_GRID,
+  DEFAULT_COL_WIDTH,
+  DEFAULT_ROW_HEIGHT,
+} from '../helpers/grid.helpers';
 import { isEmpty } from '../utils';
 
 interface Difficulty {
@@ -19,7 +23,8 @@ interface ModSettings {
     isEnabled: boolean;
     numRows: number;
     numCols: number;
-    cellSize: number;
+    colWidth: number;
+    rowHeight: number;
   };
   customColors: {
     isEnabled: boolean;
@@ -390,7 +395,7 @@ export default function songsReducer(state: State = initialState, action: any) {
     }
 
     case 'UPDATE_GRID': {
-      const { numRows, numCols } = action;
+      const { numRows, numCols, colWidth, rowHeight } = action;
 
       return produce(state, (draftState: State) => {
         // Should-be-impossible edge-case where no selected song exists
@@ -407,6 +412,8 @@ export default function songsReducer(state: State = initialState, action: any) {
 
         song.modSettings.mappingExtensions.numRows = numRows;
         song.modSettings.mappingExtensions.numCols = numCols;
+        song.modSettings.mappingExtensions.colWidth = colWidth;
+        song.modSettings.mappingExtensions.rowHeight = rowHeight;
       });
     }
 
@@ -481,7 +488,8 @@ export const getGridSize = (state: any) => {
   return {
     numRows: mappingExtensions.numRows,
     numCols: mappingExtensions.numCols,
-    cellSize: mappingExtensions.cellSize,
+    colWidth: mappingExtensions.colWidth || DEFAULT_COL_WIDTH,
+    rowHeight: mappingExtensions.rowHeight || DEFAULT_ROW_HEIGHT,
   };
 };
 

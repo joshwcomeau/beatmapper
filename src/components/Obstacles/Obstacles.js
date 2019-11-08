@@ -23,7 +23,8 @@ const Obstacles = ({
   snapTo,
   gridRows,
   gridCols,
-  gridCellSize,
+  gridColWidth,
+  gridRowHeight,
   deleteObstacle,
   resizeObstacle,
   selectObstacle,
@@ -51,7 +52,8 @@ const Obstacles = ({
       snapTo={snapTo}
       gridRows={gridRows}
       gridCols={gridCols}
-      gridCellSize={gridCellSize}
+      gridColWidth={gridColWidth}
+      gridRowHeight={gridRowHeight}
       handleDelete={deleteObstacle}
       handleResize={resizeObstacle}
       handleClick={() =>
@@ -84,7 +86,8 @@ const mapStateToProps = state => {
     snapTo: getSnapTo(state),
     gridRows: gridSize.numRows,
     gridCols: gridSize.numCols,
-    gridCellSize: gridSize.cellSize,
+    gridColWidth: gridSize.colWidth,
+    gridRowHeight: gridSize.rowHeight,
   };
 };
 

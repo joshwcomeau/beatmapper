@@ -36,9 +36,8 @@ const PlacementGrid = ({
   mappingMode,
   numRows,
   numCols,
-  cellSize,
-  colWidth = 0.5,
-  rowHeight = 1,
+  colWidth,
+  rowHeight,
   clickPlacementGrid,
   setBlockByDragging,
   createNewObstacle,
@@ -262,6 +261,8 @@ const PlacementGrid = ({
                     mappingMode,
                     numCols,
                     numRows,
+                    colWidth,
+                    rowHeight,
                     mouseDownAt,
                     mouseOverAt,
                     roundAwayFloatingPointNonsense(cursorPositionInBeats)
@@ -342,7 +343,8 @@ const mapStateToProps = state => {
     mappingMode: getMappingMode(state),
     numRows: gridSize.numRows,
     numCols: gridSize.numCols,
-    cellSize: gridSize.cellSize,
+    colWidth: gridSize.colWidth,
+    rowHeight: gridSize.rowHeight,
   };
 };
 

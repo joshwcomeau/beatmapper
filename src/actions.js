@@ -701,8 +701,10 @@ export const updateModColor = (element, color) => ({
   color,
 });
 
-export const updateGrid = (numCols, numRows) => ({
+export const updateGrid = (numCols, numRows, colWidth, rowHeight) => ({
   type: 'UPDATE_GRID',
   numCols,
   numRows,
+  colWidth,
+  rowHeight,
 });

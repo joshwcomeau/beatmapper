@@ -1,11 +1,13 @@
 export const DEFAULT_NUM_COLS = 4;
 export const DEFAULT_NUM_ROWS = 3;
-export const DEFAULT_CELL_SIZE = 1;
+export const DEFAULT_COL_WIDTH = 1;
+export const DEFAULT_ROW_HEIGHT = 1;
 
 export const DEFAULT_GRID = {
   numRows: DEFAULT_NUM_ROWS,
   numCols: DEFAULT_NUM_COLS,
-  cellSize: DEFAULT_CELL_SIZE,
+  colWidth: DEFAULT_COL_WIDTH,
+  rowHeight: DEFAULT_ROW_HEIGHT,
 };
 
 const convertFromOneGridToAnother = (

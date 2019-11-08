@@ -19,9 +19,6 @@ interface Props {
   color: string;
   snapTo: number;
   beatDepth: number;
-  gridRows: number;
-  gridCols: number;
-  gridCellSize: number;
   handleDelete: (id: string) => void;
   handleResize: (id: string, newBeatDuration: number) => void;
   handleClick: (id: string) => void;
@@ -65,9 +62,6 @@ const ObstacleBox: React.FC<Props> = ({
   color,
   beatDepth,
   snapTo,
-  gridRows,
-  gridCols,
-  gridCellSize,
   handleDelete,
   handleResize,
   handleClick,
@@ -95,13 +89,7 @@ const ObstacleBox: React.FC<Props> = ({
     return new THREE.Mesh(geometry, material);
   }, [depth, height, obstacle.tentative, width, obstacle.selected]);
 
-  const humanizedPosition = getPositionForObstacle(
-    obstacle,
-    gridRows,
-    gridCols,
-    gridCellSize,
-    beatDepth
-  );
+  const humanizedPosition = getPositionForObstacle(obstacle, beatDepth);
   const actualPosition = adjustPositionForObstacle(
     obstacle.type,
     humanizedPosition,

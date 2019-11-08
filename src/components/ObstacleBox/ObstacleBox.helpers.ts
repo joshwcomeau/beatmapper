@@ -6,9 +6,6 @@ import { Obstacle } from '../../types';
 // This will need to be adjusted.
 export const getPositionForObstacle = (
   { lane, beatStart, type, rowIndex }: any,
-  gridRows: number,
-  gridCols: number,
-  gridCellSize: number,
   beatDepth: number
 ): [number, number, number] => {
   // Our `x` parameter is controlled by `lane`.
