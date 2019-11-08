@@ -37,13 +37,16 @@ const PlacementGrid = ({
   numRows,
   numCols,
   cellSize,
+  colWidth = 1,
+  rowHeight = 1,
   clickPlacementGrid,
   setBlockByDragging,
   createNewObstacle,
 }) => {
   const CELL_SIZE_SCALE = 1.5;
 
-  const renderCellSize = cellSize * CELL_SIZE_SCALE;
+  const renderColWidth = colWidth * CELL_SIZE_SCALE;
+  const renderRowHeight = rowHeight * CELL_SIZE_SCALE;
 
   const [mouseDownAt, setMouseDownAt] = React.useState(null);
   const [mouseOverAt, setMouseOverAt] = React.useState(null);
@@ -128,7 +131,7 @@ const PlacementGrid = ({
     // eslint-disable-next-line
   }, [mouseDownAt, selectedTool]);
 
-  const paddedCellSize = renderCellSize - 0.05;
+  const cellPadding = 0.05;
 
   return (
     <>
@@ -142,8 +145,10 @@ const PlacementGrid = ({
           // x = -0.5T + 0.5 + I       // T = Total Columns
           //                           // I = Column Index
           //
-          const x = (numCols * -0.5 + 0.5 + colIndex) * renderCellSize;
-          const y = (numRows * -0.5 + 0.5 + rowIndex) * renderCellSize;
+          const x = (numCols * -0.5 + 0.5 + colIndex) * renderColWidth;
+          const y = (numRows * -0.5 + 0.5 + rowIndex) * renderRowHeight;
+
+          console.log(x, y);
 
           const isHovered =
             hoveredCell &&
@@ -288,7 +293,12 @@ const PlacementGrid = ({
             >
               <planeGeometry
                 attach="geometry"
-                args={[paddedCellSize, paddedCellSize, 1, 1]}
+                args={[
+                  renderColWidth - cellPadding,
+                  renderRowHeight - cellPadding,
+                  1,
+                  1,
+                ]}
               />
               <meshBasicMaterial
                 attach="material"
