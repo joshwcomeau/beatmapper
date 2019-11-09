@@ -214,8 +214,6 @@ const PlacementGrid = ({
                   rowHeight
                 );
 
-                // Also with mapping extensions, it's possible that our
-
                 clickPlacementGrid(
                   effectiveRowIndex,
                   effectiveColIndex,

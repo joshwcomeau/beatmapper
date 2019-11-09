@@ -22,9 +22,17 @@ const convertFromOneGridToAnother = (
   // Normally, each cell is 1x1 width x height.
   // If our columns are 0.5 width, the ratio is 0.5.
   // First we need to find out what that means for the offset of the 0 cell.
-  // The formula for that is y = -1.5x + 1.5, where `y` is the new offset and `x` is the ratio.
+  // The formula for that is y = ax + b, where
+  // - `y` is the new offset
+  // - `x` is the ratio.
+  // - `a` is the amount to multiply our ratio by, works out to either -1.5
+  //   or -1 depending on desired Total
+  // - `b` is the y intercept at 0, which for some reason is -a -shrugs-
 
-  const offset = -1.5 * ratio + 1.5;
+  let a = (desiredTotal - 1) / -2;
+  let b = a * -1;
+
+  const offset = a * ratio + b;
 
   // our formula to find the new x or y position, then, is:
   // y = ratio * index + offset

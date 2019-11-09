@@ -78,7 +78,7 @@ const OuterWrapper = styled.div`
 
 const Wrapper = styled.div`
   color: #fff;
-  padding: ${UNIT * 4}px;
+  padding: ${UNIT * 4}px ${UNIT * 3}px;
   background: rgba(0, 0, 0, 0.45);
   border-radius: ${UNIT}px 0 0 ${UNIT}px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);

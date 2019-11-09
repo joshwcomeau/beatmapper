@@ -158,7 +158,6 @@ export const convertObstaclesToExportableJson = (
 
     let duration = o.beatDuration;
     if (o.fast) {
-      console.log('Flippin', duration);
       duration *= -1;
     }
     // Obstacles need to be at least 1/10th of a beat to be visible.

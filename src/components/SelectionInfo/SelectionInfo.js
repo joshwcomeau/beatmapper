@@ -180,6 +180,8 @@ const SelectionInfo = ({
         </MiniButton>
       </Tooltip>
 
+      <Spacer size={UNIT} />
+
       {shouldShowFastWallToggle && (
         <MiniButton onClick={toggleFastWalls}>Toggle Fast Walls</MiniButton>
       )}

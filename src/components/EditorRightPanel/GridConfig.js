@@ -34,7 +34,7 @@ const GridConfig = ({
             updateGrid(Number(ev.target.value), numRows, colWidth, rowHeight);
           }}
         />
-        <Spacer size={UNIT * 4} />
+        <Spacer size={UNIT * 2} />
         <TextInput
           type="number"
           min={1}
@@ -49,7 +49,7 @@ const GridConfig = ({
           }}
         />
       </Row>
-      <Spacer size={UNIT * 1} />
+      <Spacer size={UNIT * 3} />
       <Row>
         <TextInput
           type="number"
@@ -65,7 +65,7 @@ const GridConfig = ({
             updateGrid(numCols, numRows, Number(ev.target.value), rowHeight);
           }}
         />
-        <Spacer size={UNIT * 4} />
+        <Spacer size={UNIT * 2} />
         <TextInput
           type="number"
           min={0.1}
