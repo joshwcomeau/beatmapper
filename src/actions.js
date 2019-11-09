@@ -708,3 +708,7 @@ export const updateGrid = (numCols, numRows, colWidth, rowHeight) => ({
   colWidth,
   rowHeight,
 });
+
+export const toggleFastWalls = () => ({
+  type: 'TOGGLE_FAST_WALLS',
+});

@@ -7,8 +7,9 @@ import {
   SONG_OFFSET,
   BLOCK_SIZE,
 } from '../../constants';
-
 import { Obstacle } from '../../types';
+import oswaldGlyphs from '../../assets/fonts/oswald.json';
+
 import {
   getPositionForObstacle,
   getDimensionsForObstacle,
@@ -148,43 +149,60 @@ const ObstacleBox: React.FC<Props> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mouseDownAt, handleResize]);
 
+  const font = new THREE.Font(oswaldGlyphs);
+  const textGeometryOptions = {
+    font,
+    size: 0.4,
+    height: 0.025,
+    curveSegments: 2,
+  };
+
   return (
-    // @ts-ignore
-    <primitive
-      object={mesh}
-      position={actualPosition}
-      onPointerUp={(ev: any) => {
-        if (obstacle.tentative) {
-          return;
-        }
+    <>
+      {obstacle.fast && (
+        <mesh position={actualPosition}>
+          <textGeometry attach="geometry" args={['F', textGeometryOptions]} />
+          <meshLambertMaterial attach="material" color="#AAA" />
+        </mesh>
+      )}
 
-        // Impossible condition, I believe
-        if (typeof mouseDownAt !== 'number') {
-          return;
-        }
+      {/* @ts-ignore */}
+      <primitive
+        object={mesh}
+        position={actualPosition}
+        onPointerUp={(ev: any) => {
+          if (obstacle.tentative) {
+            return;
+          }
 
-        // if the user is resizing the box, we don't want to also select it.
-        // They should be two distinct operations.
-        const distance = Math.abs(ev.pageX - mouseDownAt);
-        if (distance > RESIZE_THRESHOLD) {
-          return;
-        }
+          // Impossible condition, I believe
+          if (typeof mouseDownAt !== 'number') {
+            return;
+          }
 
-        ev.stopPropagation();
+          // if the user is resizing the box, we don't want to also select it.
+          // They should be two distinct operations.
+          const distance = Math.abs(ev.pageX - mouseDownAt);
+          if (distance > RESIZE_THRESHOLD) {
+            return;
+          }
 
-        handleClick(obstacle.id);
-      }}
-      onPointerDown={(ev: any) => {
-        ev.stopPropagation();
+          ev.stopPropagation();
 
-        if (ev.buttons === 2) {
-          handleDelete(obstacle.id);
-        } else {
-          setMouseDownAt(ev.pageX);
-        }
-      }}
-      onPointerOver={handleMouseOver}
-    />
+          handleClick(obstacle.id);
+        }}
+        onPointerDown={(ev: any) => {
+          ev.stopPropagation();
+
+          if (ev.buttons === 2) {
+            handleDelete(obstacle.id);
+          } else {
+            setMouseDownAt(ev.pageX);
+          }
+        }}
+        onPointerOver={handleMouseOver}
+      />
+    </>
   );
 };
 

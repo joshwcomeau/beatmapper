@@ -64,6 +64,12 @@ export const convertObstaclesToRedux = (
       obstacleData.colspan = (o._width - 1000) / 1000;
     }
 
+    let duration = o._duration;
+    if (duration < 0) {
+      duration = Math.abs(duration);
+      obstacleData.fast = true;
+    }
+
     return {
       id: uuid(),
       beatStart: o._time,
@@ -150,9 +156,21 @@ export const convertObstaclesToExportableJson = (
         throw new Error('Unrecognized type: ' + o.type);
     }
 
+    let duration = o.beatDuration;
+    if (o.fast) {
+      console.log('Flippin', duration);
+      duration *= -1;
+    }
+    // Obstacles need to be at least 1/10th of a beat to be visible.
+    // TODO: I should really see what the "right" value should be. What do
+    // other editors do?
+    if (Math.abs(duration) === 0) {
+      duration = 0.1;
+    }
+
     let data = {
       _time: o.beatStart,
-      _duration: o.beatDuration === 0 ? 0.1 : o.beatDuration,
+      _duration: duration,
       ...obstacleData,
     };
 

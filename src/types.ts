@@ -47,6 +47,8 @@ export interface OriginalObstacle {
   // becoming real once the user releases the mouse
   tentative?: boolean;
   selected?: boolean;
+  // Should the wall fly by as a decorative entity?
+  fast?: boolean;
 }
 
 export interface MappingExtensionObstacle extends OriginalObstacle {
