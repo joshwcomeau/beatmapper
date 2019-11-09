@@ -2,7 +2,8 @@ import uuid from 'uuid/v1';
 
 import {
   DEFAULT_NUM_COLS,
-  convertGridIndicesToNaturalGrid,
+  convertGridColumn,
+  convertGridRow,
 } from './grid.helpers';
 import { normalize, clamp } from '../utils';
 
@@ -247,11 +248,7 @@ export const createObstacleFromMouseEvent = (
 
   // 'original' walls need to be clamped, to not cause hazards
   if (mode === 'original') {
-    const [lane] = convertGridIndicesToNaturalGrid(
-      laneIndex,
-      numCols,
-      colWidth
-    );
+    const lane = convertGridColumn(laneIndex, numCols, colWidth);
     obstacle.lane = lane;
 
     if (obstacle.type === 'wall' && obstacle.colspan > 2) {
@@ -271,14 +268,10 @@ export const createObstacleFromMouseEvent = (
     // We need a rowIndex, which works like `lane`, and rowspan, which works
     // like `colspan`
     let rawRowIndex = Math.min(mouseDownAt.rowIndex, mouseOverAt.rowIndex);
-    const [lane, rowIndex] = convertGridIndicesToNaturalGrid(
-      laneIndex,
-      numCols,
-      colWidth,
-      rawRowIndex,
-      numRows,
-      rowHeight
-    );
+
+    const lane = convertGridColumn(laneIndex, numCols, colWidth);
+    const rowIndex = convertGridRow(rawRowIndex, numRows, rowHeight);
+
     let rowspan = Math.abs(mouseDownAt.rowIndex - mouseOverAt.rowIndex) + 1;
 
     // while `rowspan` should technically be the number of rows the thing

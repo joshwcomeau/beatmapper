@@ -3,12 +3,13 @@ import { connect } from 'react-redux';
 import * as THREE from 'three';
 
 import * as actions from '../../actions';
+import { BLOCK_PLACEMENT_SQUARE_SIZE } from '../../constants';
 import {
   range,
   roundToNearest,
   roundAwayFloatingPointNonsense,
 } from '../../utils';
-import { convertGridIndicesToNaturalGrid } from '../../helpers/grid.helpers';
+import { convertGridColumn, convertGridRow } from '../../helpers/grid.helpers';
 import { getColorForItem } from '../../helpers/colors.helpers';
 import { createObstacleFromMouseEvent } from '../../helpers/obstacles.helpers';
 import {
@@ -87,17 +88,12 @@ const PlacementGrid = ({
           return;
         }
 
-        const [
-          effectiveColIndex,
-          effectiveRowIndex,
-        ] = convertGridIndicesToNaturalGrid(
+        const effectiveColIndex = convertGridColumn(
           colIndex,
           numCols,
-          colWidth,
-          rowIndex,
-          numRows,
-          rowHeight
+          colWidth
         );
+        const effectiveRowIndex = convertGridRow(rowIndex, numRows, rowHeight);
 
         setBlockByDragging(
           direction,
@@ -146,7 +142,9 @@ const PlacementGrid = ({
           //                           // I = Column Index
           //
           const x = (numCols * -0.5 + 0.5 + colIndex) * renderColWidth;
-          const y = (numRows * -0.5 + 0.5 + rowIndex) * renderRowHeight;
+
+          const VERTICAL_OFFSET = -BLOCK_PLACEMENT_SQUARE_SIZE;
+          const y = rowIndex * renderRowHeight + VERTICAL_OFFSET;
 
           const isHovered =
             hoveredCell &&
@@ -202,13 +200,12 @@ const PlacementGrid = ({
                 // With mapping extensions enabled, it's possible we need to
                 // convert the rowIndex/colIndex to one appropriate for the
                 // current grid!
-                const [
-                  effectiveColIndex,
-                  effectiveRowIndex,
-                ] = convertGridIndicesToNaturalGrid(
+                const effectiveColIndex = convertGridColumn(
                   colIndex,
                   numCols,
-                  colWidth,
+                  colWidth
+                );
+                const effectiveRowIndex = convertGridRow(
                   rowIndex,
                   numRows,
                   rowHeight
