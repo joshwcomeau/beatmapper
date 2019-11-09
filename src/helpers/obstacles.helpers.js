@@ -279,7 +279,17 @@ export const createObstacleFromMouseEvent = (
       numRows,
       rowHeight
     );
-    const rowspan = Math.abs(mouseDownAt.rowIndex - mouseOverAt.rowIndex) + 1;
+    let rowspan = Math.abs(mouseDownAt.rowIndex - mouseOverAt.rowIndex) + 1;
+
+    // while `rowspan` should technically be the number of rows the thing
+    // spans, this data is insufficient with Mapping Extensions, where the
+    // user can change the height of rows so that an obstacle takes up 1
+    // row but 2 "normal" rows.
+    obstacle.rowspan = rowspan * rowHeight;
+    // Same thing for columns
+    obstacle.colspan = colspan * colWidth;
+
+    console.log(obstacle, rowspan, rowHeight);
 
     obstacle.lane = lane;
     obstacle.rowIndex = rowIndex;

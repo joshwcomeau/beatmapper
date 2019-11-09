@@ -12,6 +12,7 @@ import oswaldGlyphs from '../../assets/fonts/oswald.json';
 
 import {
   getPositionForObstacle,
+  getPositionForObstacleNew,
   getDimensionsForObstacle,
 } from './ObstacleBox.helpers';
 
@@ -22,7 +23,8 @@ interface Props {
   beatDepth: number;
   gridRows: number;
   gridCols: number;
-  gridCellSize: number;
+  gridRowHeight: number;
+  gridColWidth: number;
   handleDelete: (id: string) => void;
   handleResize: (id: string, newBeatDuration: number) => void;
   handleClick: (id: string) => void;
@@ -68,19 +70,21 @@ const ObstacleBox: React.FC<Props> = ({
   snapTo,
   gridRows,
   gridCols,
-  gridCellSize,
+  gridRowHeight,
+  gridColWidth,
   handleDelete,
   handleResize,
   handleClick,
   handleMouseOver,
 }) => {
-  const { width, height, depth } = getDimensionsForObstacle(
-    obstacle,
-    beatDepth
-  );
+  const obstacleDimensions = getDimensionsForObstacle(obstacle, beatDepth);
 
   const mesh = React.useMemo(() => {
-    const geometry = new THREE.BoxGeometry(width, height, depth);
+    const geometry = new THREE.BoxGeometry(
+      obstacleDimensions.width,
+      obstacleDimensions.height,
+      obstacleDimensions.depth
+    );
     const material = new THREE.MeshPhongMaterial({
       color,
       transparent: true,
@@ -94,15 +98,18 @@ const ObstacleBox: React.FC<Props> = ({
     });
 
     return new THREE.Mesh(geometry, material);
-  }, [depth, height, obstacle.tentative, width, obstacle.selected]);
+  }, [
+    obstacleDimensions.depth,
+    obstacleDimensions.height,
+    obstacle.tentative,
+    obstacleDimensions.width,
+    obstacle.selected,
+  ]);
 
-  const humanizedPosition = getPositionForObstacle(obstacle, beatDepth);
-  const actualPosition = adjustPositionForObstacle(
-    obstacle.type,
-    humanizedPosition,
-    width,
-    height,
-    depth
+  const actualPosition = getPositionForObstacleNew(
+    obstacle,
+    obstacleDimensions,
+    beatDepth
   );
 
   const [mouseDownAt, setMouseDownAt] = React.useState(false);

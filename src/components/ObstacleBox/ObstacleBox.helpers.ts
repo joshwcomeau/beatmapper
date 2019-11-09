@@ -1,6 +1,39 @@
-import { BLOCK_COLUMN_WIDTH, SONG_OFFSET } from '../../constants';
+import { BLOCK_PLACEMENT_SQUARE_SIZE, SONG_OFFSET } from '../../constants';
 
-import { Obstacle } from '../../types';
+import { Obstacle, MappingExtensionObstacle } from '../../types';
+
+export const getPositionForObstacleNew = (
+  obstacle: Obstacle,
+  obstacleDimensions: { width: number; height: number; depth: number },
+  zOffset: number
+): [number, number, number] => {
+  let position = { x: 0, y: 0, z: 0 };
+
+  // ----------- X ------------
+  const OFFSET_X = BLOCK_PLACEMENT_SQUARE_SIZE * 1.5 * -1;
+
+  position.x = obstacle.lane * BLOCK_PLACEMENT_SQUARE_SIZE + OFFSET_X;
+  position.x += obstacleDimensions.width / 2 - BLOCK_PLACEMENT_SQUARE_SIZE / 2;
+
+  // ----------- Y -------------
+  if (obstacle.type === 'extension') {
+    let mapObstacle = obstacle as MappingExtensionObstacle;
+    const OFFSET_Y = BLOCK_PLACEMENT_SQUARE_SIZE * -1;
+    position.y = mapObstacle.rowIndex * BLOCK_PLACEMENT_SQUARE_SIZE + OFFSET_Y;
+    position.y +=
+      obstacleDimensions.height / 2 - BLOCK_PLACEMENT_SQUARE_SIZE / 2;
+  } else {
+    // In a traditional world, there are two kinds, `ceiling` and `wall`.
+    // We can just use hardcoded values for each kind.
+    // TODO!
+  }
+
+  // -------------- Z -------------
+  const zFront = obstacle.beatStart * zOffset * -1 - SONG_OFFSET;
+  position.z = zFront - obstacleDimensions.depth / 2 + 0.1;
+
+  return [position.x, position.y, position.z];
+};
 
 // This method gets the position in terms of the obstacle's top-left corner!
 // This will need to be adjusted.
@@ -10,21 +43,21 @@ export const getPositionForObstacle = (
 ): [number, number, number] => {
   // Our `x` parameter is controlled by `lane`.
   // TBH I forget why this formula works and I'm too lazy to sort it out rn
-  const OFFSET_X = BLOCK_COLUMN_WIDTH;
+  const OFFSET_X = BLOCK_PLACEMENT_SQUARE_SIZE;
 
-  const x = (lane - 1) * BLOCK_COLUMN_WIDTH - OFFSET_X;
+  const x = (lane - 1) * BLOCK_PLACEMENT_SQUARE_SIZE - OFFSET_X;
 
   let y;
   if (type === 'wall' || type === 'ceiling') {
     // In the original 4x3 grid system without mods, obstacles are either walls
     // or ceilings, and they always start at the same place (the type dictates
     // how far down they reach).
-    y = BLOCK_COLUMN_WIDTH * 1.75;
+    y = BLOCK_PLACEMENT_SQUARE_SIZE * 1.75;
   } else {
     // 'extension' walls can start at any point, and they behave much like lanes
     // do for the opposite axis
-    const OFFSET_Y = BLOCK_COLUMN_WIDTH * 1.5;
-    y = rowIndex * BLOCK_COLUMN_WIDTH - OFFSET_Y;
+    const OFFSET_Y = BLOCK_PLACEMENT_SQUARE_SIZE * 1.5;
+    y = rowIndex * BLOCK_PLACEMENT_SQUARE_SIZE - OFFSET_Y;
   }
 
   // Our `y` parameter is always the same, because our block always starts
@@ -41,19 +74,27 @@ export const getPositionForObstacle = (
   return [x, y, z];
 };
 
-export const getDimensionsForObstacle = (obstacle: any, beatDepth: number) => {
-  // Width is easy
-  const width = obstacle.colspan * BLOCK_COLUMN_WIDTH;
+export const getDimensionsForObstacle = (
+  obstacle: Obstacle,
+  beatDepth: number
+) => {
+  let width: number;
+  let height: number;
+  let depth: number;
 
-  // Height is tricky since it depends on the type.
-  // prettier-ignore
-  const height = obstacle.type === 'extension'
-    ? obstacle.rowspan * BLOCK_COLUMN_WIDTH
-    : obstacle.type === 'wall'
-      ? BLOCK_COLUMN_WIDTH * 3.5
-      : BLOCK_COLUMN_WIDTH * 1.25;
+  width = obstacle.colspan * BLOCK_PLACEMENT_SQUARE_SIZE;
+  depth = obstacle.beatDuration * beatDepth;
 
-  let depth = obstacle.beatDuration * beatDepth;
+  if (obstacle.type === 'extension') {
+    const extensionObstacle = obstacle as MappingExtensionObstacle;
+    height = extensionObstacle.rowspan * BLOCK_PLACEMENT_SQUARE_SIZE;
+  } else {
+    // Height is tricky since it depends on the type.
+    height =
+      obstacle.type === 'wall'
+        ? BLOCK_PLACEMENT_SQUARE_SIZE * 3.5
+        : BLOCK_PLACEMENT_SQUARE_SIZE * 1.25;
+  }
 
   // We don't want to allow invisible / 0-depth walls
   if (depth === 0) {
