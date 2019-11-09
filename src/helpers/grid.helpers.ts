@@ -1,18 +1,38 @@
 export const DEFAULT_NUM_COLS = 4;
 export const DEFAULT_NUM_ROWS = 3;
-export const DEFAULT_CELL_SIZE = 1;
+export const DEFAULT_COL_WIDTH = 1;
+export const DEFAULT_ROW_HEIGHT = 1;
 
 export const DEFAULT_GRID = {
   numRows: DEFAULT_NUM_ROWS,
   numCols: DEFAULT_NUM_COLS,
-  cellSize: DEFAULT_CELL_SIZE,
+  colWidth: DEFAULT_COL_WIDTH,
+  rowHeight: DEFAULT_ROW_HEIGHT,
 };
 
 const convertFromOneGridToAnother = (
   n: number,
   currentTotal: number,
-  desiredTotal: number
-) => n - (currentTotal - desiredTotal) / 2;
+  desiredTotal: number,
+  ratio: number
+) => {
+  // Getting the index is according to this formula.
+  const index = n - (currentTotal - desiredTotal) / 2;
+
+  // Normally, each cell is 1x1 width x height.
+  // If our columns are 0.5 width, the ratio is 0.5.
+  // First we need to find out what that means for the offset of the 0 cell.
+  // The formula for that is y = -1.5x + 1.5, where `y` is the new offset and `x` is the ratio.
+
+  const offset = -1.5 * ratio + 1.5;
+
+  // our formula to find the new x or y position, then, is:
+  // y = ratio * index + offset
+
+  const newValue = ratio * index + offset;
+
+  return newValue;
+};
 
 /**
  * With Mapping Extensions, we need to move between two different grid systems:
@@ -28,49 +48,49 @@ const convertFromOneGridToAnother = (
 export const convertGridIndicesToNaturalGrid = (
   colIndex: number,
   numCols: number,
+  colWidth: number,
   rowIndex?: number,
   numRows?: number,
-  cellSize: number = 1
+  rowHeight?: number
 ) => {
   // Sometimes we only care about columns, not rows.
-  if (typeof rowIndex === 'undefined' || typeof numRows === 'undefined') {
-    return [convertFromOneGridToAnother(colIndex, numCols, DEFAULT_NUM_COLS)];
+  if (
+    typeof rowIndex === 'undefined' ||
+    typeof numRows === 'undefined' ||
+    typeof rowHeight === 'undefined'
+  ) {
+    return [
+      convertFromOneGridToAnother(
+        colIndex,
+        numCols,
+        DEFAULT_NUM_COLS,
+        colWidth
+      ),
+    ];
   }
 
   // Normally, we have 4 columns and 3 rows.
   // If the user has tweaked that grid, we need to convert to the 4x3 system
   // the game actually uses.
   return [
-    convertFromOneGridToAnother(colIndex, numCols, DEFAULT_NUM_COLS),
-    convertFromOneGridToAnother(rowIndex, numRows, DEFAULT_NUM_ROWS),
+    convertFromOneGridToAnother(colIndex, numCols, DEFAULT_NUM_COLS, colWidth),
+    convertFromOneGridToAnother(rowIndex, numRows, DEFAULT_NUM_ROWS, rowHeight),
   ];
 };
 
-/**
- * This function does the opposite of `convertGridIndicesToNaturalGrid`.
- *
- * If we have a 4x3 grid with a block in [0,2] and we want to convert it to an
- * 8x3 grid, our new positon should be [2,2], since there are 2 extra columns
- * on each side that are now empty (so we're occupying the 3rd column, not the
- * first)
- */
-export const convertGridIndicesToCustomGrid = (
+// TODO: Roll this into `convertGridIndicesToNaturalGrid`
+export const getCellCoordinates = (
   colIndex: number,
-  numCols: number,
-  rowIndex?: number,
-  numRows?: number,
-  cellSize: number = 1
+  rowIndex: number,
+  colWidth: number,
+  rowHeight: number
 ) => {
-  // Sometimes we only care about columns, not rows.
-  if (typeof rowIndex === 'undefined' || typeof numRows === 'undefined') {
-    return [convertFromOneGridToAnother(colIndex, DEFAULT_NUM_COLS, numCols)];
-  }
-
-  // Normally, we have 4 columns and 3 rows.
-  // If the user has tweaked that grid, we need to convert to the 4x3 system
-  // the game actually uses.
-  return [
-    convertFromOneGridToAnother(colIndex, DEFAULT_NUM_COLS, numCols),
-    convertFromOneGridToAnother(rowIndex, DEFAULT_NUM_ROWS, numRows),
+  const values = [
+    { index: colIndex, ratio: colWidth },
+    { index: rowIndex, ratio: rowHeight },
   ];
+
+  const transformedValues = values.map(({ index, ratio }) => {});
+
+  return transformedValues;
 };

@@ -10,7 +10,14 @@ import Spacer from '../Spacer';
 import { UNIT } from '../../constants';
 import MiniButton from '../MiniButton';
 
-const GridConfig = ({ finishTweakingGrid, numRows, numCols, updateGrid }) => {
+const GridConfig = ({
+  finishTweakingGrid,
+  numRows,
+  numCols,
+  colWidth,
+  rowHeight,
+  updateGrid,
+}) => {
   return (
     <>
       <Row>
@@ -24,7 +31,7 @@ const GridConfig = ({ finishTweakingGrid, numRows, numCols, updateGrid }) => {
             ev.stopPropagation();
           }}
           onChange={ev => {
-            updateGrid(Number(ev.target.value), numRows);
+            updateGrid(Number(ev.target.value), numRows, colWidth, rowHeight);
           }}
         />
         <Spacer size={UNIT * 4} />
@@ -38,7 +45,39 @@ const GridConfig = ({ finishTweakingGrid, numRows, numCols, updateGrid }) => {
             ev.stopPropagation();
           }}
           onChange={ev => {
-            updateGrid(numCols, Number(ev.target.value));
+            updateGrid(numCols, Number(ev.target.value), colWidth, rowHeight);
+          }}
+        />
+      </Row>
+      <Spacer size={UNIT * 1} />
+      <Row>
+        <TextInput
+          type="number"
+          min={0.1}
+          max={4}
+          step={0.1}
+          label="Cell Width"
+          value={colWidth}
+          onKeyDown={ev => {
+            ev.stopPropagation();
+          }}
+          onChange={ev => {
+            updateGrid(numCols, numRows, Number(ev.target.value), rowHeight);
+          }}
+        />
+        <Spacer size={UNIT * 4} />
+        <TextInput
+          type="number"
+          min={0.1}
+          max={4}
+          step={0.1}
+          label="Cell Height"
+          value={rowHeight}
+          onKeyDown={ev => {
+            ev.stopPropagation();
+          }}
+          onChange={ev => {
+            updateGrid(numCols, numRows, colWidth, Number(ev.target.value));
           }}
         />
       </Row>
@@ -74,6 +113,8 @@ const mapStateToProps = state => {
   return {
     numRows: gridSize.numRows,
     numCols: gridSize.numCols,
+    colWidth: gridSize.colWidth,
+    rowHeight: gridSize.rowHeight,
   };
 };
 

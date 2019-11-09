@@ -8,7 +8,12 @@ import { createSelector } from 'reselect';
 
 import { NOTES_VIEW, EVENTS_VIEW, BEATS_PER_ZOOM_LEVEL } from '../constants';
 import { floorToNearest } from '../utils';
-import { DEFAULT_NUM_COLS, DEFAULT_NUM_ROWS } from '../helpers/grid.helpers';
+import {
+  DEFAULT_NUM_COLS,
+  DEFAULT_NUM_ROWS,
+  DEFAULT_COL_WIDTH,
+  DEFAULT_ROW_HEIGHT,
+} from '../helpers/grid.helpers';
 import { getCursorPositionInBeats } from './navigation.reducer';
 
 const NOTE_TOOLS = ['left-block', 'right-block', 'mine', 'obstacle'];
@@ -22,7 +27,8 @@ const EVENT_COLORS = ['red', 'blue'];
 const defaultMappingExtensions = {
   numCols: DEFAULT_NUM_COLS,
   numRows: DEFAULT_NUM_ROWS,
-  cellSize: 1,
+  colWidth: DEFAULT_COL_WIDTH,
+  rowHeight: DEFAULT_ROW_HEIGHT,
 };
 
 const initialState = {

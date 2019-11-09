@@ -14,7 +14,8 @@ const TentativeObstacle = ({
   beatDepth,
   gridRows,
   gridCols,
-  gridCellSize,
+  gridColWidth,
+  gridRowHeight,
   ...rest
 }) => {
   // If no mouseOverAt is provided, it ought to be the same as the mouseDownAt.
@@ -28,6 +29,8 @@ const TentativeObstacle = ({
     mode,
     gridCols,
     gridRows,
+    gridColWidth,
+    gridRowHeight,
     mouseDownAt,
     mouseOverAt,
     0
@@ -44,7 +47,6 @@ const TentativeObstacle = ({
       snapTo={1} // Doesn't matter
       gridRows={gridRows}
       gridCols={gridCols}
-      gridCellSize={gridCellSize}
       handleDelete={() => {}}
       handleResize={() => {}}
       handleClick={() => {}}
@@ -59,7 +61,8 @@ const mapStateToProps = state => {
     beatDepth: getBeatDepth(state),
     gridRows: gridSize.numRows,
     gridCols: gridSize.numCols,
-    gridCellSize: gridSize.cellSize,
+    gridColWidth: gridSize.colWidth,
+    gridRowHeight: gridSize.rowHeight,
   };
 };
 

@@ -36,14 +36,16 @@ const PlacementGrid = ({
   mappingMode,
   numRows,
   numCols,
-  cellSize,
+  colWidth,
+  rowHeight,
   clickPlacementGrid,
   setBlockByDragging,
   createNewObstacle,
 }) => {
   const CELL_SIZE_SCALE = 1.5;
 
-  const renderCellSize = cellSize * CELL_SIZE_SCALE;
+  const renderColWidth = colWidth * CELL_SIZE_SCALE;
+  const renderRowHeight = rowHeight * CELL_SIZE_SCALE;
 
   const [mouseDownAt, setMouseDownAt] = React.useState(null);
   const [mouseOverAt, setMouseOverAt] = React.useState(null);
@@ -91,8 +93,10 @@ const PlacementGrid = ({
         ] = convertGridIndicesToNaturalGrid(
           colIndex,
           numCols,
+          colWidth,
           rowIndex,
-          numRows
+          numRows,
+          rowHeight
         );
 
         setBlockByDragging(
@@ -128,13 +132,12 @@ const PlacementGrid = ({
     // eslint-disable-next-line
   }, [mouseDownAt, selectedTool]);
 
-  const paddedCellSize = renderCellSize - 0.05;
+  const cellPadding = 0.05;
 
   return (
     <>
       {range(numRows).map(rowIndex =>
         range(numCols).map(colIndex => {
-          // All cell squares are cellSize apart.
           // Because we want grids to be centered, the wider the grid, the more
           // each position is pushed further from this position.
           // After sketching out the math, the formula looks like:
@@ -142,8 +145,8 @@ const PlacementGrid = ({
           // x = -0.5T + 0.5 + I       // T = Total Columns
           //                           // I = Column Index
           //
-          const x = (numCols * -0.5 + 0.5 + colIndex) * renderCellSize;
-          const y = (numRows * -0.5 + 0.5 + rowIndex) * renderCellSize;
+          const x = (numCols * -0.5 + 0.5 + colIndex) * renderColWidth;
+          const y = (numRows * -0.5 + 0.5 + rowIndex) * renderRowHeight;
 
           const isHovered =
             hoveredCell &&
@@ -205,9 +208,13 @@ const PlacementGrid = ({
                 ] = convertGridIndicesToNaturalGrid(
                   colIndex,
                   numCols,
+                  colWidth,
                   rowIndex,
-                  numRows
+                  numRows,
+                  rowHeight
                 );
+
+                // Also with mapping extensions, it's possible that our
 
                 clickPlacementGrid(
                   effectiveRowIndex,
@@ -253,6 +260,8 @@ const PlacementGrid = ({
                     mappingMode,
                     numCols,
                     numRows,
+                    colWidth,
+                    rowHeight,
                     mouseDownAt,
                     mouseOverAt,
                     roundAwayFloatingPointNonsense(cursorPositionInBeats)
@@ -288,7 +297,12 @@ const PlacementGrid = ({
             >
               <planeGeometry
                 attach="geometry"
-                args={[paddedCellSize, paddedCellSize, 1, 1]}
+                args={[
+                  renderColWidth - cellPadding,
+                  renderRowHeight - cellPadding,
+                  1,
+                  1,
+                ]}
               />
               <meshBasicMaterial
                 attach="material"
@@ -328,7 +342,8 @@ const mapStateToProps = state => {
     mappingMode: getMappingMode(state),
     numRows: gridSize.numRows,
     numCols: gridSize.numCols,
-    cellSize: gridSize.cellSize,
+    colWidth: gridSize.colWidth,
+    rowHeight: gridSize.rowHeight,
   };
 };
 

@@ -198,6 +198,8 @@ export const createObstacleFromMouseEvent = (
   mode,
   numCols,
   numRows,
+  colWidth,
+  rowHeight,
   mouseDownAt,
   mouseOverAt,
   beatStart,
@@ -228,7 +230,11 @@ export const createObstacleFromMouseEvent = (
 
   // 'original' walls need to be clamped, to not cause hazards
   if (mode === 'original') {
-    const [lane] = convertGridIndicesToNaturalGrid(laneIndex, numCols);
+    const [lane] = convertGridIndicesToNaturalGrid(
+      laneIndex,
+      numCols,
+      colWidth
+    );
     obstacle.lane = lane;
 
     if (obstacle.type === 'wall' && obstacle.colspan > 2) {
@@ -251,8 +257,10 @@ export const createObstacleFromMouseEvent = (
     const [lane, rowIndex] = convertGridIndicesToNaturalGrid(
       laneIndex,
       numCols,
+      colWidth,
       rawRowIndex,
-      numRows
+      numRows,
+      rowHeight
     );
     const rowspan = Math.abs(mouseDownAt.rowIndex - mouseOverAt.rowIndex) + 1;
 

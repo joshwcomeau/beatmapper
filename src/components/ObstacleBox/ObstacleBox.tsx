@@ -95,13 +95,7 @@ const ObstacleBox: React.FC<Props> = ({
     return new THREE.Mesh(geometry, material);
   }, [depth, height, obstacle.tentative, width, obstacle.selected]);
 
-  const humanizedPosition = getPositionForObstacle(
-    obstacle,
-    gridRows,
-    gridCols,
-    gridCellSize,
-    beatDepth
-  );
+  const humanizedPosition = getPositionForObstacle(obstacle, beatDepth);
   const actualPosition = adjustPositionForObstacle(
     obstacle.type,
     humanizedPosition,
