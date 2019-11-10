@@ -55,6 +55,7 @@ const OuterWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  pointer-events: none;
 `;
 
 const Wrapper = styled.div`
@@ -67,6 +68,7 @@ const Wrapper = styled.div`
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   user-select: none;
   overflow: auto;
+  pointer-events: auto;
 `;
 
 const mapStateToProps = state => {
