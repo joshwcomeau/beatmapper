@@ -7,7 +7,14 @@ import { COLORS, UNIT, SIDEBAR_WIDTH } from '../../constants';
 
 import BaseLink from '../BaseLink';
 
-const SidebarNavItem = ({ isActive, title, icon, to, onClick }) => {
+const SidebarNavItem = ({
+  isActive,
+  title,
+  icon,
+  to,
+  onClick,
+  ...delegated
+}) => {
   return (
     <Tooltip
       disabled={!title}
@@ -29,6 +36,7 @@ const SidebarNavItem = ({ isActive, title, icon, to, onClick }) => {
               : 'rgba(255, 255, 255, 0.65)',
           }}
           onClick={onClick}
+          {...delegated}
         >
           <Icon icon={icon} size={20} />
         </LinkElem>

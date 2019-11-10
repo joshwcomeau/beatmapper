@@ -10,14 +10,6 @@ export const DEFAULT_GRID = {
   rowHeight: DEFAULT_ROW_HEIGHT,
 };
 
-// const convertFromOneGridToAnother = (
-//   n: number,
-//   currentTotal: number,
-//   desiredTotal: number,
-//   ratio: number
-// ) => {
-// };
-
 export const convertGridColumn = (
   colIndex: number,
   numCols: number,

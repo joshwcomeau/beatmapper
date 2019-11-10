@@ -81,6 +81,7 @@ const Sidebar = ({ location, match, leaveEditor }) => {
             icon={helpCircle}
             to="/docs"
             isActive={false}
+            target="_blank"
           />
         </SpacedChildren>
       </Bottom>
