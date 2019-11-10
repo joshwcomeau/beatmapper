@@ -89,6 +89,9 @@ export function createInfoContent(song, meta = { version: 2 }) {
       _songFilename: 'song.egg',
       _coverImageFilename: 'cover.jpg',
       _environmentName: song.environment,
+      _customData: {
+        _editor: 'beatmapper',
+      },
       _difficultyBeatmapSets: [
         {
           _beatmapCharacteristicName: 'Standard',
