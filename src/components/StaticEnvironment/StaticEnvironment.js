@@ -2,51 +2,44 @@ import React from 'react';
 
 import {
   SURFACE_WIDTH,
+  SURFACE_HEIGHT,
   SURFACE_DEPTH,
   SONG_OFFSET,
   BLOCK_COLUMN_WIDTH,
 } from '../../constants';
+import { DEFAULT_NUM_ROWS } from '../../helpers/grid.helpers';
 
-import RectAreaLight from '../RectAreaLight';
-
-const GRID_Y_BASE = BLOCK_COLUMN_WIDTH * -1.5;
+import EdgeStrip from './EdgeStrip';
 
 const StaticEnvironment = ({ includeEdgeStrips }) => {
-  const PEG_WIDTH = 0.5;
+  const gridYBase = BLOCK_COLUMN_WIDTH * (DEFAULT_NUM_ROWS * -0.5);
+
   const SURFACE_Z_CENTER = SURFACE_DEPTH / 2 + SONG_OFFSET - 1;
 
+  const PEG_WIDTH = 0.5;
+  const PEG_HEIGHT = 20;
+  const PEG_DEPTH = SURFACE_DEPTH - PEG_WIDTH * 4;
   const PEG_X_OFFSET = SURFACE_WIDTH / 2 - PEG_WIDTH;
 
-  const STRIP_HEIGHT = GRID_Y_BASE + 0.01;
+  const pegY = gridYBase - 10.25;
 
-  const { current: leftRectLightPosition } = React.useRef([
-    -2.95,
-    STRIP_HEIGHT,
-    -30,
-  ]);
-  const { current: leftRectLightLookAt } = React.useRef([
-    -2.95,
-    STRIP_HEIGHT + 10,
-    -30,
-  ]);
-  const { current: rightRectLightPosition } = React.useRef([
-    2.95,
-    STRIP_HEIGHT,
-    -30,
-  ]);
-  const { current: rightRectLightLookAt } = React.useRef([
-    2.95,
-    STRIP_HEIGHT + 10,
-    -30,
-  ]);
+  const STRIP_PADDING = 0.01;
+  const STRIP_WIDTH = 0.1;
+  const STRIP_DEPTH = 50;
+  const stripY = gridYBase + STRIP_PADDING;
+  const stripX = SURFACE_WIDTH / 2 - STRIP_WIDTH / 2;
+  const stripZ = -30;
 
   return (
     <>
       {/* Surface */}
-      <mesh position={[0, GRID_Y_BASE - 0.25, -SURFACE_Z_CENTER]} receiveShadow>
+      <mesh
+        position={[0, gridYBase - SURFACE_HEIGHT / 2, -SURFACE_Z_CENTER]}
+        receiveShadow
+      >
         <boxGeometry
           attach="geometry"
-          args={[SURFACE_WIDTH, 0.5, SURFACE_DEPTH]}
+          args={[SURFACE_WIDTH, SURFACE_HEIGHT, SURFACE_DEPTH]}
         />
         <meshStandardMaterial
           metalness={0.5}
@@ -57,10 +50,10 @@ const StaticEnvironment = ({ includeEdgeStrips }) => {
       </mesh>
 
       {/* Pegs */}
-      <mesh position={[-PEG_X_OFFSET, -12.7, -SURFACE_Z_CENTER]}>
+      <mesh position={[-PEG_X_OFFSET, pegY, -SURFACE_Z_CENTER]}>
         <boxGeometry
           attach="geometry"
-          args={[0.5, 20, SURFACE_DEPTH - PEG_WIDTH * 4]}
+          args={[PEG_WIDTH, PEG_HEIGHT, PEG_DEPTH]}
         />
         <meshStandardMaterial
           metalness={0.1}
@@ -69,10 +62,10 @@ const StaticEnvironment = ({ includeEdgeStrips }) => {
           color="#222222"
         />
       </mesh>
-      <mesh position={[PEG_X_OFFSET, -12.7, -SURFACE_Z_CENTER]}>
+      <mesh position={[PEG_X_OFFSET, pegY, -SURFACE_Z_CENTER]}>
         <boxGeometry
           attach="geometry"
-          args={[0.5, 20, SURFACE_DEPTH - PEG_WIDTH * 4]}
+          args={[PEG_WIDTH, PEG_HEIGHT, PEG_DEPTH]}
         />
         <meshStandardMaterial
           metalness={0.1}
@@ -85,19 +78,19 @@ const StaticEnvironment = ({ includeEdgeStrips }) => {
       {/* Edge light strips */}
       {includeEdgeStrips && (
         <>
-          <RectAreaLight
-            intensity={0.8}
-            width={0.1}
-            height={50}
-            position={leftRectLightPosition}
-            lookAt={leftRectLightLookAt}
+          <EdgeStrip
+            x={stripX}
+            y={stripY}
+            z={stripZ}
+            width={STRIP_WIDTH}
+            depth={STRIP_DEPTH}
           />
-          <RectAreaLight
-            intensity={0.8}
-            width={0.1}
-            height={50}
-            position={rightRectLightPosition}
-            lookAt={rightRectLightLookAt}
+          <EdgeStrip
+            x={stripX * -1}
+            y={stripY}
+            z={stripZ}
+            width={STRIP_WIDTH}
+            depth={STRIP_DEPTH}
           />
         </>
       )}
@@ -105,4 +98,4 @@ const StaticEnvironment = ({ includeEdgeStrips }) => {
   );
 };
 
-export default React.memo(StaticEnvironment);
+export default StaticEnvironment;

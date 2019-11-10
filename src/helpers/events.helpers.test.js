@@ -12,7 +12,7 @@ describe('Event helpers', () => {
           trackId: 'primaryLight',
           beatNum: 12,
           type: 'on',
-          color: 'red',
+          colorType: 'red',
         },
       ];
 
@@ -35,7 +35,7 @@ describe('Event helpers', () => {
           trackId: 'laserLeft',
           beatNum: 1,
           type: 'flash',
-          color: 'red',
+          colorType: 'red',
         },
         {
           id: 'def',
@@ -48,7 +48,7 @@ describe('Event helpers', () => {
           trackId: 'laserRight',
           beatNum: 2,
           type: 'flash',
-          color: 'blue',
+          colorType: 'blue',
         },
         {
           id: 'jkl',
@@ -139,7 +139,7 @@ describe('Event helpers', () => {
           trackId: 'primaryLight',
           beatNum: 12,
           type: 'on',
-          color: 'red',
+          colorType: 'red',
         },
       ];
 
@@ -161,7 +161,7 @@ describe('Event helpers', () => {
           trackId: 'laserLeft',
           beatNum: 1,
           type: 'flash',
-          color: 'red',
+          colorType: 'red',
         },
         {
           id: 'def',
@@ -174,7 +174,7 @@ describe('Event helpers', () => {
           trackId: 'laserRight',
           beatNum: 2,
           type: 'flash',
-          color: 'blue',
+          colorType: 'blue',
         },
         {
           id: 'jkl',

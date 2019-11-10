@@ -12,7 +12,7 @@ import { getSelectedSong } from '../../reducers/songs.reducer';
 
 import Marker from './Marker';
 
-const BarMarkers = ({ duration, beatDepth, cursorPositionInBeats, bpm }) => {
+const BarMarkers = ({ duration, bpm, cursorPositionInBeats, beatDepth }) => {
   const numToRender = SURFACE_DEPTH / beatDepth;
   const totalNumOfBeats = Math.ceil(convertMillisecondsToBeats(duration, bpm));
 
@@ -56,7 +56,6 @@ const mapStateToProps = state => {
     bpm: song ? song.bpm : null,
     cursorPositionInBeats: getCursorPositionInBeats(state),
     beatDepth: getBeatDepth(state),
-    isPlaying: state.navigation.isPlaying,
   };
 };
 

@@ -1,14 +1,10 @@
 import React from 'react';
-import styled from 'styled-components';
 import { connect } from 'react-redux';
 
 import * as actions from '../../actions';
-import { UNIT } from '../../constants';
 import { getSeenPrompts } from '../../reducers/user.reducer';
 
-import Heading from '../Heading';
 import UnobtrusivePrompt from '../UnobtrusivePrompt';
-import Spacer from '../Spacer';
 import Paragraph from '../Paragraph';
 import Link from '../Link';
 import List from '../List';
@@ -76,23 +72,6 @@ const EditorPrompts = ({ prompt, dismissPrompt }) => {
     </UnobtrusivePrompt>
   );
 };
-
-const ModalContents = styled.div`
-  padding: ${UNIT * 4}px;
-
-  p {
-    margin-bottom: ${UNIT * 3}px;
-    font-size: 18px;
-  }
-
-  p:last-of-type {
-    margin-bottom: 0;
-  }
-
-  strong {
-    font-weight: bold;
-  }
-`;
 
 const mapStateToProps = state => {
   const seenPrompts = getSeenPrompts(state);

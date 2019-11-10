@@ -1,6 +1,5 @@
 import webAudioBuilder from 'waveform-data/webaudio';
 
-import { adjustCursorPosition } from '../actions';
 import { convertFileToArrayBuffer } from '../helpers/file.helpers';
 import {
   convertBeatsToMilliseconds,

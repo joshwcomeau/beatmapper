@@ -2,6 +2,7 @@
  * This middleware manages playback concerns.
  */
 import { ActionCreators as ReduxUndoActionCreators } from 'redux-undo';
+import get from 'lodash.get';
 
 import {
   finishLoadingSong,
@@ -17,13 +18,14 @@ import {
   convertBeatsToMilliseconds,
   convertMillisecondsToBeats,
 } from '../helpers/audio.helpers';
+import { convertNotesFromMappingExtensions } from '../helpers/notes.helpers';
 import { convertObstaclesToRedux } from '../helpers/obstacles.helpers';
 import {
   convertEventsToRedux,
   convertEventsToExportableJson,
 } from '../helpers/events.helpers';
 import { convertBookmarksToRedux } from '../helpers/bookmarks.helpers';
-import { clamp, floorToNearest } from '../utils';
+import { clamp } from '../utils';
 import {
   getFile,
   saveFile,
@@ -36,10 +38,7 @@ import {
 } from '../services/file.service';
 import Sfx from '../services/sfx.service';
 import { getSongById, getSelectedSong } from '../reducers/songs.reducer';
-import {
-  getBeatsPerZoomLevel,
-  getIsLockedToCurrentWindow,
-} from '../reducers/editor.reducer';
+import { getBeatsPerZoomLevel } from '../reducers/editor.reducer';
 import { getAllEventsAsArray } from '../reducers/editor-entities.reducer/events-view.reducer';
 import {
   getVolume,
@@ -98,12 +97,20 @@ export default function createSongMiddleware() {
         // we may not have any beatmap entities, if this is a new song
         // or new difficulty.
         if (beatmapJson) {
+          let notes = beatmapJson._notes;
+
+          // If this song uses mapping extensions, the note values will be in
+          // the thousands. We need to pull them down to the normal range.
+          if (get(song, 'modSettings.mappingExtensions.isEnabled')) {
+            notes = convertNotesFromMappingExtensions(notes);
+          }
+
           // If we do, we need to manage a little dance related to offsets.
           // See offsets.md for more context, but essentially we need to
           // transform our timing to match the beat, by undoing a
           // transformation previously applied.
           let unshiftedNotes = unshiftEntitiesByOffset(
-            beatmapJson._notes || [],
+            notes || [],
             song.offset,
             song.bpm
           );

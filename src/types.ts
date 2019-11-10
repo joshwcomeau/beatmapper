@@ -21,7 +21,7 @@ export type Action = {
 
 // NOTE: This type is unused. Planning to migrate to it, but for now I'm using
 // the raw "note" type, with all the underscore-prefixed fields used in-game.
-export type Block = {
+export type BlockNext = {
   id: string;
   struckWith: 'left' | 'right';
   direction: Direction;
@@ -31,25 +31,33 @@ export type Block = {
   selected?: boolean;
 };
 
-export type Obstacle = {
+export interface OriginalObstacle {
   id: string;
   // Lane: which of the 4 columns does this box START on?
   lane: 0 | 1 | 2 | 3;
   // Type: Whether this is a vertical wall or a horizontal overhead ceiling
-  type: 'wall' | 'ceiling';
+  type: 'wall' | 'ceiling' | 'extension';
   // beatStart: the number of beats that the song starts at
   beatStart: number;
   // beatDuration: the number of beats it should exist for
   beatDuration: number;
   // colspan: the number of columns this lane occupies
-  // NOTE: Users can only create 1- or 2-column widths, but technically the
-  // program supports reading 3 and 4, for imported song files.
-  colspan: 1 | 2 | 3 | 4;
+  colspan: number;
   // When initially placing an obstacle, it will exist in a limbo state, only
   // becoming real once the user releases the mouse
   tentative?: boolean;
   selected?: boolean;
-};
+  // Should the wall fly by as a decorative entity?
+  fast?: boolean;
+}
+
+export interface MappingExtensionObstacle extends OriginalObstacle {
+  type: 'extension';
+  rowIndex: number;
+  rowspan: number;
+}
+
+export type Obstacle = OriginalObstacle | MappingExtensionObstacle;
 
 export type LightingTrackId =
   | 'laserLeft'

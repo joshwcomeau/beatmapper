@@ -84,4 +84,104 @@ describe('Obstacles helpers', () => {
 
     expect(actualResult).toEqual(expectedResult);
   });
+
+  describe('mapping extensions', () => {
+    it('converts an obstacle that includes a custom row index and span', () => {
+      // This test obstacle takes up the top 2 rows in a 4×3 grid
+      //
+      // [X _ _ _]
+      // [X _ _ _]
+      // [_ _ _ _]
+      const obstacle = {
+        id: 'a',
+        type: 'extension',
+        beatStart: 2,
+        beatDuration: 4,
+        lane: 0,
+        colspan: 1,
+        rowIndex: 1,
+        rowspan: 2,
+      };
+
+      const actualResult = convertObstaclesToExportableJson([obstacle]);
+      const expectedResult = [
+        {
+          _time: 2,
+          _lineIndex: 1000,
+          _type: 404251,
+          _duration: 4,
+          _width: 2000,
+        },
+      ];
+
+      expect(actualResult).toEqual(expectedResult);
+    });
+  });
+
+  it('converts an obstacle in a wider 8x3 grid', () => {
+    // X X [_ _ _ _] _ _
+    // X X [_ _ _ _] _ _
+    // X X [_ _ _ _] _ _
+    const gridCols = 8;
+    const obstacle = {
+      id: 'a',
+      type: 'extension',
+      beatStart: 2,
+      beatDuration: 4,
+      lane: -2,
+      colspan: 2,
+      rowIndex: 0,
+      rowspan: 3,
+    };
+
+    const actualResult = convertObstaclesToExportableJson([obstacle], gridCols);
+    const expectedResult = [
+      {
+        _time: 2,
+        _lineIndex: -3000,
+        _type: 604101,
+        _duration: 4,
+        _width: 3000,
+      },
+    ];
+
+    expect(actualResult).toEqual(expectedResult);
+  });
+
+  it('Converts JSON to redux', () => {
+    const proprietaryData = [
+      {
+        _time: 2,
+        _lineIndex: -3000,
+        _type: 604101,
+        _duration: 4,
+        _width: 4000,
+      },
+    ];
+
+    const actualResult = convertObstaclesToRedux(proprietaryData);
+
+    // The method adds random IDs to every entity.
+    // We can't compare them directly since we don't know the IDs.
+    const actualWithoutIds = actualResult.map(r => {
+      const copy = { ...r };
+      delete copy.id;
+
+      return copy;
+    });
+
+    const expectedResult = [
+      {
+        type: 'extension',
+        beatStart: 2,
+        beatDuration: 4,
+        lane: -2,
+        colspan: 3,
+        rowIndex: 0,
+        rowspan: 3,
+      },
+    ];
+
+    expect(actualWithoutIds).toEqual(expectedResult);
+  });
 });

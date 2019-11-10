@@ -1,6 +1,7 @@
-import { roundToNearest, isEmpty } from '../utils';
+import { roundAwayFloatingPointNonsense, isEmpty } from '../utils';
 import { convertMillisecondsToBeats } from '../helpers/audio.helpers';
 import { formatColorFromImport } from '../helpers/colors.helpers';
+import { DEFAULT_GRID } from '../helpers/grid.helpers';
 
 export const getFileFromArchive = (archive, filename) => {
   // Ideally, our .zip archive will just have all the files we need.
@@ -34,27 +35,35 @@ export const getArchiveVersion = archive => {
   return getFileFromArchive(archive, 'info.dat') ? 2 : 1;
 };
 
+const shiftEntitiesByOffsetInBeats = (entities, offsetInBeats) => {
+  return entities.map(entity => {
+    let time = roundAwayFloatingPointNonsense(entity._time + offsetInBeats);
+
+    // For some reason, with offsets we can end up with a time of -0, which
+    // doesn't really make sense.
+    if (time === -0) {
+      time = 0;
+    }
+    return {
+      ...entity,
+      _time: time,
+    };
+  });
+};
+
 export const shiftEntitiesByOffset = (entities, offset, bpm) => {
   const offsetInBeats = convertMillisecondsToBeats(offset, bpm);
 
-  return entities.map(entity => ({
-    ...entity,
-    _time: entity._time + offsetInBeats,
-  }));
+  return shiftEntitiesByOffsetInBeats(entities, offsetInBeats);
 };
 
 export const unshiftEntitiesByOffset = (entities, offset, bpm) => {
-  const offsetInBeats = convertMillisecondsToBeats(offset, bpm);
+  let offsetInBeats = convertMillisecondsToBeats(offset, bpm);
 
-  return entities.map(entity => ({
-    ...entity,
-    // So because we're doing floating-point stuff, we want to avoid any
-    // subtle drift caused by the conversion imprecision.
-    // Numbers like 31.999999999999996.
-    // At the same time, I want to allow legit repeating values like 1.3333,
-    // Since thirds of time is valid! This rounding value seems to be the sweet spot.
-    _time: roundToNearest(entity._time - offsetInBeats, 1 / 100000000),
-  }));
+  // Because we're UNshifting, we need to invert the offset
+  offsetInBeats *= -1;
+
+  return shiftEntitiesByOffsetInBeats(entities, offsetInBeats);
 };
 
 export const getModSettingsForBeatmap = beatmapSet => {
@@ -63,6 +72,17 @@ export const getModSettingsForBeatmap = beatmapSet => {
   beatmapSet._difficultyBeatmaps.forEach(beatmap => {
     if (!beatmap._customData) {
       return;
+    }
+
+    if (
+      Array.isArray(beatmap._customData._requirements) &&
+      beatmap._customData._requirements.includes('Mapping Extensions')
+    ) {
+      modSettings.mappingExtensions = {
+        isEnabled: true,
+        // TODO: Should I save and restore the grid settings?
+        ...DEFAULT_GRID,
+      };
     }
 
     // Multiple beatmap difficulties might set custom colors, but Beatmapper
@@ -91,7 +111,10 @@ export const getModSettingsForBeatmap = beatmapSet => {
       // since this is how the app knows whether custom colors are enabled
       // or not.
       if (!isEmpty(customColors)) {
-        modSettings.customColors = customColors;
+        modSettings.customColors = {
+          isEnabled: true,
+          ...customColors,
+        };
       }
     }
   });

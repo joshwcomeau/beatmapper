@@ -1,32 +1,44 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import * as THREE from 'three';
 
 import * as actions from '../../actions';
-import { range, roundToNearest } from '../../utils';
+import { BLOCK_PLACEMENT_SQUARE_SIZE } from '../../constants';
+import { range } from '../../utils';
+import { convertGridColumn, convertGridRow } from '../../helpers/grid.helpers';
+import { getColorForItem } from '../../helpers/colors.helpers';
 import {
   getCursorPositionInBeats,
   getSnapTo,
 } from '../../reducers/navigation.reducer';
+import {
+  getGridSize,
+  getMappingMode,
+  getSelectedSong,
+} from '../../reducers/songs.reducer';
 
 import { getDirectionForDrag } from './PlacementGrid.helpers';
-
 import TentativeObstacle from './TentativeObstacle';
+import GridCell from './GridCell';
 
 const PlacementGrid = ({
   width,
-  position,
+  gridPosition,
+  song,
   cursorPositionInBeats,
   snapTo,
-  selectedDirection,
   selectedTool,
   selectionMode,
+  mappingMode,
+  numRows,
+  numCols,
+  colWidth,
+  rowHeight,
   clickPlacementGrid,
   setBlockByDragging,
   createNewObstacle,
 }) => {
-  const NUM_ROWS = 3;
-  const NUM_COLS = 4;
+  const renderColWidth = colWidth * BLOCK_PLACEMENT_SQUARE_SIZE;
+  const renderRowHeight = rowHeight * BLOCK_PLACEMENT_SQUARE_SIZE;
 
   const [mouseDownAt, setMouseDownAt] = React.useState(null);
   const [mouseOverAt, setMouseOverAt] = React.useState(null);
@@ -68,10 +80,17 @@ const PlacementGrid = ({
           return;
         }
 
+        const effectiveColIndex = convertGridColumn(
+          colIndex,
+          numCols,
+          colWidth
+        );
+        const effectiveRowIndex = convertGridRow(rowIndex, numRows, rowHeight);
+
         setBlockByDragging(
           direction,
-          rowIndex,
-          colIndex,
+          effectiveRowIndex,
+          effectiveColIndex,
           cursorPositionInBeats,
           selectedTool
         );
@@ -103,148 +122,38 @@ const PlacementGrid = ({
 
   return (
     <>
-      {range(NUM_ROWS).map(rowIndex =>
-        range(NUM_COLS).map(colIndex => {
-          const cellSize = width / 4;
-          const paddedCellSize = cellSize - width * 0.01;
-
-          const isHovered =
+      {range(numRows).map(rowIndex =>
+        range(numCols).map(colIndex => {
+          const isHovered = !!(
             hoveredCell &&
             hoveredCell.rowIndex === rowIndex &&
-            hoveredCell.colIndex === colIndex;
+            hoveredCell.colIndex === colIndex
+          );
 
           return (
-            <mesh
+            <GridCell
               key={`${rowIndex}-${colIndex}`}
-              position={[
-                position[0] - cellSize * 1.5 + colIndex * cellSize,
-                position[1] - cellSize * 1 + rowIndex * cellSize,
-                position[2],
-              ]}
-              onClick={ev => {
-                ev.stopPropagation();
-
-                // If we're in the process of selecting/deselecting/deleting
-                // notes, and the user happens to finish while over the
-                // placement grid, don't create new blocks.
-                if (selectionMode) {
-                  return;
-                }
-
-                // Because this is really one big canvas, `onClick`
-                // fires even if the mouse starts somewhere else and
-                // releases over a placement grid tile.
-                // This causes problems when resizing obstacles.
-                if (!mouseDownAt) {
-                  return;
-                }
-
-                // If we're adding an obstacle, we use the other handlers
-                if (selectedTool === 'obstacle') {
-                  return;
-                }
-
-                // If we clicked down on one grid and up on another, don't
-                // count it.
-                if (
-                  mouseDownAt &&
-                  (mouseDownAt.rowIndex !== rowIndex ||
-                    mouseDownAt.colIndex !== colIndex)
-                ) {
-                  return;
-                }
-
-                // If the user tries to place blocks while the song is playing,
-                // we want to snap to the nearest snapping interval.
-                // eg. if they're set to snap to 1/2 beats, and they click
-                // when the song is 3.476 beats in, we should round up to 3.5.
-                const roundedCursorPositionInBeats = roundToNearest(
-                  cursorPositionInBeats,
-                  snapTo
-                );
-
-                clickPlacementGrid(
-                  rowIndex,
-                  colIndex,
-                  roundedCursorPositionInBeats,
-                  selectedDirection,
-                  selectedTool
-                );
-              }}
-              onPointerDown={ev => {
-                // Only pay attention to left-clicks when it comes to the
-                // placement grid. Right-clicks should pass through.
-                if (ev.buttons !== 1) {
-                  return;
-                }
-
-                // If the user is placing an obstacle, the idea of a hovered
-                // cell suddenly doesn't make as much sense.
-                if (selectedTool === 'obstacle' && isHovered) {
-                  setHoveredCell(null);
-                }
-
-                ev.stopPropagation();
-
-                setMouseDownAt({
-                  rowIndex,
-                  colIndex,
-                  x: ev.pageX,
-                  y: ev.pageY,
-                });
-              }}
-              onPointerUp={ev => {
-                if (
-                  selectedTool === 'obstacle' &&
-                  ev.button === 0 &&
-                  mouseDownAt
-                ) {
-                  ev.stopPropagation();
-
-                  createNewObstacle(
-                    mouseDownAt,
-                    { rowIndex, colIndex },
-                    cursorPositionInBeats
-                  );
-                }
-              }}
-              onPointerOver={ev => {
-                setMouseOverAt({ rowIndex, colIndex });
-
-                // Don't update 'hoveredCell' if I'm clicking and dragging
-                // a block
-                if (!mouseDownAt) {
-                  setHoveredCell({ rowIndex, colIndex });
-                }
-              }}
-              onPointerOut={ev => {
-                // If the user is in the middle of placing a block, ignore
-                // this event
-                if (mouseDownAt) {
-                  return;
-                }
-
-                // A strange quirk/bug can mean that the `pointerOut` event
-                // fires AFTER the user has already entered a new cell.
-                // Only unset the hovered cell if they haven't already
-                // moved onto a new cell.
-                if (isHovered) {
-                  setHoveredCell(null);
-                }
-              }}
-            >
-              <planeGeometry
-                attach="geometry"
-                args={[paddedCellSize, paddedCellSize, 1, 1]}
-              />
-              <meshBasicMaterial
-                attach="material"
-                color={0xffffff}
-                transparent={true}
-                opacity={isHovered ? 0.2 : 0.1}
-                side={THREE.DoubleSide}
-              />
-            </mesh>
+              rowIndex={rowIndex}
+              colIndex={colIndex}
+              numRows={numRows}
+              numCols={numCols}
+              rowHeight={rowHeight}
+              colWidth={colWidth}
+              renderRowHeight={renderRowHeight}
+              renderColWidth={renderColWidth}
+              isHovered={isHovered}
+              gridPosition={gridPosition}
+              selectedTool={selectedTool}
+              mouseDownAt={mouseDownAt}
+              setMouseDownAt={setMouseDownAt}
+              setMouseOverAt={setMouseOverAt}
+              mappingMode={mappingMode}
+              selectionMode={selectionMode}
+              snapTo={snapTo}
+              setHoveredCell={setHoveredCell}
+              clickPlacementGrid={clickPlacementGrid}
+              createNewObstacle={createNewObstacle}
+            />
           );
         })
       )}
@@ -253,20 +162,31 @@ const PlacementGrid = ({
         <TentativeObstacle
           mouseDownAt={mouseDownAt}
           mouseOverAt={mouseOverAt}
-          cursorPositionInBeats={cursorPositionInBeats}
+          color={getColorForItem('obstacle', song)}
+          mode={mappingMode}
         />
       )}
     </>
   );
 };
 
-const mapStateToProps = state => ({
-  cursorPositionInBeats: getCursorPositionInBeats(state),
-  snapTo: getSnapTo(state),
-  selectedDirection: state.editor.notes.selectedDirection,
-  selectedTool: state.editor.notes.selectedTool,
-  selectionMode: state.editor.notes.selectionMode,
-});
+const mapStateToProps = state => {
+  const song = getSelectedSong(state);
+  const gridSize = getGridSize(state);
+
+  return {
+    song,
+    cursorPositionInBeats: getCursorPositionInBeats(state),
+    snapTo: getSnapTo(state),
+    selectedTool: state.editor.notes.selectedTool,
+    selectionMode: state.editor.notes.selectionMode,
+    mappingMode: getMappingMode(state),
+    numRows: gridSize.numRows,
+    numCols: gridSize.numCols,
+    colWidth: gridSize.colWidth,
+    rowHeight: gridSize.rowHeight,
+  };
+};
 
 export default connect(
   mapStateToProps,

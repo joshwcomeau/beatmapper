@@ -1,48 +1,52 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import ObstacleBox from '../ObstacleBox';
-import { getBeatDepth } from '../../reducers/navigation.reducer';
 
-const TentativeObstacle = props => {
-  const { mouseDownAt } = props;
-  let { mouseOverAt } = props;
-  if (typeof mouseOverAt === 'undefined') {
+import { getBeatDepth } from '../../reducers/navigation.reducer';
+import { createObstacleFromMouseEvent } from '../../helpers/obstacles.helpers';
+import { getGridSize } from '../../reducers/songs.reducer';
+
+import ObstacleBox from '../ObstacleBox';
+
+const TentativeObstacle = ({
+  mouseDownAt,
+  mode,
+  color,
+  beatDepth,
+  gridRows,
+  gridCols,
+  gridColWidth,
+  gridRowHeight,
+  ...rest
+}) => {
+  // If no mouseOverAt is provided, it ought to be the same as the mouseDownAt.
+  // They've clicked but haven't moved yet, ergo only one row/col is at play.
+  let { mouseOverAt } = rest;
+  if (!mouseOverAt) {
     mouseOverAt = mouseDownAt;
   }
 
-  const lane = Math.min(mouseDownAt.colIndex, mouseOverAt.colIndex);
+  const tentativeObstacle = createObstacleFromMouseEvent(
+    mode,
+    gridCols,
+    gridRows,
+    gridColWidth,
+    gridRowHeight,
+    mouseDownAt,
+    mouseOverAt
+  );
 
-  const colspan = Math.abs(mouseDownAt.colIndex - mouseOverAt.colIndex) + 1;
-
-  const tentativeObstacle = {
-    id: 'tentative',
-    lane,
-    type: mouseOverAt.rowIndex === 2 ? 'ceiling' : 'wall',
-    beatStart: 0,
-    beatDuration: 4,
-    colspan,
-    tentative: true,
-  };
-
-  // // Clamp our wall colspan to a max of 2
-  if (tentativeObstacle.type === 'wall' && tentativeObstacle.colspan > 2) {
-    const overBy = tentativeObstacle.colspan - 2;
-    tentativeObstacle.colspan = 2;
-
-    const colspanDelta = mouseOverAt.colIndex - mouseDownAt.colIndex;
-
-    if (colspanDelta > 0) {
-      tentativeObstacle.lane += overBy;
-    } else {
-      tentativeObstacle.lane = mouseOverAt.colIndex;
-    }
-  }
+  tentativeObstacle.id = 'tentative';
+  tentativeObstacle.tentative = true;
+  tentativeObstacle.beatStart = 0;
 
   return (
     <ObstacleBox
       obstacle={tentativeObstacle}
-      beatDepth={props.beatDepth}
+      beatDepth={beatDepth}
+      color={color}
       snapTo={1} // Doesn't matter
+      gridRows={gridRows}
+      gridCols={gridCols}
       handleDelete={() => {}}
       handleResize={() => {}}
       handleClick={() => {}}
@@ -51,8 +55,14 @@ const TentativeObstacle = props => {
 };
 
 const mapStateToProps = state => {
+  const gridSize = getGridSize(state);
+
   return {
     beatDepth: getBeatDepth(state),
+    gridRows: gridSize.numRows,
+    gridCols: gridSize.numCols,
+    gridColWidth: gridSize.colWidth,
+    gridRowHeight: gridSize.rowHeight,
   };
 };
 

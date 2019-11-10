@@ -41,9 +41,11 @@ const SelectionInfo = ({
   cutSelection,
   copySelection,
   pasteSelection,
+  toggleFastWalls,
 }) => {
-  const shouldShowObstacleTweaks =
+  const shouldShowObstacleDurationTweaks =
     numOfSelectedObstacles === 1 && numOfSelectedNotes === 0;
+  const shouldShowFastWallToggle = numOfSelectedObstacles > 0;
 
   let numbers = [];
   if (numOfSelectedNotes) {
@@ -76,7 +78,7 @@ const SelectionInfo = ({
 
       <Spacer size={UNIT * 4} />
 
-      {shouldShowObstacleTweaks && (
+      {shouldShowObstacleDurationTweaks && (
         <>
           <Heading size={3}>Selected Wall</Heading>
           <Spacer size={UNIT * 1.5} />
@@ -177,6 +179,12 @@ const SelectionInfo = ({
           Deselect
         </MiniButton>
       </Tooltip>
+
+      <Spacer size={UNIT} />
+
+      {shouldShowFastWallToggle && (
+        <MiniButton onClick={toggleFastWalls}>Toggle Fast Walls</MiniButton>
+      )}
     </Wrapper>
   );
 };
@@ -208,6 +216,7 @@ const mapDispatchToProps = {
   cutSelection: actions.cutSelection,
   copySelection: actions.copySelection,
   pasteSelection: actions.pasteSelection,
+  toggleFastWalls: actions.toggleFastWalls,
 };
 
 export default connect(

@@ -20,6 +20,8 @@ import TrackMover from '../TrackMover';
 
 import Lighting from './Lighting';
 
+const GRID_POSITION = [0, 0, -SONG_OFFSET];
+
 const MapVisualization = ({ songId }) => {
   const controls = React.useRef(null);
 
@@ -35,7 +37,7 @@ const MapVisualization = ({ songId }) => {
 
   return (
     <>
-      <StaticEnvironment includeEdgeStrips />
+      <StaticEnvironment includeEdgeStrips trackGridRows={true} />
 
       {/* Fog */}
       <fogExp2 attach="fog" args={[0x000000, 0.02]} />
@@ -51,7 +53,7 @@ const MapVisualization = ({ songId }) => {
       <PlacementGrid
         width={BLOCK_COLUMN_WIDTH * 4}
         height={BLOCK_COLUMN_WIDTH * 3}
-        position={[0, 0, -SONG_OFFSET]}
+        gridPosition={GRID_POSITION}
       />
     </>
   );

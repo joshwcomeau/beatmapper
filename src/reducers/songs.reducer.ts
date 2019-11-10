@@ -1,8 +1,15 @@
 import produce from 'immer';
 import { createSelector } from 'reselect';
+import get from 'lodash.get';
 
 import { sortDifficultyIds } from '../helpers/song.helpers';
 import { DEFAULT_RED, DEFAULT_BLUE } from '../helpers/colors.helpers';
+import {
+  DEFAULT_GRID,
+  DEFAULT_COL_WIDTH,
+  DEFAULT_ROW_HEIGHT,
+} from '../helpers/grid.helpers';
+import { isEmpty } from '../utils';
 
 interface Difficulty {
   id: string;
@@ -12,13 +19,15 @@ interface Difficulty {
 }
 
 interface ModSettings {
-  mappingExtensions?: {
+  mappingExtensions: {
+    isEnabled: boolean;
     numRows: number;
     numCols: number;
-    cellWidth: number;
-    cellHeight: number;
+    colWidth: number;
+    rowHeight: number;
   };
-  customColors?: {
+  customColors: {
+    isEnabled: boolean;
     colorLeft: string;
     colorRight: string;
     envColorLeft: string;
@@ -77,11 +86,16 @@ const DEFAULT_NOTE_JUMP_SPEEDS = {
 
 const DEFAULT_MOD_SETTINGS = {
   customColors: {
+    isEnabled: false,
     colorLeft: DEFAULT_RED,
     colorRight: DEFAULT_BLUE,
     envColorLeft: DEFAULT_RED,
     envColorRight: DEFAULT_BLUE,
     obstacleColor: DEFAULT_RED,
+  },
+  mappingExtensions: {
+    isEnabled: false,
+    ...DEFAULT_GRID,
   },
 };
 
@@ -171,7 +185,7 @@ export default function songsReducer(state: State = initialState, action: any) {
               customLabel: '',
             },
           },
-          modSettings: {},
+          modSettings: DEFAULT_MOD_SETTINGS,
         };
       });
     }
@@ -330,18 +344,29 @@ export default function songsReducer(state: State = initialState, action: any) {
       const { mod } = action;
 
       return produce(state, (draftState: any) => {
+        // Should-be-impossible edge-case where no selected song exists
         if (!state.selectedId || !draftState.byId[state.selectedId]) {
           return state;
         }
+
         const song = draftState.byId[state.selectedId];
-        const isModEnabled = !!song.modSettings[mod];
-        if (isModEnabled) {
-          song.modSettings[mod] = null;
-        } else {
-          // @ts-ignore
-          const defaultSettings = DEFAULT_MOD_SETTINGS[mod];
-          song.modSettings[mod] = defaultSettings;
+
+        // For a brief moment, modSettings was being set to an empty object,
+        // before the children were required. Update that now, if so.
+        if (!song.modSettings || isEmpty(song.modSettings)) {
+          song.modSettings = DEFAULT_MOD_SETTINGS;
         }
+
+        // Also for a brief moment, modSettings didn't always have properties
+        // for each mod
+        if (!song.modSettings[mod]) {
+          // @ts-ignore
+          song.modSettings[mod] = DEFAULT_MOD_SETTINGS[mod];
+        }
+
+        const isModEnabled = get(song, `modSettings.${mod}.isEnabled`);
+
+        song.modSettings[mod].isEnabled = !isModEnabled;
       });
     }
 
@@ -361,6 +386,29 @@ export default function songsReducer(state: State = initialState, action: any) {
 
         // @ts-ignore
         song.modSettings.customColors[element] = color;
+      });
+    }
+
+    case 'UPDATE_GRID': {
+      const { numRows, numCols, colWidth, rowHeight } = action;
+
+      return produce(state, (draftState: State) => {
+        // Should-be-impossible edge-case where no selected song exists
+        if (!state.selectedId || !draftState.byId[state.selectedId]) {
+          return state;
+        }
+
+        const song = draftState.byId[state.selectedId];
+
+        if (!song.modSettings || !song.modSettings.mappingExtensions) {
+          song.modSettings.mappingExtensions =
+            DEFAULT_MOD_SETTINGS.mappingExtensions;
+        }
+
+        song.modSettings.mappingExtensions.numRows = numRows;
+        song.modSettings.mappingExtensions.numCols = numCols;
+        song.modSettings.mappingExtensions.colWidth = colWidth;
+        song.modSettings.mappingExtensions.rowHeight = rowHeight;
       });
     }
 
@@ -416,3 +464,48 @@ export const getSelectedSongDifficultyIds = createSelector(
 export const getDemoSong = (state: any) => {
   return getAllSongs(state).find(song => song.demo);
 };
+
+export const getGridSize = (state: any) => {
+  const song = getSelectedSong(state);
+
+  const mappingExtensions = get(song, 'modSettings.mappingExtensions');
+
+  // In legacy states, `mappingExtensions` was a boolean, and it was possible
+  // to not have the key at all.
+  // Also, if the user has set a custom grid but then disabled the extension,
+  // we should
+  const isLegacy = typeof mappingExtensions === 'boolean' || !mappingExtensions;
+  const isDisabled = get(mappingExtensions, 'isEnabled') === false;
+  if (isLegacy || isDisabled) {
+    return DEFAULT_GRID;
+  }
+
+  return {
+    numRows: mappingExtensions.numRows,
+    numCols: mappingExtensions.numCols,
+    colWidth: mappingExtensions.colWidth || DEFAULT_COL_WIDTH,
+    rowHeight: mappingExtensions.rowHeight || DEFAULT_ROW_HEIGHT,
+  };
+};
+
+type EnabledMods = {
+  mappingExtensions: boolean;
+  customColors: boolean;
+};
+
+export const getEnabledMods = createSelector(
+  getSelectedSong,
+  (song): EnabledMods => {
+    return {
+      mappingExtensions: !!get(song, 'modSettings.mappingExtensions.isEnabled'),
+      customColors: !!get(song, 'modSettings.customColors.isEnabled'),
+    };
+  }
+);
+
+export const getMappingMode = createSelector(
+  getEnabledMods,
+  enabledMods => {
+    return enabledMods.mappingExtensions ? 'mapping-extensions' : 'original';
+  }
+);

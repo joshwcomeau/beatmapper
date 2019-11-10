@@ -24,6 +24,9 @@ const ACTION_WIDTH = 110;
 const HALF_ACTION_WIDTH = ACTION_WIDTH / 2 - UNIT / 2;
 
 const Actions = ({
+  song,
+  handleGridConfigClick,
+
   canUndo,
   canRedo,
   hasCopiedNotes,
@@ -33,6 +36,12 @@ const Actions = ({
   redoNotes,
   pasteSelection,
 }) => {
+  const mappingExtensionsEnabled =
+    song &&
+    song.modSettings &&
+    song.modSettings.mappingExtensions &&
+    song.modSettings.mappingExtensions.isEnabled;
+
   return (
     <Wrapper>
       <Heading size={3}>Actions</Heading>
@@ -99,6 +108,18 @@ const Actions = ({
           Jump to Beat
         </MiniButton>
       </Tooltip>
+
+      {mappingExtensionsEnabled && (
+        <>
+          <Spacer size={UNIT} />
+
+          <Tooltip delay={[500, 0]} title="Change the number of columns/rows">
+            <MiniButton onClick={handleGridConfigClick}>
+              Customize Grid
+            </MiniButton>
+          </Tooltip>
+        </>
+      )}
     </Wrapper>
   );
 };

@@ -57,8 +57,8 @@ const KeyboardShortcuts = ({
     // increments instead of the song.
     if (holdingMeta) {
       return direction === 'forwards'
-        ? incrementSnapping()
-        : decrementSnapping();
+        ? decrementSnapping()
+        : incrementSnapping();
     }
 
     if (holdingAlt) {
@@ -182,6 +182,9 @@ const KeyboardShortcuts = ({
       }
 
       case 'KeyR': {
+        if (ev.shiftKey) {
+          return;
+        }
         return selectColor(view, 'red');
       }
       case 'KeyB': {

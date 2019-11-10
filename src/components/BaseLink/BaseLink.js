@@ -4,8 +4,8 @@ import { Link as RRLink } from 'react-router-dom';
 export const shouldUseAnchor = to =>
   !!(to.match(/^https?:\/\//i) || to.match(/^mailto:/) || to.match(/^#/));
 
-const BaseLink = ({ to = '', children, ...delegated }) => {
-  if (shouldUseAnchor(to)) {
+const BaseLink = ({ to = '', children, forceAnchor, ...delegated }) => {
+  if (shouldUseAnchor(to) || forceAnchor) {
     return (
       <a href={to} target="_blank" rel="noopener noreferrer" {...delegated}>
         {children}

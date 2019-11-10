@@ -14,30 +14,49 @@ import SelectionInfo from '../SelectionInfo';
 import Spacer from '../Spacer';
 
 import Actions from './Actions';
+import GridConfig from './GridConfig';
+import { getSelectedSong } from '../../reducers/songs.reducer';
 
 // HACK: This should be a constant somewhere, used to set bottom panel
 // height!
 const bottomPanelHeight = 180;
 
 const EditorRightPanel = ({
+  song,
   numOfSelectedNotes,
   numOfSelectedObstacles,
   isAnythingSelected,
 }) => {
-  const panelContents = isAnythingSelected ? (
-    <SelectionInfo
-      numOfSelectedNotes={numOfSelectedNotes}
-      numOfSelectedObstacles={numOfSelectedObstacles}
-    />
-  ) : (
-    <>
-      <NoteGrid />
-      <Spacer size={UNIT * 4} />
-      <ItemGrid />
-      <Spacer size={UNIT * 4} />
-      <Actions />
-    </>
-  );
+  // This panel adapts based on the current situation.
+  let panelContents;
+
+  const [showGridConfig, setShowGridConfig] = React.useState(false);
+
+  if (showGridConfig) {
+    panelContents = (
+      <GridConfig finishTweakingGrid={() => setShowGridConfig(false)} />
+    );
+  } else if (isAnythingSelected) {
+    panelContents = (
+      <SelectionInfo
+        numOfSelectedNotes={numOfSelectedNotes}
+        numOfSelectedObstacles={numOfSelectedObstacles}
+      />
+    );
+  } else {
+    panelContents = (
+      <>
+        <NoteGrid />
+        <Spacer size={UNIT * 4} />
+        <ItemGrid />
+        <Spacer size={UNIT * 4} />
+        <Actions
+          song={song}
+          handleGridConfigClick={() => setShowGridConfig(true)}
+        />
+      </>
+    );
+  }
 
   return (
     <OuterWrapper>
@@ -60,7 +79,7 @@ const OuterWrapper = styled.div`
 
 const Wrapper = styled.div`
   color: #fff;
-  padding: ${UNIT * 4}px;
+  padding: ${UNIT * 4}px ${UNIT * 3}px;
   background: rgba(0, 0, 0, 0.45);
   border-radius: ${UNIT}px 0 0 ${UNIT}px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -79,6 +98,7 @@ const mapStateToProps = state => {
     selectedNotes.length > 0 || selectedObstacles.length > 0;
 
   return {
+    song: getSelectedSong(state),
     numOfSelectedNotes: selectedNotes.length,
     numOfSelectedObstacles: selectedObstacles.length,
     isAnythingSelected,

@@ -7,36 +7,56 @@ export const DEFAULT_RED = '#f21212';
 export const DEFAULT_BLUE = '#006cff';
 
 export const getColorForItem = (item, song) => {
+  const customColorsEnabled = get(song, 'modSettings.customColors.isEnabled');
+
   switch (item) {
     // In our notes view, the tool will be labeled "left-block", while the
     // underlying data structure treats colors as a number: 0, 1, 3.
     case 'left-block':
     case 0: {
-      return get(song, 'modSettings.customColors.colorLeft') || DEFAULT_RED;
+      const defaultColor = DEFAULT_RED;
+      const customColor =
+        get(song, 'modSettings.customColors.colorLeft') || defaultColor;
+
+      return customColorsEnabled ? customColor : defaultColor;
     }
     case 'right-block':
     case 1: {
-      return get(song, 'modSettings.customColors.colorRight') || DEFAULT_BLUE;
+      const defaultColor = DEFAULT_BLUE;
+      const customColor =
+        get(song, 'modSettings.customColors.colorRight') || defaultColor;
+
+      return customColorsEnabled ? customColor : defaultColor;
     }
     case 'mine':
     case 3: {
       return '#687485';
     }
     case 'obstacle': {
-      return get(song, 'modSettings.customColors.obstacleColor') || DEFAULT_RED;
+      const defaultColor = DEFAULT_RED;
+      const customColor =
+        get(song, 'modSettings.customColors.obstacleColor') || defaultColor;
+
+      return customColorsEnabled ? customColor : defaultColor;
     }
 
     // In the events view, our formal name is `envColorLeft`, but the events
     // themselves still use the original colors 'red' / 'blue'.
     case 'envColorLeft':
     case 'red': {
-      return get(song, 'modSettings.customColors.envColorLeft') || DEFAULT_RED;
+      const defaultColor = DEFAULT_RED;
+      const customColor =
+        get(song, 'modSettings.customColors.envColorLeft') || defaultColor;
+
+      return customColorsEnabled ? customColor : defaultColor;
     }
     case 'envColorRight':
     case 'blue': {
-      return (
-        get(song, 'modSettings.customColors.envColorRight') || DEFAULT_BLUE
-      );
+      const defaultColor = DEFAULT_BLUE;
+      const customColor =
+        get(song, 'modSettings.customColors.envColorRight') || defaultColor;
+
+      return customColorsEnabled ? customColor : defaultColor;
     }
 
     // Event view has two other event types: rotate and off. They have unique

@@ -1,6 +1,7 @@
 import uuid from 'uuid/v1';
 
 import { NOTES_VIEW, EVENTS_VIEW } from './constants';
+import { roundAwayFloatingPointNonsense, roundToNearest } from './utils';
 import { getNewBookmarkColor } from './helpers/bookmarks.helpers';
 import { getSelection } from './reducers/editor-entities.reducer';
 import {
@@ -13,10 +14,13 @@ import { getCopiedData } from './reducers/clipboard.reducer';
 import {
   getCursorPositionInBeats,
   getSnapTo,
+  getIsPlaying,
 } from './reducers/navigation.reducer';
 import {
   getSelectedEventBeat,
   getStartAndEndBeat,
+  getSelectedNoteTool,
+  getSelectedCutDirection,
 } from './reducers/editor.reducer';
 import { getStickyMapAuthorName } from './reducers/user.reducer';
 import { getSortedBookmarksArray } from './reducers/bookmarks.reducer';
@@ -236,20 +240,40 @@ export const deleteBookmark = beatNum => ({
   beatNum,
 });
 
-export const clickPlacementGrid = (
-  rowIndex,
-  colIndex,
-  cursorPositionInBeats,
-  selectedDirection,
-  selectedTool
-) => ({
-  type: 'CLICK_PLACEMENT_GRID',
-  rowIndex,
-  colIndex,
-  cursorPositionInBeats,
-  selectedDirection,
-  selectedTool,
-});
+export const clickPlacementGrid = (rowIndex, colIndex) => (
+  dispatch,
+  getState
+) => {
+  const state = getState();
+
+  const isPlaying = getIsPlaying(state);
+  const selectedDirection = getSelectedCutDirection(state);
+  const selectedTool = getSelectedNoteTool(state);
+  const snapTo = getSnapTo(state);
+  let cursorPositionInBeats = getCursorPositionInBeats(state);
+
+  // If the user tries to place blocks while the song is playing,
+  // we want to snap to the nearest snapping interval.
+  // eg. if they're set to snap to 1/2 beats, and they click
+  // when the song is 3.476 beats in, we should round up to 3.5.
+  if (isPlaying) {
+    cursorPositionInBeats = roundToNearest(cursorPositionInBeats, snapTo);
+  }
+
+  cursorPositionInBeats = roundAwayFloatingPointNonsense(
+    cursorPositionInBeats,
+    snapTo
+  );
+
+  dispatch({
+    type: 'CLICK_PLACEMENT_GRID',
+    rowIndex,
+    colIndex,
+    cursorPositionInBeats,
+    selectedDirection,
+    selectedTool,
+  });
+};
 
 export const setBlockByDragging = (
   direction,
@@ -495,47 +519,25 @@ export const updateVolume = volume => ({
   volume,
 });
 
-export const createNewObstacle = (
-  mouseDownAt,
-  mouseOverAt,
-  cursorPositionInBeats
-) => {
-  if (!mouseOverAt) {
-    mouseOverAt = mouseDownAt;
-  }
+export const createNewObstacle = obstacle => (dispatch, getState) => {
+  const state = getState();
 
-  // TODO: Dedupe with the code in `TentativeObstacle`
-  const lane = Math.min(mouseDownAt.colIndex, mouseOverAt.colIndex);
+  const snapTo = getSnapTo(state);
+  let cursorPositionInBeats = getCursorPositionInBeats(state);
 
-  const colspan = Math.abs(mouseDownAt.colIndex - mouseOverAt.colIndex) + 1;
+  cursorPositionInBeats = roundAwayFloatingPointNonsense(
+    cursorPositionInBeats,
+    snapTo
+  );
 
-  const obstacle = {
-    id: uuid(),
-    lane,
-    type: mouseOverAt.rowIndex === 2 ? 'ceiling' : 'wall',
-    beatStart: cursorPositionInBeats,
-    beatDuration: 4,
-    colspan,
-  };
-
-  // Clamp our wall colspan to a max of 2
-  if (obstacle.type === 'wall' && obstacle.colspan > 2) {
-    const overBy = obstacle.colspan - 2;
-    obstacle.colspan = 2;
-
-    const colspanDelta = mouseOverAt.colIndex - mouseDownAt.colIndex;
-
-    if (colspanDelta > 0) {
-      obstacle.lane += overBy;
-    } else {
-      obstacle.lane = mouseOverAt.colIndex;
-    }
-  }
-
-  return {
+  dispatch({
     type: 'CREATE_NEW_OBSTACLE',
-    obstacle,
-  };
+    obstacle: {
+      ...obstacle,
+      id: uuid(),
+      beatStart: cursorPositionInBeats,
+    },
+  });
 };
 
 export const deleteObstacle = id => ({
@@ -732,4 +734,16 @@ export const updateModColor = (element, color) => ({
   type: 'UPDATE_MOD_COLOR',
   element,
   color,
+});
+
+export const updateGrid = (numCols, numRows, colWidth, rowHeight) => ({
+  type: 'UPDATE_GRID',
+  numCols,
+  numRows,
+  colWidth,
+  rowHeight,
+});
+
+export const toggleFastWalls = () => ({
+  type: 'TOGGLE_FAST_WALLS',
 });

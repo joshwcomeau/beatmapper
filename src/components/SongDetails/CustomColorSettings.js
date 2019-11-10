@@ -7,32 +7,32 @@ import { UNIT } from '../../constants';
 import { getSelectedSong } from '../../reducers/songs.reducer';
 
 import CenteredSpinner from '../CenteredSpinner';
-import Checkbox from '../Checkbox';
+import LabeledCheckbox from '../LabeledCheckbox';
 import Heading from '../Heading';
 import Spacer from '../Spacer';
 
 const ColorPicker = React.lazy(() => import('../ColorPicker'));
 
 const CustomColorSettings = ({ song, toggleModForSong, updateModColor }) => {
-  // Might still be loading, or
   if (!song || !song.modSettings) {
     return null;
   }
 
   const colors = song.modSettings.customColors;
 
-  const isModEnabled = !!colors;
+  const isModEnabled = !!(
+    song.modSettings.customColors && song.modSettings.customColors.isEnabled
+  );
 
   return (
     <Wrapper>
-      <Row>
-        <Checkbox
-          id="enable-colors"
-          checked={isModEnabled}
-          onChange={() => toggleModForSong('customColors')}
-        />
-        <label htmlFor="enable-colors">Enable custom colors</label>
-      </Row>
+      <LabeledCheckbox
+        id="enable-colors"
+        checked={isModEnabled}
+        onChange={() => toggleModForSong('customColors')}
+      >
+        Enable custom colors
+      </LabeledCheckbox>
 
       {isModEnabled && (
         <React.Suspense fallback={<CenteredSpinner />}>
@@ -84,6 +84,7 @@ const CustomColorSettings = ({ song, toggleModForSong, updateModColor }) => {
               <Heading size={3}>Obstacles</Heading>
             </Cell>
           </Row>
+          <Spacer size={UNIT * 4} />
         </React.Suspense>
       )}
     </Wrapper>
