@@ -7,7 +7,7 @@ import { UNIT } from '../../constants';
 import { getSelectedSong } from '../../reducers/songs.reducer';
 
 import CenteredSpinner from '../CenteredSpinner';
-import Checkbox from '../Checkbox';
+import LabeledCheckbox from '../LabeledCheckbox';
 import Heading from '../Heading';
 import Spacer from '../Spacer';
 
@@ -26,14 +26,13 @@ const CustomColorSettings = ({ song, toggleModForSong, updateModColor }) => {
 
   return (
     <Wrapper>
-      <Row>
-        <Checkbox
-          id="enable-colors"
-          checked={isModEnabled}
-          onChange={() => toggleModForSong('customColors')}
-        />
-        <label htmlFor="enable-colors">Enable custom colors</label>
-      </Row>
+      <LabeledCheckbox
+        id="enable-colors"
+        checked={isModEnabled}
+        onChange={() => toggleModForSong('customColors')}
+      >
+        Enable custom colors
+      </LabeledCheckbox>
 
       {isModEnabled && (
         <React.Suspense fallback={<CenteredSpinner />}>

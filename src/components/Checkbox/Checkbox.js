@@ -37,6 +37,7 @@ const RealCheckbox = styled.input.attrs({
   width: 100%;
   height: 100%;
   margin: 0;
+  cursor: pointer;
 `;
 
 const FakeCheckbox = styled.div`
