@@ -1,7 +1,7 @@
 import uuid from 'uuid/v1';
 
 import { NOTES_VIEW, EVENTS_VIEW } from './constants';
-import { roundAwayFloatingPointNonsense } from './utils';
+import { roundAwayFloatingPointNonsense, roundToNearest } from './utils';
 import { getNewBookmarkColor } from './helpers/bookmarks.helpers';
 import { getSelection } from './reducers/editor-entities.reducer';
 import {
@@ -14,6 +14,7 @@ import { getCopiedData } from './reducers/clipboard.reducer';
 import {
   getCursorPositionInBeats,
   getSnapTo,
+  getIsPlaying,
 } from './reducers/navigation.reducer';
 import {
   getSelectedEventBeat,
@@ -245,6 +246,7 @@ export const clickPlacementGrid = (rowIndex, colIndex) => (
 ) => {
   const state = getState();
 
+  const isPlaying = getIsPlaying(state);
   const selectedDirection = getSelectedCutDirection(state);
   const selectedTool = getSelectedNoteTool(state);
   const snapTo = getSnapTo(state);
@@ -254,7 +256,9 @@ export const clickPlacementGrid = (rowIndex, colIndex) => (
   // we want to snap to the nearest snapping interval.
   // eg. if they're set to snap to 1/2 beats, and they click
   // when the song is 3.476 beats in, we should round up to 3.5.
-  // TODO
+  if (isPlaying) {
+    cursorPositionInBeats = roundToNearest(cursorPositionInBeats, snapTo);
+  }
 
   cursorPositionInBeats = roundAwayFloatingPointNonsense(
     cursorPositionInBeats,
