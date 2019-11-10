@@ -282,11 +282,8 @@ export const createObstacleFromMouseEvent = (
     // Same thing for columns
     obstacle.colspan = colspan * colWidth;
 
-    console.log(obstacle, rowspan, rowHeight);
-
     obstacle.lane = lane;
     obstacle.rowIndex = rowIndex;
-    obstacle.rowspan = rowspan;
   }
 
   return obstacle;

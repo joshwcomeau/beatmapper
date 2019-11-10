@@ -33,45 +33,11 @@ interface Props {
 
 const RESIZE_THRESHOLD = 30;
 
-// in Threejs, objects are always positioned relative to their center.
-// This is tricky when it comes to obstacles, which come in a range of sizes
-// and shapes; it would be much easier to orient them based on their top/left
-// position. This function works that all out.
-const adjustPositionForObstacle = (
-  type: 'wall' | 'ceiling' | 'extension',
-  humanizedPosition: [number, number, number],
-  width: number,
-  height: number,
-  depth: number
-) => {
-  // For our `x`, if our obstacle's `width` was only 1, we could shift it by
-  // 0.5 BLOCK_COLUMN_WIDTH. If our width is 2, we'd need to shift right by 1.
-  // 3, and it would be shifted by 1.5
-  const x = humanizedPosition[0] + width / 2;
-
-  let y = humanizedPosition[1];
-  if (type === 'wall' || type === 'ceiling') {
-    y = humanizedPosition[1] - height / 2;
-  } else {
-    // HACK: Not sure why the extra BLOCK_COLUMN_WIDTH half-step is required :/
-    // Without it, positions are off by half a cell.
-    y = humanizedPosition[1] + height / 2;
-  }
-
-  const z = humanizedPosition[2] - depth / 2 + 0.1;
-
-  return [x, y, z];
-};
-
 const ObstacleBox: React.FC<Props> = ({
   obstacle,
   color,
   beatDepth,
   snapTo,
-  gridRows,
-  gridCols,
-  gridRowHeight,
-  gridColWidth,
   handleDelete,
   handleResize,
   handleClick,

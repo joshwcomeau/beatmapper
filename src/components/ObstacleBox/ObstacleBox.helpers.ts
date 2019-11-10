@@ -2,6 +2,9 @@ import { BLOCK_PLACEMENT_SQUARE_SIZE, SONG_OFFSET } from '../../constants';
 
 import { Obstacle, MappingExtensionObstacle } from '../../types';
 
+// TODO: move to constants, share with PlacementGrid
+const CELL_SIZE_SCALE = 1.5;
+
 export const getPositionForObstacleNew = (
   obstacle: Obstacle,
   obstacleDimensions: { width: number; height: number; depth: number },
@@ -10,7 +13,10 @@ export const getPositionForObstacleNew = (
   let position = { x: 0, y: 0, z: 0 };
 
   // ----------- X ------------
-  const OFFSET_X = BLOCK_PLACEMENT_SQUARE_SIZE * 1.5 * -1;
+  const columnWidth = obstacleDimensions.width / obstacle.colspan;
+  const OFFSET_X = columnWidth * CELL_SIZE_SCALE * -1;
+
+  console.log({ OFFSET_X });
 
   position.x = obstacle.lane * BLOCK_PLACEMENT_SQUARE_SIZE + OFFSET_X;
   position.x += obstacleDimensions.width / 2 - BLOCK_PLACEMENT_SQUARE_SIZE / 2;
