@@ -66,7 +66,6 @@ export const convertObstaclesToRedux = (
     }
 
     let duration = o._duration;
-    console.log(o, duration);
     if (duration < 0) {
       duration = Math.abs(duration);
       obstacleData.fast = true;
