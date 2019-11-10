@@ -20,6 +20,7 @@ const GridSquare = ({
   setMouseDownAt,
   setMouseOverAt,
   mappingMode,
+  defaultObstacleDuration,
   selectionMode,
   selectedTool,
   snapTo,
@@ -131,7 +132,8 @@ const GridSquare = ({
             colWidth,
             rowHeight,
             mouseDownAt,
-            mouseOverAt
+            mouseOverAt,
+            defaultObstacleDuration
           );
 
           createNewObstacle(obstacle);

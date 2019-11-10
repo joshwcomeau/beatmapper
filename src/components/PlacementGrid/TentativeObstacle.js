@@ -6,12 +6,14 @@ import { createObstacleFromMouseEvent } from '../../helpers/obstacles.helpers';
 import { getGridSize } from '../../reducers/songs.reducer';
 
 import ObstacleBox from '../ObstacleBox';
+import { getDefaultObstacleDuration } from '../../reducers/editor.reducer';
 
 const TentativeObstacle = ({
   mouseDownAt,
   mode,
   color,
   beatDepth,
+  defaultObstacleDuration,
   gridRows,
   gridCols,
   gridColWidth,
@@ -32,7 +34,8 @@ const TentativeObstacle = ({
     gridColWidth,
     gridRowHeight,
     mouseDownAt,
-    mouseOverAt
+    mouseOverAt,
+    defaultObstacleDuration
   );
 
   tentativeObstacle.id = 'tentative';
@@ -59,6 +62,7 @@ const mapStateToProps = state => {
 
   return {
     beatDepth: getBeatDepth(state),
+    defaultObstacleDuration: getDefaultObstacleDuration(state),
     gridRows: gridSize.numRows,
     gridCols: gridSize.numCols,
     gridColWidth: gridSize.colWidth,

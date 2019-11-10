@@ -50,3 +50,19 @@ export const promptChangeObstacleDuration = (obstacle, wrappedAction) => {
 
   return wrappedAction(id, Number(newDuration));
 };
+
+export const promptChangeDefaultObstacleDuration = (
+  defaultObstacleDuration,
+  wrappedAction
+) => {
+  const newDefaultDuration = window.prompt(
+    'Enter the default duration for new obstacles, in beats',
+    defaultObstacleDuration
+  );
+
+  if (newDefaultDuration === null || newDefaultDuration === '') {
+    return;
+  }
+
+  return wrappedAction(Number(newDefaultDuration));
+};

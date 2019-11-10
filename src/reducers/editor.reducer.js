@@ -25,6 +25,7 @@ const initialState = {
     selectedTool: NOTE_TOOLS[0],
     selectedDirection: 8,
     selectionMode: null, // null | 'select' | 'deselect' | 'delete'.
+    defaultObstacleDuration: 4,
   },
   events: {
     zoomLevel: 2,
@@ -114,6 +115,13 @@ function notes(state = initialState.notes, action) {
       return {
         ...state,
         selectionMode: null,
+      };
+    }
+
+    case 'CHANGE_DEFAULT_OBSTACLE_DURATION': {
+      return {
+        ...state,
+        defaultObstacleDuration: action.defaultObstacleDuration,
       };
     }
 
@@ -306,9 +314,11 @@ export const getStartAndEndBeat = createSelector(
 
 export const getIsLockedToCurrentWindow = state =>
   state.editor.events.isLockedToCurrentWindow;
-
 export const getAreLasersLocked = state => state.editor.events.areLasersLocked;
 
 export const getSelectedEventBeat = state => state.editor.events.selectedBeat;
+
+export const getDefaultObstacleDuration = state =>
+  state.editor.notes.defaultObstacleDuration;
 
 export default combineReducers({ notes, events });

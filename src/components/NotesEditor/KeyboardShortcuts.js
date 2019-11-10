@@ -4,12 +4,16 @@ import { connect } from 'react-redux';
 import * as actions from '../../actions';
 import { NOTES_VIEW } from '../../constants';
 import { isMetaKeyPressed } from '../../utils';
+import { getDefaultObstacleDuration } from '../../reducers/editor.reducer';
+import { promptChangeDefaultObstacleDuration } from '../../helpers/prompts.helpers';
 
 const KeyboardShortcuts = ({
+  defaultObstacleDuration,
   selectTool,
   selectNoteDirection,
   swapSelectedNotes,
   toggleSelectAll,
+  changeDefaultObstacleDuration,
 }) => {
   let keysDepressed = React.useRef({
     w: false,
@@ -151,6 +155,17 @@ const KeyboardShortcuts = ({
         return selectNoteDirection(5);
       }
 
+      case 'KeyO': {
+        if (ev.shiftKey || isMetaKeyPressed(ev)) {
+          return;
+        }
+
+        return promptChangeDefaultObstacleDuration(
+          defaultObstacleDuration,
+          changeDefaultObstacleDuration
+        );
+      }
+
       default:
         return;
     }
@@ -193,14 +208,21 @@ const KeyboardShortcuts = ({
   return null;
 };
 
+const mapStateToProps = state => {
+  return {
+    defaultObstacleDuration: getDefaultObstacleDuration(state),
+  };
+};
+
 const mapDispatchToProps = {
   selectTool: actions.selectTool,
   selectNoteDirection: actions.selectNoteDirection,
   swapSelectedNotes: actions.swapSelectedNotes,
   toggleSelectAll: actions.toggleSelectAll,
+  changeDefaultObstacleDuration: actions.changeDefaultObstacleDuration,
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(KeyboardShortcuts);

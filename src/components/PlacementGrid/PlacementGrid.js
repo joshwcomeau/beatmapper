@@ -19,6 +19,7 @@ import {
 import { getDirectionForDrag } from './PlacementGrid.helpers';
 import TentativeObstacle from './TentativeObstacle';
 import GridCell from './GridCell';
+import { getDefaultObstacleDuration } from '../../reducers/editor.reducer';
 
 const PlacementGrid = ({
   width,
@@ -29,6 +30,7 @@ const PlacementGrid = ({
   selectedTool,
   selectionMode,
   mappingMode,
+  defaultObstacleDuration,
   numRows,
   numCols,
   colWidth,
@@ -148,6 +150,7 @@ const PlacementGrid = ({
               setMouseDownAt={setMouseDownAt}
               setMouseOverAt={setMouseOverAt}
               mappingMode={mappingMode}
+              defaultObstacleDuration={defaultObstacleDuration}
               selectionMode={selectionMode}
               snapTo={snapTo}
               setHoveredCell={setHoveredCell}
@@ -181,6 +184,7 @@ const mapStateToProps = state => {
     selectedTool: state.editor.notes.selectedTool,
     selectionMode: state.editor.notes.selectionMode,
     mappingMode: getMappingMode(state),
+    defaultObstacleDuration: getDefaultObstacleDuration(state),
     numRows: gridSize.numRows,
     numCols: gridSize.numCols,
     colWidth: gridSize.colWidth,
