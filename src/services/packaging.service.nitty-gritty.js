@@ -1,4 +1,4 @@
-import { roundToNearest, isEmpty } from '../utils';
+import { roundAwayFloatingPointNonsense, isEmpty } from '../utils';
 import { convertMillisecondsToBeats } from '../helpers/audio.helpers';
 import { formatColorFromImport } from '../helpers/colors.helpers';
 import { DEFAULT_GRID } from '../helpers/grid.helpers';
@@ -34,8 +34,6 @@ export const getArchiveVersion = archive => {
   // TODO: More reliable version checking
   return getFileFromArchive(archive, 'info.dat') ? 2 : 1;
 };
-
-const roundAwayFloatingPointNonsense = n => roundToNearest(n, 1 / 1000000);
 
 const shiftEntitiesByOffsetInBeats = (entities, offsetInBeats) => {
   return entities.map(entity => {

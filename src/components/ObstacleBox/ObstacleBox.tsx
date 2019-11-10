@@ -1,18 +1,11 @@
 import React from 'react';
 import * as THREE from 'three';
 
-import {
-  BLOCK_COLUMN_WIDTH,
-  BLOCK_PLACEMENT_SQUARE_SIZE,
-  SONG_OFFSET,
-  BLOCK_SIZE,
-} from '../../constants';
 import { Obstacle } from '../../types';
 import oswaldGlyphs from '../../assets/fonts/oswald.json';
 
 import {
   getPositionForObstacle,
-  getPositionForObstacleNew,
   getDimensionsForObstacle,
 } from './ObstacleBox.helpers';
 
@@ -21,10 +14,6 @@ interface Props {
   color: string;
   snapTo: number;
   beatDepth: number;
-  gridRows: number;
-  gridCols: number;
-  gridRowHeight: number;
-  gridColWidth: number;
   handleDelete: (id: string) => void;
   handleResize: (id: string, newBeatDuration: number) => void;
   handleClick: (id: string) => void;
@@ -72,7 +61,7 @@ const ObstacleBox: React.FC<Props> = ({
     obstacle.selected,
   ]);
 
-  const actualPosition = getPositionForObstacleNew(
+  const actualPosition = getPositionForObstacle(
     obstacle,
     obstacleDimensions,
     beatDepth

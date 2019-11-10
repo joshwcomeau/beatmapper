@@ -9,7 +9,6 @@ import {
   BLOCK_COLUMN_WIDTH,
 } from '../../constants';
 import { DEFAULT_NUM_ROWS } from '../../helpers/grid.helpers';
-import { getGridSize } from '../../reducers/songs.reducer';
 
 import EdgeStrip from './EdgeStrip';
 
@@ -100,18 +99,4 @@ const StaticEnvironment = ({ includeEdgeStrips }) => {
   );
 };
 
-const mapStateToProps = (state, ownProps) => {
-  if (!ownProps.trackGridRows) {
-    return {
-      gridRows: DEFAULT_NUM_ROWS,
-    };
-  }
-
-  const gridSize = getGridSize(state);
-
-  return {
-    gridRows: gridSize.numRows,
-  };
-};
-
-export default connect(mapStateToProps)(StaticEnvironment);
+export default StaticEnvironment;

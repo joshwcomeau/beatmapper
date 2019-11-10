@@ -14,8 +14,6 @@ const GridSquare = ({
   numCols,
   rowHeight,
   colWidth,
-  renderRowHeight,
-  renderColWidth,
   isHovered,
   gridPosition,
   mouseDownAt,
@@ -29,6 +27,14 @@ const GridSquare = ({
   clickPlacementGrid,
   createNewObstacle,
 }) => {
+  // Our `rowHeight` is in units compared to the default, so a
+  // non-map-extension grid would have a height and width of 1.
+  // A rowHeight of 2 means it's 2x as big as that default.
+  // `renderRowHeight` is how tall our grid cell should be in terms of
+  // rendering height.
+  const renderRowHeight = rowHeight * BLOCK_PLACEMENT_SQUARE_SIZE;
+  const renderColWidth = colWidth * BLOCK_PLACEMENT_SQUARE_SIZE;
+
   // Because we want grids to be centered, the wider the grid, the more
   // each position is pushed further from this position.
   // After sketching out the math, the formula looks like:

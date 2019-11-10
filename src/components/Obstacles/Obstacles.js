@@ -21,10 +21,6 @@ const Obstacles = ({
   beatDepth,
   selectionMode,
   snapTo,
-  gridRows,
-  gridCols,
-  gridColWidth,
-  gridRowHeight,
   deleteObstacle,
   resizeObstacle,
   selectObstacle,
@@ -50,10 +46,6 @@ const Obstacles = ({
       color={obstacleColor}
       beatDepth={beatDepth}
       snapTo={snapTo}
-      gridRows={gridRows}
-      gridCols={gridCols}
-      gridColWidth={gridColWidth}
-      gridRowHeight={gridRowHeight}
       handleDelete={deleteObstacle}
       handleResize={resizeObstacle}
       handleClick={() =>
@@ -75,8 +67,6 @@ const Obstacles = ({
 };
 
 const mapStateToProps = state => {
-  const gridSize = getGridSize(state);
-
   return {
     song: getSelectedSong(state),
     obstacles: getObstacles(state),
@@ -84,10 +74,6 @@ const mapStateToProps = state => {
     beatDepth: getBeatDepth(state),
     selectionMode: state.editor.notes.selectionMode,
     snapTo: getSnapTo(state),
-    gridRows: gridSize.numRows,
-    gridCols: gridSize.numCols,
-    gridColWidth: gridSize.colWidth,
-    gridRowHeight: gridSize.rowHeight,
   };
 };
 

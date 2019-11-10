@@ -364,11 +364,6 @@ export default function songsReducer(state: State = initialState, action: any) {
           song.modSettings[mod] = DEFAULT_MOD_SETTINGS[mod];
         }
 
-        // STOPSHIP: Delete this
-        if (song.modSettings.mappingExtensions === true) {
-          song.modSettings = DEFAULT_MOD_SETTINGS;
-        }
-
         const isModEnabled = get(song, `modSettings.${mod}.isEnabled`);
 
         song.modSettings[mod].isEnabled = !isModEnabled;

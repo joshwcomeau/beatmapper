@@ -1,14 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import * as THREE from 'three';
 
 import * as actions from '../../actions';
 import { BLOCK_PLACEMENT_SQUARE_SIZE } from '../../constants';
-import {
-  range,
-  roundToNearest,
-  roundAwayFloatingPointNonsense,
-} from '../../utils';
+import { range } from '../../utils';
 import { convertGridColumn, convertGridRow } from '../../helpers/grid.helpers';
 import { getColorForItem } from '../../helpers/colors.helpers';
 import {
@@ -23,7 +18,7 @@ import {
 
 import { getDirectionForDrag } from './PlacementGrid.helpers';
 import TentativeObstacle from './TentativeObstacle';
-import GridSquare from './GridSquare';
+import GridCell from './GridCell';
 
 const PlacementGrid = ({
   width,
@@ -42,10 +37,8 @@ const PlacementGrid = ({
   setBlockByDragging,
   createNewObstacle,
 }) => {
-  const CELL_SIZE_SCALE = 1.5;
-
-  const renderColWidth = colWidth * CELL_SIZE_SCALE;
-  const renderRowHeight = rowHeight * CELL_SIZE_SCALE;
+  const renderColWidth = colWidth * BLOCK_PLACEMENT_SQUARE_SIZE;
+  const renderRowHeight = rowHeight * BLOCK_PLACEMENT_SQUARE_SIZE;
 
   const [mouseDownAt, setMouseDownAt] = React.useState(null);
   const [mouseOverAt, setMouseOverAt] = React.useState(null);
@@ -138,7 +131,7 @@ const PlacementGrid = ({
           );
 
           return (
-            <GridSquare
+            <GridCell
               key={`${rowIndex}-${colIndex}`}
               rowIndex={rowIndex}
               colIndex={colIndex}

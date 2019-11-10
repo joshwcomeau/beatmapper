@@ -2,10 +2,7 @@ import { BLOCK_PLACEMENT_SQUARE_SIZE, SONG_OFFSET } from '../../constants';
 
 import { Obstacle, MappingExtensionObstacle } from '../../types';
 
-// TODO: move to constants, share with PlacementGrid
-const CELL_SIZE_SCALE = 1.5;
-
-export const getPositionForObstacleNew = (
+export const getPositionForObstacle = (
   obstacle: Obstacle,
   obstacleDimensions: { width: number; height: number; depth: number },
   zOffset: number
@@ -13,7 +10,11 @@ export const getPositionForObstacleNew = (
   let position = { x: 0, y: 0, z: 0 };
 
   // ----------- X ------------
-  const OFFSET_X = BLOCK_PLACEMENT_SQUARE_SIZE * CELL_SIZE_SCALE * -1;
+  // Our initial X should be 1.5 blocks to the left
+  // (an 'X' of 0 would be the dividing line between the 2nd and 3rd column,
+  // so I need it to move 1.5 units to the left, to sit in the center of the
+  // 1st column)
+  const OFFSET_X = BLOCK_PLACEMENT_SQUARE_SIZE * 1.5 * -1;
   position.x = obstacle.lane * BLOCK_PLACEMENT_SQUARE_SIZE + OFFSET_X;
   position.x +=
     obstacle.colspan * (BLOCK_PLACEMENT_SQUARE_SIZE / 2) -
@@ -36,45 +37,6 @@ export const getPositionForObstacleNew = (
   position.z = zFront - obstacleDimensions.depth / 2 + 0.1;
 
   return [position.x, position.y, position.z];
-};
-
-// This method gets the position in terms of the obstacle's top-left corner!
-// This will need to be adjusted.
-export const getPositionForObstacle = (
-  { lane, beatStart, type, rowIndex }: any,
-  beatDepth: number
-): [number, number, number] => {
-  // Our `x` parameter is controlled by `lane`.
-  // TBH I forget why this formula works and I'm too lazy to sort it out rn
-  const OFFSET_X = BLOCK_PLACEMENT_SQUARE_SIZE;
-
-  const x = (lane - 1) * BLOCK_PLACEMENT_SQUARE_SIZE - OFFSET_X;
-
-  let y;
-  if (type === 'wall' || type === 'ceiling') {
-    // In the original 4x3 grid system without mods, obstacles are either walls
-    // or ceilings, and they always start at the same place (the type dictates
-    // how far down they reach).
-    y = BLOCK_PLACEMENT_SQUARE_SIZE * 1.75;
-  } else {
-    // 'extension' walls can start at any point, and they behave much like lanes
-    // do for the opposite axis
-    const OFFSET_Y = BLOCK_PLACEMENT_SQUARE_SIZE * 1.5;
-    y = rowIndex * BLOCK_PLACEMENT_SQUARE_SIZE - OFFSET_Y;
-  }
-
-  // Our `y` parameter is always the same, because our block always starts
-  // at the top. The type (wallf | ceiling) dictates whether it reaches down
-  // to the floor or not, but given that this method only cares about top-left,
-  // that isn't a concern for now.
-  // The very top of our object is at
-
-  // since, again, we only care about the top-left-front of our shape,
-  // this one is easy: it's `beatStart` number of beats down the pike, plus whatever
-  // offset we have, similar to SongBlocks
-  const z = beatStart * beatDepth * -1 - SONG_OFFSET;
-
-  return [x, y, z];
 };
 
 export const getDimensionsForObstacle = (

@@ -8,12 +8,6 @@ import { createSelector } from 'reselect';
 
 import { NOTES_VIEW, EVENTS_VIEW, BEATS_PER_ZOOM_LEVEL } from '../constants';
 import { floorToNearest } from '../utils';
-import {
-  DEFAULT_NUM_COLS,
-  DEFAULT_NUM_ROWS,
-  DEFAULT_COL_WIDTH,
-  DEFAULT_ROW_HEIGHT,
-} from '../helpers/grid.helpers';
 import { getCursorPositionInBeats } from './navigation.reducer';
 
 const NOTE_TOOLS = ['left-block', 'right-block', 'mine', 'obstacle'];
@@ -24,13 +18,6 @@ const EVENT_EDIT_MODES = ['place', 'select'];
 
 const EVENT_COLORS = ['red', 'blue'];
 
-const defaultMappingExtensions = {
-  numCols: DEFAULT_NUM_COLS,
-  numRows: DEFAULT_NUM_ROWS,
-  colWidth: DEFAULT_COL_WIDTH,
-  rowHeight: DEFAULT_ROW_HEIGHT,
-};
-
 const initialState = {
   // `notes` covers everything in the /notes editor view:
   // blocks, mines, obstacles
@@ -38,7 +25,6 @@ const initialState = {
     selectedTool: NOTE_TOOLS[0],
     selectedDirection: 8,
     selectionMode: null, // null | 'select' | 'deselect' | 'delete'.
-    mappingExtensions: defaultMappingExtensions,
   },
   events: {
     zoomLevel: 2,
@@ -128,17 +114,6 @@ function notes(state = initialState.notes, action) {
       return {
         ...state,
         selectionMode: null,
-      };
-    }
-
-    case 'UPDATE_GRID': {
-      return {
-        ...state,
-        mappingExtensions: {
-          ...state.mappingExtensions,
-          numRows: action.numRows,
-          numCols: action.numCols,
-        },
       };
     }
 
@@ -335,8 +310,5 @@ export const getIsLockedToCurrentWindow = state =>
 export const getAreLasersLocked = state => state.editor.events.areLasersLocked;
 
 export const getSelectedEventBeat = state => state.editor.events.selectedBeat;
-
-export const getMappingExtensions = state =>
-  state.editor.notes.mappingExtensions;
 
 export default combineReducers({ notes, events });

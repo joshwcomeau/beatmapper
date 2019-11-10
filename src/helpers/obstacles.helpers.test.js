@@ -87,7 +87,7 @@ describe('Obstacles helpers', () => {
 
   describe('mapping extensions', () => {
     it('converts an obstacle that includes a custom row index and span', () => {
-      // This test obstacle takes up the top 2 rows in a 4x3 grid
+      // This test obstacle takes up the top 2 rows in a 4×3 grid
       //
       // [X _ _ _]
       // [X _ _ _]
