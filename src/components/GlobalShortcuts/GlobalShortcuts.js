@@ -57,8 +57,8 @@ const KeyboardShortcuts = ({
     // increments instead of the song.
     if (holdingMeta) {
       return direction === 'forwards'
-        ? incrementSnapping()
-        : decrementSnapping();
+        ? decrementSnapping()
+        : incrementSnapping();
     }
 
     if (holdingAlt) {

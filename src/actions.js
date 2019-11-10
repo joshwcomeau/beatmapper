@@ -1,6 +1,7 @@
 import uuid from 'uuid/v1';
 
 import { NOTES_VIEW, EVENTS_VIEW } from './constants';
+import { roundAwayFloatingPointNonsense } from './utils';
 import { getNewBookmarkColor } from './helpers/bookmarks.helpers';
 import { getSelection } from './reducers/editor-entities.reducer';
 import {
@@ -17,6 +18,8 @@ import {
 import {
   getSelectedEventBeat,
   getStartAndEndBeat,
+  getSelectedNoteTool,
+  getSelectedCutDirection,
 } from './reducers/editor.reducer';
 import { getStickyMapAuthorName } from './reducers/user.reducer';
 import { getSortedBookmarksArray } from './reducers/bookmarks.reducer';
@@ -236,20 +239,37 @@ export const deleteBookmark = beatNum => ({
   beatNum,
 });
 
-export const clickPlacementGrid = (
-  rowIndex,
-  colIndex,
-  cursorPositionInBeats,
-  selectedDirection,
-  selectedTool
-) => ({
-  type: 'CLICK_PLACEMENT_GRID',
-  rowIndex,
-  colIndex,
-  cursorPositionInBeats,
-  selectedDirection,
-  selectedTool,
-});
+export const clickPlacementGrid = (rowIndex, colIndex) => (
+  dispatch,
+  getState
+) => {
+  const state = getState();
+
+  const selectedDirection = getSelectedCutDirection(state);
+  const selectedTool = getSelectedNoteTool(state);
+  const snapTo = getSnapTo(state);
+  let cursorPositionInBeats = getCursorPositionInBeats(state);
+
+  // If the user tries to place blocks while the song is playing,
+  // we want to snap to the nearest snapping interval.
+  // eg. if they're set to snap to 1/2 beats, and they click
+  // when the song is 3.476 beats in, we should round up to 3.5.
+  // TODO
+
+  cursorPositionInBeats = roundAwayFloatingPointNonsense(
+    cursorPositionInBeats,
+    snapTo
+  );
+
+  dispatch({
+    type: 'CLICK_PLACEMENT_GRID',
+    rowIndex,
+    colIndex,
+    cursorPositionInBeats,
+    selectedDirection,
+    selectedTool,
+  });
+};
 
 export const setBlockByDragging = (
   direction,
@@ -495,14 +515,25 @@ export const updateVolume = volume => ({
   volume,
 });
 
-export const createNewObstacle = obstacle => {
-  return {
+export const createNewObstacle = obstacle => (dispatch, getState) => {
+  const state = getState();
+
+  const snapTo = getSnapTo(state);
+  let cursorPositionInBeats = getCursorPositionInBeats(state);
+
+  cursorPositionInBeats = roundAwayFloatingPointNonsense(
+    cursorPositionInBeats,
+    snapTo
+  );
+
+  dispatch({
     type: 'CREATE_NEW_OBSTACLE',
     obstacle: {
       ...obstacle,
       id: uuid(),
+      beatStart: cursorPositionInBeats,
     },
-  };
+  });
 };
 
 export const deleteObstacle = id => ({

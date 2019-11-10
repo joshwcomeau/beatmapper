@@ -220,7 +220,6 @@ export const createObstacleFromMouseEvent = (
   rowHeight,
   mouseDownAt,
   mouseOverAt,
-  beatStart,
   beatDuration = 4
 ) => {
   const laneIndex = Math.min(mouseDownAt.colIndex, mouseOverAt.colIndex);
@@ -241,7 +240,6 @@ export const createObstacleFromMouseEvent = (
 
   const obstacle = {
     type: obstacleType,
-    beatStart,
     beatDuration,
     colspan,
   };

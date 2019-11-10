@@ -11,7 +11,6 @@ import {
 } from '../../utils';
 import { convertGridColumn, convertGridRow } from '../../helpers/grid.helpers';
 import { getColorForItem } from '../../helpers/colors.helpers';
-import { createObstacleFromMouseEvent } from '../../helpers/obstacles.helpers';
 import {
   getCursorPositionInBeats,
   getSnapTo,
@@ -32,7 +31,6 @@ const PlacementGrid = ({
   song,
   cursorPositionInBeats,
   snapTo,
-  selectedDirection,
   selectedTool,
   selectionMode,
   mappingMode,
@@ -152,18 +150,15 @@ const PlacementGrid = ({
               renderColWidth={renderColWidth}
               isHovered={isHovered}
               gridPosition={gridPosition}
+              selectedTool={selectedTool}
               mouseDownAt={mouseDownAt}
               setMouseDownAt={setMouseDownAt}
               setMouseOverAt={setMouseOverAt}
               mappingMode={mappingMode}
               selectionMode={selectionMode}
-              selectedTool={selectedTool}
-              selectedDirection={selectedDirection}
-              cursorPositionInBeats={cursorPositionInBeats}
               snapTo={snapTo}
               setHoveredCell={setHoveredCell}
               clickPlacementGrid={clickPlacementGrid}
-              setBlockByDragging={setBlockByDragging}
               createNewObstacle={createNewObstacle}
             />
           );
@@ -190,7 +185,6 @@ const mapStateToProps = state => {
     song,
     cursorPositionInBeats: getCursorPositionInBeats(state),
     snapTo: getSnapTo(state),
-    selectedDirection: state.editor.notes.selectedDirection,
     selectedTool: state.editor.notes.selectedTool,
     selectionMode: state.editor.notes.selectionMode,
     mappingMode: getMappingMode(state),

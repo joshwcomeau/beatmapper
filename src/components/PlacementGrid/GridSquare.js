@@ -2,7 +2,6 @@ import React from 'react';
 import * as THREE from 'three';
 
 import { BLOCK_PLACEMENT_SQUARE_SIZE } from '../../constants';
-import { roundAwayFloatingPointNonsense } from '../../utils';
 import { convertGridColumn, convertGridRow } from '../../helpers/grid.helpers';
 import { createObstacleFromMouseEvent } from '../../helpers/obstacles.helpers';
 
@@ -25,12 +24,9 @@ const GridSquare = ({
   mappingMode,
   selectionMode,
   selectedTool,
-  selectedDirection,
-  cursorPositionInBeats,
   snapTo,
   setHoveredCell,
   clickPlacementGrid,
-  setBlockByDragging,
   createNewObstacle,
 }) => {
   // Because we want grids to be centered, the wider the grid, the more
@@ -82,15 +78,6 @@ const GridSquare = ({
           return;
         }
 
-        // If the user tries to place blocks while the song is playing,
-        // we want to snap to the nearest snapping interval.
-        // eg. if they're set to snap to 1/2 beats, and they click
-        // when the song is 3.476 beats in, we should round up to 3.5.
-        const roundedCursorPositionInBeats = roundAwayFloatingPointNonsense(
-          cursorPositionInBeats,
-          snapTo
-        );
-
         // With mapping extensions enabled, it's possible we need to
         // convert the rowIndex/colIndex to one appropriate for the
         // current grid!
@@ -101,13 +88,7 @@ const GridSquare = ({
         );
         const effectiveRowIndex = convertGridRow(rowIndex, numRows, rowHeight);
 
-        clickPlacementGrid(
-          effectiveRowIndex,
-          effectiveColIndex,
-          roundAwayFloatingPointNonsense(roundedCursorPositionInBeats),
-          selectedDirection,
-          selectedTool
-        );
+        clickPlacementGrid(effectiveRowIndex, effectiveColIndex);
       }}
       onPointerDown={ev => {
         // Only pay attention to left-clicks when it comes to the
@@ -144,8 +125,7 @@ const GridSquare = ({
             colWidth,
             rowHeight,
             mouseDownAt,
-            mouseOverAt,
-            roundAwayFloatingPointNonsense(cursorPositionInBeats)
+            mouseOverAt
           );
 
           createNewObstacle(obstacle);

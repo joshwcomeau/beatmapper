@@ -32,12 +32,12 @@ const TentativeObstacle = ({
     gridColWidth,
     gridRowHeight,
     mouseDownAt,
-    mouseOverAt,
-    0
+    mouseOverAt
   );
 
   tentativeObstacle.id = 'tentative';
   tentativeObstacle.tentative = true;
+  tentativeObstacle.beatStart = 0;
 
   return (
     <ObstacleBox
