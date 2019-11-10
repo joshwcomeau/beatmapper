@@ -182,6 +182,9 @@ const KeyboardShortcuts = ({
       }
 
       case 'KeyR': {
+        if (ev.shiftKey) {
+          return;
+        }
         return selectColor(view, 'red');
       }
       case 'KeyB': {

@@ -13,28 +13,25 @@ export const getPositionForObstacleNew = (
   let position = { x: 0, y: 0, z: 0 };
 
   // ----------- X ------------
-  const columnWidth = obstacleDimensions.width / obstacle.colspan;
-  const OFFSET_X = columnWidth * CELL_SIZE_SCALE * -1;
-
-  console.log({ OFFSET_X });
-
+  const OFFSET_X = BLOCK_PLACEMENT_SQUARE_SIZE * CELL_SIZE_SCALE * -1;
   position.x = obstacle.lane * BLOCK_PLACEMENT_SQUARE_SIZE + OFFSET_X;
-  position.x += obstacleDimensions.width / 2 - BLOCK_PLACEMENT_SQUARE_SIZE / 2;
+  position.x +=
+    obstacle.colspan * (BLOCK_PLACEMENT_SQUARE_SIZE / 2) -
+    BLOCK_PLACEMENT_SQUARE_SIZE / 2;
 
-  // ----------- Y -------------
+  // ----------- Y ------------
   if (obstacle.type === 'extension') {
     let mapObstacle = obstacle as MappingExtensionObstacle;
     const OFFSET_Y = BLOCK_PLACEMENT_SQUARE_SIZE * -1;
     position.y = mapObstacle.rowIndex * BLOCK_PLACEMENT_SQUARE_SIZE + OFFSET_Y;
     position.y +=
       obstacleDimensions.height / 2 - BLOCK_PLACEMENT_SQUARE_SIZE / 2;
-  } else {
-    // In a traditional world, there are two kinds, `ceiling` and `wall`.
-    // We can just use hardcoded values for each kind.
-    // TODO!
+  } else if (obstacle.type === 'wall' || obstacle.type === 'ceiling') {
+    const top = BLOCK_PLACEMENT_SQUARE_SIZE * 1.75;
+    position.y = top - obstacleDimensions.height / 2;
   }
 
-  // -------------- Z -------------
+  // ----------- Z ------------
   const zFront = obstacle.beatStart * zOffset * -1 - SONG_OFFSET;
   position.z = zFront - obstacleDimensions.depth / 2 + 0.1;
 

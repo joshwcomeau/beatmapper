@@ -269,8 +269,17 @@ export const createObstacleFromMouseEvent = (
     // like `colspan`
     let rawRowIndex = Math.min(mouseDownAt.rowIndex, mouseOverAt.rowIndex);
 
-    const lane = convertGridColumn(laneIndex, numCols, colWidth);
-    const rowIndex = convertGridRow(rawRowIndex, numRows, rowHeight);
+    let lane = convertGridColumn(laneIndex, numCols, colWidth);
+    let rowIndex = convertGridRow(rawRowIndex, numRows, rowHeight);
+
+    // For completely mystifying reasons, the lanes for obstacles don't scale
+    // well with non-standard size cells. I graphed the amount it was off by
+    // so that I could use it. No friggin clue why this works but it does.
+    const shiftLaneBy = 0.5 * colWidth - 0.5;
+    lane -= shiftLaneBy;
+
+    const shiftRowBy = 0.5 * rowHeight - 0.5;
+    rowIndex -= shiftRowBy;
 
     let rowspan = Math.abs(mouseDownAt.rowIndex - mouseOverAt.rowIndex) + 1;
 
