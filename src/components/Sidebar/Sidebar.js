@@ -7,7 +7,6 @@ import { box } from 'react-icons-kit/feather/box';
 import { sun } from 'react-icons-kit/feather/sun';
 import { sliders } from 'react-icons-kit/feather/sliders';
 import { download } from 'react-icons-kit/feather/download';
-import { settings } from 'react-icons-kit/feather/settings';
 import { helpCircle } from 'react-icons-kit/feather/helpCircle';
 import { play } from 'react-icons-kit/feather/play';
 

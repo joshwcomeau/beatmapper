@@ -54,6 +54,7 @@ const ObstacleBox: React.FC<Props> = ({
 
     return new THREE.Mesh(geometry, material);
   }, [
+    color,
     obstacleDimensions.depth,
     obstacleDimensions.height,
     obstacle.tentative,

@@ -1,5 +1,3 @@
-import { sample } from '../utils';
-
 export const BOOKMARK_COLORS = [
   { background: '#F50057', text: 'white' }, // pink
   { background: '#FFEA00', text: 'black' }, // yellow

@@ -10,7 +10,7 @@ import {
   getBeatDepth,
 } from '../../reducers/navigation.reducer';
 import { getObstacles } from '../../reducers/editor-entities.reducer/notes-view.reducer';
-import { getSelectedSong, getGridSize } from '../../reducers/songs.reducer';
+import { getSelectedSong } from '../../reducers/songs.reducer';
 
 import ObstacleBox from '../ObstacleBox';
 

@@ -25,7 +25,7 @@ import {
   convertEventsToExportableJson,
 } from '../helpers/events.helpers';
 import { convertBookmarksToRedux } from '../helpers/bookmarks.helpers';
-import { clamp, floorToNearest } from '../utils';
+import { clamp } from '../utils';
 import {
   getFile,
   saveFile,
@@ -38,10 +38,7 @@ import {
 } from '../services/file.service';
 import Sfx from '../services/sfx.service';
 import { getSongById, getSelectedSong } from '../reducers/songs.reducer';
-import {
-  getBeatsPerZoomLevel,
-  getIsLockedToCurrentWindow,
-} from '../reducers/editor.reducer';
+import { getBeatsPerZoomLevel } from '../reducers/editor.reducer';
 import { getAllEventsAsArray } from '../reducers/editor-entities.reducer/events-view.reducer';
 import {
   getVolume,

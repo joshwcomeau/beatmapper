@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { BLOCK_COLUMN_WIDTH, SONG_OFFSET, COLORS } from '../../constants';
+import { BLOCK_COLUMN_WIDTH, SONG_OFFSET } from '../../constants';
 import * as actions from '../../actions';
 import { getColorForItem } from '../../helpers/colors.helpers';
 import {

@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { LASER_COLORS } from '../../constants';
 import { range, normalize, convertDegreesToRadians } from '../../utils';
 import { getCursorPositionInBeats } from '../../reducers/navigation.reducer';
 import { getCursorPosition } from '../../reducers/navigation.reducer';
