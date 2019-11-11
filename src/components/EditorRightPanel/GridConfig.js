@@ -3,12 +3,18 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import * as actions from '../../actions';
+import { GRID_PRESET_SLOTS } from '../../constants';
 import { getGridSize } from '../../reducers/songs.reducer';
+import { getGridPresets } from '../../reducers/editor.reducer';
+import { promptSaveGridPreset } from '../../helpers/prompts.helpers';
 
 import TextInput from '../TextInput';
 import Spacer from '../Spacer';
 import { UNIT } from '../../constants';
 import MiniButton from '../MiniButton';
+import Heading from '../Heading';
+import Center from '../Center';
+import SpacedChildren from '../SpacedChildren';
 
 const GridConfig = ({
   finishTweakingGrid,
@@ -16,15 +22,41 @@ const GridConfig = ({
   numCols,
   colWidth,
   rowHeight,
+  gridPresets,
   updateGrid,
   resetGrid,
+  saveGridPreset,
+  loadGridPreset,
 }) => {
+  const showPresets = Object.keys(gridPresets).length > 0;
+
   return (
     <>
       <Buttons>
         <MiniButton onClick={resetGrid}>Reset</MiniButton>
       </Buttons>
       <Spacer size={UNIT * 4} />
+
+      {showPresets && (
+        <Center>
+          <Heading size={3}>Presets</Heading>
+          <Spacer size={UNIT * 1.5} />
+          <Row>
+            <SpacedChildren>
+              {GRID_PRESET_SLOTS.map(slot => (
+                <MiniButton
+                  disabled={!gridPresets[slot]}
+                  onClick={() => loadGridPreset(gridPresets[slot])}
+                >
+                  {slot}
+                </MiniButton>
+              ))}
+            </SpacedChildren>
+          </Row>
+          <Spacer size={UNIT * 4} />
+        </Center>
+      )}
+
       <Row>
         <TextInput
           type="number"
@@ -86,8 +118,15 @@ const GridConfig = ({
           }}
         />
       </Row>
+
       <Spacer size={UNIT * 4} />
       <Buttons>
+        <MiniButton
+          onClick={() => promptSaveGridPreset(gridPresets, saveGridPreset)}
+        >
+          Save Preset
+        </MiniButton>
+        <Spacer size={UNIT * 1} />
         <MiniButton onClick={finishTweakingGrid}>Finish Customizing</MiniButton>
       </Buttons>
     </>
@@ -104,7 +143,8 @@ const Row = styled.div`
 
 const Buttons = styled.div`
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 
   i,
   svg {
@@ -120,12 +160,15 @@ const mapStateToProps = state => {
     numCols: gridSize.numCols,
     colWidth: gridSize.colWidth,
     rowHeight: gridSize.rowHeight,
+    gridPresets: getGridPresets(state),
   };
 };
 
 const mapDispatchToProps = {
   updateGrid: actions.updateGrid,
   resetGrid: actions.resetGrid,
+  saveGridPreset: actions.saveGridPreset,
+  loadGridPreset: actions.loadGridPreset,
 };
 
 export default connect(

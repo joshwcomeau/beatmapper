@@ -66,3 +66,29 @@ export const promptChangeDefaultObstacleDuration = (
 
   return wrappedAction(Number(newDefaultDuration));
 };
+
+export const promptSaveGridPreset = (gridPresets, wrappedAction) => {
+  const presetSlots = [1, 2, 3, 4];
+  const suggestedPreset = presetSlots.find(n => !gridPresets[n]);
+
+  const providedValue = window.prompt(
+    'Select a number from 1 to 4 to store this preset',
+    suggestedPreset
+  );
+
+  if (!providedValue) {
+    return;
+  }
+
+  const providedNumber = Number(providedValue);
+
+  const isValidInput = presetSlots.some(n => n === providedNumber);
+
+  if (!isValidInput) {
+    window.alert(
+      'The value you provided was not accepted. Please enter 1, 2, 3, or 4.'
+    );
+  }
+
+  return wrappedAction(providedNumber);
+};

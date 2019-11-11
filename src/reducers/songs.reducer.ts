@@ -346,11 +346,11 @@ export default function songsReducer(state: State = initialState, action: any) {
 
       return produce(state, (draftState: any) => {
         // Should-be-impossible edge-case where no selected song exists
-        if (!state.selectedId || !draftState.byId[state.selectedId]) {
-          return state;
+        if (!draftState.selectedId || !draftState.byId[draftState.selectedId]) {
+          return;
         }
 
-        const song = draftState.byId[state.selectedId];
+        const song = draftState.byId[draftState.selectedId];
 
         // For a brief moment, modSettings was being set to an empty object,
         // before the children were required. Update that now, if so.
@@ -375,14 +375,14 @@ export default function songsReducer(state: State = initialState, action: any) {
       const { element, color } = action;
 
       return produce(state, (draftState: State) => {
-        if (!state.selectedId || !draftState.byId[state.selectedId]) {
-          return state;
+        const song = grabSelectedSong(draftState);
+
+        if (!song) {
+          return;
         }
 
-        const song = draftState.byId[state.selectedId];
-
         if (!song.modSettings.customColors) {
-          return;
+          song.modSettings.customColors = DEFAULT_MOD_SETTINGS.customColors;
         }
 
         // @ts-ignore
@@ -394,12 +394,11 @@ export default function songsReducer(state: State = initialState, action: any) {
       const { numRows, numCols, colWidth, rowHeight } = action;
 
       return produce(state, (draftState: State) => {
-        // Should-be-impossible edge-case where no selected song exists
-        if (!state.selectedId || !draftState.byId[state.selectedId]) {
-          return state;
-        }
+        const song = grabSelectedSong(draftState);
 
-        const song = draftState.byId[state.selectedId];
+        if (!song) {
+          return;
+        }
 
         if (!song.modSettings || !song.modSettings.mappingExtensions) {
           song.modSettings.mappingExtensions =
@@ -415,12 +414,11 @@ export default function songsReducer(state: State = initialState, action: any) {
 
     case 'RESET_GRID': {
       return produce(state, (draftState: State) => {
-        // Should-be-impossible edge-case where no selected song exists
-        if (!state.selectedId || !draftState.byId[state.selectedId]) {
-          return state;
-        }
+        const song = grabSelectedSong(draftState);
 
-        const song = draftState.byId[state.selectedId];
+        if (!song) {
+          return;
+        }
 
         song.modSettings.mappingExtensions = {
           ...song.modSettings.mappingExtensions,
@@ -429,15 +427,31 @@ export default function songsReducer(state: State = initialState, action: any) {
       });
     }
 
-    case 'TOGGLE_FAST_WALLS_ENABLED_FOR_SONG': {
+    case 'LOAD_GRID_PRESET': {
+      const { grid } = action;
+
       return produce(state, (draftState: State) => {
-        if (!state.selectedId || !draftState.byId[state.selectedId]) {
-          return state;
+        const song = grabSelectedSong(draftState);
+
+        if (!song) {
+          return;
         }
 
-        const song = draftState.byId[state.selectedId];
+        song.modSettings.mappingExtensions = {
+          ...song.modSettings.mappingExtensions,
+          ...grid,
+        };
+      });
+    }
 
-        // @ts-ignore
+    case 'TOGGLE_FAST_WALLS_ENABLED_FOR_SONG': {
+      return produce(state, (draftState: State) => {
+        const song = grabSelectedSong(draftState);
+
+        if (!song) {
+          return;
+        }
+
         song.enabledFastWalls = !song.enabledFastWalls;
       });
     }
@@ -447,6 +461,22 @@ export default function songsReducer(state: State = initialState, action: any) {
   }
 }
 
+//
+//
+//// HELPERS
+//
+const grabSelectedSong = (state: State) => {
+  if (!state.selectedId) {
+    return undefined;
+  }
+
+  return state.byId[state.selectedId];
+};
+
+//
+//
+//// SELECTORS
+//
 const getById = (state: any) => state.songs.byId;
 
 export const getAllSongs = (state: any): Array<Song> => {

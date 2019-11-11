@@ -219,3 +219,5 @@ export const EVENT_TRACKS = [
     type: 'blocks',
   },
 ];
+
+export const GRID_PRESET_SLOTS = ['1', '2', '3', '4'];

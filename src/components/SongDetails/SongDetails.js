@@ -381,13 +381,13 @@ const SongDetails = ({
         <Spacer size={UNIT * 2} />
         <LabeledCheckbox
           id="enable-fast-walls"
-          checked={enabledFastWalls}
+          checked={!!enabledFastWalls}
           onChange={toggleFastWallsEnabledForSong}
         >
           Enable "fast walls"{' '}
           <QuestionTooltip>
-            Allows you to customize size and shape of the grid, to place notes
-            outside of the typical 4×3 grid.{' '}
+            Fast walls exploit a loophole in the game to allow walls to blur by
+            at high speed{' '}
             <Link forceAnchor to="/docs/mods#mapping-extensions">
               Learn more
             </Link>

@@ -26,6 +26,7 @@ const initialState = {
     selectedDirection: 8,
     selectionMode: null, // null | 'select' | 'deselect' | 'delete'.
     defaultObstacleDuration: 4,
+    gridPresets: {},
   },
   events: {
     zoomLevel: 2,
@@ -122,6 +123,18 @@ function notes(state = initialState.notes, action) {
       return {
         ...state,
         defaultObstacleDuration: action.defaultObstacleDuration,
+      };
+    }
+
+    case 'SAVE_GRID_PRESET': {
+      const { grid, presetNum } = action;
+
+      return {
+        ...state,
+        gridPresets: {
+          ...state.gridPresets,
+          [presetNum]: grid,
+        },
       };
     }
 
@@ -320,5 +333,7 @@ export const getSelectedEventBeat = state => state.editor.events.selectedBeat;
 
 export const getDefaultObstacleDuration = state =>
   state.editor.notes.defaultObstacleDuration;
+
+export const getGridPresets = state => state.editor.notes.gridPresets;
 
 export default combineReducers({ notes, events });

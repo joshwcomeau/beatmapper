@@ -9,7 +9,7 @@ import {
   getObstacles,
 } from './reducers/editor-entities.reducer/notes-view.reducer';
 import { getAllEventsAsArray } from './reducers/editor-entities.reducer/events-view.reducer';
-import { getSelectedSong } from './reducers/songs.reducer';
+import { getSelectedSong, getGridSize } from './reducers/songs.reducer';
 import { getCopiedData } from './reducers/clipboard.reducer';
 import {
   getCursorPositionInBeats,
@@ -751,6 +751,23 @@ export const updateGrid = (numCols, numRows, colWidth, rowHeight) => ({
 export const resetGrid = () => ({
   type: 'RESET_GRID',
 });
+
+export const loadGridPreset = grid => ({
+  type: 'LOAD_GRID_PRESET',
+  grid,
+});
+
+export const saveGridPreset = presetNum => (dispatch, getState) => {
+  const state = getState();
+
+  const grid = getGridSize(state);
+
+  return dispatch({
+    type: 'SAVE_GRID_PRESET',
+    grid,
+    presetNum,
+  });
+};
 
 export const toggleFastWallsForSelectedObstacles = () => ({
   type: 'TOGGLE_FAST_WALLS_FOR_SELECTED_OBSTACLES',
