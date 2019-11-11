@@ -190,7 +190,14 @@ const EventsGrid = ({
 
   return (
     <Wrapper isLoading={isLoading} style={{ width: contentWidth }}>
-      <PrefixColumn style={{ width: PREFIX_WIDTH }}>
+      <PrefixColumn
+        style={{ width: PREFIX_WIDTH }}
+        onContextMenu={ev => {
+          // I often accidentally right-click the prefix when trying to
+          // delete notes near the start of the window. Avoid this problem.
+          ev.preventDefault();
+        }}
+      >
         <TopLeftBlankCell style={{ height: headerHeight }} />
 
         {EVENT_TRACKS.map(({ id, type, label }) => (
