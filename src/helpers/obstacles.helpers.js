@@ -163,11 +163,10 @@ export const convertObstaclesToExportableJson = (
     if (o.fast) {
       duration *= -1;
     }
-    // Obstacles need to be at least 1/10th of a beat to be visible.
-    // TODO: I should really see what the "right" value should be. What do
-    // other editors do?
+    // Obstacles need to be at least 1/100th of a beat to be visible.
+    // Stealing this from MediocreMapper
     if (Math.abs(duration) === 0) {
-      duration = 0.1;
+      duration = 0.01;
     }
 
     let data = {

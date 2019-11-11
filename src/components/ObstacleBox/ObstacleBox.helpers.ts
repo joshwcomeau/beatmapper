@@ -34,7 +34,7 @@ export const getPositionForObstacle = (
 
   // ----------- Z ------------
   const zFront = obstacle.beatStart * zOffset * -1 - SONG_OFFSET;
-  position.z = zFront - obstacleDimensions.depth / 2 + 0.1;
+  position.z = zFront - obstacleDimensions.depth / 2 + 0.05;
 
   return [position.x, position.y, position.z];
 };
