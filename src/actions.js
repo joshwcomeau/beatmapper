@@ -748,6 +748,10 @@ export const updateGrid = (numCols, numRows, colWidth, rowHeight) => ({
   rowHeight,
 });
 
+export const resetGrid = () => ({
+  type: 'RESET_GRID',
+});
+
 export const toggleFastWallsForSelectedObstacles = () => ({
   type: 'TOGGLE_FAST_WALLS_FOR_SELECTED_OBSTACLES',
 });

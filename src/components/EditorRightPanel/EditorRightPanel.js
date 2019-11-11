@@ -59,7 +59,16 @@ const EditorRightPanel = ({
   }
 
   return (
-    <OuterWrapper>
+    <OuterWrapper
+      onWheel={ev => {
+        // On smaller windows, the content won't fit in the side panel.
+        // By default we disable all mousewheel action since it causes problems
+        // with our main view, but if the cursor is over this panel, we'll
+        // allow it to behave normally by not bubbling that event to the
+        // window handler (which prevents it).
+        ev.stopPropagation();
+      }}
+    >
       <Wrapper>{panelContents}</Wrapper>
     </OuterWrapper>
   );

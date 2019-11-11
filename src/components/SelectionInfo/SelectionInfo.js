@@ -45,7 +45,6 @@ const SelectionInfo = ({
   pasteSelection,
   toggleFastWallsForSelectedObstacles,
 }) => {
-  console.log({ enabledFastWalls });
   const shouldShowObstacleDurationTweaks =
     numOfSelectedObstacles === 1 && numOfSelectedNotes === 0;
 

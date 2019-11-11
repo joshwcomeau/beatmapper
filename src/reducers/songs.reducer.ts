@@ -413,6 +413,22 @@ export default function songsReducer(state: State = initialState, action: any) {
       });
     }
 
+    case 'RESET_GRID': {
+      return produce(state, (draftState: State) => {
+        // Should-be-impossible edge-case where no selected song exists
+        if (!state.selectedId || !draftState.byId[state.selectedId]) {
+          return state;
+        }
+
+        const song = draftState.byId[state.selectedId];
+
+        song.modSettings.mappingExtensions = {
+          ...song.modSettings.mappingExtensions,
+          ...DEFAULT_GRID,
+        };
+      });
+    }
+
     case 'TOGGLE_FAST_WALLS_ENABLED_FOR_SONG': {
       return produce(state, (draftState: State) => {
         if (!state.selectedId || !draftState.byId[state.selectedId]) {

@@ -17,9 +17,14 @@ const GridConfig = ({
   colWidth,
   rowHeight,
   updateGrid,
+  resetGrid,
 }) => {
   return (
     <>
+      <Buttons>
+        <MiniButton onClick={resetGrid}>Reset</MiniButton>
+      </Buttons>
+      <Spacer size={UNIT * 4} />
       <Row>
         <TextInput
           type="number"
@@ -120,6 +125,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
   updateGrid: actions.updateGrid,
+  resetGrid: actions.resetGrid,
 };
 
 export default connect(
