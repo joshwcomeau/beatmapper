@@ -9,6 +9,7 @@ import { Tooltip } from 'react-tippy';
 import * as actions from '../../actions';
 import { COLORS, UNIT, NOTES_VIEW } from '../../constants';
 import { getMetaKeyLabel } from '../../utils';
+import { getEnabledFastWalls } from '../../reducers/songs.reducer';
 import { getHasCopiedNotes } from '../../reducers/clipboard.reducer';
 
 import MiniButton from '../MiniButton';
@@ -35,17 +36,21 @@ const SelectionInfo = ({
   numOfSelectedNotes,
   numOfSelectedObstacles,
   hasCopiedNotes,
+  enabledFastWalls,
   deselectAll,
   swapSelectedNotes,
   nudgeSelection,
   cutSelection,
   copySelection,
   pasteSelection,
-  toggleFastWalls,
+  toggleFastWallsForSelectedObstacles,
 }) => {
+  console.log({ enabledFastWalls });
   const shouldShowObstacleDurationTweaks =
     numOfSelectedObstacles === 1 && numOfSelectedNotes === 0;
-  const shouldShowFastWallToggle = numOfSelectedObstacles > 0;
+
+  const shouldShowFastWallToggle =
+    enabledFastWalls && numOfSelectedObstacles > 0;
 
   let numbers = [];
   if (numOfSelectedNotes) {
@@ -183,7 +188,9 @@ const SelectionInfo = ({
       <Spacer size={UNIT} />
 
       {shouldShowFastWallToggle && (
-        <MiniButton onClick={toggleFastWalls}>Toggle Fast Walls</MiniButton>
+        <MiniButton onClick={toggleFastWallsForSelectedObstacles}>
+          Toggle Fast Walls
+        </MiniButton>
       )}
     </Wrapper>
   );
@@ -206,6 +213,7 @@ const Highlight = styled.span`
 const mapStateToProps = state => {
   return {
     hasCopiedNotes: getHasCopiedNotes(state),
+    enabledFastWalls: getEnabledFastWalls(state),
   };
 };
 
@@ -216,7 +224,8 @@ const mapDispatchToProps = {
   cutSelection: actions.cutSelection,
   copySelection: actions.copySelection,
   pasteSelection: actions.pasteSelection,
-  toggleFastWalls: actions.toggleFastWalls,
+  toggleFastWallsForSelectedObstacles:
+    actions.toggleFastWallsForSelectedObstacles,
 };
 
 export default connect(

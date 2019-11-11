@@ -1,0 +1,44 @@
+---
+title: Fast Walls
+subtitle: 💨
+---
+
+By default, walls pop into existence a few beats ahead of the player, and move at the same speed as the notes towards the player. Fast walls offer a way to tweak this behavior, and send walls shooting quickly towards the player.
+
+> Fast walls are a very advanced feature, with many caveats.
+>
+> For one thing, you risk injuring players who are startled by how quickly an obstacle flies towards them!
+>
+> Additionally, they exploit a loophole in the game's programming, and will likely be patched in the future. Using fast walls might make your maps unplayable.
+
+### Enabling fast walls
+
+By default, you are not able to place fast walls.
+
+Head into the "Map settings" page and scroll down to tick the "Enable Fast Walls" checkbox.
+
+### Toggling fast walls
+
+To set a wall as "fast", select it and then click the "Toggle Fast Walls" button in the right side-panel. Fast walls are differentiated with a large "F" in their center:
+
+import fastWallsSrc from './images/fast-walls.png';
+
+<img src={fastWallsSrc} width={600} />
+
+### Working with fast walls
+
+Simply toggling a wall as "fast" won't guarantee that it moves by the player quickly. The _speed_ of the wall depends on its _duration_ and _start beat offset_.
+
+By default, notes and obstacles spawn 2 beats away from the player. If a note is to be struck on Beat 16, it spawns in the distance on beat 14. "Start beat offset" is a way to tweak that value; it defaults to 0, and you can push the offset back further with positive numbers; a "start beat offset" of 1 means that notes and obstacles start 3 beats away from the player instead of 2.
+
+With a default "start beat offset" of 0, here's some rough guidelines:
+
+- A wall that lasts for a single beat won't be very fast at all, it moves at a normal-ish speed.
+- A wall that lasts 2 beats moves noticeably faster; Shortly after spawning it accelerates towards the player
+- A wall that lasts 3 beats moves very very quickly, though it still has the same spawn animation as any other wall.
+
+Fast walls are sort-of the Wild West; not many people understand them that deeply, and they're seldomly used. Some experimentation is required to get a feel for them.
+
+They can provide neat effects in certain songs, especially when combined with [Mapping Extensions](/docs/mods#mapping-extensions) to place the walls outside of the player's personal space. But they carry risks: a future update might break any map that uses them! So please be cautious.
+
+Better support might come in the future, but until their future feels more solid, it's not worth investing time into.

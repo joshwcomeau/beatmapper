@@ -748,6 +748,9 @@ export const updateGrid = (numCols, numRows, colWidth, rowHeight) => ({
   rowHeight,
 });
 
-export const toggleFastWalls = () => ({
-  type: 'TOGGLE_FAST_WALLS',
+export const toggleFastWallsForSelectedObstacles = () => ({
+  type: 'TOGGLE_FAST_WALLS_FOR_SELECTED_OBSTACLES',
+});
+export const toggleFastWallsEnabledForSong = () => ({
+  type: 'TOGGLE_FAST_WALLS_ENABLED_FOR_SONG',
 });

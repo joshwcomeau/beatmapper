@@ -14,7 +14,10 @@ import {
 } from '../../services/file.service';
 import useMount from '../../hooks/use-mount.hook';
 import { sortDifficultyIds } from '../../helpers/song.helpers';
-import { getSelectedSong } from '../../reducers/songs.reducer';
+import {
+  getSelectedSong,
+  getEnabledFastWalls,
+} from '../../reducers/songs.reducer';
 
 import TextInput from '../TextInput';
 import DropdownInput from '../DropdownInput';
@@ -22,6 +25,9 @@ import Heading from '../Heading';
 import Spacer from '../Spacer';
 import Spinner from '../Spinner';
 import Button from '../Button';
+import LabeledCheckbox from '../LabeledCheckbox';
+import QuestionTooltip from '../QuestionTooltip';
+import Link from '../Link';
 import CoverArtPicker from '../AddSongForm/CoverArtPicker';
 import SongPicker from '../AddSongForm/SongPicker';
 
@@ -44,7 +50,13 @@ const ENVIRONMENT_DISPLAY_MAP = {
   PanicEnvironment: 'Panic',
 };
 
-const SongDetails = ({ song, stopPlaying, updateSongDetails }) => {
+const SongDetails = ({
+  song,
+  stopPlaying,
+  enabledFastWalls,
+  updateSongDetails,
+  toggleFastWallsEnabledForSong,
+}) => {
   const [songData, setSongData] = React.useState(song);
   const [isDirty, setIsDirty] = React.useState(false);
   const [songFile, setSongFile] = React.useState(null);
@@ -366,6 +378,22 @@ const SongDetails = ({ song, stopPlaying, updateSongDetails }) => {
         <CustomColorSettings />
         <Spacer size={UNIT * 2} />
         <MappingExtensionSettings />
+        <Spacer size={UNIT * 2} />
+        <LabeledCheckbox
+          id="enable-fast-walls"
+          checked={enabledFastWalls}
+          onChange={toggleFastWallsEnabledForSong}
+        >
+          Enable "fast walls"{' '}
+          <QuestionTooltip>
+            Allows you to customize size and shape of the grid, to place notes
+            outside of the typical 4×3 grid.{' '}
+            <Link forceAnchor to="/docs/mods#mapping-extensions">
+              Learn more
+            </Link>
+            .
+          </QuestionTooltip>
+        </LabeledCheckbox>
       </InnerWrapper>
 
       <Spacer size={UNIT * 36} />
@@ -426,12 +454,14 @@ const Center = styled.div`
 const mapStateToProps = state => {
   return {
     song: getSelectedSong(state),
+    enabledFastWalls: getEnabledFastWalls(state),
   };
 };
 
 const mapDispatchToProps = {
   updateSongDetails: actions.updateSongDetails,
   stopPlaying: actions.stopPlaying,
+  toggleFastWallsEnabledForSong: actions.toggleFastWallsEnabledForSong,
 };
 
 export default connect(

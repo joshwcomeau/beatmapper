@@ -446,7 +446,7 @@ const obstacles = (state = initialState.obstacles, action) => {
       return nudgeObstacles(direction, amount, state);
     }
 
-    case 'TOGGLE_FAST_WALLS': {
+    case 'TOGGLE_FAST_WALLS_FOR_SELECTED_OBSTACLES': {
       return state.map(obstacle => {
         if (obstacle.selected) {
           return {

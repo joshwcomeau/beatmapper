@@ -62,6 +62,7 @@ interface Song {
   lastOpenedAt: number;
   demo?: boolean;
   modSettings: ModSettings;
+  enabledFastWalls?: boolean;
 }
 
 interface State {
@@ -412,6 +413,19 @@ export default function songsReducer(state: State = initialState, action: any) {
       });
     }
 
+    case 'TOGGLE_FAST_WALLS_ENABLED_FOR_SONG': {
+      return produce(state, (draftState: State) => {
+        if (!state.selectedId || !draftState.byId[state.selectedId]) {
+          return state;
+        }
+
+        const song = draftState.byId[state.selectedId];
+
+        // @ts-ignore
+        song.enabledFastWalls = !song.enabledFastWalls;
+      });
+    }
+
     default:
       return state;
   }
@@ -500,6 +514,13 @@ export const getEnabledMods = createSelector(
       mappingExtensions: !!get(song, 'modSettings.mappingExtensions.isEnabled'),
       customColors: !!get(song, 'modSettings.customColors.isEnabled'),
     };
+  }
+);
+
+export const getEnabledFastWalls = createSelector(
+  getSelectedSong,
+  song => {
+    return song.enabledFastWalls;
   }
 );
 
