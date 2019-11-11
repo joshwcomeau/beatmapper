@@ -79,6 +79,7 @@ describe('packaging.service', () => {
         _songFilename: 'song.egg',
         _coverImageFilename: 'cover.jpg',
         _environmentName: DEFAULT_SONG.environment,
+        _customData: { _editor: 'beatmapper' },
         _difficultyBeatmapSets: [
           {
             _beatmapCharacteristicName: 'Standard',
