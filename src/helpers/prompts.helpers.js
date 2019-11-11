@@ -68,7 +68,7 @@ export const promptChangeDefaultObstacleDuration = (
 };
 
 export const promptSaveGridPreset = (gridPresets, wrappedAction) => {
-  const presetSlots = [1, 2, 3, 4];
+  const presetSlots = ['1', '2', '3', '4'];
   const suggestedPreset = presetSlots.find(n => !gridPresets[n]);
 
   const providedValue = window.prompt(
@@ -80,9 +80,7 @@ export const promptSaveGridPreset = (gridPresets, wrappedAction) => {
     return;
   }
 
-  const providedNumber = Number(providedValue);
-
-  const isValidInput = presetSlots.some(n => n === providedNumber);
+  const isValidInput = presetSlots.some(n => n === providedValue);
 
   if (!isValidInput) {
     window.alert(
@@ -90,5 +88,5 @@ export const promptSaveGridPreset = (gridPresets, wrappedAction) => {
     );
   }
 
-  return wrappedAction(providedNumber);
+  return wrappedAction(providedValue);
 };

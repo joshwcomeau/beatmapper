@@ -5,6 +5,7 @@
  */
 import { combineReducers } from 'redux';
 import { createSelector } from 'reselect';
+import produce from 'immer';
 
 import { NOTES_VIEW, EVENTS_VIEW, BEATS_PER_ZOOM_LEVEL } from '../constants';
 import { floorToNearest } from '../utils';
@@ -127,15 +128,23 @@ function notes(state = initialState.notes, action) {
     }
 
     case 'SAVE_GRID_PRESET': {
-      const { grid, presetNum } = action;
+      const { grid, presetSlot } = action;
 
       return {
         ...state,
         gridPresets: {
           ...state.gridPresets,
-          [presetNum]: grid,
+          [presetSlot]: grid,
         },
       };
+    }
+
+    case 'DELETE_GRID_PRESET': {
+      const { presetSlot } = action;
+
+      return produce(state, draftState => {
+        delete draftState.gridPresets[presetSlot];
+      });
     }
 
     default:

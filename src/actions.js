@@ -757,7 +757,7 @@ export const loadGridPreset = grid => ({
   grid,
 });
 
-export const saveGridPreset = presetNum => (dispatch, getState) => {
+export const saveGridPreset = presetSlot => (dispatch, getState) => {
   const state = getState();
 
   const grid = getGridSize(state);
@@ -765,9 +765,14 @@ export const saveGridPreset = presetNum => (dispatch, getState) => {
   return dispatch({
     type: 'SAVE_GRID_PRESET',
     grid,
-    presetNum,
+    presetSlot,
   });
 };
+
+export const deleteGridPreset = presetSlot => ({
+  type: 'DELETE_GRID_PRESET',
+  presetSlot,
+});
 
 export const toggleFastWallsForSelectedObstacles = () => ({
   type: 'TOGGLE_FAST_WALLS_FOR_SELECTED_OBSTACLES',

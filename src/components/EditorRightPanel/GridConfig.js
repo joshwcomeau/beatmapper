@@ -27,6 +27,7 @@ const GridConfig = ({
   resetGrid,
   saveGridPreset,
   loadGridPreset,
+  deleteGridPreset,
 }) => {
   const showPresets = Object.keys(gridPresets).length > 0;
 
@@ -45,8 +46,17 @@ const GridConfig = ({
             <SpacedChildren>
               {GRID_PRESET_SLOTS.map(slot => (
                 <MiniButton
+                  key={slot}
                   disabled={!gridPresets[slot]}
-                  onClick={() => loadGridPreset(gridPresets[slot])}
+                  onClick={ev => {
+                    if (ev.buttons === 0) {
+                      loadGridPreset(gridPresets[slot]);
+                    }
+                  }}
+                  onContextMenu={ev => {
+                    ev.preventDefault();
+                    deleteGridPreset(slot);
+                  }}
                 >
                   {slot}
                 </MiniButton>
@@ -169,6 +179,7 @@ const mapDispatchToProps = {
   resetGrid: actions.resetGrid,
   saveGridPreset: actions.saveGridPreset,
   loadGridPreset: actions.loadGridPreset,
+  deleteGridPreset: actions.deleteGridPreset,
 };
 
 export default connect(
