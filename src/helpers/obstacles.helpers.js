@@ -5,7 +5,7 @@ import {
   convertGridColumn,
   convertGridRow,
 } from './grid.helpers';
-import { normalize, clamp } from '../utils';
+import { normalize, clamp, roundToNearest } from '../utils';
 
 // These constants relate to the conversion to/from MappingExtensions
 // obstacles.
@@ -43,18 +43,20 @@ export const convertObstaclesToRedux = (
       const wallHeight = Math.round(typeValue / 1000);
       const wallStartHeight = typeValue % 1000;
 
-      const rowspan = Math.round(
+      const rowspan = roundToNearest(
         normalize(
           wallHeight,
           WALL_HEIGHT_MIN,
           WALL_HEIGHT_MAX,
           0,
           FULL_WALL_HEIGHT_IN_ROWS
-        )
+        ),
+        0.001
       );
 
-      const rowIndex = Math.round(
-        normalize(wallStartHeight, WALL_START_BASE, WALL_START_MAX, 0, 2)
+      const rowIndex = roundToNearest(
+        normalize(wallStartHeight, WALL_START_BASE, WALL_START_MAX, 0, 2),
+        0.01
       );
 
       obstacleData.type = 'extension';

@@ -148,7 +148,7 @@ describe('Obstacles helpers', () => {
     expect(actualResult).toEqual(expectedResult);
   });
 
-  it('Converts JSON to redux', () => {
+  it('Converts an 8x3 grid to Redux', () => {
     const proprietaryData = [
       {
         _time: 2,
@@ -183,5 +183,63 @@ describe('Obstacles helpers', () => {
     ];
 
     expect(actualWithoutIds).toEqual(expectedResult);
+  });
+
+  describe('With different cell widths/heights', () => {
+    it('handles narrower columns', () => {
+      // This grid is 10x3 with 0.25x columns
+      // First, just check and make sure I get the same values in and out.
+      const gridCols = 10;
+      const obstacle = {
+        id: 'a',
+        beatDuration: 1,
+        beatStart: 0,
+        colspan: 0.25,
+        lane: 2.75,
+        rowIndex: 1,
+        rowspan: 1,
+        type: 'extension',
+      };
+
+      const exportableJson = convertObstaclesToExportableJson(
+        [obstacle],
+        gridCols
+      );
+      const [backToRedux] = convertObstaclesToRedux(exportableJson, gridCols);
+
+      // We'll lose the ID in the back-and-forth conversion, which is OK.
+      // Let's add it back in
+      backToRedux.id = obstacle.id;
+
+      expect(backToRedux).toEqual(obstacle);
+    });
+    it('handles shorter rows', () => {
+      // This grid is 4x10 with 0.25x columns
+      // First, just check and make sure I get the same values in and out.
+      const gridCols = 4;
+      const obstacle = {
+        id: 'a',
+        beatDuration: 1,
+        beatStart: 0,
+        colspan: 1,
+        lane: 1,
+        rowIndex: 1.25,
+        rowspan: 0.5,
+        type: 'extension',
+      };
+
+      const exportableJson = convertObstaclesToExportableJson(
+        [obstacle],
+        gridCols
+      );
+
+      const [backToRedux] = convertObstaclesToRedux(exportableJson, gridCols);
+
+      // We'll lose the ID in the back-and-forth conversion, which is OK.
+      // Let's add it back in
+      backToRedux.id = obstacle.id;
+
+      expect(backToRedux).toEqual(obstacle);
+    });
   });
 });
