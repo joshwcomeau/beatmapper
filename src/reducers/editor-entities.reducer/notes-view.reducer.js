@@ -459,11 +459,17 @@ const obstacles = (state = initialState.obstacles, action) => {
     }
 
     case 'TOGGLE_FAST_WALLS_FOR_SELECTED_OBSTACLES': {
+      // This action should either set all walls to "fast", or all walls to
+      // "slow" (normal), based on if a single selected map is fast already.
+      const areAnySelectedWallsFast = state.some(obstacle => obstacle.fast);
+
+      const shouldBeFast = !areAnySelectedWallsFast;
+
       return state.map(obstacle => {
         if (obstacle.selected) {
           return {
             ...obstacle,
-            fast: !obstacle.fast,
+            fast: shouldBeFast,
           };
         } else {
           return obstacle;
