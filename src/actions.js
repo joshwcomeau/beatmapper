@@ -550,6 +550,12 @@ export const resizeObstacle = (id, newBeatDuration) => ({
   id,
   newBeatDuration,
 });
+
+export const resizeSelectedObstacles = newBeatDuration => ({
+  type: 'RESIZE_SELECTED_OBSTACLES',
+  newBeatDuration,
+});
+
 export const changeDefaultObstacleDuration = defaultObstacleDuration => ({
   type: 'CHANGE_DEFAULT_OBSTACLE_DURATION',
   defaultObstacleDuration,

@@ -36,19 +36,39 @@ export const promptJumpToBeat = (wrappedAction, ...additionalArgs) => {
   return wrappedAction(Number(beatNum), ...additionalArgs);
 };
 
-export const promptChangeObstacleDuration = (obstacle, wrappedAction) => {
-  const { id, beatDuration } = obstacle;
+export const promptChangeObstacleDuration = (obstacles, wrappedAction) => {
+  const { beatDuration } = obstacles[0];
 
-  const newDuration = window.prompt(
-    'Enter the duration for this wall, in beats',
-    beatDuration
-  );
+  const promptCopy =
+    obstacles.length === 1
+      ? 'Enter the new duration for this wall, in beats'
+      : 'Enter the new duration for all selected walls';
+
+  const newDuration = window.prompt(promptCopy, beatDuration);
 
   if (newDuration === null || newDuration === '') {
     return;
   }
 
-  return wrappedAction(id, Number(newDuration));
+  const selectedObstacleDurations = {};
+  obstacles.forEach(obstacle => {
+    selectedObstacleDurations[obstacle.beatDuration] = true;
+  });
+  const numOfDifferentDurations = Object.keys(selectedObstacleDurations).length;
+
+  if (numOfDifferentDurations > 1) {
+    const hasConfirmed = window.confirm(
+      `Warning: You've selected obstacles with different durations. This will set all selected obstacles to ${newDuration} ${
+        newDuration === 1 ? 'beat' : 'beats'
+      }. Is this what you want?`
+    );
+
+    if (!hasConfirmed) {
+      return;
+    }
+  }
+
+  return wrappedAction(Number(newDuration));
 };
 
 export const promptChangeDefaultObstacleDuration = (

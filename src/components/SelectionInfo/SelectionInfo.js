@@ -45,11 +45,7 @@ const SelectionInfo = ({
   pasteSelection,
   toggleFastWallsForSelectedObstacles,
 }) => {
-  const shouldShowObstacleDurationTweaks =
-    numOfSelectedObstacles === 1 && numOfSelectedNotes === 0;
-
-  const shouldShowFastWallToggle =
-    enabledFastWalls && numOfSelectedObstacles > 0;
+  const hasSelectedObstacles = numOfSelectedObstacles >= 1;
 
   let numbers = [];
   if (numOfSelectedNotes) {
@@ -82,10 +78,8 @@ const SelectionInfo = ({
 
       <Spacer size={UNIT * 4} />
 
-      {shouldShowObstacleDurationTweaks && (
+      {hasSelectedObstacles && (
         <>
-          <Heading size={3}>Selected Wall</Heading>
-          <Spacer size={UNIT * 1.5} />
           <ObstacleTweaks />
           <Spacer size={UNIT * 4} />
         </>
@@ -183,14 +177,6 @@ const SelectionInfo = ({
           Deselect
         </MiniButton>
       </Tooltip>
-
-      <Spacer size={UNIT} />
-
-      {shouldShowFastWallToggle && (
-        <MiniButton onClick={toggleFastWallsForSelectedObstacles}>
-          Toggle Fast Walls
-        </MiniButton>
-      )}
     </Wrapper>
   );
 };

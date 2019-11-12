@@ -1,54 +1,60 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
 
 import * as actions from '../../actions';
-import { COLORS, UNIT } from '../../constants';
+import { UNIT } from '../../constants';
 import { getSelectedObstacles } from '../../reducers/editor-entities.reducer/notes-view.reducer';
+import { getEnabledFastWalls } from '../../reducers/songs.reducer';
 import { promptChangeObstacleDuration } from '../../helpers/prompts.helpers';
 
 import Spacer from '../Spacer';
+import Heading from '../Heading';
 import MiniButton from '../MiniButton';
 
-const ObstacleTweaks = ({ obstacle, resizeObstacle }) => {
-  // We want to let the user tweak the duration of the obstacle
-  const beatNoun = obstacle.beatDuration === 1 ? 'beat' : 'beats';
-
+const ObstacleTweaks = ({
+  selectedObstacles,
+  enabledFastWalls,
+  resizeSelectedObstacles,
+  toggleFastWallsForSelectedObstacles,
+}) => {
   return (
     <>
-      <div>
-        Duration: <Highlight>{obstacle.beatDuration}</Highlight> {beatNoun}
-      </div>
+      <Heading size={3}>Selected Walls</Heading>
       <Spacer size={UNIT * 1.5} />
       <MiniButton
-        onClick={() => promptChangeObstacleDuration(obstacle, resizeObstacle)}
+        onClick={() =>
+          promptChangeObstacleDuration(
+            selectedObstacles,
+            resizeSelectedObstacles
+          )
+        }
       >
         Change duration
       </MiniButton>
+      {enabledFastWalls && (
+        <>
+          <Spacer size={UNIT} />
+          <MiniButton onClick={toggleFastWallsForSelectedObstacles}>
+            Toggle Fast Walls
+          </MiniButton>
+        </>
+      )}
     </>
   );
 };
 
-const Highlight = styled.span`
-  color: ${COLORS.yellow[500]};
-`;
-
 const mapStateToProps = state => {
-  const selectedObstacles = getSelectedObstacles(state);
-
-  if (selectedObstacles.length !== 1) {
-    throw new Error(
-      'ObstacleTweaks is rendered with an incorrect number of selected obstacles. Expected 1, got ' +
-        selectedObstacles.length
-    );
-  }
-
-  const [obstacle] = selectedObstacles;
-
-  return { obstacle };
+  return {
+    selectedObstacles: getSelectedObstacles(state),
+    enabledFastWalls: getEnabledFastWalls(state),
+  };
 };
 
-const mapDispatchToProps = { resizeObstacle: actions.resizeObstacle };
+const mapDispatchToProps = {
+  resizeSelectedObstacles: actions.resizeSelectedObstacles,
+  toggleFastWallsForSelectedObstacles:
+    actions.toggleFastWallsForSelectedObstacles,
+};
 
 export default connect(
   mapStateToProps,

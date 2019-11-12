@@ -328,6 +328,18 @@ const obstacles = (state = initialState.obstacles, action) => {
       });
     }
 
+    case 'RESIZE_SELECTED_OBSTACLES': {
+      const { newBeatDuration } = action;
+
+      return produce(state, draftState => {
+        draftState.forEach(obstacle => {
+          if (obstacle.selected) {
+            obstacle.beatDuration = newBeatDuration;
+          }
+        });
+      });
+    }
+
     case 'DELETE_OBSTACLE': {
       return state.filter(obstacle => obstacle.id !== action.id);
     }
@@ -479,6 +491,7 @@ const notesView = undoable(combineReducers({ notes, obstacles }), {
     'PASTE_SELECTION',
     'CREATE_NEW_OBSTACLE',
     'RESIZE_OBSTACLE',
+    'RESIZE_SELECTED_OBSTACLES',
     'DELETE_OBSTACLE',
     'SWAP_SELECTED_NOTES',
     'TOGGLE_NOTE_COLOR',
