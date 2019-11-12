@@ -34,7 +34,7 @@ import {
   getArchiveVersion,
   shiftEntitiesByOffset,
   getFileFromArchive,
-  getModSettingsForBeatmap,
+  deriveDefaultModSettingsFromBeatmap,
 } from './packaging.service.nitty-gritty';
 import { getSortedBookmarksArray } from '../reducers/bookmarks.reducer';
 
@@ -49,9 +49,18 @@ export function createInfoContent(song, meta = { version: 2 }) {
 
   // Has this song enabled any mod support?
   let requirements = [];
-  if (get(song, 'modSettings.mappingExtensions.isEnabled')) {
+  const mappingExtensionsEnabled = !!get(
+    song,
+    'modSettings.mappingExtensions.isEnabled'
+  );
+  if (mappingExtensionsEnabled) {
     requirements.push('Mapping Extensions');
   }
+
+  const editorSettings = {
+    enabledFastWalls: song.enabledFastWalls,
+    modSettings: song.modSettings,
+  };
 
   let contents;
   if (meta.version === 1) {
@@ -91,6 +100,7 @@ export function createInfoContent(song, meta = { version: 2 }) {
       _environmentName: song.environment,
       _customData: {
         _editor: 'beatmapper',
+        _editorSettings: editorSettings,
       },
       _difficultyBeatmapSets: [
         {
@@ -523,13 +533,6 @@ export const processImportedMap = async (zipFile, currentSongIds) => {
     })
   );
 
-  // The beatmap might come with mod info, like saber/env colors.
-  // Pluck that out.
-  // Note that it's possible for different difficulties to have different data.
-  // I'm just going to take the last one available, I don't support different
-  // saber colors for different difficulties
-  const modSettings = getModSettingsForBeatmap(beatmapSet);
-
   const difficultiesById = difficultyFiles.reduce(
     (acc, { id, noteJumpSpeed, startBeatOffset, customLabel, ...rest }) => {
       return {
@@ -552,6 +555,17 @@ export const processImportedMap = async (zipFile, currentSongIds) => {
         ._editorOffset || 0;
   } catch (e) {}
 
+  const wasCreatedInBeatmapper =
+    get(infoDatJson, '_customData._editor') === 'beatmapper';
+
+  const persistedData = wasCreatedInBeatmapper
+    ? infoDatJson._customData._editorSettings
+    : {};
+
+  let modSettings =
+    persistedData.modSettings ||
+    deriveDefaultModSettingsFromBeatmap(beatmapSet);
+
   return {
     songId,
     songFile,
@@ -570,6 +584,7 @@ export const processImportedMap = async (zipFile, currentSongIds) => {
     previewDuration: infoDatJson._previewDuration,
     environment: infoDatJson._environmentName,
     difficultiesById,
+    ...persistedData,
     modSettings,
   };
 };

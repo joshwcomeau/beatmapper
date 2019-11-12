@@ -66,7 +66,7 @@ export const unshiftEntitiesByOffset = (entities, offset, bpm) => {
   return shiftEntitiesByOffsetInBeats(entities, offsetInBeats);
 };
 
-export const getModSettingsForBeatmap = beatmapSet => {
+export const deriveDefaultModSettingsFromBeatmap = beatmapSet => {
   const modSettings = {};
 
   beatmapSet._difficultyBeatmaps.forEach(beatmap => {

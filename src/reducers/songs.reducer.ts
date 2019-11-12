@@ -213,6 +213,7 @@ export default function songsReducer(state: State = initialState, action: any) {
           difficultiesById,
           demo,
           modSettings = {},
+          enabledFastWalls,
         },
       } = action;
 
@@ -242,6 +243,7 @@ export default function songsReducer(state: State = initialState, action: any) {
           lastOpenedAt,
           demo,
           modSettings,
+          enabledFastWalls,
         };
       });
     }
