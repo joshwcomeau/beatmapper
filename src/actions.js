@@ -279,16 +279,37 @@ export const setBlockByDragging = (
   direction,
   rowIndex,
   colIndex,
-  cursorPositionInBeats,
   selectedTool
-) => ({
-  type: 'SET_BLOCK_BY_DRAGGING',
-  direction,
-  rowIndex,
-  colIndex,
-  cursorPositionInBeats,
-  selectedTool,
-});
+) => (dispatch, getState) => {
+  const state = getState();
+
+  const isPlaying = getIsPlaying(state);
+  const selectedTool = getSelectedNoteTool(state);
+  const snapTo = getSnapTo(state);
+  let cursorPositionInBeats = getCursorPositionInBeats(state);
+
+  // If the user tries to place blocks while the song is playing,
+  // we want to snap to the nearest snapping interval.
+  // eg. if they're set to snap to 1/2 beats, and they click
+  // when the song is 3.476 beats in, we should round up to 3.5.
+  if (isPlaying) {
+    cursorPositionInBeats = roundToNearest(cursorPositionInBeats, snapTo);
+  }
+
+  cursorPositionInBeats = roundAwayFloatingPointNonsense(
+    cursorPositionInBeats,
+    snapTo
+  );
+
+  return dispatch({
+    type: 'SET_BLOCK_BY_DRAGGING',
+    direction,
+    rowIndex,
+    colIndex,
+    cursorPositionInBeats,
+    selectedTool,
+  });
+};
 
 export const zoomWaveform = amount => ({
   type: 'ZOOM_WAVEFORM',

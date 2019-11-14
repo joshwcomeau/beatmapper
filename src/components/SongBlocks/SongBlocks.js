@@ -13,6 +13,7 @@ import { getVisibleNotes } from '../../reducers/editor-entities.reducer/notes-vi
 import Block from '../Block';
 import Mine from '../Mine';
 import { getSelectedSong } from '../../reducers/songs.reducer';
+import { roundAwayFloatingPointNonsense } from '../../utils';
 
 const getPositionForBlock = (note, beatDepth) => {
   const x = note._lineIndex * BLOCK_COLUMN_WIDTH - BLOCK_COLUMN_WIDTH * 1.5;
@@ -80,7 +81,7 @@ const SongBlocks = ({
 
   return notes.map((note, index) => {
     const { x, y, z } = getPositionForBlock(note, beatDepth);
-    const noteZPosition = zPosition + z;
+    const noteZPosition = roundAwayFloatingPointNonsense(zPosition + z);
 
     const NoteComponent = note._type === 3 ? Mine : Block;
 

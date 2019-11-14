@@ -23,7 +23,6 @@ const GridSquare = ({
   defaultObstacleDuration,
   selectionMode,
   selectedTool,
-  snapTo,
   setHoveredCell,
   clickPlacementGrid,
   createNewObstacle,

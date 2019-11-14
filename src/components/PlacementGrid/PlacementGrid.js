@@ -7,10 +7,6 @@ import { range } from '../../utils';
 import { convertGridColumn, convertGridRow } from '../../helpers/grid.helpers';
 import { getColorForItem } from '../../helpers/colors.helpers';
 import {
-  getCursorPositionInBeats,
-  getSnapTo,
-} from '../../reducers/navigation.reducer';
-import {
   getGridSize,
   getMappingMode,
   getSelectedSong,
@@ -25,8 +21,6 @@ const PlacementGrid = ({
   width,
   gridPosition,
   song,
-  cursorPositionInBeats,
-  snapTo,
   selectedTool,
   selectionMode,
   mappingMode,
@@ -93,7 +87,6 @@ const PlacementGrid = ({
           direction,
           effectiveRowIndex,
           effectiveColIndex,
-          cursorPositionInBeats,
           selectedTool
         );
 
@@ -152,7 +145,6 @@ const PlacementGrid = ({
               mappingMode={mappingMode}
               defaultObstacleDuration={defaultObstacleDuration}
               selectionMode={selectionMode}
-              snapTo={snapTo}
               setHoveredCell={setHoveredCell}
               clickPlacementGrid={clickPlacementGrid}
               createNewObstacle={createNewObstacle}
@@ -179,8 +171,6 @@ const mapStateToProps = state => {
 
   return {
     song,
-    cursorPositionInBeats: getCursorPositionInBeats(state),
-    snapTo: getSnapTo(state),
     selectedTool: state.editor.notes.selectedTool,
     selectionMode: state.editor.notes.selectionMode,
     mappingMode: getMappingMode(state),
