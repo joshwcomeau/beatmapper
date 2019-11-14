@@ -147,10 +147,11 @@ export const convertObstaclesToExportableJson = (
         //
         // As with notes, we need to convert them to the thousands-scale used
         // by MappingExtensions.
-        obstacleData._lineIndex =
-          o.lane < 0 ? o.lane * 1000 - 1000 : o.lane * 1000 + 1000;
+        obstacleData._lineIndex = Math.round(
+          o.lane < 0 ? o.lane * 1000 - 1000 : o.lane * 1000 + 1000
+        );
 
-        obstacleData._width = o.colspan * 1000 + 1000;
+        obstacleData._width = Math.round(o.colspan * 1000 + 1000);
 
         break;
       }

@@ -31,11 +31,12 @@ export const convertBlocksToRedux = blocks => {
   });
 };
 
+// UNUSED
 export const convertBlocksToExportableJson = blocks => {
   return blocks.map(b => ({
     _time: b.beatNum,
-    _lineIndex: b.colIndex,
-    _lineLayer: b.rowIndex,
+    _lineIndex: Math.round(b.colIndex),
+    _lineLayer: Math.round(b.rowIndex),
     _type: b.color === 'blue' ? 0 : 1,
     _cutDirection: HUMANIZED_DIRECTIONS.indexOf(b.direction),
   }));

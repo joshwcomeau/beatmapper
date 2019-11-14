@@ -192,6 +192,15 @@ export function createBeatmapContents(
   let sortedObstacles = [...obstacles].sort(sortByTime);
   let sortedEvents = [...events].sort(sortByTime);
 
+  // Annoyingly sometimes we can end up with floating-point issues on
+  // lineIndex and lineLayer. Usually I deal with this in the helpers, but
+  // notes don't have a helper yet
+  sortedNotes = sortedNotes.map(note => ({
+    ...note,
+    _lineIndex: Math.round(note._lineIndex),
+    _lineLayer: Math.round(note._lineLayer),
+  }));
+
   // Remove 'selected' property
   const removeSelected = entity => {
     const copy = { ...entity };
