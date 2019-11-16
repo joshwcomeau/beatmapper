@@ -1,15 +1,16 @@
 /**
  * This reducer holds user/session-specific info.
- * For now, it only tracks whether or not we should treat this user as
- * brand-new or not.
  *
  * Persisted across sessions (like songs.reducer)
  */
+
+const DEFAULT_PROCESSING_DELAY = 60;
 
 const initialState = {
   isNewUser: true,
   seenPrompts: [],
   stickyMapAuthorName: null,
+  processingDelay: DEFAULT_PROCESSING_DELAY,
 };
 
 export default function user(state = initialState, action) {
@@ -47,6 +48,13 @@ export default function user(state = initialState, action) {
       };
     }
 
+    case 'UPDATE_PROCESSING_DELAY': {
+      return {
+        ...state,
+        processingDelay: action.newDelay,
+      };
+    }
+
     default:
       return state;
   }
@@ -55,3 +63,7 @@ export default function user(state = initialState, action) {
 export const getIsNewUser = state => state.user.isNewUser;
 export const getSeenPrompts = state => state.user.seenPrompts;
 export const getStickyMapAuthorName = state => state.user.stickyMapAuthorName;
+export const getProcessingDelay = state =>
+  typeof state.user.processingDelay === 'number'
+    ? state.user.processingDelay
+    : DEFAULT_PROCESSING_DELAY;

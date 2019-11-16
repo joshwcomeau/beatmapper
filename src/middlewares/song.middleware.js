@@ -61,6 +61,7 @@ import {
   triggerTickerIfNecessary,
   calculateIfPlaybackShouldBeCommandeered,
 } from './song.middleware.helpers';
+import { getProcessingDelay } from '../reducers/user.reducer';
 
 export default function createSongMiddleware() {
   let animationFrameId = null;
@@ -268,13 +269,20 @@ export default function createSongMiddleware() {
 
           const state = store.getState();
           const song = getSelectedSong(state);
+          const processingDelay = getProcessingDelay(state);
 
           const currentBeat = convertMillisecondsToBeats(
             currentTime - song.offset,
             song.bpm
           );
 
-          triggerTickerIfNecessary(state, currentBeat, lastBeat, ticker);
+          triggerTickerIfNecessary(
+            state,
+            currentBeat,
+            lastBeat,
+            ticker,
+            processingDelay
+          );
 
           // Normally, we just want to have one frame after another, with no
           // overriding behavior. Sometimes, though, we want to commandeer.
@@ -285,7 +293,7 @@ export default function createSongMiddleware() {
             state,
             currentBeat,
             lastBeat,
-            audioElem
+            processingDelay
           );
 
           if (typeof commandeeredCursorPosition === 'number') {

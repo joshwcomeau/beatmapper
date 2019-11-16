@@ -8,6 +8,7 @@ import { sun } from 'react-icons-kit/feather/sun';
 import { sliders } from 'react-icons-kit/feather/sliders';
 import { download } from 'react-icons-kit/feather/download';
 import { helpCircle } from 'react-icons-kit/feather/helpCircle';
+import { settings } from 'react-icons-kit/feather/settings';
 import { play } from 'react-icons-kit/feather/play';
 
 import { COLORS, UNIT, SIDEBAR_WIDTH } from '../../constants';
@@ -15,77 +16,88 @@ import * as actions from '../../actions';
 
 import SpacedChildren from '../SpacedChildren';
 import Spacer from '../Spacer';
+import SettingsModal from '../SettingsModal';
 import SidebarNavItem from './SidebarNavItem';
 
-const Sidebar = ({ location, match, leaveEditor }) => {
+const Sidebar = ({ location, match }) => {
   const { songId, difficulty } = match.params;
 
+  const [showSettingsModal, setShowSettingsModal] = React.useState(false);
+
   return (
-    <Wrapper>
-      <Top>
-        <Spacer size={UNIT * 2} />
-        <SidebarNavItem icon={home} to="/" />
+    <>
+      <SettingsModal
+        isVisible={showSettingsModal}
+        onDismiss={() => {
+          setShowSettingsModal(false);
+        }}
+      />
 
-        <Spacer size={UNIT * 2} />
-        <Divider />
-        <Spacer size={UNIT * 2} />
+      <Wrapper>
+        <Top>
+          <Spacer size={UNIT * 2} />
+          <SidebarNavItem icon={home} to="/" />
 
-        <SpacedChildren spacing={UNIT * 2}>
-          <SidebarNavItem
-            title="Notes"
-            icon={box}
-            to={`/edit/${songId}/${difficulty}/notes`}
-            isActive={!!location.pathname.match(/\/notes$/)}
-          />
-          <SidebarNavItem
-            title="Events"
-            icon={sun}
-            to={`/edit/${songId}/${difficulty}/events`}
-            isActive={!!location.pathname.match(/\/events$/)}
-          />
-          {/* SECRET for now */}
-          <SidebarNavItem
-            title="Preview"
-            icon={play}
-            to={`/edit/${songId}/${difficulty}/preview`}
-            isActive={!!location.pathname.match(/\/preview$/)}
-          />
-          <SidebarNavItem
-            title="Map Settings"
-            icon={sliders}
-            to={`/edit/${songId}/${difficulty}/details`}
-            isActive={!!location.pathname.match(/\/details$/)}
-          />
-          <SidebarNavItem
-            title="Download"
-            icon={download}
-            to={`/edit/${songId}/${difficulty}/download`}
-            isActive={!!location.pathname.match(/\/download$/)}
-          />
-        </SpacedChildren>
-      </Top>
+          <Spacer size={UNIT * 2} />
+          <Divider />
+          <Spacer size={UNIT * 2} />
 
-      <Bottom>
-        <SpacedChildren spacing={UNIT * 2}>
-          {/* <SidebarNavItem
-            title="Settings"
-            icon={settings}
-            onClick={ev => {
-              ev.preventDefault();
-              alert('click');
-            }}
-            isActive={false}
-          /> */}
-          <SidebarNavItem
-            title="Help"
-            icon={helpCircle}
-            to="/docs"
-            isActive={false}
-            target="_blank"
-          />
-        </SpacedChildren>
-      </Bottom>
-    </Wrapper>
+          <SpacedChildren spacing={UNIT * 2}>
+            <SidebarNavItem
+              title="Notes"
+              icon={box}
+              to={`/edit/${songId}/${difficulty}/notes`}
+              isActive={!!location.pathname.match(/\/notes$/)}
+            />
+            <SidebarNavItem
+              title="Events"
+              icon={sun}
+              to={`/edit/${songId}/${difficulty}/events`}
+              isActive={!!location.pathname.match(/\/events$/)}
+            />
+            <SidebarNavItem
+              title="Preview"
+              icon={play}
+              to={`/edit/${songId}/${difficulty}/preview`}
+              isActive={!!location.pathname.match(/\/preview$/)}
+            />
+            <SidebarNavItem
+              title="Map settings"
+              icon={sliders}
+              to={`/edit/${songId}/${difficulty}/details`}
+              isActive={!!location.pathname.match(/\/details$/)}
+            />
+            <SidebarNavItem
+              title="Download"
+              icon={download}
+              to={`/edit/${songId}/${difficulty}/download`}
+              isActive={!!location.pathname.match(/\/download$/)}
+            />
+          </SpacedChildren>
+        </Top>
+
+        <Bottom>
+          <SpacedChildren spacing={UNIT * 2}>
+            <SidebarNavItem
+              title="App settings"
+              icon={settings}
+              onClick={ev => {
+                ev.preventDefault();
+                setShowSettingsModal(true);
+              }}
+              isActive={false}
+            />
+            <SidebarNavItem
+              title="Help"
+              icon={helpCircle}
+              to="/docs"
+              isActive={false}
+              target="_blank"
+            />
+          </SpacedChildren>
+        </Bottom>
+      </Wrapper>
+    </>
   );
 };
 
@@ -115,9 +127,4 @@ const mapDispatchToProps = {
   leaveEditor: actions.leaveEditor,
 };
 
-export default withRouter(
-  connect(
-    null,
-    mapDispatchToProps
-  )(Sidebar)
-);
+export default withRouter(connect(null, mapDispatchToProps)(Sidebar));

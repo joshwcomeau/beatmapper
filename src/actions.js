@@ -799,3 +799,8 @@ export const toggleFastWallsForSelectedObstacles = () => ({
 export const toggleFastWallsEnabledForSong = () => ({
   type: 'TOGGLE_FAST_WALLS_ENABLED_FOR_SONG',
 });
+
+export const updateProcessingDelay = newDelay => ({
+  type: 'UPDATE_PROCESSING_DELAY',
+  newDelay,
+});

@@ -44,16 +44,14 @@ export const triggerTickerIfNecessary = (
   state,
   currentBeat,
   lastBeat,
-  ticker
+  ticker,
+  processingDelay
 ) => {
   const song = getSelectedSong(state);
 
   const playNoteTick = getPlayNoteTick(state);
 
   if (playNoteTick) {
-    // TODO: pull from state, allow users to customize it in a settings
-    // modal or similar
-    const processingDelay = 60;
     const delayInBeats = convertMillisecondsToBeats(processingDelay, song.bpm);
 
     const anyNotesWithinTimespan = getNotes(state).some(
@@ -69,14 +67,11 @@ export const triggerTickerIfNecessary = (
   }
 };
 
-// TODO: Pull this in from state.
-const PROCESSING_DELAY = 60;
-
 export const calculateIfPlaybackShouldBeCommandeered = (
   state,
   currentBeat,
   lastBeat,
-  audioElem
+  processingDelay
 ) => {
   const song = getSelectedSong(state);
 
@@ -89,7 +84,7 @@ export const calculateIfPlaybackShouldBeCommandeered = (
   const deltaInMillisecondsBetweenFrames = currentTime - lastBeatTime;
 
   const processingDelayInBeats = convertMillisecondsToBeats(
-    PROCESSING_DELAY,
+    processingDelay,
     song.bpm
   );
 

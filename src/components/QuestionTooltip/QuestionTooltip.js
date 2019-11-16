@@ -4,10 +4,14 @@ import { helpCircle } from 'react-icons-kit/feather/helpCircle';
 import { Tooltip } from 'react-tippy';
 import styled from 'styled-components';
 
-const QuestionTooltip = ({ children }) => {
+const QuestionTooltip = ({ children, ...delegated }) => {
   return (
     <Wrapper>
-      <Tooltip interactive html={<HelpWrapper>{children}</HelpWrapper>}>
+      <Tooltip
+        interactive
+        html={<HelpWrapper>{children}</HelpWrapper>}
+        {...delegated}
+      >
         <Icon size={14} icon={helpCircle} />
       </Tooltip>
     </Wrapper>
