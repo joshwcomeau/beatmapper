@@ -81,7 +81,12 @@ const SongBlocks = ({
 
   return notes.map((note, index) => {
     const { x, y, z } = getPositionForBlock(note, beatDepth);
-    const noteZPosition = roundAwayFloatingPointNonsense(zPosition + z);
+    let noteZPosition = roundAwayFloatingPointNonsense(zPosition + z);
+    // HACK: So I'm winding up with zPositions of like 11.999994, and it's
+    // making the notes transparent because they're 0.000006 before the
+    // placement grid. I imagine there's a better place to manage this than
+    // here, but I'm sick of this problem.
+    const adjustedNoteZPosition = noteZPosition - 0.001;
 
     const NoteComponent = note._type === 3 ? Mine : Block;
 
@@ -96,7 +101,7 @@ const SongBlocks = ({
         lineIndex={note._lineIndex}
         direction={note._cutDirection}
         color={getColorForItem(note._type, song)}
-        isTransparent={noteZPosition > -SONG_OFFSET * 2}
+        isTransparent={adjustedNoteZPosition > -SONG_OFFSET * 2}
         isSelected={note.selected}
         selectionMode={selectionMode}
         handleClick={clickNote}

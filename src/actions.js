@@ -246,7 +246,6 @@ export const clickPlacementGrid = (rowIndex, colIndex) => (
 ) => {
   const state = getState();
 
-  const isPlaying = getIsPlaying(state);
   const selectedDirection = getSelectedCutDirection(state);
   const selectedTool = getSelectedNoteTool(state);
   const snapTo = getSnapTo(state);
@@ -256,14 +255,7 @@ export const clickPlacementGrid = (rowIndex, colIndex) => (
   // we want to snap to the nearest snapping interval.
   // eg. if they're set to snap to 1/2 beats, and they click
   // when the song is 3.476 beats in, we should round up to 3.5.
-  if (isPlaying) {
-    cursorPositionInBeats = roundToNearest(cursorPositionInBeats, snapTo);
-  }
-
-  cursorPositionInBeats = roundAwayFloatingPointNonsense(
-    cursorPositionInBeats,
-    snapTo
-  );
+  cursorPositionInBeats = roundToNearest(cursorPositionInBeats, snapTo);
 
   dispatch({
     type: 'CLICK_PLACEMENT_GRID',
