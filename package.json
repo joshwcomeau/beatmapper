@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js"
+    "test": "node scripts/test.js",
+    "foo": "echo 'hello';"
   },
   "dependencies": {
     "@babel/core": "7.4.3",

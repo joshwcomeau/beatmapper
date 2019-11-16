@@ -1,24 +1,26 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import {
   SURFACE_WIDTH,
   SURFACE_HEIGHT,
-  SURFACE_DEPTH,
   SONG_OFFSET,
   BLOCK_COLUMN_WIDTH,
+  getSurfaceDepth,
 } from '../../constants';
 import { DEFAULT_NUM_ROWS } from '../../helpers/grid.helpers';
 
 import EdgeStrip from './EdgeStrip';
+import { getGraphicsLevel } from '../../reducers/user.reducer';
 
-const StaticEnvironment = ({ includeEdgeStrips }) => {
+const StaticEnvironment = ({ surfaceDepth, includeEdgeStrips }) => {
   const gridYBase = BLOCK_COLUMN_WIDTH * (DEFAULT_NUM_ROWS * -0.5);
 
-  const SURFACE_Z_CENTER = SURFACE_DEPTH / 2 + SONG_OFFSET - 1;
+  const SURFACE_Z_CENTER = surfaceDepth / 2 + SONG_OFFSET - 1;
 
   const PEG_WIDTH = 0.5;
   const PEG_HEIGHT = 20;
-  const PEG_DEPTH = SURFACE_DEPTH - PEG_WIDTH * 4;
+  const PEG_DEPTH = surfaceDepth - PEG_WIDTH * 4;
   const PEG_X_OFFSET = SURFACE_WIDTH / 2 - PEG_WIDTH;
 
   const pegY = gridYBase - 10.25;
@@ -28,7 +30,6 @@ const StaticEnvironment = ({ includeEdgeStrips }) => {
   const STRIP_DEPTH = 50;
   const stripY = gridYBase + STRIP_PADDING;
   const stripX = SURFACE_WIDTH / 2 - STRIP_WIDTH / 2;
-  const stripZ = -30;
 
   return (
     <>
@@ -39,7 +40,7 @@ const StaticEnvironment = ({ includeEdgeStrips }) => {
       >
         <boxGeometry
           attach="geometry"
-          args={[SURFACE_WIDTH, SURFACE_HEIGHT, SURFACE_DEPTH]}
+          args={[SURFACE_WIDTH, SURFACE_HEIGHT, surfaceDepth]}
         />
         <meshStandardMaterial
           metalness={0.5}
@@ -81,14 +82,12 @@ const StaticEnvironment = ({ includeEdgeStrips }) => {
           <EdgeStrip
             x={stripX}
             y={stripY}
-            z={stripZ}
             width={STRIP_WIDTH}
             depth={STRIP_DEPTH}
           />
           <EdgeStrip
             x={stripX * -1}
             y={stripY}
-            z={stripZ}
             width={STRIP_WIDTH}
             depth={STRIP_DEPTH}
           />
@@ -98,4 +97,13 @@ const StaticEnvironment = ({ includeEdgeStrips }) => {
   );
 };
 
-export default StaticEnvironment;
+const mapStateToProps = state => {
+  const graphicsLevel = getGraphicsLevel(state);
+  const surfaceDepth = getSurfaceDepth(graphicsLevel);
+
+  return {
+    surfaceDepth,
+  };
+};
+
+export default connect(mapStateToProps)(StaticEnvironment);

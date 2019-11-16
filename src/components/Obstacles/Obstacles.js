@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import * as actions from '../../actions';
-import { SURFACE_DEPTH } from '../../constants';
+import { getSurfaceDepth } from '../../constants';
 import { getColorForItem } from '../../helpers/colors.helpers';
 import {
   getCursorPositionInBeats,
@@ -21,14 +21,17 @@ const Obstacles = ({
   beatDepth,
   selectionMode,
   snapTo,
+  graphicsLevel,
   deleteObstacle,
   resizeObstacle,
   selectObstacle,
   deselectObstacle,
 }) => {
   // Show only the obstacles that fit atop the platform.
-  const farLimit = SURFACE_DEPTH / beatDepth;
-  const closeLimit = (SURFACE_DEPTH / beatDepth) * 0.2;
+  const surfaceDepth = getSurfaceDepth(graphicsLevel);
+
+  const farLimit = surfaceDepth / beatDepth;
+  const closeLimit = (surfaceDepth / beatDepth) * 0.2;
   const visibleObstacles = obstacles.filter(obstacle => {
     const beatEnd = obstacle.beatStart + obstacle.beatDuration;
     return (
@@ -84,7 +87,4 @@ const mapDispatchToProps = {
   deselectObstacle: actions.deselectObstacle,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Obstacles);
+export default connect(mapStateToProps, mapDispatchToProps)(Obstacles);

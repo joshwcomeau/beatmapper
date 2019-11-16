@@ -5,12 +5,14 @@
  */
 
 const DEFAULT_PROCESSING_DELAY = 60;
+const DEFAULT_GRAPHICS_LEVEL = 'high';
 
 const initialState = {
   isNewUser: true,
   seenPrompts: [],
   stickyMapAuthorName: null,
   processingDelay: DEFAULT_PROCESSING_DELAY,
+  graphicsLevel: DEFAULT_GRAPHICS_LEVEL,
 };
 
 export default function user(state = initialState, action) {
@@ -55,6 +57,13 @@ export default function user(state = initialState, action) {
       };
     }
 
+    case 'UPDATE_GRAPHICS_LEVEL': {
+      return {
+        ...state,
+        graphicsLevel: action.newGraphicsLevel,
+      };
+    }
+
     default:
       return state;
   }
@@ -67,3 +76,7 @@ export const getProcessingDelay = state =>
   typeof state.user.processingDelay === 'number'
     ? state.user.processingDelay
     : DEFAULT_PROCESSING_DELAY;
+export const getGraphicsLevel = state =>
+  typeof state.user.graphicsLevel === 'string'
+    ? state.user.graphicsLevel
+    : DEFAULT_GRAPHICS_LEVEL;

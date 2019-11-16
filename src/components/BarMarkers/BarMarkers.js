@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { SONG_OFFSET, SURFACE_DEPTH } from '../../constants';
+import { SONG_OFFSET, getSurfaceDepth } from '../../constants';
 import { range } from '../../utils';
 import { convertMillisecondsToBeats } from '../../helpers/audio.helpers';
 import {
@@ -9,11 +9,20 @@ import {
   getBeatDepth,
 } from '../../reducers/navigation.reducer';
 import { getSelectedSong } from '../../reducers/songs.reducer';
+import { getGraphicsLevel } from '../../reducers/user.reducer';
 
 import Marker from './Marker';
 
-const BarMarkers = ({ duration, bpm, cursorPositionInBeats, beatDepth }) => {
-  const numToRender = SURFACE_DEPTH / beatDepth;
+const BarMarkers = ({
+  duration,
+  bpm,
+  cursorPositionInBeats,
+  beatDepth,
+  graphicsLevel,
+}) => {
+  const surfaceDepth = getSurfaceDepth(graphicsLevel);
+  const numToRender = surfaceDepth / beatDepth;
+
   const totalNumOfBeats = Math.ceil(convertMillisecondsToBeats(duration, bpm));
 
   const linesArray = React.useMemo(() => range(totalNumOfBeats * 4), [
@@ -56,6 +65,7 @@ const mapStateToProps = state => {
     bpm: song ? song.bpm : null,
     cursorPositionInBeats: getCursorPositionInBeats(state),
     beatDepth: getBeatDepth(state),
+    graphicsLevel: getGraphicsLevel(state),
   };
 };
 

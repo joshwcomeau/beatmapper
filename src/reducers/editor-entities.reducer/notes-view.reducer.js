@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 import undoable, { includeAction, groupByActionTypes } from 'redux-undo';
 import produce from 'immer';
 
-import { NOTES_VIEW, SURFACE_DEPTH } from '../../constants';
+import { NOTES_VIEW, getSurfaceDepth } from '../../constants';
 import {
   findNoteIndexByProperties,
   swapNotes,
@@ -13,6 +13,7 @@ import {
 import { swapObstacles, nudgeObstacles } from '../../helpers/obstacles.helpers';
 import { getCursorPositionInBeats, getBeatDepth } from '../navigation.reducer';
 import { getSelectedSong } from '../songs.reducer';
+import { getGraphicsLevel } from '../user.reducer';
 
 const initialState = {
   notes: [],
@@ -517,18 +518,12 @@ export const getNotes = state => state.editorEntities.notesView.present.notes;
 export const getObstacles = state =>
   state.editorEntities.notesView.present.obstacles;
 
-export const getSelectedNotes = createSelector(
-  getNotes,
-  notes => {
-    return notes.filter(note => note.selected);
-  }
-);
-export const getSelectedObstacles = createSelector(
-  getObstacles,
-  obstacles => {
-    return obstacles.filter(obstacle => obstacle.selected);
-  }
-);
+export const getSelectedNotes = createSelector(getNotes, notes => {
+  return notes.filter(note => note.selected);
+});
+export const getSelectedObstacles = createSelector(getObstacles, obstacles => {
+  return obstacles.filter(obstacle => obstacle.selected);
+});
 
 export const getSelectedNotesAndObstacles = createSelector(
   getSelectedNotes,
@@ -536,18 +531,12 @@ export const getSelectedNotesAndObstacles = createSelector(
   (notes, obstacles) => [...notes, ...obstacles]
 );
 
-export const getNumOfBlocks = createSelector(
-  getNotes,
-  notes => {
-    return notes.filter(note => note._type === 0 || note._type === 1).length;
-  }
-);
-export const getNumOfMines = createSelector(
-  getNotes,
-  notes => {
-    return notes.filter(note => note._type === 3).length;
-  }
-);
+export const getNumOfBlocks = createSelector(getNotes, notes => {
+  return notes.filter(note => note._type === 0 || note._type === 1).length;
+});
+export const getNumOfMines = createSelector(getNotes, notes => {
+  return notes.filter(note => note._type === 3).length;
+});
 export const getNumOfObstacles = state => getObstacles(state).length;
 
 export const getNumOfSelectedNotes = state => {
@@ -565,9 +554,11 @@ export const getVisibleNotes = createSelector(
   getNotes,
   getCursorPositionInBeats,
   getBeatDepth,
-  (notes, cursorPositionInBeats, beatDepth) => {
-    const farLimit = SURFACE_DEPTH / beatDepth;
-    const closeLimit = (SURFACE_DEPTH / beatDepth) * 0.2;
+  getGraphicsLevel,
+  (notes, cursorPositionInBeats, beatDepth, graphicsLevel) => {
+    const surfaceDepth = getSurfaceDepth(graphicsLevel);
+    const farLimit = surfaceDepth / beatDepth;
+    const closeLimit = (surfaceDepth / beatDepth) * 0.2;
 
     return notes.filter(note => {
       return (
@@ -580,12 +571,14 @@ export const getVisibleNotes = createSelector(
 
 export const getNoteDensity = createSelector(
   getVisibleNotes,
-  getCursorPositionInBeats,
   getBeatDepth,
   getSelectedSong,
-  (notes, cursorPositionInBeats, beatDepth, song) => {
+  getGraphicsLevel,
+  (notes, beatDepth, song, graphicsLevel) => {
+    const surfaceDepth = getSurfaceDepth(graphicsLevel);
+
     const { bpm } = song;
-    const segmentLengthInBeats = (SURFACE_DEPTH / beatDepth) * 1.2;
+    const segmentLengthInBeats = (surfaceDepth / beatDepth) * 1.2;
 
     return calculateNoteDensity(notes.length, segmentLengthInBeats, bpm);
   }

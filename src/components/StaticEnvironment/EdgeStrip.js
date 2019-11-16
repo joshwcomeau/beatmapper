@@ -1,9 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { SONG_OFFSET, getSurfaceDepth } from '../../constants';
+import { getGraphicsLevel } from '../../reducers/user.reducer';
+
 import RectAreaLight from '../RectAreaLight';
 
-const EdgeStrip = ({ x, y, z, width = 0.1, depth = 50, renderAs }) => {
+const EdgeStrip = ({ x, y, z, width = 0.1, depth, renderAs }) => {
   // This strip can either be a RectAreaLight, to cast on the blocks, or it can
   // be a simple plane. This is dependent on the performance tuning. Because
   // hooks can't be conditional, I always need to create a value for lookAt.
@@ -29,15 +32,16 @@ const EdgeStrip = ({ x, y, z, width = 0.1, depth = 50, renderAs }) => {
   }
 };
 
-const mapStateToProps = (state, ownProps) => {
-  // TODO: Replace this with redux state
-  const performance = {
-    setting: 'high',
-  };
+const mapStateToProps = state => {
+  const graphicsLevel = getGraphicsLevel(state);
 
-  const renderAs = performance.setting === 'high' ? 'light' : 'plane';
+  const depth = getSurfaceDepth(graphicsLevel);
 
-  return { renderAs };
+  const renderAs = graphicsLevel === 'high' ? 'light' : 'plane';
+
+  const z = -SONG_OFFSET - depth / 2;
+
+  return { renderAs, z, depth };
 };
 
 export default connect(mapStateToProps)(EdgeStrip);

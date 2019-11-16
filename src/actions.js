@@ -804,3 +804,8 @@ export const updateProcessingDelay = newDelay => ({
   type: 'UPDATE_PROCESSING_DELAY',
   newDelay,
 });
+
+export const updateGraphicsLevel = newGraphicsLevel => ({
+  type: 'UPDATE_GRAPHICS_LEVEL',
+  newGraphicsLevel,
+});

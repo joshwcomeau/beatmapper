@@ -17,16 +17,17 @@ import BarMarkers from '../BarMarkers';
 import Obstacles from '../Obstacles';
 import PlacementGrid from '../PlacementGrid';
 import TrackMover from '../TrackMover';
+import Fog from '../Fog';
 
 import Lighting from './Lighting';
 
 const GRID_POSITION = [0, 0, -SONG_OFFSET];
 
-const MapVisualization = ({ songId }) => {
+const MapVisualization = () => {
   const controls = React.useRef(null);
 
   // Controls to move around the space.
-  useRender(({ canvas, scene, camera }) => {
+  useRender(({ scene, camera }) => {
     if (!controls.current) {
       controls.current = new Controls(camera);
       scene.add(controls.current.getObject());
@@ -39,8 +40,7 @@ const MapVisualization = ({ songId }) => {
     <>
       <StaticEnvironment includeEdgeStrips trackGridRows={true} />
 
-      {/* Fog */}
-      <fogExp2 attach="fog" args={[0x000000, 0.02]} />
+      <Fog />
 
       <Lighting />
 

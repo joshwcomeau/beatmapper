@@ -55,7 +55,21 @@ export const SONG_OFFSET = 6;
 // How wide is the platform the notes float above?
 export const SURFACE_WIDTH = 6;
 export const SURFACE_HEIGHT = 0.5;
-export const SURFACE_DEPTH = 50;
+
+export const SURFACE_DEPTH_HIGH = 75;
+export const SURFACE_DEPTH_MED = 55;
+export const SURFACE_DEPTH_LOW = 38;
+
+export const getSurfaceDepth = graphicsLevel => {
+  switch (graphicsLevel) {
+    case 'low':
+      return SURFACE_DEPTH_LOW;
+    case 'medium':
+      return SURFACE_DEPTH_MED;
+    case 'high':
+      return SURFACE_DEPTH_HIGH;
+  }
+};
 
 export const UNIT = 8;
 
