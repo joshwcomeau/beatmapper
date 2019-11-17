@@ -179,6 +179,8 @@ export const SNAPPING_INCREMENTS = [
   },
 ];
 
+export const HIGHEST_PRECISION = SNAPPING_INCREMENTS[0].value;
+
 export const NOTES_VIEW = 'notes';
 export const EVENTS_VIEW = 'events';
 export const PREVIEW_VIEW = 'preview';

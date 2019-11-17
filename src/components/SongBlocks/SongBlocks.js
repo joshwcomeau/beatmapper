@@ -1,7 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { BLOCK_COLUMN_WIDTH, SONG_OFFSET } from '../../constants';
+import {
+  BLOCK_COLUMN_WIDTH,
+  SONG_OFFSET,
+  HIGHEST_PRECISION,
+} from '../../constants';
 import * as actions from '../../actions';
 import { getColorForItem } from '../../helpers/colors.helpers';
 import {
@@ -9,11 +13,11 @@ import {
   getBeatDepth,
 } from '../../reducers/navigation.reducer';
 import { getVisibleNotes } from '../../reducers/editor-entities.reducer/notes-view.reducer';
+import { getSelectedSong } from '../../reducers/songs.reducer';
+import { roundAwayFloatingPointNonsense } from '../../utils';
 
 import Block from '../Block';
 import Mine from '../Mine';
-import { getSelectedSong } from '../../reducers/songs.reducer';
-import { roundAwayFloatingPointNonsense } from '../../utils';
 
 const getPositionForBlock = (note, beatDepth) => {
   const x = note._lineIndex * BLOCK_COLUMN_WIDTH - BLOCK_COLUMN_WIDTH * 1.5;
@@ -86,7 +90,8 @@ const SongBlocks = ({
     // making the notes transparent because they're 0.000006 before the
     // placement grid. I imagine there's a better place to manage this than
     // here, but I'm sick of this problem.
-    const adjustedNoteZPosition = noteZPosition - 0.001;
+    const adjustment = beatDepth * HIGHEST_PRECISION;
+    const adjustedNoteZPosition = noteZPosition - adjustment;
 
     const NoteComponent = note._type === 3 ? Mine : Block;
 

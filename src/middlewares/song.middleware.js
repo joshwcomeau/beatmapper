@@ -25,7 +25,7 @@ import {
   convertEventsToExportableJson,
 } from '../helpers/events.helpers';
 import { convertBookmarksToRedux } from '../helpers/bookmarks.helpers';
-import { clamp } from '../utils';
+import { clamp, roundToNearest } from '../utils';
 import {
   getFile,
   saveFile,
@@ -53,7 +53,7 @@ import {
   shiftEntitiesByOffset,
   unshiftEntitiesByOffset,
 } from '../services/packaging.service.nitty-gritty';
-import { EVENTS_VIEW } from '../constants';
+import { EVENTS_VIEW, HIGHEST_PRECISION } from '../constants';
 
 import {
   generateWaveformForSongFile,
@@ -126,6 +126,15 @@ export default function createSongMiddleware() {
             song.offset,
             song.bpm
           );
+
+          // Round all notes, so that no floating-point imprecision drift
+          // happens
+          unshiftedNotes = unshiftedNotes.map(note => {
+            return {
+              ...note,
+              _time: roundToNearest(note._time, HIGHEST_PRECISION),
+            };
+          });
 
           // our beatmap comes in a "raw" form, using proprietary fields.
           // At present, I'm using that proprietary structure for notes/mines,

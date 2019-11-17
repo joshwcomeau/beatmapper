@@ -1,6 +1,6 @@
 import uuid from 'uuid/v1';
 
-import { NOTES_VIEW, EVENTS_VIEW } from './constants';
+import { NOTES_VIEW, EVENTS_VIEW, HIGHEST_PRECISION } from './constants';
 import { roundAwayFloatingPointNonsense, roundToNearest } from './utils';
 import { getNewBookmarkColor } from './helpers/bookmarks.helpers';
 import { getSelection } from './reducers/editor-entities.reducer';
@@ -248,20 +248,18 @@ export const clickPlacementGrid = (rowIndex, colIndex) => (
 
   const selectedDirection = getSelectedCutDirection(state);
   const selectedTool = getSelectedNoteTool(state);
-  const snapTo = getSnapTo(state);
-  let cursorPositionInBeats = getCursorPositionInBeats(state);
+  const cursorPositionInBeats = getCursorPositionInBeats(state);
 
-  // If the user tries to place blocks while the song is playing,
-  // we want to snap to the nearest snapping interval.
-  // eg. if they're set to snap to 1/2 beats, and they click
-  // when the song is 3.476 beats in, we should round up to 3.5.
-  cursorPositionInBeats = roundToNearest(cursorPositionInBeats, snapTo);
+  const adjustedCursorPosition = adjustNoteCursorPosition(
+    cursorPositionInBeats,
+    state
+  );
 
   dispatch({
     type: 'CLICK_PLACEMENT_GRID',
     rowIndex,
     colIndex,
-    cursorPositionInBeats,
+    cursorPositionInBeats: adjustedCursorPosition,
     selectedDirection,
     selectedTool,
   });
@@ -275,22 +273,12 @@ export const setBlockByDragging = (
 ) => (dispatch, getState) => {
   const state = getState();
 
-  const isPlaying = getIsPlaying(state);
   const selectedTool = getSelectedNoteTool(state);
-  const snapTo = getSnapTo(state);
-  let cursorPositionInBeats = getCursorPositionInBeats(state);
+  const cursorPositionInBeats = getCursorPositionInBeats(state);
 
-  // If the user tries to place blocks while the song is playing,
-  // we want to snap to the nearest snapping interval.
-  // eg. if they're set to snap to 1/2 beats, and they click
-  // when the song is 3.476 beats in, we should round up to 3.5.
-  if (isPlaying) {
-    cursorPositionInBeats = roundToNearest(cursorPositionInBeats, snapTo);
-  }
-
-  cursorPositionInBeats = roundAwayFloatingPointNonsense(
+  const adjustedCursorPosition = adjustNoteCursorPosition(
     cursorPositionInBeats,
-    snapTo
+    state
   );
 
   return dispatch({
@@ -298,7 +286,7 @@ export const setBlockByDragging = (
     direction,
     rowIndex,
     colIndex,
-    cursorPositionInBeats,
+    cursorPositionInBeats: adjustedCursorPosition,
     selectedTool,
   });
 };
@@ -809,3 +797,25 @@ export const updateGraphicsLevel = newGraphicsLevel => ({
   type: 'UPDATE_GRAPHICS_LEVEL',
   newGraphicsLevel,
 });
+
+/////////////////
+// HELPERS ////
+/////////////
+
+const adjustNoteCursorPosition = (cursorPositionInBeats, state) => {
+  const isPlaying = getIsPlaying(state);
+
+  if (isPlaying) {
+    // If the user tries to place blocks while the song is playing,
+    // we want to snap to the nearest snapping interval.
+    // eg. if they're set to snap to 1/2 beats, and they click
+    // when the song is 3.476 beats in, we should round up to 3.5.
+    const snapTo = getSnapTo(state);
+    return roundToNearest(cursorPositionInBeats, snapTo);
+  } else {
+    // If the song isn't playing, we want to snap to the highest precision we
+    // have. Note that this will mean a slight tweak for notes that are a
+    // multiple of 3 (eg. a note at 1.333 beats will be rounded to 1.328125)
+    return roundToNearest(cursorPositionInBeats, HIGHEST_PRECISION);
+  }
+};
