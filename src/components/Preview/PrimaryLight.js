@@ -21,7 +21,7 @@ const ON_PROPS = { emissiveIntensity: 0.75, opacity: 0.75 };
 const OFF_PROPS = { emissiveIntensity: 0, opacity: 0 };
 const BRIGHT_PROPS = { emissiveIntensity: 1, opacity: 1 };
 
-const PrimaryLight = ({ song, lastEvent }) => {
+const PrimaryLight = ({ song, isPlaying, lastEvent }) => {
   // TODO: laser beams for along the side and maybe along the bottom too?
   const status = lastEvent ? lastEvent.type : 'off';
   const lastEventId = lastEvent ? lastEvent.id : null;
@@ -31,7 +31,8 @@ const PrimaryLight = ({ song, lastEvent }) => {
 
   const springConfig = getSpringConfigForLight(
     [ON_PROPS, OFF_PROPS, BRIGHT_PROPS],
-    status
+    status,
+    isPlaying
   );
 
   useOnChange(() => {
@@ -91,6 +92,7 @@ const PrimaryLight = ({ song, lastEvent }) => {
         size={30}
         status={status}
         lastEventId={lastEvent ? lastEvent.id : null}
+        isPlaying={isPlaying}
       />
     </>
   );

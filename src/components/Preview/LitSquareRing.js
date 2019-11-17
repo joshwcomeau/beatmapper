@@ -18,13 +18,15 @@ const RingPeg = ({
   lightStatus,
   lightColor,
   lastLightingEventId,
+  isPlaying,
 }) => {
   const length = size;
   const width = thickness * 2;
 
   let lightSpringConfig = getSpringConfigForLight(
     [ON_PROPS, OFF_PROPS, BRIGHT_PROPS],
-    lightStatus
+    lightStatus,
+    isPlaying
   );
 
   useOnChange(() => {
@@ -73,6 +75,7 @@ const LitSquareRing = ({
   lightStatus,
   lightColor,
   lastLightingEventId,
+  isPlaying,
 }) => {
   // Each ring consists of 4 identical pegs, long thick bars with a light
   // pointing inwards
@@ -89,44 +92,23 @@ const LitSquareRing = ({
     },
   });
 
+  const zRotations = [0, Math.PI * 0.5, Math.PI * 1, Math.PI * 1.5];
+
   return (
     <animated.group rotation={[0, 0, rotation]} {...movementSpring}>
-      <RingPeg
-        size={size}
-        thickness={thickness}
-        color={color}
-        zRotation={0}
-        lightStatus={lightStatus}
-        lightColor={lightColor}
-        lastLightingEventId={lastLightingEventId}
-      />
-      <RingPeg
-        size={size}
-        thickness={thickness}
-        color={color}
-        zRotation={Math.PI * 0.5}
-        lightStatus={lightStatus}
-        lightColor={lightColor}
-        lastLightingEventId={lastLightingEventId}
-      />
-      <RingPeg
-        size={size}
-        thickness={thickness}
-        color={color}
-        zRotation={Math.PI * 1}
-        lightStatus={lightStatus}
-        lightColor={lightColor}
-        lastLightingEventId={lastLightingEventId}
-      />
-      <RingPeg
-        size={size}
-        thickness={thickness}
-        color={color}
-        zRotation={Math.PI * 1.5}
-        lightStatus={lightStatus}
-        lightColor={lightColor}
-        lastLightingEventId={lastLightingEventId}
-      />
+      {zRotations.map(zRotation => (
+        <RingPeg
+          key={zRotation}
+          size={size}
+          thickness={thickness}
+          color={color}
+          zRotation={zRotation}
+          lightStatus={lightStatus}
+          lightColor={lightColor}
+          lastLightingEventId={lastLightingEventId}
+          isPlaying={isPlaying}
+        />
+      ))}
     </animated.group>
   );
 };

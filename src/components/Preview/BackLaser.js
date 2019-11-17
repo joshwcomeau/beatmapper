@@ -11,7 +11,7 @@ import { range } from '../../utils';
 import { findMostRecentEventInTrack } from './Preview.helpers';
 import LaserBeam from './LaserBeam';
 
-const BackLaser = ({ song, lastEvent, secondsSinceSongStart }) => {
+const BackLaser = ({ song, isPlaying, lastEvent, secondsSinceSongStart }) => {
   const NUM_OF_BEAMS_PER_SIDE = 5;
   const laserIndices = range(0, NUM_OF_BEAMS_PER_SIDE);
 
@@ -41,6 +41,7 @@ const BackLaser = ({ song, lastEvent, secondsSinceSongStart }) => {
           rotation={rotation}
           lastEventId={eventId}
           status={status}
+          isPlaying={isPlaying}
         />
       );
     });

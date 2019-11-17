@@ -17,6 +17,7 @@ const DISTANCE_BETWEEN_RINGS = 18;
 
 const LargeRings = ({
   song,
+  isPlaying,
   numOfRings = 16,
   lastRotationEvent,
   lastLightingEvent,
@@ -35,7 +36,9 @@ const LargeRings = ({
       : getColorForItem(lastLightingEvent.colorType, song);
 
   useOnChange(() => {
-    setRotationRatio(rotationRatio + 0.45);
+    if (isPlaying) {
+      setRotationRatio(rotationRatio + 0.45);
+    }
   }, lastRotationEventId);
 
   return range(numOfRings).map(index => (
@@ -50,6 +53,7 @@ const LargeRings = ({
       lightStatus={lightStatus}
       lightColor={lightColor}
       lastLightingEventId={lastLightingEventId}
+      isPlaying={isPlaying}
     />
   ));
 };

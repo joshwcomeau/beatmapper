@@ -16,6 +16,7 @@ const LaserBeam = ({
   brightness,
   status,
   lastEventId,
+  isPlaying,
 }) => {
   const radius = 0.35;
   const height = 500;
@@ -40,7 +41,8 @@ const LaserBeam = ({
   // This feels hacky, but I don't know of a better way.
   let springConfig = getSpringConfigForLight(
     [ON_PROPS, OFF_PROPS, BRIGHT_PROPS],
-    status
+    status,
+    isPlaying
   );
 
   useOnChange(() => {

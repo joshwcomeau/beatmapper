@@ -1,6 +1,7 @@
 export const getSpringConfigForLight = (
   [onProps, offProps, brightProps],
-  status
+  status,
+  isPlaying
 ) => {
   switch (status) {
     case 'off':
@@ -22,7 +23,7 @@ export const getSpringConfigForLight = (
       return {
         from: brightProps,
         to: onProps,
-        immediate: false,
+        immediate: isPlaying ? false : true,
         reset: false,
       };
     }
@@ -31,7 +32,7 @@ export const getSpringConfigForLight = (
       return {
         from: brightProps,
         to: offProps,
-        immediate: false,
+        immediate: isPlaying ? false : true,
         reset: false,
       };
     }

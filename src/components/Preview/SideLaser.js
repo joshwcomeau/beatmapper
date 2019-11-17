@@ -52,6 +52,7 @@ const getSinRotationValue = (
 
 const SideLaser = ({
   song,
+  isPlaying,
   side,
   lastEvent,
   laserSpeed,
@@ -100,6 +101,7 @@ const SideLaser = ({
         rotation={rotation}
         lastEventId={eventId}
         status={status}
+        isPlaying={isPlaying}
       />
     );
   });
@@ -113,6 +115,7 @@ const SideLaser = ({
       rotation={[convertDegreesToRadians(90), 0, 0]}
       lastEventId={eventId}
       status={status}
+      isPlaying={isPlaying}
     />
   );
 

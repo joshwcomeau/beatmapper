@@ -37,12 +37,13 @@ void main()
 }
 `;
 
-const Glow = ({ x, y, z, color, size, status, lastEventId }) => {
+const Glow = ({ x, y, z, color, size, status, lastEventId, isPlaying }) => {
   const { camera } = useThree();
 
   let springConfig = getSpringConfigForLight(
     [ON_PROPS, OFF_PROPS, BRIGHT_PROPS],
-    status
+    status,
+    isPlaying
   );
 
   useOnChange(() => {
