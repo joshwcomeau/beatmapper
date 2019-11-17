@@ -224,12 +224,12 @@ export const EVENT_TRACKS = [
   },
   {
     id: 'largeRing',
-    label: 'Large ring',
+    label: 'Ring rotation',
     type: 'blocks',
   },
   {
     id: 'smallRing',
-    label: 'Small ring',
+    label: 'Small ring zoom',
     type: 'blocks',
   },
 ];
