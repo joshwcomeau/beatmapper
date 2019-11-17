@@ -1,10 +1,9 @@
 import React from 'react';
 import { useSpring, animated } from 'react-spring/three';
 
-const RingHalf = ({ side, size }) => {
+const RingHalf = ({ side, size, thickness, color }) => {
   const length = size;
   const height = length / 3;
-  const thickness = 0.4;
 
   // If this is the bottom half, we need to rotate the whole thing 180deg.
   const rotation = side === 'bottom' ? [0, 0, Math.PI] : [0, 0, 0];
@@ -14,7 +13,7 @@ const RingHalf = ({ side, size }) => {
       {/* Long beam */}
       <mesh position={[0, length / 2, 0]}>
         <boxGeometry attach="geometry" args={[length, thickness, thickness]} />
-        <meshLambertMaterial attach="material" color="#333" />
+        <meshLambertMaterial attach="material" color={color} />
       </mesh>
 
       {/* Stubby legs */}
@@ -23,14 +22,14 @@ const RingHalf = ({ side, size }) => {
         rotation={[0, 0, Math.PI * 0.5]}
       >
         <boxGeometry attach="geometry" args={[height, thickness, thickness]} />
-        <meshLambertMaterial attach="material" color="#333" />
+        <meshLambertMaterial attach="material" color={color} />
       </mesh>
       <mesh
         position={[length / 2 - thickness / 2, length / 2 - height / 2, 0]}
         rotation={[0, 0, Math.PI * 0.5]}
       >
         <boxGeometry attach="geometry" args={[height, thickness, thickness]} />
-        <meshLambertMaterial attach="material" color="#333" />
+        <meshLambertMaterial attach="material" color={color} />
       </mesh>
     </group>
   );
@@ -38,10 +37,12 @@ const RingHalf = ({ side, size }) => {
 
 const Ring = ({
   size = 12,
+  thickness,
   x = 0,
   y = -2,
   z = -8,
   rotation = Math.PI * 0.25,
+  color,
 }) => {
   // Each ring consists of 2 identical-but-mirrored pieces, each the shape of
   // an unused staple:
@@ -50,6 +51,7 @@ const Ring = ({
   const spring = useSpring({
     to: {
       position: [x, y, z],
+      rotation: [0, 0, rotation],
     },
     config: {
       tension: 250,
@@ -60,8 +62,8 @@ const Ring = ({
 
   return (
     <animated.group rotation={[0, 0, rotation]} {...spring}>
-      <RingHalf size={size} />
-      <RingHalf side="bottom" size={size} />
+      <RingHalf size={size} thickness={thickness} color={color} />
+      <RingHalf side="bottom" size={size} thickness={thickness} color={color} />
     </animated.group>
   );
 };

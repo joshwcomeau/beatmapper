@@ -14,9 +14,11 @@ import { getSelectedSong } from '../../reducers/songs.reducer';
 
 import StaticEnvironment from '../StaticEnvironment';
 import { Bloom, NoBloom } from '../BloomEffect';
+import Fog from '../Fog';
 import SideLaser from './SideLaser';
 import BackLaser from './BackLaser';
 import SmallRings from './SmallRings';
+import LargeRings from './LargeRings';
 import PrimaryLight from './PrimaryLight';
 import AmbientLighting from './AmbientLighting';
 
@@ -38,11 +40,9 @@ const LightingPreview = ({ song }) => {
       <Bloom>
         <SideLaser song={song} side="left" />
         <SideLaser song={song} side="right" />
-
         <BackLaser song={song} />
-
+        <LargeRings />
         <SmallRings />
-
         <PrimaryLight song={song} />
       </Bloom>
 
