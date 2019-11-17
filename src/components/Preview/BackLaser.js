@@ -5,7 +5,6 @@ import { getColorForItem } from '../../helpers/colors.helpers';
 import { convertMillisecondsToBeats } from '../../helpers/audio.helpers';
 import { getCursorPositionInBeats } from '../../reducers/navigation.reducer';
 import { getProcessingDelay } from '../../reducers/user.reducer';
-import { getSelectedSong } from '../../reducers/songs.reducer';
 import { getTracks } from '../../reducers/editor-entities.reducer/events-view.reducer';
 import { range } from '../../utils';
 

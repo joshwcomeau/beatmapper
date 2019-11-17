@@ -8,7 +8,6 @@ import { getCursorPosition } from '../../reducers/navigation.reducer';
 import { getTracks } from '../../reducers/editor-entities.reducer/events-view.reducer';
 import { getColorForItem } from '../../helpers/colors.helpers';
 import { getProcessingDelay } from '../../reducers/user.reducer';
-import { getSelectedSong } from '../../reducers/songs.reducer';
 
 import { findMostRecentEventInTrack } from './Preview.helpers';
 import LaserBeam from './LaserBeam';

@@ -53,7 +53,6 @@ const LightingPreview = ({ song, graphicsLevel }) => {
     </>
   );
 
-  console.log(graphicsLevel);
   if (graphicsLevel === 'high') {
     return (
       <>

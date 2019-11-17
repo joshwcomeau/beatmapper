@@ -7,7 +7,6 @@ import { getCursorPositionInBeats } from '../../reducers/navigation.reducer';
 import { convertMillisecondsToBeats } from '../../helpers/audio.helpers';
 
 import { getProcessingDelay } from '../../reducers/user.reducer';
-import { getSelectedSong } from '../../reducers/songs.reducer';
 import { getTracks } from '../../reducers/editor-entities.reducer/events-view.reducer';
 import useOnChange from '../../hooks/use-on-change.hook';
 
@@ -98,6 +97,9 @@ const PrimaryLight = ({ song, lastEvent }) => {
 };
 
 const mapStateToProps = (state, { song }) => {
+  if (!song) {
+    return;
+  }
   const trackId = 'primaryLight';
 
   const tracks = getTracks(state);
