@@ -39,7 +39,12 @@ export default function useLocallyStoredFile(filename, readAs = 'dataUrl') {
 
       const methodNameToCall = getFileReaderMethodName(readAs);
 
-      fileReader.current[methodNameToCall](file);
+      try {
+        fileReader.current[methodNameToCall](file);
+      } catch (err) {
+        console.error('Could not call method', methodNameToCall, 'on', file);
+        throw new Error(err);
+      }
     });
 
     return () => {

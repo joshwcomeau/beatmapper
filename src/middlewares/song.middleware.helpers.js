@@ -1,5 +1,6 @@
 import webAudioBuilder from 'waveform-data/webaudio';
 
+import { EVENTS_VIEW } from '../constants';
 import { convertFileToArrayBuffer } from '../helpers/file.helpers';
 import {
   convertBeatsToMilliseconds,
@@ -71,8 +72,12 @@ export const calculateIfPlaybackShouldBeCommandeered = (
   state,
   currentBeat,
   lastBeat,
-  processingDelay
+  processingDelay,
+  view
 ) => {
+  if (view !== EVENTS_VIEW) {
+    return;
+  }
   const song = getSelectedSong(state);
 
   const isLockedToCurrentWindow = getIsLockedToCurrentWindow(state);

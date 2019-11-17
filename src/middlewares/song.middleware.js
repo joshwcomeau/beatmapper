@@ -289,11 +289,15 @@ export default function createSongMiddleware() {
           // Specifically, this can be when the user enables the "Loop" lock
           // in the event grid. When the time reaches the end of the current
           // window, it's commandeered and reset to the start of that window.
+          const viewMatch = window.location.pathname.match(/\/(\w+)$/);
+          const view = viewMatch ? viewMatch[1] : null;
+
           const commandeeredCursorPosition = calculateIfPlaybackShouldBeCommandeered(
             state,
             currentBeat,
             lastBeat,
-            processingDelay
+            processingDelay,
+            view
           );
 
           if (typeof commandeeredCursorPosition === 'number') {
