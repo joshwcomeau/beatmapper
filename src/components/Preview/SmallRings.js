@@ -16,21 +16,32 @@ const INITIAL_ROTATION = Math.PI * 0.25;
 const DISTANCE_BETWEEN_RINGS_MIN = 3;
 const DISTANCE_BETWEEN_RINGS_MAX = 10;
 
-const SmallRings = ({ numOfRings = 16, lastEvent }) => {
-  const lastEventId = lastEvent ? lastEvent.id : null;
+const SmallRings = ({ numOfRings = 16, lastZoomEvent, lastRotationEvent }) => {
+  const lastZoomEventId = lastZoomEvent ? lastZoomEvent.id : null;
+  const lastRotationEventId = lastRotationEvent ? lastRotationEvent.id : null;
   const firstRingOffset = -8;
 
   const [distanceBetweenRings, setDistanceBetweenRings] = React.useState(
     DISTANCE_BETWEEN_RINGS_MIN
   );
 
+  const [rotationRatio, setRotationRatio] = React.useState(0.1);
+
   useOnChange(() => {
-    setDistanceBetweenRings(
-      distanceBetweenRings === DISTANCE_BETWEEN_RINGS_MAX
-        ? DISTANCE_BETWEEN_RINGS_MIN
-        : DISTANCE_BETWEEN_RINGS_MAX
-    );
-  }, lastEventId);
+    if (lastZoomEventId) {
+      setDistanceBetweenRings(
+        distanceBetweenRings === DISTANCE_BETWEEN_RINGS_MAX
+          ? DISTANCE_BETWEEN_RINGS_MIN
+          : DISTANCE_BETWEEN_RINGS_MAX
+      );
+    }
+  }, lastZoomEventId);
+
+  useOnChange(() => {
+    if (lastRotationEventId) {
+      setRotationRatio(rotationRatio + 0.25);
+    }
+  }, lastRotationEventId);
 
   return range(numOfRings).map(index => (
     <Ring
@@ -39,17 +50,20 @@ const SmallRings = ({ numOfRings = 16, lastEvent }) => {
       thickness={0.4}
       y={-2}
       z={firstRingOffset + distanceBetweenRings * index * -1}
-      rotation={INITIAL_ROTATION + index * 0.1}
+      rotation={INITIAL_ROTATION + index * rotationRatio}
       color="#333"
     />
   ));
 };
 
 const mapStateToProps = state => {
-  const trackId = 'smallRing';
-
   const tracks = getTracks(state);
-  const events = tracks[trackId];
+
+  const zoomTrackId = 'smallRing';
+  const rotationTrackId = 'largeRing';
+
+  const zoomEvents = tracks[zoomTrackId];
+  const rotationEvents = tracks[rotationTrackId];
 
   const song = getSelectedSong(state);
   const currentBeat = getCursorPositionInBeats(state);
@@ -60,14 +74,20 @@ const mapStateToProps = state => {
     song.bpm
   );
 
-  const lastEvent = findMostRecentEventInTrack(
-    events,
+  const lastZoomEvent = findMostRecentEventInTrack(
+    zoomEvents,
+    currentBeat,
+    processingDelayInBeats
+  );
+  const lastRotationEvent = findMostRecentEventInTrack(
+    rotationEvents,
     currentBeat,
     processingDelayInBeats
   );
 
   return {
-    lastEvent,
+    lastZoomEvent,
+    lastRotationEvent,
   };
 };
 
