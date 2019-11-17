@@ -1,11 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { range } from '../../utils';
+import { convertMillisecondsToBeats } from '../../helpers/audio.helpers';
 import { getCursorPositionInBeats } from '../../reducers/navigation.reducer';
-import { getEventForTrackAtBeat } from '../../reducers/editor-entities.reducer/events-view.reducer';
+import { getTracks } from '../../reducers/editor-entities.reducer/events-view.reducer';
+import { getProcessingDelay } from '../../reducers/user.reducer';
+import { getSelectedSong } from '../../reducers/songs.reducer';
 import useOnChange from '../../hooks/use-on-change.hook';
+import { range } from '../../utils';
 
+import { findMostRecentEventInTrack } from './Preview.helpers';
 import Ring from './Ring';
 
 const INITIAL_ROTATION = Math.PI * 0.25;
@@ -42,10 +46,26 @@ const SmallRings = ({ numOfRings = 16, lastEvent }) => {
 const mapStateToProps = state => {
   const trackId = 'smallRing';
 
+  const tracks = getTracks(state);
+  const events = tracks[trackId];
+
+  const song = getSelectedSong(state);
   const currentBeat = getCursorPositionInBeats(state);
+  const processingDelay = getProcessingDelay(state);
+
+  const processingDelayInBeats = convertMillisecondsToBeats(
+    processingDelay,
+    song.bpm
+  );
+
+  const lastEvent = findMostRecentEventInTrack(
+    events,
+    currentBeat,
+    processingDelayInBeats
+  );
 
   return {
-    lastEvent: getEventForTrackAtBeat(state, trackId, currentBeat),
+    lastEvent,
   };
 };
 
