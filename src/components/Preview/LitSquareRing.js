@@ -25,11 +25,14 @@ const RingPeg = ({
 
   let lightSpringConfig = getSpringConfigForLight(
     [ON_PROPS, OFF_PROPS, BRIGHT_PROPS],
-    lightStatus,
-    isPlaying
+    lightStatus
   );
 
   useOnChange(() => {
+    if (!isPlaying) {
+      return;
+    }
+
     const statusShouldReset = lightStatus === 'flash' || lightStatus === 'fade';
 
     lightSpringConfig.reset = statusShouldReset;

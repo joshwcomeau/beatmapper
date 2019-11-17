@@ -15,7 +15,12 @@ const INITIAL_ROTATION = Math.PI * 0.25;
 const DISTANCE_BETWEEN_RINGS_MIN = 3;
 const DISTANCE_BETWEEN_RINGS_MAX = 10;
 
-const SmallRings = ({ numOfRings = 16, lastZoomEvent, lastRotationEvent }) => {
+const SmallRings = ({
+  numOfRings = 16,
+  isPlaying,
+  lastZoomEvent,
+  lastRotationEvent,
+}) => {
   const lastZoomEventId = lastZoomEvent ? lastZoomEvent.id : null;
   const lastRotationEventId = lastRotationEvent ? lastRotationEvent.id : null;
   const firstRingOffset = -8;
@@ -27,6 +32,10 @@ const SmallRings = ({ numOfRings = 16, lastZoomEvent, lastRotationEvent }) => {
   const [rotationRatio, setRotationRatio] = React.useState(0.1);
 
   useOnChange(() => {
+    if (!isPlaying) {
+      return;
+    }
+
     if (lastZoomEventId) {
       setDistanceBetweenRings(
         distanceBetweenRings === DISTANCE_BETWEEN_RINGS_MAX
@@ -37,6 +46,10 @@ const SmallRings = ({ numOfRings = 16, lastZoomEvent, lastRotationEvent }) => {
   }, lastZoomEventId);
 
   useOnChange(() => {
+    if (!isPlaying) {
+      return;
+    }
+
     if (lastRotationEventId) {
       setRotationRatio(rotationRatio + 0.25);
     }

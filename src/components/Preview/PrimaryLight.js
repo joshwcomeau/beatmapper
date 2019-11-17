@@ -31,11 +31,14 @@ const PrimaryLight = ({ song, isPlaying, lastEvent }) => {
 
   const springConfig = getSpringConfigForLight(
     [ON_PROPS, OFF_PROPS, BRIGHT_PROPS],
-    status,
-    isPlaying
+    status
   );
 
   useOnChange(() => {
+    if (!isPlaying) {
+      return;
+    }
+
     const statusShouldReset = status === 'flash' || status === 'fade';
 
     springConfig.reset = statusShouldReset;

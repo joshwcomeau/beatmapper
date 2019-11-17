@@ -36,9 +36,10 @@ const LargeRings = ({
       : getColorForItem(lastLightingEvent.colorType, song);
 
   useOnChange(() => {
-    if (isPlaying) {
-      setRotationRatio(rotationRatio + 0.45);
+    if (!isPlaying) {
+      return;
     }
+    setRotationRatio(rotationRatio + 0.45);
   }, lastRotationEventId);
 
   return range(numOfRings).map(index => (
