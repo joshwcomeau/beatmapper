@@ -13,6 +13,7 @@ import { getObstacles } from '../../reducers/editor-entities.reducer/notes-view.
 import { getSelectedSong } from '../../reducers/songs.reducer';
 
 import ObstacleBox from '../ObstacleBox';
+import { getGraphicsLevel } from '../../reducers/user.reducer';
 
 const Obstacles = ({
   song,
@@ -32,6 +33,7 @@ const Obstacles = ({
 
   const farLimit = surfaceDepth / beatDepth;
   const closeLimit = (surfaceDepth / beatDepth) * 0.2;
+
   const visibleObstacles = obstacles.filter(obstacle => {
     const beatEnd = obstacle.beatStart + obstacle.beatDuration;
     return (
@@ -75,6 +77,7 @@ const mapStateToProps = state => {
     obstacles: getObstacles(state),
     cursorPositionInBeats: getCursorPositionInBeats(state),
     beatDepth: getBeatDepth(state),
+    graphicsLevel: getGraphicsLevel(state),
     selectionMode: state.editor.notes.selectionMode,
     snapTo: getSnapTo(state),
   };
@@ -87,4 +90,7 @@ const mapDispatchToProps = {
   deselectObstacle: actions.deselectObstacle,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Obstacles);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Obstacles);
