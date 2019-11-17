@@ -10,10 +10,10 @@ import {
 
 import NoteGrid from '../NoteGrid';
 import ItemGrid from '../ItemGrid';
-import SelectionInfo from '../SelectionInfo';
 import Spacer from '../Spacer';
 
 import Actions from './Actions';
+import SelectionInfo from './SelectionInfo';
 import GridConfig from './GridConfig';
 import { getSelectedSong } from '../../reducers/songs.reducer';
 

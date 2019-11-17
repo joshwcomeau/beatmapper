@@ -18,9 +18,8 @@ import IconButton from '../IconButton';
 import Spacer from '../Spacer';
 
 import ObstacleTweaks from './ObstacleTweaks';
-
-const ACTION_WIDTH = 110;
-const HALF_ACTION_WIDTH = ACTION_WIDTH / 2 - UNIT / 2;
+import UndoRedo from './UndoRedo';
+import { ACTION_WIDTH, HALF_ACTION_WIDTH } from './EditorRightPanel.constants';
 
 const SelectionCount = ({ num, label }) => {
   const pluralizedLabel = num === 1 ? label : `${label}s`;
@@ -105,7 +104,9 @@ const SelectionInfo = ({
           />
         </Tooltip>
       </Row>
+
       <Spacer size={UNIT} />
+
       <Row>
         <Tooltip
           delay={[1000, 0]}
@@ -127,6 +128,21 @@ const SelectionInfo = ({
           />
         </Tooltip>
       </Row>
+
+      <Spacer size={UNIT * 2} />
+
+      <Tooltip delay={[1000, 0]} title="Clear selection (Escape)">
+        <MiniButton
+          width={ACTION_WIDTH}
+          onClick={() => deselectAll(NOTES_VIEW)}
+        >
+          Deselect
+        </MiniButton>
+      </Tooltip>
+      <Spacer size={UNIT * 2} />
+
+      <UndoRedo />
+
       <Spacer size={UNIT * 2} />
 
       <Row>
@@ -154,7 +170,9 @@ const SelectionInfo = ({
           </MiniButton>
         </Tooltip>
       </Row>
+
       <Spacer size={UNIT} />
+
       <Tooltip
         delay={[1000, 0]}
         title={`Paste copied notes and obstacles (${getMetaKeyLabel()} + V)`}
@@ -165,16 +183,6 @@ const SelectionInfo = ({
           onClick={() => pasteSelection(NOTES_VIEW)}
         >
           Paste
-        </MiniButton>
-      </Tooltip>
-      <Spacer size={UNIT * 2} />
-
-      <Tooltip delay={[1000, 0]} title="Clear selection (Escape)">
-        <MiniButton
-          width={ACTION_WIDTH}
-          onClick={() => deselectAll(NOTES_VIEW)}
-        >
-          Deselect
         </MiniButton>
       </Tooltip>
     </Wrapper>

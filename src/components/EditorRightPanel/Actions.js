@@ -14,14 +14,10 @@ import {
 import MiniButton from '../MiniButton';
 import Heading from '../Heading';
 import Spacer from '../Spacer';
-import {
-  getCanUndo,
-  getCanRedo,
-} from '../../reducers/editor-entities.reducer/notes-view.reducer';
 import { getHasCopiedNotes } from '../../reducers/clipboard.reducer';
 
-const ACTION_WIDTH = 110;
-const HALF_ACTION_WIDTH = ACTION_WIDTH / 2 - UNIT / 2;
+import { ACTION_WIDTH } from './EditorRightPanel.constants';
+import UndoRedo from './UndoRedo';
 
 const Actions = ({
   song,
@@ -47,27 +43,7 @@ const Actions = ({
       <Heading size={3}>Actions</Heading>
       <Spacer size={UNIT * 1.5} />
 
-      <Row>
-        <Tooltip delay={[1000, 0]} title={`(${getMetaKeyLabel()} + Z)`}>
-          <MiniButton
-            width={HALF_ACTION_WIDTH}
-            disabled={!canUndo}
-            onClick={undoNotes}
-          >
-            Undo
-          </MiniButton>
-        </Tooltip>
-        <Spacer size={UNIT} />
-        <Tooltip delay={[1000, 0]} title={`(Shift + ${getMetaKeyLabel()} + Z)`}>
-          <MiniButton
-            width={HALF_ACTION_WIDTH}
-            disabled={!canRedo}
-            onClick={redoNotes}
-          >
-            Redo
-          </MiniButton>
-        </Tooltip>
-      </Row>
+      <UndoRedo />
 
       <Spacer size={UNIT} />
 
@@ -130,14 +106,8 @@ const Wrapper = styled.div`
   align-items: center;
 `;
 
-const Row = styled.div`
-  display: flex;
-`;
-
 const mapStateToProps = state => {
   return {
-    canUndo: getCanUndo(state),
-    canRedo: getCanRedo(state),
     hasCopiedNotes: getHasCopiedNotes(state),
   };
 };
@@ -145,8 +115,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   selectAllInRange: actions.selectAllInRange,
   jumpToBeat: actions.jumpToBeat,
-  undoNotes: actions.undoNotes,
-  redoNotes: actions.redoNotes,
   pasteSelection: actions.pasteSelection,
 };
 
