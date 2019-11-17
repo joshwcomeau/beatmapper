@@ -4,9 +4,17 @@ import { useSpring, animated } from 'react-spring/three';
 
 import { getColorForItem } from '../../helpers/colors.helpers';
 import { getCursorPositionInBeats } from '../../reducers/navigation.reducer';
-import { getEventForTrackAtBeat } from '../../reducers/editor-entities.reducer/events-view.reducer';
+import { convertMillisecondsToBeats } from '../../helpers/audio.helpers';
+
+import { getProcessingDelay } from '../../reducers/user.reducer';
+import { getSelectedSong } from '../../reducers/songs.reducer';
+import { getTracks } from '../../reducers/editor-entities.reducer/events-view.reducer';
 import useOnChange from '../../hooks/use-on-change.hook';
-import { getSpringConfigForLight } from './Preview.helpers';
+
+import {
+  findMostRecentEventInTrack,
+  getSpringConfigForLight,
+} from './Preview.helpers';
 
 import Glow from './Glow';
 
@@ -92,9 +100,22 @@ const PrimaryLight = ({ song, lastEvent }) => {
 const mapStateToProps = (state, ownProps) => {
   const trackId = 'primaryLight';
 
-  const currentBeat = getCursorPositionInBeats(state);
+  const tracks = getTracks(state);
+  const events = tracks[trackId];
 
-  const lastEvent = getEventForTrackAtBeat(state, trackId, currentBeat);
+  const song = getSelectedSong(state);
+  const currentBeat = getCursorPositionInBeats(state);
+  const processingDelay = getProcessingDelay(state);
+  const processingDelayInBeats = convertMillisecondsToBeats(
+    processingDelay,
+    song.bpm
+  );
+
+  const lastEvent = findMostRecentEventInTrack(
+    events,
+    currentBeat,
+    processingDelayInBeats
+  );
 
   return {
     lastEvent,

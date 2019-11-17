@@ -512,7 +512,8 @@ const filterEventsBeforeBeat = (tracks, trackId, beforeBeat) => {
 //
 //// SELECTORS
 //
-const getTracks = state => state.editorEntities.eventsView.present.tracks;
+export const getTracks = state =>
+  state.editorEntities.eventsView.present.tracks;
 
 export const makeGetEventsForTrack = trackId =>
   createSelector(

@@ -40,3 +40,18 @@ export const getSpringConfigForLight = (
       throw new Error('Unrecognized status: ' + status);
   }
 };
+
+export const findMostRecentEventInTrack = (
+  events,
+  currentBeat,
+  processingDelayInBeats
+) => {
+  for (let i = events.length - 1; i >= 0; i--) {
+    const event = events[i];
+    if (event.beatNum < currentBeat + processingDelayInBeats) {
+      return event;
+    }
+  }
+
+  return null;
+};
