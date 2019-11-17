@@ -6,10 +6,12 @@ import * as actions from '../../actions';
 import { UNIT } from '../../constants';
 import { getSelectedSong } from '../../reducers/songs.reducer';
 import useBoundingBox from '../../hooks/use-bounding-box.hook';
+import { roundToNearest, throttle } from '../../utils';
 
 import ScrubbableWaveform from '../ScrubbableWaveform';
 import CenteredSpinner from '../CenteredSpinner';
 import Bookmarks from '../Bookmarks';
+import { getGraphicsLevel } from '../../reducers/user.reducer';
 
 const EditorWaveform = ({
   height,
@@ -20,9 +22,23 @@ const EditorWaveform = ({
   duration,
   cursorPosition,
   bookmarks,
+  graphicsLevel,
   scrubWaveform,
 }) => {
   const [ref, boundingBox] = useBoundingBox();
+
+  // Updating this waveform is surprisingly expensive!
+  // We'll throttle its rendering by rounding the cursor position for lower
+  // graphics settings. Because it's a pure component, providing the same
+  // cursorPosition means that the rendering will be skipped for equal values.
+  let roundedCursorPosition;
+  if (graphicsLevel === 'low') {
+    roundedCursorPosition = roundToNearest(cursorPosition, 150);
+  } else if (graphicsLevel === 'medium') {
+    roundedCursorPosition = roundToNearest(cursorPosition, 75);
+  } else {
+    roundedCursorPosition = cursorPosition;
+  }
 
   return (
     <Wrapper ref={ref}>
@@ -40,7 +56,7 @@ const EditorWaveform = ({
             height={height - UNIT * 2}
             waveformData={waveformData}
             duration={duration}
-            cursorPosition={cursorPosition}
+            cursorPosition={roundedCursorPosition}
             scrubWaveform={scrubWaveform}
           />
           {!isLoadingSong && <Bookmarks />}
@@ -71,6 +87,7 @@ const mapStateToProps = state => {
     isLoadingSong: state.navigation.isLoading,
     duration: state.navigation.duration,
     cursorPosition: state.navigation.cursorPosition,
+    graphicsLevel: getGraphicsLevel(state),
   };
 };
 
