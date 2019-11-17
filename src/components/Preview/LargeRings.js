@@ -2,49 +2,69 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { convertMillisecondsToBeats } from '../../helpers/audio.helpers';
+import { getColorForItem } from '../../helpers/colors.helpers';
 import { getCursorPositionInBeats } from '../../reducers/navigation.reducer';
 import { getTracks } from '../../reducers/editor-entities.reducer/events-view.reducer';
 import { getProcessingDelay } from '../../reducers/user.reducer';
-import { getSelectedSong } from '../../reducers/songs.reducer';
 import useOnChange from '../../hooks/use-on-change.hook';
 import { range } from '../../utils';
 
 import { findMostRecentEventInTrack } from './Preview.helpers';
-import Ring from './Ring';
+import LitSquareRing from './LitSquareRing';
 
 const INITIAL_ROTATION = Math.PI * 0.25;
-const DISTANCE_BETWEEN_RINGS = 25;
+const DISTANCE_BETWEEN_RINGS = 18;
 
-const SmallRings = ({ numOfRings = 16, lastEvent }) => {
-  const lastEventId = lastEvent ? lastEvent.id : null;
+const LargeRings = ({
+  song,
+  numOfRings = 16,
+  lastRotationEvent,
+  lastLightingEvent,
+}) => {
+  const lastRotationEventId = lastRotationEvent ? lastRotationEvent.id : null;
+
   const firstRingOffset = -8;
 
-  const [rotationRatio, setRotationRatio] = React.useState(0.1);
+  const [rotationRatio, setRotationRatio] = React.useState(0);
+
+  const lightStatus = lastLightingEvent ? lastLightingEvent.type : 'off';
+  const lastLightingEventId = lastLightingEvent ? lastLightingEvent.id : null;
+  const lightColor =
+    lightStatus === 'off'
+      ? '#000000'
+      : getColorForItem(lastLightingEvent.colorType, song);
+
+  console.log({ lightStatus, lightColor });
 
   useOnChange(() => {
     setRotationRatio(rotationRatio + 0.45);
-  }, lastEventId);
+  }, lastRotationEventId);
 
   return range(numOfRings).map(index => (
-    <Ring
+    <LitSquareRing
       key={index}
       size={96}
       thickness={2.5}
       y={-2}
       z={firstRingOffset + DISTANCE_BETWEEN_RINGS * index * -1}
       rotation={INITIAL_ROTATION + index * rotationRatio}
-      color="#1C1C1C"
+      color="#111111"
+      lightStatus={lightStatus}
+      lightColor={lightColor}
+      lastLightingEventId={lastLightingEventId}
     />
   ));
 };
 
-const mapStateToProps = state => {
-  const trackId = 'largeRing';
-
+const mapStateToProps = (state, { song }) => {
   const tracks = getTracks(state);
-  const events = tracks[trackId];
 
-  const song = getSelectedSong(state);
+  const rotationTrackId = 'largeRing';
+  const lightingTrackId = 'trackNeons';
+
+  const rotationEvents = tracks[rotationTrackId];
+  const lightingEvents = tracks[lightingTrackId];
+
   const currentBeat = getCursorPositionInBeats(state);
   const processingDelay = getProcessingDelay(state);
 
@@ -53,15 +73,21 @@ const mapStateToProps = state => {
     song.bpm
   );
 
-  const lastEvent = findMostRecentEventInTrack(
-    events,
+  const lastRotationEvent = findMostRecentEventInTrack(
+    rotationEvents,
+    currentBeat,
+    processingDelayInBeats
+  );
+  const lastLightingEvent = findMostRecentEventInTrack(
+    lightingEvents,
     currentBeat,
     processingDelayInBeats
   );
 
   return {
-    lastEvent,
+    lastRotationEvent,
+    lastLightingEvent,
   };
 };
 
-export default connect(mapStateToProps)(SmallRings);
+export default connect(mapStateToProps)(LargeRings);

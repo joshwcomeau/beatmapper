@@ -10,7 +10,7 @@ import useOnChange from '../../hooks/use-on-change.hook';
 import { range } from '../../utils';
 
 import { findMostRecentEventInTrack } from './Preview.helpers';
-import Ring from './Ring';
+import BracketRing from './BracketRing';
 
 const INITIAL_ROTATION = Math.PI * 0.25;
 const DISTANCE_BETWEEN_RINGS_MIN = 3;
@@ -44,7 +44,7 @@ const SmallRings = ({ numOfRings = 16, lastZoomEvent, lastRotationEvent }) => {
   }, lastRotationEventId);
 
   return range(numOfRings).map(index => (
-    <Ring
+    <BracketRing
       key={index}
       size={12}
       thickness={0.4}
