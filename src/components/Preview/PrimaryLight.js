@@ -97,13 +97,12 @@ const PrimaryLight = ({ song, lastEvent }) => {
   );
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state, { song }) => {
   const trackId = 'primaryLight';
 
   const tracks = getTracks(state);
   const events = tracks[trackId];
 
-  const song = getSelectedSong(state);
   const currentBeat = getCursorPositionInBeats(state);
   const processingDelay = getProcessingDelay(state);
   const processingDelayInBeats = convertMillisecondsToBeats(

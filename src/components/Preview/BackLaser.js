@@ -48,13 +48,16 @@ const BackLaser = ({ song, lastEvent, secondsSinceSongStart }) => {
   });
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state, { song }) => {
+  if (!song) {
+    return;
+  }
+
   const trackId = 'laserBack';
 
   const tracks = getTracks(state);
   const events = tracks[trackId];
 
-  const song = getSelectedSong(state);
   const currentBeat = getCursorPositionInBeats(state);
   const processingDelay = getProcessingDelay(state);
   const processingDelayInBeats = convertMillisecondsToBeats(

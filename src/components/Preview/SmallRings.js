@@ -56,7 +56,11 @@ const SmallRings = ({ numOfRings = 16, lastZoomEvent, lastRotationEvent }) => {
   ));
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, { song }) => {
+  if (!song) {
+    return;
+  }
+
   const tracks = getTracks(state);
 
   const zoomTrackId = 'smallRing';
@@ -65,7 +69,6 @@ const mapStateToProps = state => {
   const zoomEvents = tracks[zoomTrackId];
   const rotationEvents = tracks[rotationTrackId];
 
-  const song = getSelectedSong(state);
   const currentBeat = getCursorPositionInBeats(state);
   const processingDelay = getProcessingDelay(state);
 

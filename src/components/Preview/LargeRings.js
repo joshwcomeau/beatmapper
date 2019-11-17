@@ -34,8 +34,6 @@ const LargeRings = ({
       ? '#000000'
       : getColorForItem(lastLightingEvent.colorType, song);
 
-  console.log({ lightStatus, lightColor });
-
   useOnChange(() => {
     setRotationRatio(rotationRatio + 0.45);
   }, lastRotationEventId);
@@ -57,6 +55,10 @@ const LargeRings = ({
 };
 
 const mapStateToProps = (state, { song }) => {
+  if (!song) {
+    return;
+  }
+
   const tracks = getTracks(state);
 
   const rotationTrackId = 'largeRing';

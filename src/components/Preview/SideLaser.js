@@ -125,17 +125,19 @@ const SideLaser = ({
   );
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state, { song, side }) => {
+  if (!song) {
+    return;
+  }
+
   const tracks = getTracks(state);
 
-  const trackId = ownProps.side === 'left' ? 'laserLeft' : 'laserRight';
-  const speedTrackId =
-    ownProps.side === 'left' ? 'laserSpeedLeft' : 'laserSpeedRight';
+  const trackId = side === 'left' ? 'laserLeft' : 'laserRight';
+  const speedTrackId = side === 'left' ? 'laserSpeedLeft' : 'laserSpeedRight';
 
   const lightEvents = tracks[trackId];
   const speedEvents = tracks[speedTrackId];
 
-  const song = getSelectedSong(state);
   const currentBeat = getCursorPositionInBeats(state);
   const processingDelay = getProcessingDelay(state);
 

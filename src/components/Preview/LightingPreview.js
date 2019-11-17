@@ -19,7 +19,7 @@ import BackLaser from './BackLaser';
 import SmallRings from './SmallRings';
 import LargeRings from './LargeRings';
 import PrimaryLight from './PrimaryLight';
-import Lighting from './Lighting';
+import AmbientLighting from './AmbientLighting';
 
 const LightingPreview = ({ song }) => {
   const controls = React.useRef(null);
@@ -41,14 +41,14 @@ const LightingPreview = ({ song }) => {
         <SideLaser song={song} side="right" />
         <BackLaser song={song} />
         <LargeRings song={song} />
-        <SmallRings />
+        <SmallRings song={song} />
         <PrimaryLight song={song} />
       </Bloom>
 
       <NoBloom>
         <>
           <StaticEnvironment />
-          <Lighting />
+          <AmbientLighting />
         </>
       </NoBloom>
     </>
