@@ -67,6 +67,7 @@ export const getSurfaceDepth = graphicsLevel => {
     default:
     case 'medium':
       return SURFACE_DEPTH_MED;
+    default:
     case 'high':
       return SURFACE_DEPTH_HIGH;
   }

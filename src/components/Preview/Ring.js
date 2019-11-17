@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSpring, animated } from 'react-spring/three';
 
 const RingHalf = ({ side, size }) => {
   const length = size;
@@ -46,11 +47,22 @@ const Ring = ({
   // an unused staple:
   // [ ]
 
+  const spring = useSpring({
+    to: {
+      position: [x, y, z],
+    },
+    config: {
+      tension: 250,
+      friction: 120,
+      mass: 1,
+    },
+  });
+
   return (
-    <group position={[x, y, z]} rotation={[0, 0, rotation]}>
+    <animated.group rotation={[0, 0, rotation]} {...spring}>
       <RingHalf size={size} />
       <RingHalf side="bottom" size={size} />
-    </group>
+    </animated.group>
   );
 };
 

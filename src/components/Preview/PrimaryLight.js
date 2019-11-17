@@ -4,7 +4,6 @@ import { useSpring, animated } from 'react-spring/three';
 
 import { getColorForItem } from '../../helpers/colors.helpers';
 import { getCursorPositionInBeats } from '../../reducers/navigation.reducer';
-import { getCursorPosition } from '../../reducers/navigation.reducer';
 import { getEventForTrackAtBeat } from '../../reducers/editor-entities.reducer/events-view.reducer';
 import useOnChange from '../../hooks/use-on-change.hook';
 import { getSpringConfigForLight } from './Preview.helpers';
@@ -15,7 +14,7 @@ const ON_PROPS = { emissiveIntensity: 0.75, opacity: 0.75 };
 const OFF_PROPS = { emissiveIntensity: 0, opacity: 0 };
 const BRIGHT_PROPS = { emissiveIntensity: 1, opacity: 1 };
 
-const PrimaryLight = ({ song, lastEvent, secondsSinceSongStart }) => {
+const PrimaryLight = ({ song, lastEvent }) => {
   // TODO: laser beams for along the side and maybe along the bottom too?
   const status = lastEvent ? lastEvent.type : 'off';
   const lastEventId = lastEvent ? lastEvent.id : null;
@@ -97,11 +96,8 @@ const mapStateToProps = (state, ownProps) => {
 
   const lastEvent = getEventForTrackAtBeat(state, trackId, currentBeat);
 
-  const secondsSinceSongStart = getCursorPosition(state) / 1000;
-
   return {
     lastEvent,
-    secondsSinceSongStart,
   };
 };
 
