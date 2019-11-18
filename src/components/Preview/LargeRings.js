@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { useTrail } from 'react-spring';
+import { useTrail } from 'react-spring/three';
 
 import { convertMillisecondsToBeats } from '../../helpers/audio.helpers';
 import { getColorForItem } from '../../helpers/colors.helpers';
@@ -40,7 +40,7 @@ const LargeRings = ({
     if (!isPlaying) {
       return;
     }
-    setRotationRatio(rotationRatio + 0.45);
+    setRotationRatio(rotationRatio + Math.PI * 0.25);
   }, lastRotationEventId);
 
   // () => ({ xy: [0, 0], config: i => (i === 0 ? fast : slow) });
@@ -51,8 +51,9 @@ const LargeRings = ({
     },
     config: {
       tension: 2500,
-      friction: 1700,
-      mass: 20,
+      friction: 800,
+      mass: 1,
+      precision: 0.001,
     },
   });
 
@@ -64,15 +65,14 @@ const LargeRings = ({
       thickness={2.5}
       y={-2}
       z={firstRingOffset + DISTANCE_BETWEEN_RINGS * index * -1}
-      color="#FF0000"
+      color="#111111"
       lightStatus={lightStatus}
       lightColor={lightColor}
       lastLightingEventId={lastLightingEventId}
       isPlaying={isPlaying}
       getRotation={() => {
-        console.log('getting', trailProps.rotationRatio.interpolate);
         return trailProps.rotationRatio.interpolate(ratio => [
-          console.log(ratio) || 0,
+          0,
           0,
           INITIAL_ROTATION + index * ratio,
         ]);
