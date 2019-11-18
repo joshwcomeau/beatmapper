@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { useTrail } from 'react-spring';
 
 import { convertMillisecondsToBeats } from '../../helpers/audio.helpers';
 import { getColorForItem } from '../../helpers/colors.helpers';
@@ -42,19 +43,40 @@ const LargeRings = ({
     setRotationRatio(rotationRatio + 0.45);
   }, lastRotationEventId);
 
-  return range(numOfRings).map(index => (
+  // () => ({ xy: [0, 0], config: i => (i === 0 ? fast : slow) });
+
+  const trail = useTrail(numOfRings, {
+    to: {
+      rotationRatio,
+    },
+    config: {
+      tension: 2500,
+      friction: 1700,
+      mass: 20,
+    },
+  });
+
+  return trail.map((trailProps, index) => (
     <LitSquareRing
       key={index}
+      index={index}
       size={96}
       thickness={2.5}
       y={-2}
       z={firstRingOffset + DISTANCE_BETWEEN_RINGS * index * -1}
-      rotation={INITIAL_ROTATION + index * rotationRatio}
-      color="#111111"
+      color="#FF0000"
       lightStatus={lightStatus}
       lightColor={lightColor}
       lastLightingEventId={lastLightingEventId}
       isPlaying={isPlaying}
+      getRotation={() => {
+        console.log('getting', trailProps.rotationRatio.interpolate);
+        return trailProps.rotationRatio.interpolate(ratio => [
+          console.log(ratio) || 0,
+          0,
+          INITIAL_ROTATION + index * ratio,
+        ]);
+      }}
     />
   ));
 };

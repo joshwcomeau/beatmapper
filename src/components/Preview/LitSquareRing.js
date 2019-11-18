@@ -38,7 +38,7 @@ const RingPeg = ({
     lightSpringConfig.reset = statusShouldReset;
   }, lastLightingEventId);
 
-  const spring = useSpring(lightSpringConfig);
+  const lightingSpring = useSpring(lightSpringConfig);
 
   return (
     <group rotation={[0, 0, zRotation]}>
@@ -60,7 +60,7 @@ const RingPeg = ({
           emissive={lightColor}
           transparent={true}
           side={THREE.DoubleSide}
-          {...spring}
+          {...lightingSpring}
         />
       </mesh>
     </group>
@@ -73,32 +73,19 @@ const LitSquareRing = ({
   x = 0,
   y = -2,
   z = -8,
-  rotation = 0,
   color,
   lightStatus,
   lightColor,
   lastLightingEventId,
   isPlaying,
+  getRotation,
 }) => {
   // Each ring consists of 4 identical pegs, long thick bars with a light
-  // pointing inwards
-
-  const movementSpring = useSpring({
-    to: {
-      position: [x, y, z],
-      rotation: [0, 0, rotation],
-    },
-    config: {
-      tension: 2500,
-      friction: 1700,
-      mass: 20,
-    },
-  });
-
+  // pointing inwards. They're each rotated 90deg to form a square.
   const zRotations = [0, Math.PI * 0.5, Math.PI * 1, Math.PI * 1.5];
 
   return (
-    <animated.group rotation={[0, 0, rotation]} {...movementSpring}>
+    <animated.group position={[x, y, z]} rotation={getRotation()}>
       {zRotations.map(zRotation => (
         <RingPeg
           key={zRotation}
