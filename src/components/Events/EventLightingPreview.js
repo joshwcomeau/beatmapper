@@ -35,7 +35,7 @@ const EventLightingPreviewPresentational = ({
   // Controls to move around the space.
   useRender(({ canvas, scene, camera }) => {
     if (!controls.current) {
-      controls.current = new Controls(camera);
+      controls.current = new Controls(camera, [0, -1, 0]);
       scene.add(controls.current.getObject());
     } else {
       controls.current.update();
@@ -56,7 +56,7 @@ const EventLightingPreviewPresentational = ({
   const environment = (
     <>
       <StaticEnvironment />
-      <AmbientLighting />
+      <AmbientLighting includeSpotlight />
     </>
   );
 

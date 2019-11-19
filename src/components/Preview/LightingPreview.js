@@ -26,6 +26,8 @@ import AmbientLighting from './AmbientLighting';
 const LightingPreview = ({ song, isPlaying, graphicsLevel }) => {
   const controls = React.useRef(null);
 
+  const useBloom = graphicsLevel === 'high';
+
   // Controls to move around the space.
   useRender(({ canvas, scene, camera }) => {
     if (!controls.current) {
@@ -50,7 +52,7 @@ const LightingPreview = ({ song, isPlaying, graphicsLevel }) => {
   const environment = (
     <>
       <StaticEnvironment />
-      <AmbientLighting />
+      <AmbientLighting includeSpotlight={!useBloom} />
     </>
   );
 
