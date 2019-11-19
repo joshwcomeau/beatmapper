@@ -18,6 +18,7 @@ export const COLORS = {
     '700': 'hsl(222, 15%, 18%)',
     '900': 'hsl(222, 25%, 12%)',
     '1000': 'hsl(222, 30%, 7%)',
+    '1100': 'hsl(222, 32%, 4%)',
   },
   pink: {
     '500': 'hsl(310, 100%, 50%)',
@@ -47,13 +48,13 @@ export const COLORS = {
 export const DEVTOOLS_ENABLED_IN_DEV = false;
 
 export const BLOCK_SIZE = 1;
-export const BLOCK_COLUMN_WIDTH = BLOCK_SIZE * 1.5;
+export const BLOCK_COLUMN_WIDTH = BLOCK_SIZE * 1.175;
 export const BLOCK_PLACEMENT_SQUARE_SIZE = BLOCK_COLUMN_WIDTH;
 export const BEAT_DEPTH = BLOCK_SIZE * 8;
 export const SONG_OFFSET = 6;
 
 // How wide is the platform the notes float above?
-export const SURFACE_WIDTH = 6;
+export const SURFACE_WIDTH = BLOCK_COLUMN_WIDTH * 4;
 export const SURFACE_HEIGHT = 0.5;
 
 export const SURFACE_DEPTH_HIGH = 75;

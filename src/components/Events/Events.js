@@ -7,26 +7,36 @@ import useWindowDimensions from '../../hooks/use-window-dimensions.hook';
 import EventsGrid from '../EventsGrid';
 import SongInfo from '../SongInfo';
 import GlobalShortcuts from '../GlobalShortcuts';
+import ReduxForwardingCanvas from '../ReduxForwardingCanvas';
 
 import BottomPanel from './BottomPanel';
 import GridControls from './GridControls';
 import KeyboardShortcuts from './KeyboardShortcuts';
+import EventLightingPreview from './EventLightingPreview';
 
 const Events = () => {
   const { width: windowWidth } = useWindowDimensions();
   const contentWidth = windowWidth - SIDEBAR_WIDTH;
 
   return (
-    <Wrapper>
-      <SongInfo showDifficultySelector={false} coverArtSize="small" />
+    <>
+      <Background>
+        <EventLightingPreview />
+      </Background>
 
-      <GridControls contentWidth={contentWidth} />
-      <EventsGrid contentWidth={contentWidth} />
-      <BottomPanel contentWidth={contentWidth} />
+      <Wrapper>
+        <SongInfo showDifficultySelector={false} coverArtSize="small" />
 
-      <GlobalShortcuts view={EVENTS_VIEW} />
-      <KeyboardShortcuts />
-    </Wrapper>
+        <MainUI>
+          <GridControls contentWidth={contentWidth} />
+          <EventsGrid contentWidth={contentWidth} />
+          <BottomPanel contentWidth={contentWidth} />
+        </MainUI>
+
+        <GlobalShortcuts view={EVENTS_VIEW} />
+        <KeyboardShortcuts />
+      </Wrapper>
+    </>
   );
 };
 
@@ -37,6 +47,22 @@ const Wrapper = styled.div`
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
+`;
+
+const Background = styled.div`
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+`;
+
+const MainUI = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: hsla(222, 32%, 4%, 0.8);
 `;
 
 export default Events;

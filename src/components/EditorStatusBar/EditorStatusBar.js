@@ -18,9 +18,17 @@ import { bell as tickOnIcon } from 'react-icons-kit/feather/bell';
 import { bellOff as tickOffIcon } from 'react-icons-kit/feather/bellOff';
 import { minimize2 as distanceCloseIcon } from 'react-icons-kit/feather/minimize2';
 import { maximize2 as distanceFarIcon } from 'react-icons-kit/feather/maximize2';
+import { eye as showLightsIcon } from 'react-icons-kit/feather/eye';
+import { eyeOff as hideLightsIcon } from 'react-icons-kit/feather/eyeOff';
 
 import * as actions from '../../actions';
-import { COLORS, UNIT } from '../../constants';
+import {
+  COLORS,
+  UNIT,
+  NOTES_VIEW,
+  EVENTS_VIEW,
+  PREVIEW_VIEW,
+} from '../../constants';
 import {
   getNumOfBlocks,
   getNumOfMines,
@@ -33,6 +41,8 @@ import {
   getVolume,
   getPlayNoteTick,
 } from '../../reducers/navigation.reducer';
+import { getShowLightingPreview } from '../../reducers/editor.reducer';
+import { pluralize } from '../../utils';
 
 import Spacer from '../Spacer';
 
@@ -41,10 +51,14 @@ import SliderGroup from './SliderGroup';
 import Toggle from './Toggle';
 import NoteDensityIndicator from './NoteDensityIndicator';
 
-const pluralize = (num, string) => {
-  const noun = num === 1 ? string : `${string}s`;
-
-  return `${num} ${noun}`;
+const getViewFromLocation = location => {
+  if (location.pathname.match(/\/notes$/)) {
+    return NOTES_VIEW;
+  } else if (location.pathname.match(/\/events$/)) {
+    return EVENTS_VIEW;
+  } else {
+    return PREVIEW_VIEW;
+  }
 };
 
 const EditorStatusBar = ({
@@ -53,6 +67,7 @@ const EditorStatusBar = ({
   numOfBlocks,
   numOfMines,
   numOfObstacles,
+  showLightingPreview,
   playbackRate,
   beatDepth,
   volume,
@@ -62,14 +77,17 @@ const EditorStatusBar = ({
   updateBeatDepth,
   updateVolume,
   toggleNoteTick,
+  togglePreviewLightingInEventsView,
   location,
 }) => {
-  const isNotesView = !!location.pathname.match(/\/notes$/);
+  const view = getViewFromLocation(location);
 
   let leftContent;
   let rightContent;
 
-  if (isNotesView) {
+  console.log({ showLightingPreview });
+
+  if (view === NOTES_VIEW) {
     leftContent = (
       <>
         <CountIndicator
@@ -142,8 +160,18 @@ const EditorStatusBar = ({
         />
       </>
     );
-  } else {
-    leftContent = null;
+  } else if (view === EVENTS_VIEW) {
+    leftContent = (
+      <>
+        <Toggle
+          size={8}
+          value={showLightingPreview}
+          onIcon={showLightsIcon}
+          offIcon={hideLightsIcon}
+          onChange={togglePreviewLightingInEventsView}
+        />
+      </>
+    );
     rightContent = (
       <>
         <Toggle
@@ -205,6 +233,7 @@ const Wrapper = styled.div`
 
 const Left = styled.div`
   display: flex;
+  align-items: center;
 
   @media (max-width: 850px) {
     display: none;
@@ -226,6 +255,7 @@ const mapStateToProps = state => {
     numOfBlocks: getNumOfBlocks(state),
     numOfMines: getNumOfMines(state),
     numOfObstacles: getNumOfObstacles(state),
+    showLightingPreview: getShowLightingPreview(state),
   };
 };
 
@@ -234,6 +264,7 @@ const mapDispatchToProps = {
   updateBeatDepth: actions.updateBeatDepth,
   updateVolume: actions.updateVolume,
   toggleNoteTick: actions.toggleNoteTick,
+  togglePreviewLightingInEventsView: actions.togglePreviewLightingInEventsView,
 };
 
 export default connect(

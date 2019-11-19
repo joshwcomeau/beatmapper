@@ -277,7 +277,6 @@ const EventsGrid = ({
 
 const Wrapper = styled.div`
   display: flex;
-  background: rgba(0, 0, 0, 0.45);
   opacity: ${props => (props.isLoading ? 0.25 : 1)};
   /*
     Disallow clicking until the song has loaded, to prevent weird edge-case bugs
