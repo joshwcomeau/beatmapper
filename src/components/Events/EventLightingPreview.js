@@ -60,16 +60,6 @@ const EventLightingPreviewPresentational = ({
     </>
   );
 
-  // if (graphicsLevel === 'high') {
-  //   return (
-  //     <>
-  //       <Bloom>{lights}</Bloom>
-
-  //       <NoBloom>{environment}</NoBloom>
-  //     </>
-  //   );
-  // }
-
   return (
     <>
       {lights}

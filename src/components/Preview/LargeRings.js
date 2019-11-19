@@ -6,9 +6,11 @@ import { convertMillisecondsToBeats } from '../../helpers/audio.helpers';
 import { getColorForItem } from '../../helpers/colors.helpers';
 import { getCursorPositionInBeats } from '../../reducers/navigation.reducer';
 import { getTracks } from '../../reducers/editor-entities.reducer/events-view.reducer';
-import { getProcessingDelay } from '../../reducers/user.reducer';
+import {
+  getProcessingDelay,
+  getGraphicsLevel,
+} from '../../reducers/user.reducer';
 import useOnChange from '../../hooks/use-on-change.hook';
-import { range } from '../../utils';
 
 import { findMostRecentEventInTrack } from './Preview.helpers';
 import LitSquareRing from './LitSquareRing';
@@ -19,13 +21,13 @@ const DISTANCE_BETWEEN_RINGS = 18;
 const LargeRings = ({
   song,
   isPlaying,
-  numOfRings = 16,
+  numOfRings,
   lastRotationEvent,
   lastLightingEvent,
 }) => {
   const lastRotationEventId = lastRotationEvent ? lastRotationEvent.id : null;
 
-  const firstRingOffset = -8;
+  const firstRingOffset = -26;
 
   const [rotationRatio, setRotationRatio] = React.useState(0);
 
@@ -40,7 +42,11 @@ const LargeRings = ({
     if (!isPlaying) {
       return;
     }
-    setRotationRatio(rotationRatio + Math.PI * 0.25);
+
+    const shouldChangeDirection = Math.random() < 0.25;
+    const directionMultiple = shouldChangeDirection ? 1 : -1;
+
+    setRotationRatio(rotationRatio + Math.PI * 0.25 * directionMultiple);
   }, lastRotationEventId);
 
   // () => ({ xy: [0, 0], config: i => (i === 0 ? fast : slow) });
@@ -74,7 +80,7 @@ const LargeRings = ({
         return trailProps.rotationRatio.interpolate(ratio => [
           0,
           0,
-          INITIAL_ROTATION + index * ratio,
+          INITIAL_ROTATION + (index + 1) * ratio,
         ]);
       }}
     />
@@ -113,9 +119,29 @@ const mapStateToProps = (state, { song }) => {
     processingDelayInBeats
   );
 
+  const graphicsLevel = getGraphicsLevel(state);
+
+  let numOfRings;
+  switch (graphicsLevel) {
+    case 'high': {
+      numOfRings = 16;
+      break;
+    }
+    default:
+    case 'medium': {
+      numOfRings = 8;
+      break;
+    }
+    case 'low': {
+      numOfRings = 4;
+      break;
+    }
+  }
+
   return {
     lastRotationEvent,
     lastLightingEvent,
+    numOfRings,
   };
 };
 

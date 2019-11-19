@@ -53,8 +53,6 @@ const convertMousePositionToBeatNum = (
 
 const EventsGrid = ({
   contentWidth,
-  zoomLevel,
-  events,
   startBeat,
   endBeat,
   selectedBeat,
@@ -70,7 +68,6 @@ const EventsGrid = ({
   clearSelectionBox,
   commitSelection,
 }) => {
-  console.log({ rowHeight });
   const innerGridWidth = contentWidth - PREFIX_WIDTH;
 
   const headerHeight = 32;
@@ -79,12 +76,13 @@ const EventsGrid = ({
   const beatNums = range(Math.floor(startBeat), Math.ceil(endBeat));
 
   const [mouseDownAt, setMouseDownAt] = React.useState(null);
-  const [mousePosition, setMousePosition] = React.useState(null);
   const mouseButtonDepressed = React.useRef(null); // 'left' | 'middle' | 'right'
+
+  const mousePositionRef = React.useRef(null);
 
   React.useEffect(() => {
     setMouseDownAt(null);
-    setMousePosition(null);
+    mousePositionRef.current = null;
     clearSelectionBox();
   }, [clearSelectionBox, selectedEditMode]);
 
@@ -105,7 +103,7 @@ const EventsGrid = ({
 
   const tracksRef = useMousePositionOverElement((x, y) => {
     const currentMousePosition = { x, y };
-    setMousePosition(currentMousePosition);
+    mousePositionRef.current = currentMousePosition;
 
     const hoveringOverBeatNum = convertMousePositionToBeatNum(
       x,
@@ -179,7 +177,7 @@ const EventsGrid = ({
       mouseButtonDepressed.current = 'left';
     }
 
-    setMouseDownAt(mousePosition);
+    setMouseDownAt(mousePositionRef.current);
   };
 
   const getIsTrackDisabled = trackId => {
@@ -365,7 +363,6 @@ const mapStateToProps = (state, ownProps) => {
     startBeat,
     endBeat,
     selectedBeat,
-    zoomLevel: getZoomLevel(state),
     numOfBeatsToShow,
     selectedEditMode,
     isLoading: getIsLoading(state),
@@ -383,7 +380,4 @@ const mapDispatchToProps = {
   commitSelection: actions.commitSelection,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(EventsGrid);
+export default connect(mapStateToProps, mapDispatchToProps)(EventsGrid);

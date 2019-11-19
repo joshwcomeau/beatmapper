@@ -4,7 +4,10 @@ import { connect } from 'react-redux';
 import { convertMillisecondsToBeats } from '../../helpers/audio.helpers';
 import { getCursorPositionInBeats } from '../../reducers/navigation.reducer';
 import { getTracks } from '../../reducers/editor-entities.reducer/events-view.reducer';
-import { getProcessingDelay } from '../../reducers/user.reducer';
+import {
+  getProcessingDelay,
+  getGraphicsLevel,
+} from '../../reducers/user.reducer';
 import useOnChange from '../../hooks/use-on-change.hook';
 import { range } from '../../utils';
 
@@ -16,7 +19,7 @@ const DISTANCE_BETWEEN_RINGS_MIN = 3;
 const DISTANCE_BETWEEN_RINGS_MAX = 10;
 
 const SmallRings = ({
-  numOfRings = 16,
+  numOfRings,
   isPlaying,
   lastZoomEvent,
   lastRotationEvent,
@@ -100,9 +103,29 @@ const mapStateToProps = (state, { song }) => {
     processingDelayInBeats
   );
 
+  const graphicsLevel = getGraphicsLevel(state);
+
+  let numOfRings;
+  switch (graphicsLevel) {
+    case 'high': {
+      numOfRings = 16;
+      break;
+    }
+    default:
+    case 'medium': {
+      numOfRings = 12;
+      break;
+    }
+    case 'low': {
+      numOfRings = 8;
+      break;
+    }
+  }
+
   return {
     lastZoomEvent,
     lastRotationEvent,
+    numOfRings,
   };
 };
 

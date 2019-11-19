@@ -3,7 +3,7 @@ import { useSpring, animated } from 'react-spring/three';
 
 const RingHalf = ({ side, size, thickness, color }) => {
   const length = size;
-  const height = length / 3;
+  const height = length * 0.2;
 
   // If this is the bottom half, we need to rotate the whole thing 180deg.
   const rotation = side === 'bottom' ? [0, 0, Math.PI] : [0, 0, 0];
