@@ -18,8 +18,12 @@ import { bell as tickOnIcon } from 'react-icons-kit/feather/bell';
 import { bellOff as tickOffIcon } from 'react-icons-kit/feather/bellOff';
 import { minimize2 as distanceCloseIcon } from 'react-icons-kit/feather/minimize2';
 import { maximize2 as distanceFarIcon } from 'react-icons-kit/feather/maximize2';
-import { eye as showLightsIcon } from 'react-icons-kit/feather/eye';
-import { eyeOff as hideLightsIcon } from 'react-icons-kit/feather/eyeOff';
+import { zap as showLightsIcon } from 'react-icons-kit/feather/zap';
+import { zapOff as hideLightsIcon } from 'react-icons-kit/feather/zapOff';
+import { eyeOff as backgroundOpacityMinIcon } from 'react-icons-kit/feather/eyeOff';
+import { eye as backgroundOpacityMaxIcon } from 'react-icons-kit/feather/eye';
+import { alignJustify as rowHeightMinIcon } from 'react-icons-kit/feather/alignJustify';
+import { menu as rowHeightMaxIcon } from 'react-icons-kit/feather/menu';
 
 import * as actions from '../../actions';
 import {
@@ -41,7 +45,11 @@ import {
   getVolume,
   getPlayNoteTick,
 } from '../../reducers/navigation.reducer';
-import { getShowLightingPreview } from '../../reducers/editor.reducer';
+import {
+  getShowLightingPreview,
+  getRowHeight,
+  getBackgroundOpacity,
+} from '../../reducers/editor.reducer';
 import { pluralize } from '../../utils';
 
 import Spacer from '../Spacer';
@@ -68,6 +76,8 @@ const EditorStatusBar = ({
   numOfMines,
   numOfObstacles,
   showLightingPreview,
+  rowHeight,
+  backgroundOpacity,
   playbackRate,
   beatDepth,
   volume,
@@ -78,14 +88,14 @@ const EditorStatusBar = ({
   updateVolume,
   toggleNoteTick,
   togglePreviewLightingInEventsView,
+  tweakEventRowHeight,
+  tweakEventBackgroundOpacity,
   location,
 }) => {
   const view = getViewFromLocation(location);
 
   let leftContent;
   let rightContent;
-
-  console.log({ showLightingPreview });
 
   if (view === NOTES_VIEW) {
     leftContent = (
@@ -169,6 +179,31 @@ const EditorStatusBar = ({
           onIcon={showLightsIcon}
           offIcon={hideLightsIcon}
           onChange={togglePreviewLightingInEventsView}
+        />
+        <Spacer size={UNIT * 6} />
+        <SliderGroup
+          width={UNIT * 5}
+          height={height}
+          minIcon={rowHeightMinIcon}
+          maxIcon={rowHeightMaxIcon}
+          min={25}
+          max={50}
+          step={1}
+          value={rowHeight}
+          onChange={value => tweakEventRowHeight(value)}
+        />
+        <Spacer size={UNIT * 6} />
+        <SliderGroup
+          disabled={isLoading}
+          width={UNIT * 5}
+          height={height}
+          minIcon={backgroundOpacityMinIcon}
+          maxIcon={backgroundOpacityMaxIcon}
+          min={0.3}
+          max={1}
+          step={0.02}
+          value={backgroundOpacity}
+          onChange={value => tweakEventBackgroundOpacity(value)}
         />
       </>
     );
@@ -256,6 +291,8 @@ const mapStateToProps = state => {
     numOfMines: getNumOfMines(state),
     numOfObstacles: getNumOfObstacles(state),
     showLightingPreview: getShowLightingPreview(state),
+    rowHeight: getRowHeight(state),
+    backgroundOpacity: getBackgroundOpacity(state),
   };
 };
 
@@ -265,6 +302,8 @@ const mapDispatchToProps = {
   updateVolume: actions.updateVolume,
   toggleNoteTick: actions.toggleNoteTick,
   togglePreviewLightingInEventsView: actions.togglePreviewLightingInEventsView,
+  tweakEventRowHeight: actions.tweakEventRowHeight,
+  tweakEventBackgroundOpacity: actions.tweakEventBackgroundOpacity,
 };
 
 export default connect(

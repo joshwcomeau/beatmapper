@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import { SIDEBAR_WIDTH, EVENTS_VIEW } from '../../constants';
@@ -7,14 +8,14 @@ import useWindowDimensions from '../../hooks/use-window-dimensions.hook';
 import EventsGrid from '../EventsGrid';
 import SongInfo from '../SongInfo';
 import GlobalShortcuts from '../GlobalShortcuts';
-import ReduxForwardingCanvas from '../ReduxForwardingCanvas';
 
 import BottomPanel from './BottomPanel';
 import GridControls from './GridControls';
 import KeyboardShortcuts from './KeyboardShortcuts';
 import EventLightingPreview from './EventLightingPreview';
+import { getBackgroundOpacity } from '../../reducers/editor.reducer';
 
-const Events = () => {
+const Events = ({ backgroundOpacity }) => {
   const { width: windowWidth } = useWindowDimensions();
   const contentWidth = windowWidth - SIDEBAR_WIDTH;
 
@@ -27,7 +28,11 @@ const Events = () => {
       <Wrapper>
         <SongInfo showDifficultySelector={false} coverArtSize="small" />
 
-        <MainUI>
+        <MainUI
+          style={{
+            background: `hsla(222, 32%, 4%, ${backgroundOpacity})`,
+          }}
+        >
           <GridControls contentWidth={contentWidth} />
           <EventsGrid contentWidth={contentWidth} />
           <BottomPanel contentWidth={contentWidth} />
@@ -62,7 +67,12 @@ const MainUI = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  background: hsla(222, 32%, 4%, 0.8);
 `;
 
-export default Events;
+const mapStateToProps = state => {
+  return {
+    backgroundOpacity: getBackgroundOpacity(state),
+  };
+};
+
+export default connect(mapStateToProps)(Events);

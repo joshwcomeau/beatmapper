@@ -729,6 +729,15 @@ export const togglePreviewLightingInEventsView = () => ({
   type: 'TOGGLE_PREVIEW_LIGHTING_IN_EVENTS_VIEW',
 });
 
+export const tweakEventRowHeight = newHeight => ({
+  type: 'TWEAK_EVENT_ROW_HEIGHT',
+  newHeight,
+});
+export const tweakEventBackgroundOpacity = newOpacity => ({
+  type: 'TWEAK_EVENT_BACKGROUND_OPACITY',
+  newOpacity,
+});
+
 export const dismissPrompt = promptId => ({
   type: 'DISMISS_PROMPT',
   promptId,

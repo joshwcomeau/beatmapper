@@ -35,7 +35,7 @@ const SliderGroup = ({
       max={max}
       step={typeof step === 'number' ? step : 1 / width}
       value={value}
-      onChange={ev => onChange(ev.target.value)}
+      onChange={ev => onChange(Number(ev.target.value))}
       disabled={disabled}
       {...delegated}
     />

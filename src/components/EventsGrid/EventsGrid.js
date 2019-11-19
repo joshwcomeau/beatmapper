@@ -13,6 +13,7 @@ import {
   getSelectedEventBeat,
   getSelectionBox,
   getAreLasersLocked,
+  getRowHeight,
 } from '../../reducers/editor.reducer';
 import useMousePositionOverElement from '../../hooks/use-mouse-position-over-element.hook';
 import usePointerUpHandler from '../../hooks/use-pointer-up-handler.hook';
@@ -62,17 +63,18 @@ const EventsGrid = ({
   isLoading,
   areLasersLocked,
   snapTo,
+  rowHeight,
   selectedEditMode,
   moveMouseAcrossEventsGrid,
   drawSelectionBox,
   clearSelectionBox,
   commitSelection,
 }) => {
+  console.log({ rowHeight });
   const innerGridWidth = contentWidth - PREFIX_WIDTH;
-  // TODO: Dynamic height?
-  const trackHeight = 40;
+
   const headerHeight = 32;
-  const innerGridHeight = trackHeight * EVENT_TRACKS.length;
+  const innerGridHeight = rowHeight * EVENT_TRACKS.length;
 
   const beatNums = range(Math.floor(startBeat), Math.ceil(endBeat));
 
@@ -128,8 +130,8 @@ const EventsGrid = ({
       // Selection boxes need to include their cartesian values, in pixels, but
       // we should also encode the values in business terms: start/end beat,
       // and start/end track
-      const startTrackIndex = Math.floor(newSelectionBox.top / trackHeight);
-      const endTrackIndex = Math.floor(newSelectionBox.bottom / trackHeight);
+      const startTrackIndex = Math.floor(newSelectionBox.top / rowHeight);
+      const endTrackIndex = Math.floor(newSelectionBox.bottom / rowHeight);
 
       const start = convertMousePositionToBeatNum(
         newSelectionBox.left,
@@ -203,7 +205,7 @@ const EventsGrid = ({
         {EVENT_TRACKS.map(({ id, type, label }) => (
           <TrackPrefix
             key={id}
-            style={{ height: trackHeight }}
+            style={{ height: rowHeight }}
             isDisabled={getIsTrackDisabled(id)}
           >
             {label}
@@ -246,7 +248,7 @@ const EventsGrid = ({
                   key={id}
                   trackId={id}
                   width={innerGridWidth}
-                  height={type === 'blocks' ? trackHeight : trackHeight}
+                  height={rowHeight}
                   startBeat={startBeat}
                   numOfBeatsToShow={numOfBeatsToShow}
                   cursorAtBeat={selectedBeat}
@@ -370,6 +372,7 @@ const mapStateToProps = (state, ownProps) => {
     areLasersLocked: getAreLasersLocked(state),
     snapTo: getSnapTo(state),
     selectionBox: getSelectionBox(state),
+    rowHeight: getRowHeight(state),
   };
 };
 
