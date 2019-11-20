@@ -37,7 +37,17 @@ void main()
 }
 `;
 
-const Glow = ({ x, y, z, color, size, status, lastEventId, isPlaying }) => {
+const Glow = ({
+  x,
+  y,
+  z,
+  color,
+  size,
+  status,
+  lastEventId,
+  isPlaying,
+  isBlooming,
+}) => {
   const { camera } = useThree();
 
   let springConfig = getSpringConfigForLight(
@@ -56,6 +66,10 @@ const Glow = ({ x, y, z, color, size, status, lastEventId, isPlaying }) => {
 
   const spring = useSpring(springConfig);
 
+  // When blooming, the `c` uniform makes it white and obnoxious, so tune the
+  // effect down in this case.
+  const cUniformValue = isBlooming ? 0.2 : 0.001;
+
   return (
     <mesh position={[x, y, z]}>
       <sphereGeometry attach="geometry" args={[size, 32, 16]} />
@@ -64,7 +78,7 @@ const Glow = ({ x, y, z, color, size, status, lastEventId, isPlaying }) => {
         args={[
           {
             uniforms: {
-              c: { type: 'f', value: 0.2 },
+              c: { type: 'f', value: cUniformValue },
               p: { type: 'f', value: undefined },
               glowColor: { type: 'c', value: new THREE.Color(color) },
               viewVector: { type: 'v3', value: camera.position },

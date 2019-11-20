@@ -40,7 +40,7 @@ const MapVisualization = () => {
     <>
       <StaticEnvironment includeEdgeStrips trackGridRows={true} />
 
-      <Fog />
+      <Fog renderForGraphics="high" strength={0.02} />
 
       <Lighting />
 

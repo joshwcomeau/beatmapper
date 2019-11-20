@@ -16,6 +16,7 @@ import { getIsPlaying } from '../../reducers/navigation.reducer';
 
 import StaticEnvironment from '../StaticEnvironment';
 import { Bloom, NoBloom } from '../BloomEffect';
+import Fog from '../Fog';
 import SideLaser from './SideLaser';
 import BackLaser from './BackLaser';
 import SmallRings from './SmallRings';
@@ -26,7 +27,7 @@ import AmbientLighting from './AmbientLighting';
 const LightingPreview = ({ song, isPlaying, graphicsLevel }) => {
   const controls = React.useRef(null);
 
-  const useBloom = graphicsLevel === 'high';
+  const isBlooming = graphicsLevel === 'high';
 
   // Controls to move around the space.
   useRender(({ canvas, scene, camera }) => {
@@ -45,18 +46,18 @@ const LightingPreview = ({ song, isPlaying, graphicsLevel }) => {
       <BackLaser song={song} isPlaying={isPlaying} />
       <LargeRings song={song} isPlaying={isPlaying} />
       <SmallRings song={song} isPlaying={isPlaying} />
-      <PrimaryLight song={song} isPlaying={isPlaying} />
+      <PrimaryLight song={song} isPlaying={isPlaying} isBlooming={isBlooming} />
     </>
   );
 
   const environment = (
     <>
       <StaticEnvironment />
-      <AmbientLighting includeSpotlight={!useBloom} />
+      <AmbientLighting includeSpotlight={!isBlooming} />
     </>
   );
 
-  if (graphicsLevel === 'high') {
+  if (isBlooming) {
     return (
       <>
         <Bloom>{lights}</Bloom>
@@ -70,6 +71,7 @@ const LightingPreview = ({ song, isPlaying, graphicsLevel }) => {
     <>
       {lights}
       {environment}
+      <Fog renderForGraphics="medium" strength={0.005} />
     </>
   );
 };

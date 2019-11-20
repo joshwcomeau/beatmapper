@@ -21,7 +21,7 @@ const ON_PROPS = { emissiveIntensity: 0.75, opacity: 0.75 };
 const OFF_PROPS = { emissiveIntensity: 0, opacity: 0 };
 const BRIGHT_PROPS = { emissiveIntensity: 1, opacity: 1 };
 
-const PrimaryLight = ({ song, isPlaying, lastEvent }) => {
+const PrimaryLight = ({ song, isPlaying, isBlooming, lastEvent }) => {
   // TODO: laser beams for along the side and maybe along the bottom too?
   const status = lastEvent ? lastEvent.type : 'off';
   const lastEventId = lastEvent ? lastEvent.id : null;
@@ -92,10 +92,11 @@ const PrimaryLight = ({ song, isPlaying, lastEvent }) => {
         x={0}
         y={0}
         z={z}
-        size={30}
+        size={40}
         status={status}
         lastEventId={lastEvent ? lastEvent.id : null}
         isPlaying={isPlaying}
+        isBlooming={isBlooming}
       />
     </>
   );
