@@ -4,7 +4,8 @@ import styled from 'styled-components';
 
 import { UNIT } from '../../constants';
 import {
-  getSelectedNotes,
+  getSelectedBlocks,
+  getSelectedMines,
   getSelectedObstacles,
 } from '../../reducers/editor-entities.reducer/notes-view.reducer';
 
@@ -23,7 +24,8 @@ const bottomPanelHeight = 180;
 
 const EditorRightPanel = ({
   song,
-  numOfSelectedNotes,
+  numOfSelectedBlocks,
+  numOfSelectedMines,
   numOfSelectedObstacles,
   isAnythingSelected,
 }) => {
@@ -39,7 +41,8 @@ const EditorRightPanel = ({
   } else if (isAnythingSelected) {
     panelContents = (
       <SelectionInfo
-        numOfSelectedNotes={numOfSelectedNotes}
+        numOfSelectedBlocks={numOfSelectedBlocks}
+        numOfSelectedMines={numOfSelectedMines}
         numOfSelectedObstacles={numOfSelectedObstacles}
       />
     );
@@ -100,15 +103,19 @@ const Wrapper = styled.div`
 `;
 
 const mapStateToProps = state => {
-  const selectedNotes = getSelectedNotes(state);
+  const selectedBlocks = getSelectedBlocks(state);
+  const selectedMines = getSelectedMines(state);
   const selectedObstacles = getSelectedObstacles(state);
 
   const isAnythingSelected =
-    selectedNotes.length > 0 || selectedObstacles.length > 0;
+    selectedBlocks.length > 0 ||
+    selectedObstacles.length > 0 ||
+    selectedMines.length > 0;
 
   return {
     song: getSelectedSong(state),
-    numOfSelectedNotes: selectedNotes.length,
+    numOfSelectedBlocks: selectedBlocks.length,
+    numOfSelectedMines: selectedMines.length,
     numOfSelectedObstacles: selectedObstacles.length,
     isAnythingSelected,
   };

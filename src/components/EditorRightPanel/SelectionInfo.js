@@ -8,48 +8,65 @@ import { Tooltip } from 'react-tippy';
 
 import * as actions from '../../actions';
 import { COLORS, UNIT, NOTES_VIEW } from '../../constants';
-import { getMetaKeyLabel } from '../../utils';
-import { getEnabledFastWalls } from '../../reducers/songs.reducer';
 import { getHasCopiedNotes } from '../../reducers/clipboard.reducer';
+import { getMetaKeyLabel, interleave } from '../../utils';
+import { ACTION_WIDTH, HALF_ACTION_WIDTH } from './EditorRightPanel.constants';
 
 import MiniButton from '../MiniButton';
 import Heading from '../Heading';
 import IconButton from '../IconButton';
 import Spacer from '../Spacer';
-
+import UnstyledButton from '../UnstyledButton';
+import StrikethroughOnHover from '../StrikethroughOnHover';
 import ObstacleTweaks from './ObstacleTweaks';
 import UndoRedo from './UndoRedo';
-import { ACTION_WIDTH, HALF_ACTION_WIDTH } from './EditorRightPanel.constants';
 
-const SelectionCount = ({ num, label }) => {
+const SelectionCount = ({ num, label, onClick }) => {
   const pluralizedLabel = num === 1 ? label : `${label}s`;
 
   return (
-    <>
-      <Highlight>{num}</Highlight> {pluralizedLabel}
-    </>
+    <UnstyledButton display="inline" onClick={onClick}>
+      <StrikethroughOnHover>
+        <Highlight>{num}</Highlight> {pluralizedLabel}
+      </StrikethroughOnHover>
+    </UnstyledButton>
   );
 };
 
 const SelectionInfo = ({
-  numOfSelectedNotes,
+  numOfSelectedBlocks,
+  numOfSelectedMines,
   numOfSelectedObstacles,
   hasCopiedNotes,
-  enabledFastWalls,
   deselectAll,
   swapSelectedNotes,
   nudgeSelection,
   cutSelection,
   copySelection,
   pasteSelection,
-  toggleFastWallsForSelectedObstacles,
+  deselectAllOfType,
 }) => {
   const hasSelectedObstacles = numOfSelectedObstacles >= 1;
 
   let numbers = [];
-  if (numOfSelectedNotes) {
+  if (numOfSelectedBlocks) {
     numbers.push(
-      <SelectionCount key="notes" num={numOfSelectedNotes} label="note" />
+      <SelectionCount
+        key="blocks"
+        num={numOfSelectedBlocks}
+        label="block"
+        onClick={() => deselectAllOfType('block')}
+      />
+    );
+  }
+  if (numOfSelectedMines) {
+    numbers.push(
+      <SelectionCount
+        key="mines"
+        num={numOfSelectedMines}
+        label="mine"
+        onClick={() => deselectAllOfType('mine')}
+      />
     );
   }
   if (numOfSelectedObstacles) {
@@ -58,13 +75,12 @@ const SelectionInfo = ({
         key="obstacles"
         num={numOfSelectedObstacles}
         label="wall"
+        onClick={() => deselectAllOfType('obstacle')}
       />
     );
   }
 
-  if (numbers.length === 2) {
-    numbers = [numbers[0], ', ', numbers[1]];
-  }
+  numbers = interleave(numbers, ', ');
 
   const metaKeyLabel = getMetaKeyLabel();
 
@@ -206,7 +222,6 @@ const Highlight = styled.span`
 const mapStateToProps = state => {
   return {
     hasCopiedNotes: getHasCopiedNotes(state),
-    enabledFastWalls: getEnabledFastWalls(state),
   };
 };
 
@@ -217,11 +232,7 @@ const mapDispatchToProps = {
   cutSelection: actions.cutSelection,
   copySelection: actions.copySelection,
   pasteSelection: actions.pasteSelection,
-  toggleFastWallsForSelectedObstacles:
-    actions.toggleFastWallsForSelectedObstacles,
+  deselectAllOfType: actions.deselectAllOfType,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SelectionInfo);
+export default connect(mapStateToProps, mapDispatchToProps)(SelectionInfo);

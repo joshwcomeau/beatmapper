@@ -295,6 +295,33 @@ const notes = (state = initialState.notes, action) => {
       return nudgeNotes(direction, amount, state);
     }
 
+    case 'DESELECT_ALL_OF_TYPE': {
+      const { itemType } = action;
+
+      if (itemType === 'obstacle') {
+        return state;
+      }
+
+      const typeMap = {
+        '0': 'block',
+        '1': 'block',
+        '3': 'mine',
+      };
+
+      return state.map(note => {
+        const matchesType = typeMap[note._type] === itemType;
+
+        if (!matchesType || !note.selected) {
+          return note;
+        }
+
+        return {
+          ...note,
+          selected: false,
+        };
+      });
+    }
+
     default:
       return state;
   }
@@ -480,6 +507,25 @@ const obstacles = (state = initialState.obstacles, action) => {
       });
     }
 
+    case 'DESELECT_ALL_OF_TYPE': {
+      const { itemType } = action;
+
+      if (itemType !== 'obstacle') {
+        return state;
+      }
+
+      return state.map(obstacle => {
+        if (!obstacle.selected) {
+          return obstacle;
+        }
+
+        return {
+          ...obstacle,
+          selected: false,
+        };
+      });
+    }
+
     default:
       return state;
   }
@@ -518,18 +564,19 @@ export const getNotes = state => state.editorEntities.notesView.present.notes;
 export const getObstacles = state =>
   state.editorEntities.notesView.present.obstacles;
 
-export const getSelectedNotes = createSelector(
-  getNotes,
-  notes => {
-    return notes.filter(note => note.selected);
-  }
-);
-export const getSelectedObstacles = createSelector(
-  getObstacles,
-  obstacles => {
-    return obstacles.filter(obstacle => obstacle.selected);
-  }
-);
+// Notes === blocks + mines
+export const getSelectedNotes = createSelector(getNotes, notes => {
+  return notes.filter(note => note.selected);
+});
+export const getSelectedObstacles = createSelector(getObstacles, obstacles => {
+  return obstacles.filter(obstacle => obstacle.selected);
+});
+export const getSelectedBlocks = createSelector(getNotes, notes => {
+  return notes.filter(note => note.selected && note._type < 2);
+});
+export const getSelectedMines = createSelector(getNotes, notes => {
+  return notes.filter(note => note.selected && note._type === 3);
+});
 
 export const getSelectedNotesAndObstacles = createSelector(
   getSelectedNotes,
@@ -537,18 +584,12 @@ export const getSelectedNotesAndObstacles = createSelector(
   (notes, obstacles) => [...notes, ...obstacles]
 );
 
-export const getNumOfBlocks = createSelector(
-  getNotes,
-  notes => {
-    return notes.filter(note => note._type === 0 || note._type === 1).length;
-  }
-);
-export const getNumOfMines = createSelector(
-  getNotes,
-  notes => {
-    return notes.filter(note => note._type === 3).length;
-  }
-);
+export const getNumOfBlocks = createSelector(getNotes, notes => {
+  return notes.filter(note => note._type === 0 || note._type === 1).length;
+});
+export const getNumOfMines = createSelector(getNotes, notes => {
+  return notes.filter(note => note._type === 3).length;
+});
 export const getNumOfObstacles = state => getObstacles(state).length;
 
 export const getNumOfSelectedNotes = state => {

@@ -364,3 +364,14 @@ export const getMetaKeyLabel = () => {
 export const getOptionKeyLabel = () => {
   return getIsMac() ? '⌥' : 'alt';
 };
+
+export const interleave = (arr, delimiter) => {
+  return arr.reduce((acc, item, index) => {
+    const isLastItem = index === arr.length - 1;
+    if (isLastItem) {
+      return [...acc, item];
+    }
+
+    return [...acc, item, delimiter];
+  }, []);
+};

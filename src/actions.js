@@ -400,6 +400,12 @@ export const deselectAll = view => ({
   type: 'DESELECT_ALL',
   view,
 });
+
+export const deselectAllOfType = itemType => ({
+  type: 'DESELECT_ALL_OF_TYPE',
+  itemType,
+});
+
 export const selectAll = view => (dispatch, getState) => {
   const state = getState();
 
