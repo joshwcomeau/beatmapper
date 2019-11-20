@@ -4,7 +4,10 @@ import { useTrail } from 'react-spring/three';
 
 import { convertMillisecondsToBeats } from '../../helpers/audio.helpers';
 import { getColorForItem } from '../../helpers/colors.helpers';
-import { getCursorPositionInBeats } from '../../reducers/navigation.reducer';
+import {
+  getCursorPositionInBeats,
+  getAnimateRingMotion,
+} from '../../reducers/navigation.reducer';
 import { getTracks } from '../../reducers/editor-entities.reducer/events-view.reducer';
 import {
   getProcessingDelay,
@@ -16,12 +19,14 @@ import { findMostRecentEventInTrack } from './Preview.helpers';
 import LitSquareRing from './LitSquareRing';
 
 const INITIAL_ROTATION = Math.PI * 0.25;
+const INCREMENT_ROTATION_BY = Math.PI * 0.5;
 const DISTANCE_BETWEEN_RINGS = 18;
 
 const LargeRings = ({
   song,
   isPlaying,
   numOfRings,
+  animateRingMotion,
   lastRotationEvent,
   lastLightingEvent,
 }) => {
@@ -38,26 +43,26 @@ const LargeRings = ({
       ? '#000000'
       : getColorForItem(lastLightingEvent.colorType, song);
 
+  // TODO: Custom hook that is shared with SmallRings
   useOnChange(() => {
-    if (!isPlaying) {
+    if (!isPlaying || !lastRotationEventId) {
       return;
     }
 
     const shouldChangeDirection = Math.random() < 0.25;
     const directionMultiple = shouldChangeDirection ? 1 : -1;
 
-    setRotationRatio(rotationRatio + Math.PI * 0.25 * directionMultiple);
+    setRotationRatio(rotationRatio + INCREMENT_ROTATION_BY * directionMultiple);
   }, lastRotationEventId);
-
-  // () => ({ xy: [0, 0], config: i => (i === 0 ? fast : slow) });
 
   const trail = useTrail(numOfRings, {
     to: {
-      rotationRatio,
+      rotation: [0, 0, INITIAL_ROTATION * rotationRatio],
     },
+    immediate: !animateRingMotion,
     config: {
       tension: 2500,
-      friction: 800,
+      friction: 600,
       mass: 1,
       precision: 0.001,
     },
@@ -67,22 +72,16 @@ const LargeRings = ({
     <LitSquareRing
       key={index}
       index={index}
-      size={96}
+      size={128}
       thickness={2.5}
       y={-2}
       z={firstRingOffset + DISTANCE_BETWEEN_RINGS * index * -1}
       color="#111111"
+      rotation={trailProps.rotation}
       lightStatus={lightStatus}
       lightColor={lightColor}
       lastLightingEventId={lastLightingEventId}
       isPlaying={isPlaying}
-      getRotation={() => {
-        return trailProps.rotationRatio.interpolate(ratio => [
-          0,
-          0,
-          INITIAL_ROTATION + (index + 1) * ratio,
-        ]);
-      }}
     />
   ));
 };
@@ -138,10 +137,13 @@ const mapStateToProps = (state, { song }) => {
     }
   }
 
+  const animateRingMotion = getAnimateRingMotion(state);
+
   return {
     lastRotationEvent,
     lastLightingEvent,
     numOfRings,
+    animateRingMotion,
   };
 };
 

@@ -6,7 +6,7 @@ import useOnChange from '../../hooks/use-on-change.hook';
 
 import { getSpringConfigForLight } from './Preview.helpers';
 
-const ON_PROPS = { emissiveIntensity: 0.75, opacity: 0.75 };
+const ON_PROPS = { emissiveIntensity: 0.5, opacity: 0.75 };
 const OFF_PROPS = { emissiveIntensity: 0, opacity: 0 };
 const BRIGHT_PROPS = { emissiveIntensity: 1, opacity: 1 };
 
@@ -21,7 +21,7 @@ const RingPeg = ({
   isPlaying,
 }) => {
   const length = size;
-  const width = thickness * 2;
+  const width = thickness * 1.5;
 
   let lightSpringConfig = getSpringConfigForLight(
     [ON_PROPS, OFF_PROPS, BRIGHT_PROPS],
@@ -74,18 +74,18 @@ const LitSquareRing = ({
   y = -2,
   z = -8,
   color,
+  rotation,
   lightStatus,
   lightColor,
   lastLightingEventId,
   isPlaying,
-  getRotation,
 }) => {
   // Each ring consists of 4 identical pegs, long thick bars with a light
   // pointing inwards. They're each rotated 90deg to form a square.
   const zRotations = [0, Math.PI * 0.5, Math.PI * 1, Math.PI * 1.5];
 
   return (
-    <animated.group position={[x, y, z]} rotation={getRotation()}>
+    <animated.group position={[x, y, z]} rotation={rotation}>
       {zRotations.map(zRotation => (
         <RingPeg
           key={zRotation}

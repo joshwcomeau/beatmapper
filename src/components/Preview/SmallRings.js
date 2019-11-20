@@ -15,6 +15,7 @@ import { findMostRecentEventInTrack } from './Preview.helpers';
 import BracketRing from './BracketRing';
 
 const INITIAL_ROTATION = Math.PI * 0.25;
+const INCREMENT_ROTATION_BY = Math.PI * 0.5;
 const DISTANCE_BETWEEN_RINGS_MIN = 3;
 const DISTANCE_BETWEEN_RINGS_MAX = 10;
 
@@ -48,25 +49,27 @@ const SmallRings = ({
     }
   }, lastZoomEventId);
 
+  // TODO: Custom hook that is shared with LArgeRings
   useOnChange(() => {
-    if (!isPlaying) {
+    if (!isPlaying || !lastRotationEventId) {
       return;
     }
 
-    if (lastRotationEventId) {
-      setRotationRatio(rotationRatio + 0.25);
-    }
+    const shouldChangeDirection = Math.random() < 0.5;
+    const directionMultiple = shouldChangeDirection ? 1 : -1;
+
+    setRotationRatio(rotationRatio + INCREMENT_ROTATION_BY * directionMultiple);
   }, lastRotationEventId);
 
   return range(numOfRings).map(index => (
     <BracketRing
       key={index}
-      size={12}
+      size={16}
       thickness={0.4}
       y={-2}
       z={firstRingOffset + distanceBetweenRings * index * -1}
       rotation={INITIAL_ROTATION + index * rotationRatio}
-      color="#333"
+      color="#1C1C1C"
     />
   ));
 };

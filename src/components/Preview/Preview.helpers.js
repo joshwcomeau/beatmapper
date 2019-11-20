@@ -1,3 +1,8 @@
+const lightSpringConfig = {
+  tension: 270,
+  friction: 120,
+};
+
 export const getSpringConfigForLight = (
   [onProps, offProps, brightProps],
   status
@@ -8,6 +13,7 @@ export const getSpringConfigForLight = (
         to: offProps,
         immediate: true,
         reset: false,
+        config: lightSpringConfig,
       };
 
     case 'on': {
@@ -15,6 +21,7 @@ export const getSpringConfigForLight = (
         to: onProps,
         immediate: true,
         reset: false,
+        config: lightSpringConfig,
       };
     }
 
@@ -24,6 +31,7 @@ export const getSpringConfigForLight = (
         to: onProps,
         immediate: false,
         reset: false,
+        config: lightSpringConfig,
       };
     }
 
@@ -33,6 +41,7 @@ export const getSpringConfigForLight = (
         to: offProps,
         immediate: false,
         reset: false,
+        config: lightSpringConfig,
       };
     }
 
