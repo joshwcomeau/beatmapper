@@ -2,9 +2,8 @@ import { combineReducers } from 'redux';
 import { createSelector } from 'reselect';
 import undoable, { includeAction, groupByActionTypes } from 'redux-undo';
 import produce from 'immer';
-import get from 'lodash.get';
 
-import { NOTES_VIEW, getSurfaceDepth } from '../../constants';
+import { NOTES_VIEW, SURFACE_DEPTHS } from '../../constants';
 import {
   findNoteIndexByProperties,
   swapNotes,
@@ -12,6 +11,7 @@ import {
   calculateNoteDensity,
 } from '../../helpers/notes.helpers';
 import { swapObstacles, nudgeObstacles } from '../../helpers/obstacles.helpers';
+import { calculateVisibleRange } from '../../helpers/editor.helpers';
 import { getCursorPositionInBeats, getBeatDepth } from '../navigation.reducer';
 import { getSelectedSong } from '../songs.reducer';
 import { getGraphicsLevel } from '../user.reducer';
@@ -586,28 +586,23 @@ export const getNotes = state => state.editorEntities.notesView.present.notes;
 export const getObstacles = state =>
   state.editorEntities.notesView.present.obstacles;
 
-export const getPastNotes = state => {
+// Get the past/future set of either notes or obstacles.
+const createHistoryGetter = (set, entityType) => state => {
   try {
-    const { past } = state.editorEntities.notesView;
+    const entities = state.editorEntities.notesView[set];
 
-    const mostRecentSet = past[past.length - 1];
+    const mostRecentSet = entities[entities.length - 1];
 
-    return mostRecentSet.notes;
+    return mostRecentSet[entityType];
   } catch (e) {
     return [];
   }
 };
-export const getFutureNotes = state => {
-  try {
-    const { future } = state.editorEntities.notesView;
 
-    const mostRecentSet = future[future.length - 1];
-
-    return mostRecentSet.notes;
-  } catch (e) {
-    return [];
-  }
-};
+export const getPastNotes = createHistoryGetter('past', 'notes');
+export const getFutureNotes = createHistoryGetter('future', 'notes');
+export const getPastObstacles = createHistoryGetter('past', 'obstacles');
+export const getFutureObstacles = createHistoryGetter('future', 'obstacles');
 
 // Notes === blocks + mines
 export const getSelectedNotes = createSelector(
@@ -672,15 +667,36 @@ export const getVisibleNotes = createSelector(
   getBeatDepth,
   getGraphicsLevel,
   (notes, cursorPositionInBeats, beatDepth, graphicsLevel) => {
-    const surfaceDepth = getSurfaceDepth(graphicsLevel);
-    const farLimit = surfaceDepth / beatDepth;
-    const closeLimit = (surfaceDepth / beatDepth) * 0.2;
+    const [closeLimit, farLimit] = calculateVisibleRange(
+      cursorPositionInBeats,
+      beatDepth,
+      graphicsLevel,
+      { includeSpaceBeforeGrid: true }
+    );
 
     return notes.filter(note => {
-      return (
-        note._time > cursorPositionInBeats - closeLimit &&
-        note._time < cursorPositionInBeats + farLimit
-      );
+      return note._time > closeLimit && note._time < farLimit;
+    });
+  }
+);
+
+export const getVisibleObstacles = createSelector(
+  getObstacles,
+  getCursorPositionInBeats,
+  getBeatDepth,
+  getGraphicsLevel,
+  (obstacles, cursorPositionInBeats, beatDepth, graphicsLevel) => {
+    const [closeLimit, farLimit] = calculateVisibleRange(
+      cursorPositionInBeats,
+      beatDepth,
+      graphicsLevel,
+      { includeSpaceBeforeGrid: true }
+    );
+
+    return obstacles.filter(obstacle => {
+      const beatEnd = obstacle.beatStart + obstacle.beatDuration;
+
+      return beatEnd > closeLimit && obstacle.beatStart < farLimit;
     });
   }
 );
@@ -691,7 +707,7 @@ export const getNoteDensity = createSelector(
   getSelectedSong,
   getGraphicsLevel,
   (notes, beatDepth, song, graphicsLevel) => {
-    const surfaceDepth = getSurfaceDepth(graphicsLevel);
+    const surfaceDepth = SURFACE_DEPTHS[graphicsLevel];
 
     const { bpm } = song;
     const segmentLengthInBeats = (surfaceDepth / beatDepth) * 1.2;

@@ -8,34 +8,33 @@
  */
 
 import { jumpToBeat } from '../actions';
+import { calculateVisibleRange } from '../helpers/editor.helpers';
 import {
   getNotes,
   getPastNotes,
   getFutureNotes,
 } from '../reducers/editor-entities.reducer/notes-view.reducer';
+import {
+  getCursorPositionInBeats,
+  getBeatDepth,
+} from '../reducers/navigation.reducer';
+import { getGraphicsLevel } from '../reducers/user.reducer';
 
-const jumpToEarliestNote = (earlierNotes, laterNotes, dispatch) => {
+const jumpToEarliestNote = (earlierNotes, laterNotes, store) => {
   const notesAboutToBeAdded = earlierNotes.filter(note => {
     return !laterNotes.find(laterNote => {
       return note === laterNote;
     });
   });
   const notesAboutToBeRemoved = laterNotes.filter(note => {
-    // return !earlierNotes.includes(note);
     return !earlierNotes.find(earlierNote => {
       return note === earlierNote;
     });
   });
 
-  // This _should_ be impossible; undoing/redoing notes should always
-  // either add or remove notes - but I can imagine this
-  // changing. No error needed, since this just means the middleware
-  // does nothing.
   if (notesAboutToBeAdded.length === 0 && notesAboutToBeRemoved.length === 0) {
     return;
   }
-
-  console.log(notesAboutToBeAdded, notesAboutToBeRemoved);
 
   const relevantNotes =
     notesAboutToBeAdded.length > 0
@@ -47,7 +46,24 @@ const jumpToEarliestNote = (earlierNotes, laterNotes, dispatch) => {
   // cluster it brings me to the start of that cluster?
   const earliestNote = relevantNotes[0];
 
-  dispatch(jumpToBeat(earliestNote._time, true, true));
+  // Is this note within our visible range? If not, jump to it.
+  const state = store.getState();
+  const cursorPositionInBeats = getCursorPositionInBeats(state);
+  const beatDepth = getBeatDepth(state);
+  const graphicsLevel = getGraphicsLevel(state);
+
+  const [closeLimit, farLimit] = calculateVisibleRange(
+    cursorPositionInBeats,
+    beatDepth,
+    graphicsLevel
+  );
+
+  const isNoteVisible =
+    earliestNote._time > closeLimit && earliestNote._time < farLimit;
+
+  if (!isNoteVisible) {
+    store.dispatch(jumpToBeat(earliestNote._time, true, true));
+  }
 };
 
 export default function createHistoryMiddleware() {
@@ -59,7 +75,12 @@ export default function createHistoryMiddleware() {
         const pastNotes = getPastNotes(state);
         const presentNotes = getNotes(state);
 
-        jumpToEarliestNote(pastNotes, presentNotes, store.dispatch);
+        if (!pastNotes.length) {
+          // Nothing to undo!
+          return;
+        }
+
+        jumpToEarliestNote(pastNotes, presentNotes, store);
 
         // Never interrupt the default action
         next(action);
@@ -73,7 +94,12 @@ export default function createHistoryMiddleware() {
         const presentNotes = getNotes(state);
         const futureNotes = getFutureNotes(state);
 
-        jumpToEarliestNote(presentNotes, futureNotes, store.dispatch);
+        if (!futureNotes.length) {
+          // Nothing to redo!
+          return;
+        }
+
+        jumpToEarliestNote(presentNotes, futureNotes, store);
 
         // Never interrupt the default action
         next(action);
