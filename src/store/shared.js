@@ -7,6 +7,7 @@ import createSelectionMiddleware from '../middlewares/selection.middleware';
 import createPackagingMiddleware from '../middlewares/packaging.middleware';
 import createBackupMiddleware from '../middlewares/backup.middleware';
 import createDemoMiddleware from '../middlewares/demo.middleware';
+import createHistoryMiddleware from '../middlewares/history.middleware';
 
 import createEngine from './persistence-engine';
 
@@ -39,6 +40,7 @@ export const createAllSharedMiddlewares = persistenceEngine => {
   const downloadMiddleware = createPackagingMiddleware();
   const backupMiddleware = createBackupMiddleware();
   const demoMiddleware = createDemoMiddleware();
+  const historyMiddleware = createHistoryMiddleware();
   const storageMiddleware = storage.createMiddleware(persistenceEngine);
 
   return [
@@ -52,6 +54,7 @@ export const createAllSharedMiddlewares = persistenceEngine => {
     selectionMiddleware,
     downloadMiddleware,
     demoMiddleware,
+    historyMiddleware,
     // We have two middlewares related to persistence:
     // - Storage middleware persists the current redux state to localforage
     // - Backup middleware saves the editor entities as beatmap files, also

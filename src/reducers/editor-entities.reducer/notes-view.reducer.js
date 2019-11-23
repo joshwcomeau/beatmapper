@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import { createSelector } from 'reselect';
 import undoable, { includeAction, groupByActionTypes } from 'redux-undo';
 import produce from 'immer';
+import get from 'lodash.get';
 
 import { NOTES_VIEW, getSurfaceDepth } from '../../constants';
 import {
@@ -584,6 +585,29 @@ const notesView = undoable(combineReducers({ notes, obstacles }), {
 export const getNotes = state => state.editorEntities.notesView.present.notes;
 export const getObstacles = state =>
   state.editorEntities.notesView.present.obstacles;
+
+export const getPastNotes = state => {
+  try {
+    const { past } = state.editorEntities.notesView;
+
+    const mostRecentSet = past[past.length - 1];
+
+    return mostRecentSet.notes;
+  } catch (e) {
+    return [];
+  }
+};
+export const getFutureNotes = state => {
+  try {
+    const { future } = state.editorEntities.notesView;
+
+    const mostRecentSet = future[future.length - 1];
+
+    return mostRecentSet.notes;
+  } catch (e) {
+    return [];
+  }
+};
 
 // Notes === blocks + mines
 export const getSelectedNotes = createSelector(
