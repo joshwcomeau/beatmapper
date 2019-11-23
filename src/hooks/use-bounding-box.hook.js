@@ -17,7 +17,7 @@ const useBoundingBox = (dependencies = []) => {
     }
 
     setBoundingBox(ref.current.getBoundingClientRect());
-  }, dependencies);
+  }, dependencies); // eslint-disable-line
 
   // We want to re-capture the bounding box whenever the user scrolls or
   // resizes the window.
