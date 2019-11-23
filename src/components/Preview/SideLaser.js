@@ -7,7 +7,7 @@ import { getCursorPositionInBeats } from '../../reducers/navigation.reducer';
 import { getCursorPosition } from '../../reducers/navigation.reducer';
 import { getTracks } from '../../reducers/editor-entities.reducer/events-view.reducer';
 import { getColorForItem } from '../../helpers/colors.helpers';
-import { getProcessingDelay } from '../../reducers/user.reducer';
+import { getUsableProcessingDelay } from '../../reducers/user.reducer';
 
 import { findMostRecentEventInTrack } from './Preview.helpers';
 import LaserBeam from './LaserBeam';
@@ -141,7 +141,7 @@ const mapStateToProps = (state, { song, side }) => {
   const speedEvents = tracks[speedTrackId];
 
   const currentBeat = getCursorPositionInBeats(state);
-  const processingDelay = getProcessingDelay(state);
+  const processingDelay = getUsableProcessingDelay(state);
 
   const processingDelayInBeats = convertMillisecondsToBeats(
     processingDelay,

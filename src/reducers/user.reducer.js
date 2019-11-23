@@ -3,6 +3,7 @@
  *
  * Persisted across sessions (like songs.reducer)
  */
+import { createSelector } from 'reselect';
 import { getIsPlaying } from './navigation.reducer';
 
 const DEFAULT_PROCESSING_DELAY = 60;
@@ -52,6 +53,7 @@ export default function user(state = initialState, action) {
     }
 
     case 'UPDATE_PROCESSING_DELAY': {
+      console.log(action.newDelay);
       return {
         ...state,
         processingDelay: action.newDelay,
@@ -73,20 +75,22 @@ export default function user(state = initialState, action) {
 export const getIsNewUser = state => state.user.isNewUser;
 export const getSeenPrompts = state => state.user.seenPrompts;
 export const getStickyMapAuthorName = state => state.user.stickyMapAuthorName;
-export const getProcessingDelay = state => {
-  const isPlaying = getIsPlaying(state);
-
-  // If we're not playing the track, we shouldn't have any processing
-  // delay. This is to prevent stuff from firing prematurely when
-  // scrubbing.
-  if (!isPlaying) {
-    return 0;
-  }
-
-  return typeof state.user.processingDelay === 'number'
+export const getProcessingDelay = state =>
+  typeof state.user.processingDelay === 'number'
     ? state.user.processingDelay
     : DEFAULT_PROCESSING_DELAY;
-};
+
+export const getUsableProcessingDelay = createSelector(
+  getProcessingDelay,
+  getIsPlaying,
+  (processingDelay, isPlaying) => {
+    // If we're not playing the track, we shouldn't have any processing
+    // delay. This is to prevent stuff from firing prematurely when
+    // scrubbing.
+    return isPlaying ? processingDelay : 0;
+  }
+);
+
 export const getGraphicsLevel = state =>
   typeof state.user.graphicsLevel === 'string'
     ? state.user.graphicsLevel

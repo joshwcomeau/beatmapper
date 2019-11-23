@@ -10,7 +10,7 @@ import {
 } from '../../reducers/navigation.reducer';
 import { getTracks } from '../../reducers/editor-entities.reducer/events-view.reducer';
 import {
-  getProcessingDelay,
+  getUsableProcessingDelay,
   getGraphicsLevel,
 } from '../../reducers/user.reducer';
 import useOnChange from '../../hooks/use-on-change.hook';
@@ -100,7 +100,7 @@ const mapStateToProps = (state, { song }) => {
   const lightingEvents = tracks[lightingTrackId];
 
   const currentBeat = getCursorPositionInBeats(state);
-  const processingDelay = getProcessingDelay(state);
+  const processingDelay = getUsableProcessingDelay(state);
 
   const processingDelayInBeats = convertMillisecondsToBeats(
     processingDelay,

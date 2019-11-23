@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { getColorForItem } from '../../helpers/colors.helpers';
 import { convertMillisecondsToBeats } from '../../helpers/audio.helpers';
 import { getCursorPositionInBeats } from '../../reducers/navigation.reducer';
-import { getProcessingDelay } from '../../reducers/user.reducer';
+import { getUsableProcessingDelay } from '../../reducers/user.reducer';
 import { getTracks } from '../../reducers/editor-entities.reducer/events-view.reducer';
 import { range } from '../../utils';
 
@@ -59,7 +59,7 @@ const mapStateToProps = (state, { song }) => {
   const events = tracks[trackId];
 
   const currentBeat = getCursorPositionInBeats(state);
-  const processingDelay = getProcessingDelay(state);
+  const processingDelay = getUsableProcessingDelay(state);
   const processingDelayInBeats = convertMillisecondsToBeats(
     processingDelay,
     song.bpm

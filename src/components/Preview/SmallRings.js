@@ -2,10 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { convertMillisecondsToBeats } from '../../helpers/audio.helpers';
-import { getCursorPositionInBeats } from '../../reducers/navigation.reducer';
+import {
+  getCursorPositionInBeats,
+  getAnimateRingMotion,
+} from '../../reducers/navigation.reducer';
 import { getTracks } from '../../reducers/editor-entities.reducer/events-view.reducer';
 import {
-  getProcessingDelay,
+  getUsableProcessingDelay,
   getGraphicsLevel,
 } from '../../reducers/user.reducer';
 import useOnChange from '../../hooks/use-on-change.hook';
@@ -21,6 +24,7 @@ const DISTANCE_BETWEEN_RINGS_MAX = 10;
 
 const SmallRings = ({
   numOfRings,
+  animateRingMotion,
   isPlaying,
   lastZoomEvent,
   lastRotationEvent,
@@ -88,7 +92,7 @@ const mapStateToProps = (state, { song }) => {
   const rotationEvents = tracks[rotationTrackId];
 
   const currentBeat = getCursorPositionInBeats(state);
-  const processingDelay = getProcessingDelay(state);
+  const processingDelay = getUsableProcessingDelay(state);
 
   const processingDelayInBeats = convertMillisecondsToBeats(
     processingDelay,
@@ -125,10 +129,13 @@ const mapStateToProps = (state, { song }) => {
     }
   }
 
+  const animateRingMotion = getAnimateRingMotion(state);
+
   return {
     lastZoomEvent,
     lastRotationEvent,
     numOfRings,
+    animateRingMotion,
   };
 };
 
