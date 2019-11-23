@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from 'react';
 
 import { debounce } from '../utils';
 
-const useBoundingBox = () => {
+const useBoundingBox = (dependencies = []) => {
   // Our `ref` is needed to be passed to the component's `ref` attribute.
   // $FlowFixMe
   const ref = useRef(null);
@@ -17,7 +17,7 @@ const useBoundingBox = () => {
     }
 
     setBoundingBox(ref.current.getBoundingClientRect());
-  }, []);
+  }, dependencies);
 
   // We want to re-capture the bounding box whenever the user scrolls or
   // resizes the window.

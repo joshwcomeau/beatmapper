@@ -59,22 +59,25 @@ const SpeedTrack = ({
 
   usePointerUpHandler(tentativeEvent.visible, commitChanges);
 
-  const ref = useMousePositionOverElement((_, y) => {
-    // We don't care about x, since we already have that under `cursorAtBeat`.
-    // We need to know which vertical bar they're closest to.
-    // `y` will be a number from 0 to `height`, where 0 is the top and `height`
-    // is the bottom. Start by flipping this, since we want speed to increase
-    // from bottom to top.
-    const invertedY = height - y;
-    const speed = Math.ceil(invertedY / (NUM_OF_SPEEDS - 2));
+  const ref = useMousePositionOverElement(
+    (_, y) => {
+      // We don't care about x, since we already have that under `cursorAtBeat`.
+      // We need to know which vertical bar they're closest to.
+      // `y` will be a number from 0 to `height`, where 0 is the top and `height`
+      // is the bottom. Start by flipping this, since we want speed to increase
+      // from bottom to top.
+      const invertedY = height - y;
+      const speed = Math.ceil(invertedY / (NUM_OF_SPEEDS - 2));
 
-    if (speed !== tentativeEvent.laserSpeed) {
-      setTentativeEvent({
-        ...tentativeEvent,
-        laserSpeed: speed,
-      });
-    }
-  });
+      if (speed !== tentativeEvent.laserSpeed) {
+        setTentativeEvent({
+          ...tentativeEvent,
+          laserSpeed: speed,
+        });
+      }
+    },
+    { boxDependencies: [height] }
+  );
 
   const handlePointerDown = ev => {
     if (isDisabled) {
