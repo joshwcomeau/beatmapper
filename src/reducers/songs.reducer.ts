@@ -63,6 +63,7 @@ interface Song {
   demo?: boolean;
   modSettings: ModSettings;
   enabledFastWalls?: boolean;
+  enabledLightshow?: boolean;
 }
 
 interface State {

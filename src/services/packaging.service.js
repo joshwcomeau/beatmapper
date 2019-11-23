@@ -38,6 +38,8 @@ import {
 } from './packaging.service.nitty-gritty';
 import { getSortedBookmarksArray } from '../reducers/bookmarks.reducer';
 
+const LIGHTSHOW_FILENAME = 'EasyLightshow.dat';
+
 export function createInfoContent(song, meta = { version: 2 }) {
   const difficultyIds = sortDifficultyIds(Object.keys(song.difficultiesById));
   const difficulties = difficultyIds.map(id => song.difficultiesById[id]);
@@ -83,6 +85,49 @@ export function createInfoContent(song, meta = { version: 2 }) {
       })),
     };
   } else if (meta.version === 2) {
+    const beatmapSets = [];
+
+    if (true || song.enabledLightshow) {
+      beatmapSets.push({
+        _beatmapCharacteristicName: 'Lightshow',
+        _difficultyBeatmaps: [
+          {
+            _difficulty: 'Easy',
+            _difficultyRank: 1,
+            _beatmapFilename: 'EasyLightshow.dat',
+            _noteJumpMovementSpeed: 16,
+            _noteJumpStartBeatOffset: 0,
+            _customData: {
+              _difficultyLabel: 'Lightshow',
+            },
+          },
+        ],
+      });
+    }
+
+    beatmapSets.push({
+      _beatmapCharacteristicName: 'Standard',
+      _difficultyBeatmaps: difficulties.map(difficulty => {
+        const difficultyData = {
+          _difficulty: difficulty.id,
+          _difficultyRank: getDifficultyRankForDifficulty(difficulty),
+          _beatmapFilename: `${difficulty.id}.dat`,
+          _noteJumpMovementSpeed: difficulty.noteJumpSpeed,
+          _noteJumpStartBeatOffset: difficulty.startBeatOffset,
+          _customData: {
+            _editorOffset: offset,
+            _requirements: requirements,
+          },
+        };
+
+        if (difficulty.customLabel) {
+          difficultyData._customData._difficultyLabel = difficulty.customLabel;
+        }
+
+        return difficultyData;
+      }),
+    });
+
     contents = {
       _version: '2.0.0',
       _songName: song.name,
@@ -102,31 +147,7 @@ export function createInfoContent(song, meta = { version: 2 }) {
         _editor: 'beatmapper',
         _editorSettings: editorSettings,
       },
-      _difficultyBeatmapSets: [
-        {
-          _beatmapCharacteristicName: 'Standard',
-          _difficultyBeatmaps: difficulties.map(difficulty => {
-            const difficultyData = {
-              _difficulty: difficulty.id,
-              _difficultyRank: getDifficultyRankForDifficulty(difficulty),
-              _beatmapFilename: `${difficulty.id}.dat`,
-              _noteJumpMovementSpeed: difficulty.noteJumpSpeed,
-              _noteJumpStartBeatOffset: difficulty.startBeatOffset,
-              _customData: {
-                _editorOffset: offset,
-                _requirements: requirements,
-              },
-            };
-
-            if (difficulty.customLabel) {
-              difficultyData._customData._difficultyLabel =
-                difficulty.customLabel;
-            }
-
-            return difficultyData;
-          }),
-        },
-      ],
+      _difficultyBeatmapSets: beatmapSets,
     };
 
     // If the user has enabled custom colors, we need to include that as well
@@ -163,7 +184,7 @@ export function createInfoContent(song, meta = { version: 2 }) {
  * eg. 'Expert.dat'.
  */
 export function createBeatmapContents(
-  { notes, obstacles = [], events = [], bookmarks = [] },
+  { notes = [], obstacles = [], events = [], bookmarks = [] },
   meta = { version: 2 },
   // The following fields are only necessary for v1.
   bpm,
@@ -345,6 +366,19 @@ export const zipFiles = (song, songFile, coverArtFile, version) => {
       }
     });
 
+    if (version === 2 && song.enabledLightshow) {
+      // We want to grab the lights (events). Any beatmap will do
+      const { fileContents } = difficultyContents[0];
+      const events = JSON.parse(fileContents)._events;
+
+      const lightshowFileContents = createBeatmapContents(
+        { events },
+        { version: 2 }
+      );
+
+      zip.file(LIGHTSHOW_FILENAME, lightshowFileContents, { binary: false });
+    }
+
     zip.generateAsync({ type: 'blob' }).then(function(blob) {
       const timestamp = formatDate(new Date(), 'YYYYMMDDTHHmm');
       const filename =
@@ -503,8 +537,8 @@ export const processImportedMap = async (zipFile, currentSongIds) => {
   // disk using our local persistence layer, so that it can be loaded like any
   // other song from the list.
   //
-  // For now, we only support 'standard' characteristics (no lightshow or
-  // custom game modes)
+  // While we can export lightshow maps, we pretend they don't exist for the
+  // editor's sake.
   const beatmapSet = infoDatJson._difficultyBeatmapSets.find(
     set => set._beatmapCharacteristicName === 'Standard'
   );
