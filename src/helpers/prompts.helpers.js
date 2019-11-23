@@ -71,22 +71,6 @@ export const promptChangeObstacleDuration = (obstacles, wrappedAction) => {
   return wrappedAction(Number(newDuration));
 };
 
-export const promptChangeDefaultObstacleDuration = (
-  defaultObstacleDuration,
-  wrappedAction
-) => {
-  const newDefaultDuration = window.prompt(
-    'Enter the default duration for new obstacles, in beats',
-    defaultObstacleDuration
-  );
-
-  if (newDefaultDuration === null || newDefaultDuration === '') {
-    return;
-  }
-
-  return wrappedAction(Number(newDefaultDuration));
-};
-
 export const promptSaveGridPreset = (gridPresets, wrappedAction) => {
   const presetSlots = ['1', '2', '3', '4'];
   const suggestedPreset = presetSlots.find(n => !gridPresets[n]);

@@ -120,10 +120,10 @@ function notes(state = initialState.notes, action) {
       };
     }
 
-    case 'CHANGE_DEFAULT_OBSTACLE_DURATION': {
+    case 'RESIZE_OBSTACLE': {
       return {
         ...state,
-        defaultObstacleDuration: action.defaultObstacleDuration,
+        defaultObstacleDuration: action.newBeatDuration,
       };
     }
 

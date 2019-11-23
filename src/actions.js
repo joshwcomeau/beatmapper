@@ -563,11 +563,6 @@ export const resizeSelectedObstacles = newBeatDuration => ({
   newBeatDuration,
 });
 
-export const changeDefaultObstacleDuration = defaultObstacleDuration => ({
-  type: 'CHANGE_DEFAULT_OBSTACLE_DURATION',
-  defaultObstacleDuration,
-});
-
 export const undoNotes = () => ({
   type: 'UNDO_NOTES',
 });
