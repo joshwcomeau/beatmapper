@@ -17,6 +17,7 @@ import { sortDifficultyIds } from '../../helpers/song.helpers';
 import {
   getSelectedSong,
   getEnabledFastWalls,
+  getEnabledLightshow,
 } from '../../reducers/songs.reducer';
 
 import TextInput from '../TextInput';
@@ -54,8 +55,9 @@ const SongDetails = ({
   song,
   stopPlaying,
   enabledFastWalls,
+  enabledLightshow,
   updateSongDetails,
-  toggleFastWallsEnabledForSong,
+  togglePropertyForSelectedSong,
 }) => {
   const [songData, setSongData] = React.useState(song);
   const [isDirty, setIsDirty] = React.useState(false);
@@ -380,9 +382,24 @@ const SongDetails = ({
         <MappingExtensionSettings />
         <Spacer size={UNIT * 2} />
         <LabeledCheckbox
+          id="enable-lightshow"
+          checked={!!enabledLightshow}
+          onChange={() => togglePropertyForSelectedSong('enabledLightshow')}
+        >
+          Includes "Lightshow" difficulty{' '}
+          <QuestionTooltip>
+            If enabled, adds a non-standard difficulty with all blocks removed.
+            Nice to include if your lighting is spectacular{' '}
+            <span role="img" aria-label="sparkles">
+              ✨
+            </span>
+          </QuestionTooltip>
+        </LabeledCheckbox>
+        <Spacer size={UNIT * 2} />
+        <LabeledCheckbox
           id="enable-fast-walls"
           checked={!!enabledFastWalls}
-          onChange={toggleFastWallsEnabledForSong}
+          onChange={() => togglePropertyForSelectedSong('enabledFastWalls')}
         >
           Enable "fast walls"{' '}
           <QuestionTooltip>
@@ -455,13 +472,14 @@ const mapStateToProps = state => {
   return {
     song: getSelectedSong(state),
     enabledFastWalls: getEnabledFastWalls(state),
+    enabledLightshow: getEnabledLightshow(state),
   };
 };
 
 const mapDispatchToProps = {
   updateSongDetails: actions.updateSongDetails,
   stopPlaying: actions.stopPlaying,
-  toggleFastWallsEnabledForSong: actions.toggleFastWallsEnabledForSong,
+  togglePropertyForSelectedSong: actions.togglePropertyForSelectedSong,
 };
 
 export default connect(

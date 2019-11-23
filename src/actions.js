@@ -785,8 +785,9 @@ export const deleteGridPreset = presetSlot => ({
 export const toggleFastWallsForSelectedObstacles = () => ({
   type: 'TOGGLE_FAST_WALLS_FOR_SELECTED_OBSTACLES',
 });
-export const toggleFastWallsEnabledForSong = () => ({
-  type: 'TOGGLE_FAST_WALLS_ENABLED_FOR_SONG',
+export const togglePropertyForSelectedSong = property => ({
+  type: 'TOGGLE_PROPERTY_FOR_SELECTED_SONG',
+  property,
 });
 
 export const updateProcessingDelay = newDelay => ({

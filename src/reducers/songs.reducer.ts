@@ -214,7 +214,8 @@ export default function songsReducer(state: State = initialState, action: any) {
           difficultiesById,
           demo,
           modSettings = {},
-          enabledFastWalls,
+          enabledFastWalls = false,
+          enabledLightshow = false,
         },
       } = action;
 
@@ -245,6 +246,7 @@ export default function songsReducer(state: State = initialState, action: any) {
           demo,
           modSettings,
           enabledFastWalls,
+          enabledLightshow,
         };
       });
     }
@@ -447,7 +449,9 @@ export default function songsReducer(state: State = initialState, action: any) {
       });
     }
 
-    case 'TOGGLE_FAST_WALLS_ENABLED_FOR_SONG': {
+    case 'TOGGLE_PROPERTY_FOR_SELECTED_SONG': {
+      const { property } = action;
+
       return produce(state, (draftState: State) => {
         const song = grabSelectedSong(draftState);
 
@@ -455,7 +459,8 @@ export default function songsReducer(state: State = initialState, action: any) {
           return;
         }
 
-        song.enabledFastWalls = !song.enabledFastWalls;
+        // @ts-ignore
+        song[property] = !song[property];
       });
     }
 
@@ -570,6 +575,12 @@ export const getEnabledFastWalls = createSelector(
   getSelectedSong,
   song => {
     return song.enabledFastWalls;
+  }
+);
+export const getEnabledLightshow = createSelector(
+  getSelectedSong,
+  song => {
+    return song.enabledLightshow;
   }
 );
 

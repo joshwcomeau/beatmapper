@@ -87,7 +87,7 @@ export function createInfoContent(song, meta = { version: 2 }) {
   } else if (meta.version === 2) {
     const beatmapSets = [];
 
-    if (true || song.enabledLightshow) {
+    if (song.enabledLightshow) {
       beatmapSets.push({
         _beatmapCharacteristicName: 'Lightshow',
         _difficultyBeatmaps: [
@@ -98,6 +98,8 @@ export function createInfoContent(song, meta = { version: 2 }) {
             _noteJumpMovementSpeed: 16,
             _noteJumpStartBeatOffset: 0,
             _customData: {
+              _editorOffset: offset,
+              _requirements: requirements,
               _difficultyLabel: 'Lightshow',
             },
           },
@@ -537,10 +539,15 @@ export const processImportedMap = async (zipFile, currentSongIds) => {
   // disk using our local persistence layer, so that it can be loaded like any
   // other song from the list.
   //
-  // While we can export lightshow maps, we pretend they don't exist for the
-  // editor's sake.
+  // While we can export lightshow maps, we don't actually load them.
   const beatmapSet = infoDatJson._difficultyBeatmapSets.find(
     set => set._beatmapCharacteristicName === 'Standard'
+  );
+
+  // We do check if a lightshow exists only so we can store that setting, to
+  // include lightmaps when exporting
+  const enabledLightshow = infoDatJson._difficultyBeatmapSets.some(
+    set => set._beatmapCharacteristicName === 'Lightshow'
   );
 
   const difficultyFiles = await Promise.all(
@@ -629,6 +636,7 @@ export const processImportedMap = async (zipFile, currentSongIds) => {
     difficultiesById,
     ...persistedData,
     modSettings,
+    enabledLightshow,
   };
 };
 
