@@ -9,6 +9,7 @@ import HorizontalRule from './HorizontalRule';
 
 const pages = [
   { id: 'getting-started', title: 'Getting started' },
+  { id: 'navigating-the-editor', title: 'Navigating the Editor' },
   { id: 'notes-view', title: 'Notes View' },
   { id: 'events-view', title: 'Events View' },
   { id: 'demo-view', title: 'Demo View' },
@@ -25,7 +26,7 @@ const NavigationBlock = ({ direction, item }) => {
       }}
     >
       <Subtitle>{formattedSubtitle}</Subtitle>
-      <BaseLink to={`/docs/${item.id}`}>{item.title}</BaseLink>
+      <BaseLink to={`/docs/manual/${item.id}`}>{item.title}</BaseLink>
     </NavBlockWrapper>
   );
 };

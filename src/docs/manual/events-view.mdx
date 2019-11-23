@@ -17,7 +17,7 @@ import eventsViewIconSrc from '../images/events-view-icon.png';
 
 The Events view takes inspiration from MIDI piano rolls in audio editing software. It looks like this:
 
-import eventsViewSrc from '../images/events-view.png';
+import eventsViewSrc from '../images/default-events-view.png';
 
 <img src={eventsViewSrc} width={1415} />
 
@@ -55,7 +55,7 @@ import snappingIntervalSrc from '../images/snapping-interval.png';
 
 Finally, above the tracks you'll find a suite of **controls**. These controls change what happens when you interact with the tracks. We'll learn more about them below.
 
-import eventToolsSrc from '../images/event-tools.png';
+import eventToolsSrc from '../images/event-controls.png';
 
 <img src={eventToolsSrc} />
 
@@ -198,6 +198,50 @@ import placingSpeedEventSrc from '../images/place-speed-event.gif';
 
 <img src={placingSpeedEventSrc} width={488 / 2} />
 
+## Previewing your work
+
+It takes a while to build up an intuition to be able to picture what a "Flash" event on the "Back laser" track looks like. Fortunately, Beatmapper makes it possible to preview your lighting events!
+
+### Enabling lights in the background
+
+At the very bottom of the editor, you'll see a toggle and a couple sliders:
+
+import bottomLightConfigSrc from '../images/bottom-light-config.png';
+
+<img src={bottomLightConfigSrc} width={868 / 2} />
+
+The toggle enables **background lights**. This allows you to view the lights at the same time as you edit the grid!
+
+import enableLights from '../videos/enable-lights.mp4';
+
+<video
+  src={enableLights}
+  autoPlay
+  muted
+  loop
+  controls
+  style={{
+    width: '100%',
+  }}
+/>
+
+The sliders beside this toggle allow you to customize the height of each row, and how see-through the event grid is:
+
+import customizeLights from '../videos/customize-lights.mp4';
+
+<video
+  src={customizeLights}
+  autoPlay
+  muted
+  loop
+  controls
+  style={{
+    width: '100%',
+  }}
+/>
+
+These configuration options will hopefully make it easier to find an arrangement that works for monitors of all sizes.
+
 ## Edit modes
 
 There are two editing modes: **Add** and **Select**. So far, we've been using Add mode.
@@ -254,12 +298,12 @@ import lockLasersSrc from '../images/lock-lasers.gif';
 
 You can toggle it on or off with the `X` key.
 
-## Previewing your work
+## Playtesting your map
 
-One downside to Beatmapper's approach for events is that you don't get any immediate feedback. You can't immediately tell what effect the events you place have!
+While Beatmapper now comes with a [lighting preview setting](#previewing-your-work), it can be difficult to imagine how the lights and blocks you've placed will work out together.
 
-This is something that can be solved with practice; after a few hours mapping, you'll develop a good mental picture of what each event does.
+Beatmapper is currently working on [the Demo view](/docs/demo-view), a tab that will try and replicate the visuals of the Beat Saber game, to give you an accurate preview of how your map will look and feel in-game.
 
-Nevertheless, this is an area under active development! While still in its infancy, you can check out [the Demo view](/docs/demo-view) to see the lighting for yourself.
+> Right now this view only shows lighting, although it's still worth checking out, since the lights are higher fidelity than in the current Events view!
 
 <PreviousNextBar currentPageId="events-view" />

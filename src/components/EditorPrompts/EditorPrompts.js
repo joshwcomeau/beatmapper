@@ -56,6 +56,37 @@ const PROMPTS = [
       </>
     ),
   },
+  {
+    id: 'version-zero-point-three',
+    title: 'Version 0.3 released!',
+    contents: () => (
+      <>
+        <Paragraph>
+          We just shipped a new version, with some pretty exciting new stuff:
+        </Paragraph>
+
+        <List>
+          <List.ListItem>
+            You can <strong>preview your lights</strong> now, right from the
+            Events page!
+          </List.ListItem>
+
+          <List.ListItem>
+            Having performance problems? Switch to a{' '}
+            <strong>low-quality graphics setting</strong>.
+          </List.ListItem>
+        </List>
+
+        <Paragraph>
+          Learn more about these two new features in our{' '}
+          <strong>
+            <Link to="/docs/release-notes">release notes</Link>
+          </strong>
+          .
+        </Paragraph>
+      </>
+    ),
+  },
 ];
 
 const EditorPrompts = ({ prompt, dismissPrompt }) => {

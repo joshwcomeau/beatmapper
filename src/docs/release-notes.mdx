@@ -1,0 +1,90 @@
+---
+title: Release Notes
+---
+
+# v0.3 - Lighting previews and performance
+
+This is a really exciting release, because it addresses the 2 most commonly-requested features:
+
+- Being able to preview the events/lighting you create
+- Performance
+
+Let's tackle these in turn:
+
+#### Lighting previews
+
+In the "Events" view, you can click the toggle in the bottom-left corner to enable background lighting:
+
+import enableLights from './videos/enable-lights.mp4';
+
+<video
+  src={enableLights}
+  autoPlay
+  muted
+  loop
+  controls
+  style={{
+    width: '100%',
+  }}
+/>
+
+The sliders beside this toggle allow you to customize the height of each row, and how see-through the event grid is:
+
+import customizeLights from './videos/customize-lights.mp4';
+
+<video
+  src={customizeLights}
+  autoPlay
+  muted
+  loop
+  controls
+  style={{
+    width: '100%',
+  }}
+/>
+
+In addition to a low-fidelity preview in the background, the **Demo view** features high-fidelity "bloomed" lighting:
+
+import demoBloom from './videos/demo-bloom.mp4';
+
+<video
+  src={demoBloom}
+  autoPlay
+  muted
+  loop
+  controls
+  style={{
+    width: '100%',
+  }}
+/>
+
+It's still important to test your map's lighting in-game, but you should have to do it much less often now that you can get a general sense right from the editor :D
+
+#### Performance
+
+Beatmapper runs entirely in the browser, and it uses a language (Javascript) never meant for this type of graphic-intensive work. As such, the performance of Beatmapper has always been worse than competing editors.
+
+This new version introduces a "quality toggle". You can switch between low/medium/high graphics settings:
+
+import qualityToggle from './videos/quality-toggle-2.mp4';
+
+<video
+  src={qualityToggle}
+  autoPlay
+  muted
+  loop
+  controls
+  style={{
+    width: '100%',
+  }}
+/>
+
+This setting changes a few things:
+
+- Draws fewer blocks on the screen
+- No more reflections on blocks
+- No fog effect
+- Greatly simplified lighting
+- Optimized rendering on the scrubbable waveform
+
+There's still a lot of room for improvement, and honestly I don't expect a night/day difference... but for folks who were running at ~10-20fps before, it should hopefully help quite a bit!
