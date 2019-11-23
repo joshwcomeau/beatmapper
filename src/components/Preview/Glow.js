@@ -68,7 +68,9 @@ const Glow = ({
 
   // When blooming, the `c` uniform makes it white and obnoxious, so tune the
   // effect down in this case.
-  const MAX_C_VALUE = isBlooming ? 0.2 : 0.001;
+  const maxCValue = isBlooming ? 0.2 : 0.001;
+
+  const PValueRange = isBlooming ? [40, 1] : [28, 7];
 
   return (
     <mesh position={[x, y, z]}>
@@ -78,7 +80,7 @@ const Glow = ({
         args={[
           {
             uniforms: {
-              c: { type: 'f', value: MAX_C_VALUE },
+              c: { type: 'f', value: maxCValue },
               p: { type: 'f', value: undefined },
               glowColor: { type: 'c', value: new THREE.Color(color) },
               viewVector: { type: 'v3', value: camera.position },
@@ -92,10 +94,10 @@ const Glow = ({
         ]}
         uniforms-glowColor-value={new THREE.Color(color)}
         uniforms-p-value={spring.opacity.interpolate(o =>
-          normalize(o, 0, 1, 28, 7)
+          normalize(o, 0, 1, ...PValueRange)
         )}
         uniforms-c-value={spring.opacity.interpolate(o =>
-          normalize(o, 0, 1, 0.1, MAX_C_VALUE)
+          normalize(o, 0, 1, 0.1, maxCValue)
         )}
       />
     </mesh>

@@ -32,7 +32,7 @@ const LargeRings = ({
 }) => {
   const lastRotationEventId = lastRotationEvent ? lastRotationEvent.id : null;
 
-  const firstRingOffset = -26;
+  const firstRingOffset = -60;
 
   const [rotationRatio, setRotationRatio] = React.useState(0);
 

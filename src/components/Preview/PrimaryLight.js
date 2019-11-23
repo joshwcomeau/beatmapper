@@ -2,13 +2,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { useSpring, animated } from 'react-spring/three';
 
+import { SURFACE_WIDTH } from '../../constants';
 import { getColorForItem } from '../../helpers/colors.helpers';
 import { getCursorPositionInBeats } from '../../reducers/navigation.reducer';
 import { convertMillisecondsToBeats } from '../../helpers/audio.helpers';
-
 import { getUsableProcessingDelay } from '../../reducers/user.reducer';
 import { getTracks } from '../../reducers/editor-entities.reducer/events-view.reducer';
 import useOnChange from '../../hooks/use-on-change.hook';
+import { convertDegreesToRadians } from '../../utils';
 
 import {
   findMostRecentEventInTrack,
@@ -16,6 +17,7 @@ import {
 } from './Preview.helpers';
 
 import Glow from './Glow';
+import LaserBeam from './LaserBeam';
 
 const ON_PROPS = { emissiveIntensity: 0.75, opacity: 0.75 };
 const OFF_PROPS = { emissiveIntensity: 0, opacity: 0 };
@@ -51,9 +53,13 @@ const PrimaryLight = ({ song, isPlaying, isBlooming, lastEvent }) => {
   const hatSideLength = 5;
   const hatThickness = 0.5;
 
+  const yPosition = 5;
+
+  const laserBeamLength = 250;
+
   return (
     <>
-      <group position={[0, 0, z]} rotation={[0, 0, -Math.PI * 0.25]}>
+      <group position={[0, yPosition, z]} rotation={[0, 0, -Math.PI * 0.25]}>
         <mesh position={[0, hatSideLength / 2 + hatThickness / 2, 0]}>
           <boxGeometry
             attach="geometry"
@@ -87,10 +93,32 @@ const PrimaryLight = ({ song, isPlaying, isBlooming, lastEvent }) => {
         </mesh>
       </group>
 
+      {/* Side parallel-to-platform lasers */}
+      <LaserBeam
+        color={color}
+        position={[SURFACE_WIDTH - 2, -2, -laserBeamLength / 2 - 5]}
+        rotation={[convertDegreesToRadians(90), 0, 0]}
+        lastEventId={lastEventId}
+        status={status}
+        isPlaying={isPlaying}
+        length={laserBeamLength}
+        radius={0.08}
+      />
+      <LaserBeam
+        color={color}
+        position={[-SURFACE_WIDTH + 2, -2, -laserBeamLength / 2 - 5]}
+        rotation={[convertDegreesToRadians(90), 0, 0]}
+        lastEventId={lastEventId}
+        status={status}
+        isPlaying={isPlaying}
+        length={laserBeamLength}
+        radius={0.08}
+      />
+
       <Glow
         color={color}
         x={0}
-        y={0}
+        y={yPosition}
         z={z}
         size={40}
         status={status}

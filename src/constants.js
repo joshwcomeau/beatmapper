@@ -54,7 +54,7 @@ export const BEAT_DEPTH = BLOCK_SIZE * 8;
 export const SONG_OFFSET = 6;
 
 // How wide is the platform the notes float above?
-export const SURFACE_WIDTH = BLOCK_COLUMN_WIDTH * 4;
+export const SURFACE_WIDTH = 6.5;
 export const SURFACE_HEIGHT = 0.5;
 
 export const SURFACE_DEPTH_HIGH = 75;
