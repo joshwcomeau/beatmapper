@@ -13,6 +13,9 @@ import {
   getNotes,
   getPastNotes,
   getFutureNotes,
+  getObstacles,
+  getPastObstacles,
+  getFutureObstacles,
 } from '../reducers/editor-entities.reducer/notes-view.reducer';
 import {
   getCursorPositionInBeats,
@@ -20,7 +23,13 @@ import {
 } from '../reducers/navigation.reducer';
 import { getGraphicsLevel } from '../reducers/user.reducer';
 
-const jumpToEarliestNote = (earlierNotes, laterNotes, store) => {
+const jumpToEarliestNote = (
+  earlierNotes,
+  laterNotes,
+  earlierObstacles,
+  laterObstacles,
+  store
+) => {
   const notesAboutToBeAdded = earlierNotes.filter(note => {
     return !laterNotes.find(laterNote => {
       return note === laterNote;
@@ -32,19 +41,37 @@ const jumpToEarliestNote = (earlierNotes, laterNotes, store) => {
     });
   });
 
-  if (notesAboutToBeAdded.length === 0 && notesAboutToBeRemoved.length === 0) {
+  const obstaclesAboutToBeAdded = earlierObstacles.filter(obstacle => {
+    return !laterObstacles.find(laterObstacle => {
+      return obstacle === laterObstacle;
+    });
+  });
+  const obstaclesAboutToBeRemoved = laterObstacles.filter(obstacle => {
+    return !earlierObstacles.find(earlierObstacle => {
+      return obstacle === earlierObstacle;
+    });
+  });
+
+  const isTweakingNotes =
+    notesAboutToBeAdded.length || notesAboutToBeRemoved.length;
+  const isTweakingObstacles =
+    obstaclesAboutToBeAdded.length || obstaclesAboutToBeRemoved.length;
+
+  if (!isTweakingNotes && !isTweakingObstacles) {
     return;
   }
 
-  const relevantNotes =
-    notesAboutToBeAdded.length > 0
-      ? notesAboutToBeAdded
-      : notesAboutToBeRemoved;
+  const relevantEntities = [
+    notesAboutToBeAdded,
+    notesAboutToBeRemoved,
+    obstaclesAboutToBeAdded,
+    obstaclesAboutToBeRemoved,
+  ].find(entity => entity.length > 0);
 
-  // For now, assume that the first beat is the earliest.
+  // For now, assume that the first entity is the earliest.
   // Might make sense to sort them, so that if I delete a selected
   // cluster it brings me to the start of that cluster?
-  const earliestNote = relevantNotes[0];
+  const earliestEntity = relevantEntities[0];
 
   // Is this note within our visible range? If not, jump to it.
   const state = store.getState();
@@ -58,11 +85,17 @@ const jumpToEarliestNote = (earlierNotes, laterNotes, store) => {
     graphicsLevel
   );
 
-  const isNoteVisible =
-    earliestNote._time > closeLimit && earliestNote._time < farLimit;
+  const entityTime =
+    typeof earliestEntity._time === 'number'
+      ? earliestEntity._time
+      : earliestEntity.beatStart;
+
+  console.log({ earliestEntity, entityTime });
+
+  const isNoteVisible = entityTime > closeLimit && entityTime < farLimit;
 
   if (!isNoteVisible) {
-    store.dispatch(jumpToBeat(earliestNote._time, true, true));
+    store.dispatch(jumpToBeat(entityTime, true, true));
   }
 };
 
@@ -74,13 +107,16 @@ export default function createHistoryMiddleware() {
 
         const pastNotes = getPastNotes(state);
         const presentNotes = getNotes(state);
+        const pastObstacles = getPastObstacles(state);
+        const presentObstacles = getObstacles(state);
 
-        if (!pastNotes.length) {
-          // Nothing to undo!
-          return;
-        }
-
-        jumpToEarliestNote(pastNotes, presentNotes, store);
+        jumpToEarliestNote(
+          pastNotes,
+          presentNotes,
+          pastObstacles,
+          presentObstacles,
+          store
+        );
 
         // Never interrupt the default action
         next(action);
@@ -93,13 +129,21 @@ export default function createHistoryMiddleware() {
 
         const presentNotes = getNotes(state);
         const futureNotes = getFutureNotes(state);
+        const presentObstacles = getObstacles(state);
+        const futureObstacles = getFutureObstacles(state);
 
         if (!futureNotes.length) {
           // Nothing to redo!
           return;
         }
 
-        jumpToEarliestNote(presentNotes, futureNotes, store);
+        jumpToEarliestNote(
+          presentNotes,
+          futureNotes,
+          presentObstacles,
+          futureObstacles,
+          store
+        );
 
         // Never interrupt the default action
         next(action);
