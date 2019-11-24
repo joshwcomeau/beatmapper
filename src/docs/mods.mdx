@@ -3,6 +3,8 @@ title: Mod Support
 subtitle: Enabling and working with Beat Saber mods
 ---
 
+import { MetaKey } from '../components/Docs/ShortcutHelpers';
+
 There are a lot of really cool mods for Beat Saber, and I'm starting to add limited support for some of them to Beatmapper.
 
 Additional mod support coming soon.
@@ -23,18 +25,40 @@ You can now overwrite those values in the "Map Settings" tab. Tick the "Enable c
 
 ### Mapping Extensions
 
-The [Mapping Extensions](https://github.com/Kylemc1413/MappingExtensions) mod grants incredible power to the modder, allowing them to place notes outside the bounds of the typical 4×3 grid.
+The [Mapping Extensions](https://github.com/Kylemc1413/MappingExtensions) mod grants incredible power to the modder:
+
+- Notes can be added anywhere, not just in the 12 traditional spots
+- Obstacles can come in any shape and size, not just wall/ceiling
+- Blocks can take on 360 degrees of directions, not just the cardinal and diagonal directions.
 
 Beatmapper approaches this mod in a bit of an unconventional way. Rather than simply letting you place notes outside the 4×3 grid, it allows you to _redefine the grid_. Maybe you want a section of the song to be in a 5×4 grid, or maybe you want to squeeze an extra column in between all the normal ones, for a 7×3 grid in the space of a 4×3 one.
 
 To use Mapping Extensions, first you have to enable it for your map in the "Map Settings" tab.
 
-> Note: Ticking this box will mean that only users who have Mapping Extensions enabled will be able to play your map. Many users, especially on the Quest, will not be able to load it.
+> Note: Ticking this box will mean that only users who have Mapping Extensions enabled will be able to play your map. Some users will not be able to play your map if you tick this box.
+
+#### Redefining the grid
 
 Once Mapping Extensions has been enabled for your map, a new button appears in the Notes view's right-hand sidebar: `Customize Grid`.
 
-Clicking this button opens a modal that allows you to customize the number of rows and columns in the grid. You can also change the width and height of each cell, so that a larger number of columns doesn't need to take up more physical space in the world!
+Clicking this button swaps the side-panel to one that allows you to customize the number of rows and columns in the grid. You can also change the width and height of each cell, so that a larger number of columns doesn't need to take up more physical space in the world!
 
-> Changing the grid doesn't affect notes you've already placed. This means that different sections of your map can use different grids!
+> Changing the grid doesn't affect notes you've already placed. This means that different sections of your map can use different grids! I've coined the term "Magic lanes" for songs that feature different grids in different sections.
+
+#### Precise note directions
+
+One way to place notes in Beatmapper is to click and drag in a direction:
+
+import dragDirectionSrc from './images/drag-direction.gif';
+
+<img src={dragDirectionSrc} width={474} />
+
+With Mapping Extensions enabled, you aren't constrained to 8 possible directions. Hold <MetaKey /> to allow for 360-degree placement:
+
+import threeSixtySrc from './images/360.gif';
+
+<img src={threeSixtySrc} width={474} />
+
+---
 
 There's much to be done in this arena - stay tuned for additional tweaks and quality-of-life improvements!
