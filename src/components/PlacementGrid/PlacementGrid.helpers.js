@@ -71,7 +71,7 @@ export const getDirectionForDrag = (
   const deltaY = currentPosition.y - initialPosition.y;
 
   const distance = Math.sqrt(deltaX ** 2 + deltaY ** 2);
-  const THRESHOLD = 35;
+  const THRESHOLD = 15;
 
   if (distance < THRESHOLD) {
     return null;

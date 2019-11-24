@@ -26,6 +26,7 @@ const GridSquare = ({
   setHoveredCell,
   clickPlacementGrid,
   createNewObstacle,
+  clearCellOfNotes,
 }) => {
   // Our `rowHeight` is in units compared to the default, so a
   // non-map-extension grid would have a height and width of 1.
@@ -102,6 +103,19 @@ const GridSquare = ({
         if (ev.buttons !== 1) {
           return;
         }
+
+        // If this cell already has a block, we should clear it
+        // With mapping extensions enabled, it's possible we need to
+        // convert the rowIndex/colIndex to one appropriate for the
+        // current grid!
+        const effectiveColIndex = convertGridColumn(
+          colIndex,
+          numCols,
+          colWidth
+        );
+        const effectiveRowIndex = convertGridRow(rowIndex, numRows, rowHeight);
+
+        clearCellOfNotes(effectiveRowIndex, effectiveColIndex);
 
         // If the user is placing an obstacle, the idea of a hovered
         // cell suddenly doesn't make as much sense.

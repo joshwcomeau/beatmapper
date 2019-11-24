@@ -33,6 +33,7 @@ const PlacementGrid = ({
   clickPlacementGrid,
   setBlockByDragging,
   createNewObstacle,
+  clearCellOfNotes,
 }) => {
   const renderColWidth = colWidth * BLOCK_PLACEMENT_SQUARE_SIZE;
   const renderRowHeight = rowHeight * BLOCK_PLACEMENT_SQUARE_SIZE;
@@ -174,6 +175,7 @@ const PlacementGrid = ({
               setHoveredCell={setHoveredCell}
               clickPlacementGrid={clickPlacementGrid}
               createNewObstacle={createNewObstacle}
+              clearCellOfNotes={clearCellOfNotes}
             />
           );
         })
@@ -224,5 +226,6 @@ export default connect(
     clickPlacementGrid: actions.clickPlacementGrid,
     setBlockByDragging: actions.setBlockByDragging,
     createNewObstacle: actions.createNewObstacle,
+    clearCellOfNotes: actions.clearCellOfNotes,
   }
 )(PlacementGrid);

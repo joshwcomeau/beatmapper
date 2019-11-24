@@ -265,6 +265,14 @@ export const clickPlacementGrid = (rowIndex, colIndex) => (
   });
 };
 
+export const clearCellOfNotes = (rowIndex, colIndex) => {
+  return {
+    type: 'CLEAR_CELL_OF_NOTES',
+    rowIndex,
+    colIndex,
+  };
+};
+
 export const setBlockByDragging = (
   direction,
   rowIndex,
