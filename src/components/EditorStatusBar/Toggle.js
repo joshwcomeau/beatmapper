@@ -53,6 +53,7 @@ const Toggle = ({ size, onIcon, offIcon, value, onChange }) => {
 
 const Wrapper = styled.div`
   display: flex;
+  align-items: center;
 `;
 
 const ToggleWrapper = styled(UnfocusedButton)`

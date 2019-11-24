@@ -13,6 +13,7 @@ import {
   getSelectedEventBeat,
   getSelectionBox,
   getAreLasersLocked,
+  getRowHeight,
 } from '../../reducers/editor.reducer';
 import useMousePositionOverElement from '../../hooks/use-mouse-position-over-element.hook';
 import usePointerUpHandler from '../../hooks/use-pointer-up-handler.hook';
@@ -52,8 +53,6 @@ const convertMousePositionToBeatNum = (
 
 const EventsGrid = ({
   contentWidth,
-  zoomLevel,
-  events,
   startBeat,
   endBeat,
   selectedBeat,
@@ -62,6 +61,7 @@ const EventsGrid = ({
   isLoading,
   areLasersLocked,
   snapTo,
+  rowHeight,
   selectedEditMode,
   moveMouseAcrossEventsGrid,
   drawSelectionBox,
@@ -69,20 +69,20 @@ const EventsGrid = ({
   commitSelection,
 }) => {
   const innerGridWidth = contentWidth - PREFIX_WIDTH;
-  // TODO: Dynamic height?
-  const trackHeight = 40;
+
   const headerHeight = 32;
-  const innerGridHeight = trackHeight * EVENT_TRACKS.length;
+  const innerGridHeight = rowHeight * EVENT_TRACKS.length;
 
   const beatNums = range(Math.floor(startBeat), Math.ceil(endBeat));
 
   const [mouseDownAt, setMouseDownAt] = React.useState(null);
-  const [mousePosition, setMousePosition] = React.useState(null);
   const mouseButtonDepressed = React.useRef(null); // 'left' | 'middle' | 'right'
+
+  const mousePositionRef = React.useRef(null);
 
   React.useEffect(() => {
     setMouseDownAt(null);
-    setMousePosition(null);
+    mousePositionRef.current = null;
     clearSelectionBox();
   }, [clearSelectionBox, selectedEditMode]);
 
@@ -103,7 +103,7 @@ const EventsGrid = ({
 
   const tracksRef = useMousePositionOverElement((x, y) => {
     const currentMousePosition = { x, y };
-    setMousePosition(currentMousePosition);
+    mousePositionRef.current = currentMousePosition;
 
     const hoveringOverBeatNum = convertMousePositionToBeatNum(
       x,
@@ -128,8 +128,8 @@ const EventsGrid = ({
       // Selection boxes need to include their cartesian values, in pixels, but
       // we should also encode the values in business terms: start/end beat,
       // and start/end track
-      const startTrackIndex = Math.floor(newSelectionBox.top / trackHeight);
-      const endTrackIndex = Math.floor(newSelectionBox.bottom / trackHeight);
+      const startTrackIndex = Math.floor(newSelectionBox.top / rowHeight);
+      const endTrackIndex = Math.floor(newSelectionBox.bottom / rowHeight);
 
       const start = convertMousePositionToBeatNum(
         newSelectionBox.left,
@@ -177,7 +177,7 @@ const EventsGrid = ({
       mouseButtonDepressed.current = 'left';
     }
 
-    setMouseDownAt(mousePosition);
+    setMouseDownAt(mousePositionRef.current);
   };
 
   const getIsTrackDisabled = trackId => {
@@ -203,7 +203,7 @@ const EventsGrid = ({
         {EVENT_TRACKS.map(({ id, type, label }) => (
           <TrackPrefix
             key={id}
-            style={{ height: trackHeight }}
+            style={{ height: rowHeight }}
             isDisabled={getIsTrackDisabled(id)}
           >
             {label}
@@ -246,7 +246,7 @@ const EventsGrid = ({
                   key={id}
                   trackId={id}
                   width={innerGridWidth}
-                  height={type === 'blocks' ? trackHeight : trackHeight}
+                  height={rowHeight}
                   startBeat={startBeat}
                   numOfBeatsToShow={numOfBeatsToShow}
                   cursorAtBeat={selectedBeat}
@@ -277,7 +277,6 @@ const EventsGrid = ({
 
 const Wrapper = styled.div`
   display: flex;
-  background: rgba(0, 0, 0, 0.45);
   opacity: ${props => (props.isLoading ? 0.25 : 1)};
   /*
     Disallow clicking until the song has loaded, to prevent weird edge-case bugs
@@ -364,13 +363,13 @@ const mapStateToProps = (state, ownProps) => {
     startBeat,
     endBeat,
     selectedBeat,
-    zoomLevel: getZoomLevel(state),
     numOfBeatsToShow,
     selectedEditMode,
     isLoading: getIsLoading(state),
     areLasersLocked: getAreLasersLocked(state),
     snapTo: getSnapTo(state),
     selectionBox: getSelectionBox(state),
+    rowHeight: getRowHeight(state),
   };
 };
 
@@ -381,7 +380,4 @@ const mapDispatchToProps = {
   commitSelection: actions.commitSelection,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(EventsGrid);
+export default connect(mapStateToProps, mapDispatchToProps)(EventsGrid);

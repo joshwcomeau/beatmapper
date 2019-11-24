@@ -4,7 +4,7 @@ import { clamp } from '../utils';
 import useBoundingBox from './use-bounding-box.hook';
 
 export default function useMousePositionOverElement(callback, options = {}) {
-  const [ref, bb] = useBoundingBox();
+  const [ref, bb] = useBoundingBox(options.boxDependencies);
 
   React.useEffect(() => {
     if (!bb) {

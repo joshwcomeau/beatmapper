@@ -23,6 +23,9 @@ const Sidebar = () => {
         </NavGroup>
         <NavGroup title="User Manual" showByDefault>
           <NavLink to="/docs/manual/getting-started">Getting started</NavLink>
+          <NavLink to="/docs/manual/navigating-the-editor">
+            Navigating the editor
+          </NavLink>
           <NavLink to="/docs/manual/notes-view">Notes view</NavLink>
           <NavLink to="/docs/manual/events-view">Events view</NavLink>
           <NavLink to="/docs/manual/demo-view">Demo view</NavLink>
@@ -38,6 +41,9 @@ const Sidebar = () => {
         <NavGroup title="Legal">
           <NavLink to="/docs/content-policy">Content policy</NavLink>
           <NavLink to="/docs/privacy">Privacy</NavLink>
+        </NavGroup>
+        <NavGroup>
+          <NavLink to="/docs/release-notes">Release notes</NavLink>
         </NavGroup>
       </Navigation>
     </Wrapper>

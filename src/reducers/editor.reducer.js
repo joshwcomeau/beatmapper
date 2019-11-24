@@ -33,6 +33,9 @@ const initialState = {
     zoomLevel: 2,
     isLockedToCurrentWindow: false,
     areLasersLocked: false,
+    showLightingPreview: false,
+    rowHeight: 40,
+    backgroundOpacity: 0.85,
     selectedEditMode: EVENT_EDIT_MODES[0],
     selectedBeat: null,
     selectedTool: EVENT_TOOLS[0],
@@ -289,6 +292,25 @@ function events(state = initialState.events, action) {
       };
     }
 
+    case 'TOGGLE_PREVIEW_LIGHTING_IN_EVENTS_VIEW': {
+      return {
+        ...state,
+        showLightingPreview: !state.showLightingPreview,
+      };
+    }
+    case 'TWEAK_EVENT_ROW_HEIGHT': {
+      return {
+        ...state,
+        rowHeight: action.newHeight,
+      };
+    }
+    case 'TWEAK_EVENT_BACKGROUND_OPACITY': {
+      return {
+        ...state,
+        backgroundOpacity: action.newOpacity,
+      };
+    }
+
     default:
       return state;
   }
@@ -304,6 +326,11 @@ export const getSelectedEventTool = state => state.editor.events.selectedTool;
 export const getSelectedEventColor = state => state.editor.events.selectedColor;
 export const getZoomLevel = state => state.editor.events.zoomLevel;
 export const getSelectionBox = state => state.editor.events.selectionBox;
+export const getShowLightingPreview = state =>
+  state.editor.events.showLightingPreview;
+export const getRowHeight = state => state.editor.events.rowHeight;
+export const getBackgroundOpacity = state =>
+  state.editor.events.backgroundOpacity;
 
 export const getBeatsPerZoomLevel = state => {
   const zoomLevel = getZoomLevel(state);

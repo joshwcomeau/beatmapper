@@ -37,7 +37,17 @@ void main()
 }
 `;
 
-const Glow = ({ x, y, z, color, size, status, lastEventId }) => {
+const Glow = ({
+  x,
+  y,
+  z,
+  color,
+  size,
+  status,
+  lastEventId,
+  isPlaying,
+  isBlooming,
+}) => {
   const { camera } = useThree();
 
   let springConfig = getSpringConfigForLight(
@@ -46,12 +56,21 @@ const Glow = ({ x, y, z, color, size, status, lastEventId }) => {
   );
 
   useOnChange(() => {
+    if (!isPlaying) {
+      return;
+    }
     const statusShouldReset = status === 'flash' || status === 'fade';
 
     springConfig.reset = statusShouldReset;
   }, lastEventId);
 
   const spring = useSpring(springConfig);
+
+  // When blooming, the `c` uniform makes it white and obnoxious, so tune the
+  // effect down in this case.
+  const maxCValue = isBlooming ? 0.2 : 0.001;
+
+  const PValueRange = isBlooming ? [40, 1] : [28, 7];
 
   return (
     <mesh position={[x, y, z]}>
@@ -61,7 +80,7 @@ const Glow = ({ x, y, z, color, size, status, lastEventId }) => {
         args={[
           {
             uniforms: {
-              c: { type: 'f', value: 0.2 },
+              c: { type: 'f', value: maxCValue },
               p: { type: 'f', value: undefined },
               glowColor: { type: 'c', value: new THREE.Color(color) },
               viewVector: { type: 'v3', value: camera.position },
@@ -75,7 +94,10 @@ const Glow = ({ x, y, z, color, size, status, lastEventId }) => {
         ]}
         uniforms-glowColor-value={new THREE.Color(color)}
         uniforms-p-value={spring.opacity.interpolate(o =>
-          normalize(o, 0, 1, 20, 7)
+          normalize(o, 0, 1, ...PValueRange)
+        )}
+        uniforms-c-value={spring.opacity.interpolate(o =>
+          normalize(o, 0, 1, 0.1, maxCValue)
         )}
       />
     </mesh>

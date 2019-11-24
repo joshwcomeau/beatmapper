@@ -2,14 +2,16 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { getColorForItem } from '../../helpers/colors.helpers';
+import { convertMillisecondsToBeats } from '../../helpers/audio.helpers';
 import { getCursorPositionInBeats } from '../../reducers/navigation.reducer';
-import { getCursorPosition } from '../../reducers/navigation.reducer';
-import { getEventForTrackAtBeat } from '../../reducers/editor-entities.reducer/events-view.reducer';
+import { getUsableProcessingDelay } from '../../reducers/user.reducer';
+import { getTracks } from '../../reducers/editor-entities.reducer/events-view.reducer';
 import { range } from '../../utils';
 
+import { findMostRecentEventInTrack } from './Preview.helpers';
 import LaserBeam from './LaserBeam';
 
-const BackLaser = ({ song, lastEvent, secondsSinceSongStart }) => {
+const BackLaser = ({ song, isPlaying, lastEvent, secondsSinceSongStart }) => {
   const NUM_OF_BEAMS_PER_SIDE = 5;
   const laserIndices = range(0, NUM_OF_BEAMS_PER_SIDE);
 
@@ -39,24 +41,38 @@ const BackLaser = ({ song, lastEvent, secondsSinceSongStart }) => {
           rotation={rotation}
           lastEventId={eventId}
           status={status}
+          isPlaying={isPlaying}
         />
       );
     });
   });
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state, { song }) => {
+  if (!song) {
+    return;
+  }
+
   const trackId = 'laserBack';
 
+  const tracks = getTracks(state);
+  const events = tracks[trackId];
+
   const currentBeat = getCursorPositionInBeats(state);
+  const processingDelay = getUsableProcessingDelay(state);
+  const processingDelayInBeats = convertMillisecondsToBeats(
+    processingDelay,
+    song.bpm
+  );
 
-  const lastEvent = getEventForTrackAtBeat(state, trackId, currentBeat);
-
-  const secondsSinceSongStart = getCursorPosition(state) / 1000;
+  const lastEvent = findMostRecentEventInTrack(
+    events,
+    currentBeat,
+    processingDelayInBeats
+  );
 
   return {
     lastEvent,
-    secondsSinceSongStart,
   };
 };
 

@@ -1,9 +1,10 @@
 import * as THREE from 'three';
 
 export default class Controls {
-  constructor(camera, speed = 1) {
+  constructor(camera, initialPosition = [0, 0, 0], speed = 1) {
     this.camera = camera;
     this.speed = speed;
+    this.initialPosition = initialPosition;
 
     this.enabled = false;
 
@@ -13,6 +14,7 @@ export default class Controls {
     this.pitchObject.add(this.camera);
 
     this.yawObject = new THREE.Object3D();
+    this.yawObject.position.set(...this.initialPosition);
     this.yawObject.add(this.pitchObject);
 
     this.velocity = new THREE.Vector3();
@@ -78,7 +80,7 @@ export default class Controls {
         this.velocity.y = 0;
         this.velocity.z = 0;
 
-        this.yawObject.position.set(0, 0, 0);
+        this.yawObject.position.set(...this.initialPosition);
         this.yawObject.rotation.y = 0;
         this.pitchObject.rotation.x = 0;
 

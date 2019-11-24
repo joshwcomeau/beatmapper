@@ -1,0 +1,47 @@
+---
+title: Navigating the Editor
+subtitle: User Manual
+---
+
+import googleSearchImgSrc from '../images/google-image-search.png';
+import unsplashSrc from '../images/unsplash.png';
+import newSongModalSrc from '../images/new-song-modal.png';
+
+import PreviousNextBar from '../../components/Docs/PreviousNextBar';
+
+After either creating or importing your first map, you'll find yourself in **the main editor**. Here's how it's laid out:
+
+import annotatedViewSrc from '../images/annotated-view.png';
+
+<img src={annotatedViewSrc} />
+
+## Main view
+
+The **main view** contains the content for the currently-selected tab. By default, we land on the _Notes view_. We'll learn much more about all the available views in this manual, but for now it's sufficient to understand that this is where you'll do your actual mapping.
+
+## Controls
+
+Below the main view, you'll find the **navigation controls**. It allows you to scrub forwards and backwards in time, trigger playback, and make editor customizations. We'll explore this in more depth later on.
+
+## Sidebar
+
+The **Sidebar** contains links to the 5 current views: Notes, Events, Demo, Map Details, and Download. You can hop between views using these links.
+
+Crucially, the sidebar contains two other links, located at the bottom:
+
+- A "Settings" popup
+- A link to these docs
+
+### Customizing settings
+
+Click the little gear icon near the bottom of the sidebar. You should see a little popup in the middle of the window:
+
+import settingsModal from '../images/settings-modal.png';
+
+<img src={settingsModal} width={876 / 2} />
+
+If you're using a lower-end machine (or, really, even a mid-tier machine), you're probably better off choosing "low" to ensure that everything runs smoothly. Choosing a lower graphics setting reduces detail and draws less stuff on the screen at a time.
+
+> "Processing delay" lets you tweak the timing so that the blocks are perfectly in-sync with the music. Please don't use Beatmapper to try and sync your map! There are [other tools](/docs/song-prep#understanding-bpm-and-offset) you can use to calculate the BPM and offset. Once you have those numbers, use this setting to ensure they're in-sync in the editor.
+
+<PreviousNextBar currentPageId="navigating-the-editor" />

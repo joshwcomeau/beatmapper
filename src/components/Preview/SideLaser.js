@@ -2,12 +2,15 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { range, normalize, convertDegreesToRadians } from '../../utils';
+import { convertMillisecondsToBeats } from '../../helpers/audio.helpers';
 import { getCursorPositionInBeats } from '../../reducers/navigation.reducer';
 import { getCursorPosition } from '../../reducers/navigation.reducer';
-import { getEventForTrackAtBeat } from '../../reducers/editor-entities.reducer/events-view.reducer';
-
-import LaserBeam from './LaserBeam';
+import { getTracks } from '../../reducers/editor-entities.reducer/events-view.reducer';
 import { getColorForItem } from '../../helpers/colors.helpers';
+import { getUsableProcessingDelay } from '../../reducers/user.reducer';
+
+import { findMostRecentEventInTrack } from './Preview.helpers';
+import LaserBeam from './LaserBeam';
 
 // We want to use a sin curve to control laser rotation.
 // Math.sin produces a value between -1 and 1, and resets after 2PI, which means
@@ -49,6 +52,7 @@ const getSinRotationValue = (
 
 const SideLaser = ({
   song,
+  isPlaying,
   side,
   lastEvent,
   laserSpeed,
@@ -97,6 +101,7 @@ const SideLaser = ({
         rotation={rotation}
         lastEventId={eventId}
         status={status}
+        isPlaying={isPlaying}
       />
     );
   });
@@ -110,6 +115,7 @@ const SideLaser = ({
       rotation={[convertDegreesToRadians(90), 0, 0]}
       lastEventId={eventId}
       status={status}
+      isPlaying={isPlaying}
     />
   );
 
@@ -121,18 +127,36 @@ const SideLaser = ({
   );
 };
 
-const mapStateToProps = (state, ownProps) => {
-  const trackId = ownProps.side === 'left' ? 'laserLeft' : 'laserRight';
-  const speedTrackId =
-    ownProps.side === 'left' ? 'laserSpeedLeft' : 'laserSpeedRight';
+const mapStateToProps = (state, { song, side }) => {
+  if (!song) {
+    return;
+  }
+
+  const tracks = getTracks(state);
+
+  const trackId = side === 'left' ? 'laserLeft' : 'laserRight';
+  const speedTrackId = side === 'left' ? 'laserSpeedLeft' : 'laserSpeedRight';
+
+  const lightEvents = tracks[trackId];
+  const speedEvents = tracks[speedTrackId];
 
   const currentBeat = getCursorPositionInBeats(state);
+  const processingDelay = getUsableProcessingDelay(state);
 
-  const lastEvent = getEventForTrackAtBeat(state, trackId, currentBeat);
-  const lastSpeedEvent = getEventForTrackAtBeat(
-    state,
-    speedTrackId,
-    currentBeat
+  const processingDelayInBeats = convertMillisecondsToBeats(
+    processingDelay,
+    song.bpm
+  );
+
+  const lastEvent = findMostRecentEventInTrack(
+    lightEvents,
+    currentBeat,
+    processingDelayInBeats
+  );
+  const lastSpeedEvent = findMostRecentEventInTrack(
+    speedEvents,
+    currentBeat,
+    processingDelayInBeats
   );
 
   const laserSpeed = lastSpeedEvent ? lastSpeedEvent.laserSpeed : 0;

@@ -91,4 +91,7 @@ const mapDispatchToProps = {
   updateGraphicsLevel: actions.updateGraphicsLevel,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SettingsModal);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SettingsModal);

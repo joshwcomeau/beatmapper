@@ -375,3 +375,10 @@ export const interleave = (arr, delimiter) => {
     return [...acc, item, delimiter];
   }, []);
 };
+
+// VERY naive pluralize
+export const pluralize = (num, string) => {
+  const noun = num === 1 ? string : `${string}s`;
+
+  return `${num} ${noun}`;
+};

@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import { SIDEBAR_WIDTH, EVENTS_VIEW } from '../../constants';
@@ -11,22 +12,36 @@ import GlobalShortcuts from '../GlobalShortcuts';
 import BottomPanel from './BottomPanel';
 import GridControls from './GridControls';
 import KeyboardShortcuts from './KeyboardShortcuts';
+import EventLightingPreview from './EventLightingPreview';
+import { getBackgroundOpacity } from '../../reducers/editor.reducer';
 
-const Events = () => {
+const Events = ({ backgroundOpacity }) => {
   const { width: windowWidth } = useWindowDimensions();
   const contentWidth = windowWidth - SIDEBAR_WIDTH;
 
   return (
-    <Wrapper>
-      <SongInfo showDifficultySelector={false} coverArtSize="small" />
+    <>
+      <Background>
+        <EventLightingPreview />
+      </Background>
 
-      <GridControls contentWidth={contentWidth} />
-      <EventsGrid contentWidth={contentWidth} />
-      <BottomPanel contentWidth={contentWidth} />
+      <Wrapper>
+        <SongInfo showDifficultySelector={false} coverArtSize="small" />
 
-      <GlobalShortcuts view={EVENTS_VIEW} />
-      <KeyboardShortcuts />
-    </Wrapper>
+        <MainUI
+          style={{
+            background: `hsla(222, 32%, 4%, ${backgroundOpacity})`,
+          }}
+        >
+          <GridControls contentWidth={contentWidth} />
+          <EventsGrid contentWidth={contentWidth} />
+          <BottomPanel contentWidth={contentWidth} />
+        </MainUI>
+
+        <GlobalShortcuts view={EVENTS_VIEW} />
+        <KeyboardShortcuts />
+      </Wrapper>
+    </>
   );
 };
 
@@ -39,4 +54,26 @@ const Wrapper = styled.div`
   align-items: center;
 `;
 
-export default Events;
+const Background = styled.div`
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #000;
+`;
+
+const MainUI = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+`;
+
+const mapStateToProps = state => {
+  return {
+    backgroundOpacity: getBackgroundOpacity(state),
+  };
+};
+
+export default connect(mapStateToProps)(Events);

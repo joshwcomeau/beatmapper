@@ -16,10 +16,10 @@ const LaserBeam = ({
   brightness,
   status,
   lastEventId,
+  isPlaying,
+  length = 500,
+  radius = 0.35,
 }) => {
-  const radius = 0.35;
-  const height = 500;
-
   // ~~Complicated Business~~
   // This component renders super often, since its `rotation` can change on
   // every frame.
@@ -44,6 +44,10 @@ const LaserBeam = ({
   );
 
   useOnChange(() => {
+    if (!isPlaying) {
+      return;
+    }
+
     const statusShouldReset = status === 'flash' || status === 'fade';
 
     springConfig.reset = statusShouldReset;
@@ -54,7 +58,7 @@ const LaserBeam = ({
   return (
     <group>
       <mesh position={position} rotation={rotation}>
-        <cylinderGeometry attach="geometry" args={[radius, radius, height]} />
+        <cylinderGeometry attach="geometry" args={[radius, radius, length]} />
         <animated.meshLambertMaterial
           attach="material"
           emissive={color}

@@ -6,6 +6,7 @@ import Intro from './pages/Intro';
 import SongPrep from './pages/SongPrep';
 import Shortcuts from './pages/Shortcuts';
 import ManualGettingStarted from './pages/ManualGettingStarted';
+import ManualNavigatingTheEditor from './pages/ManualNavigatingTheEditor';
 import ManualNotes from './pages/ManualNotes';
 import ManualEvents from './pages/ManualEvents';
 import ManualDemo from './pages/ManualDemo';
@@ -13,6 +14,7 @@ import ManualPublishing from './pages/ManualDownloadingPublishing';
 import Migrating from './pages/Migrating';
 import Mods from './pages/Mods';
 import FastWalls from './pages/FastWalls';
+import ReleaseNotes from './pages/ReleaseNotes';
 import Privacy from './pages/Privacy';
 import ContentPolicy from './pages/ContentPolicy';
 
@@ -27,6 +29,10 @@ const Docs = () => {
           path="/docs/manual/getting-started"
           component={ManualGettingStarted}
         />
+        <Route
+          path="/docs/manual/navigating-the-editor"
+          component={ManualNavigatingTheEditor}
+        />
         <Route path="/docs/manual/notes-view" component={ManualNotes} />
         <Route path="/docs/manual/events-view" component={ManualEvents} />
         <Route path="/docs/manual/demo-view" component={ManualDemo} />
@@ -34,6 +40,7 @@ const Docs = () => {
         <Route path="/docs/migrating" component={Migrating} />
         <Route path="/docs/mods" component={Mods} />
         <Route path="/docs/fast-walls" component={FastWalls} />
+        <Route path="/docs/release-notes" component={ReleaseNotes} />
         <Route path="/docs/privacy" component={Privacy} />
         <Route path="/docs/content-policy" component={ContentPolicy} />
       </Switch>

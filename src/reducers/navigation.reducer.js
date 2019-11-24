@@ -9,6 +9,7 @@ const initialState = {
   snapTo: 0.5,
   cursorPosition: 0,
   animateBlockMotion: true,
+  animateRingMotion: true,
   playbackRate: 1,
   beatDepth: 9,
   volume: 0.75,
@@ -61,6 +62,7 @@ export default function navigationReducer(state = initialState, action) {
         ...state,
         isPlaying: true,
         animateBlockMotion: false,
+        animateRingMotion: true,
       };
     }
 
@@ -69,6 +71,7 @@ export default function navigationReducer(state = initialState, action) {
         ...state,
         isPlaying: false,
         animateBlockMotion: true,
+        animateRingMotion: false,
       };
     }
     case 'STOP_PLAYING': {
@@ -76,6 +79,7 @@ export default function navigationReducer(state = initialState, action) {
         ...state,
         isPlaying: false,
         animateBlockMotion: false,
+        animateRingMotion: false,
         cursorPosition: action.offset,
       };
     }
@@ -91,6 +95,7 @@ export default function navigationReducer(state = initialState, action) {
       return {
         ...state,
         cursorPosition: action.timeElapsed,
+        animateRingMotion: true,
       };
     }
 
@@ -99,6 +104,7 @@ export default function navigationReducer(state = initialState, action) {
         ...state,
         cursorPosition: action.newOffset,
         animateBlockMotion: false,
+        animateRingMotion: false,
       };
     }
 
@@ -111,6 +117,7 @@ export default function navigationReducer(state = initialState, action) {
         ...state,
         isPlaying,
         animateBlockMotion: false,
+        animateRingMotion: false,
       };
     }
 
@@ -127,6 +134,7 @@ export default function navigationReducer(state = initialState, action) {
       return {
         ...state,
         animateBlockMotion: false,
+        animateRingMotion: false,
       };
     }
 
@@ -136,6 +144,7 @@ export default function navigationReducer(state = initialState, action) {
       return {
         ...state,
         animateBlockMotion: true,
+        animateRingMotion: false,
       };
     }
 
@@ -143,6 +152,7 @@ export default function navigationReducer(state = initialState, action) {
       return {
         ...state,
         animateBlockMotion: false,
+        animateRingMotion: false,
         cursorPosition: action.offset,
       };
     }
@@ -150,6 +160,7 @@ export default function navigationReducer(state = initialState, action) {
       return {
         ...state,
         animateBlockMotion: false,
+        animateRingMotion: false,
         cursorPosition: state.duration,
       };
     }
@@ -247,6 +258,9 @@ export const getPlaybackRate = state => state.navigation.playbackRate;
 export const getBeatDepth = state => state.navigation.beatDepth;
 export const getVolume = state => state.navigation.volume;
 export const getPlayNoteTick = state => state.navigation.playNoteTick;
+export const getAnimateBlockMotion = state =>
+  state.navigation.animateBlockMotion;
+export const getAnimateRingMotion = state => state.navigation.animateRingMotion;
 
 export const getCursorPositionInBeats = state => {
   const song = getSelectedSong(state);
