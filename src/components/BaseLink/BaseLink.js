@@ -6,8 +6,14 @@ export const shouldUseAnchor = to =>
 
 const BaseLink = ({ to = '', children, forceAnchor, ...delegated }) => {
   if (shouldUseAnchor(to) || forceAnchor) {
+    let target;
+
+    if (to[0] !== '#') {
+      target = '_blank';
+    }
+
     return (
-      <a href={to} target="_blank" rel="noopener noreferrer" {...delegated}>
+      <a href={to} target={target} rel="noopener noreferrer" {...delegated}>
         {children}
       </a>
     );

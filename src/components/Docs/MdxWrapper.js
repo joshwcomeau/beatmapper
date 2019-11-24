@@ -34,11 +34,23 @@ const Subtle = styled.span`
   font-style: italic;
 `;
 
+const Pre = styled.pre`
+  padding: 2rem;
+  background: rgba(0, 0, 0, 0.04);
+  font-family: monospace;
+  margin: 2rem 0;
+
+  code {
+    background: transparent !important;
+  }
+`;
+
 const components = {
   a: ({ href, ...props }) => <BaseLink {...props} to={href} />,
   img: Image,
   subtle: Subtle,
   hr: HorizontalRule,
+  pre: Pre,
 };
 
 const MdxWrapper = ({ children }) => {

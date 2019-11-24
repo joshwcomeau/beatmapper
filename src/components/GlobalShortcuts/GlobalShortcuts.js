@@ -16,7 +16,7 @@ import {
 } from '../../helpers/prompts.helpers';
 import useMousewheel from '../../hooks/use-mousewheel.hook';
 
-const KeyboardShortcuts = ({
+const GlobalShortcuts = ({
   view,
   togglePlaying,
   scrollThroughSong,
@@ -298,4 +298,4 @@ const mapDispatchToProps = {
 export default connect(
   null,
   mapDispatchToProps
-)(KeyboardShortcuts);
+)(GlobalShortcuts);

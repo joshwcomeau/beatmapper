@@ -1,0 +1,308 @@
+---
+title: Running locally
+subtitle: Creating your own Beatmapper
+---
+
+Beatmapper is open-source, meaning that its source code is made freely available for anyone to read and use. While you can't do _anything_ you want with it (it's [licensed under the MIT license](https://github.com/joshwcomeau/beatmapper/blob/master/LICENSE.md)), you are definitely free to create your own local copy and modify it for your personal, non-commercial endeavors.
+
+Here are some reasons you might wish to do this:
+
+- You can make small tweaks, like changing keybindings or removing controls you don't need
+- If the Beatmapper server goes down, your local copy will always work
+
+> NOTE: While this document doesn't assume any programming know-how, this is still a pretty technical thing to be doing. The online version should work plenty well for most folks!
+
+---
+
+## Prerequisites
+
+First thing's first, you'll need to [download and install Node.js](https://nodejs.org/en/). Any version greater than 12.0 should work.
+
+Node.js is a Javascript server environment, which is needed to compile the Beatmapper application.
+
+> During installation on Windows, you'll be asked a number of questions in the install wizard. The default options are all sufficient.
+
+## Cloning or downloading the source code
+
+Beatmapper is [hosted on GitHub](https://github.com/joshwcomeau/beatmapper), an online source-code repository. We'll need to download a copy of this source code.
+
+GitHub lets you download a .zip of all the files you'll need:
+
+import downloadFromGithubSrc from './images/download-from-github.gif';
+
+<img
+  src={downloadFromGithubSrc}
+  width={1020 / 2}
+  caption="If you happen to already know Git, then you should probably fork and clone instead."
+/>
+
+Unzip the .zip archive. It doesn't really matter where you put it, but for the purposes of this guide, we'll assume you've extracted it on the desktop. You should have a `beatmapper-master` folder on the desktop.
+
+## Getting to that directory in the terminal
+
+This is where things get a bit tricky, for those without a tinkering-with-computers background.
+
+Your computer should come with a terminal application. On MacOS, it's simply called "terminal", and it looks like this:
+
+import macTerminalSrc from './images/mac-terminal.png';
+
+<img src={macTerminalSrc} width={700} />
+
+On Windows 10, it's called "Command prompt". It looks slightly different:
+
+import windowsTerminalSrc from './images/windows-terminal.png';
+
+<img src={windowsTerminalSrc} width={700} />
+
+While different operating systems feature different terminal environments, the good news is that all the commands we'll need for this process are the same across all common operating systems (Windows, MacOS, Linux).
+
+The terminal is an alternative UI for navigating the operating system; unlike the graphical one you typically use, the terminal does everything through text commands.
+
+Our first order of business is to move into the directory we just created. By default, your terminal should put you in your home directory. If you type `ls`, it should show you a list of the current directory's contents:
+
+import macLsSrc from './images/mac-ls.png';
+
+<img src={macLsSrc} width={700} />
+
+We need to navigate to the folder we downloaded from GitHub. Assuming that you placed the `beatmapper-master` folder on the desktop, you should be able to get there by typing:
+
+```
+cd Desktop/beatmapper-master
+```
+
+`cd` stands for "Change Directory", and it's a way of entering a directory (much like double-clicking a folder to enter it).
+
+Once you're in the correct folder, you can run `ls` again to see a list of the Beatmapper files. It should look something like this:
+
+import beatmapperContentsSrc from './images/beatmapper-contents.png';
+
+<img src={beatmapperContentsSrc} width={700} />
+
+## Building the project
+
+From within the `beatmapper-master` directory, run the following command:
+
+```
+npm install
+```
+
+`npm` stands for Node Package Manager - it's a tool used to fetch the dependencies that Beatmapper uses, using Node.js (the tool we installed earlier). This can take a few minutes. You may see some warnings, but the final output should look something like this:
+
+```
+Installed 12345 packages
+Found N vulnerabilities
+```
+
+Once that command has finished, we're ready to build the project. Run:
+
+```
+npm run build
+```
+
+This will also take a couple minutes, and you may see a few scary-looking warnings. Pay no attention to them. The final output should look like:
+
+import builtOutputSrc from './images/built-output.png';
+
+<img src={builtOutputSrc} width={700} />
+
+We've successfully compiled our application!
+
+## Running a local server
+
+The last step in our intrepid adventure: we need to serve the built application.
+
+For this, we first need to install a new dependency:
+
+```
+npm install -g serve
+```
+
+Once that finishes, you can run:
+
+```
+serve -s build
+```
+
+import serveSrc from './images/serve.png';
+
+<img src={serveSrc} width={700} />
+
+This command creates a mini webserver, and allows you to access your local version of Beatmapper by visiting http://localhost:5000.
+
+When you do so, you should see the familiar UI of Beatmapper! There is no difference between this local build and the one that runs on this domain. All of the documentation and everything should work just as well
+
+This server will run until you close the terminal window. The process can be interrupted with `ctrl + C` (may be different on Windows), if you wish to stop the server without closing the window.
+
+## Editing local files
+
+When you make changes to local files, you'll need to rebuild the application. After you've made your changes, run the following command to rebuild the application and restart the web server:
+
+```
+npm run build && serve -s build
+```
+
+---
+
+# Overriding keyboard shortcuts
+
+Beatmapper has come up with a wholly unique set of keyboard shortcuts. Experienced MediocreMapper users in particular have not enjoyed having to learn a whole new set of keybindings.
+
+Adding custom bindings in the application will take some time, but you can set whatever bindings you want on your local copy!
+
+Here's how shortcuts are organized in Beatmapper:
+
+- Shortcuts used across multiple views are registered in `src/components/GlobalShortcuts/GlobalShortcuts.js`
+- Shortcuts exclusive to the "Notes view" are registered in `src/components/NotesEditor/KeyboardShortcuts.js`
+- Shortcuts exclusive to the "Events view" are registered in `src/components/Events/KeyboardShortcuts.js`
+
+> If you're not a Javascript developer, the contents of these files might look pretty intimidating. Happily, we won't be making any major changes; our tweaks for updating keyboard shortcuts will be pretty minimal.
+
+We'll need a text editor to modify these files. In a pinch, you can use Notepad, but I'd recommend using [VS Code](https://code.visualstudio.com/) - it's cross-platform, free, and pretty great.
+
+Open up those 3 files in this editor.
+
+## Mission: Remapping the "Undo" shortcut
+
+Beatmapper uses the standard convention of having Ctrl + Z used for undo. On QWERTY keyboards, this works great, but on AZERTY keyboards, this shortcut closes the browser tab!
+
+We want to remap this to Ctrl + W instead
+
+Inside `GlobalShortcuts.js`, there is a section of code around line 90 that looks like:
+
+```
+switch (ev.code) {
+  case 'Space': {
+    ...
+  }
+
+  case 'Escape': {
+    ...
+  }
+
+  case 'Tab': {
+    ...
+  }
+}
+```
+
+To briefly explain what's happening here: this code runs whenever a key on the keyboard is pressed, and each `case` is listening for a different letter. When the spacebar is pressed, the code inside `case 'Space'` is run.
+
+For individual letters, the pattern is `KeyX`. So the 'A' key is `KeyA`. Scroll down until you see this code:
+
+```
+case 'KeyZ': {
+  if (!isMetaKeyPressed(ev)) {
+    return;
+  }
+
+  if (view === NOTES_VIEW) {
+    return ev.shiftKey ? redoNotes() : undoNotes();
+  } else if (view === EVENTS_VIEW) {
+    return ev.shiftKey ? redoEvents() : undoEvents();
+  } else {
+    return;
+  }
+}
+```
+
+If we change `KeyZ` to `KeyW`, we'll have successfully remapped! We don't even have to worry about what all that code does, since we're not changing the logic itself; we're just changing which key triggers that logic.
+
+Save the file, and [follow the rebuild steps](#editing-local-files). Your new keyboard shortcut should now work!
+
+## Mission: Remapping the event tools
+
+In the events view, you can use the numbers 1 through 4 to pick between the different event types: `1` is "On", `2` is "Off", `3` is "Flash", `4` is "Fade".
+
+Let's say we want to remap this to use WASD, but only when the "Shift" key is held.
+
+First, let's find where the shortcuts live now. They're in `src/components/Events/KeyboardShortcuts.js`:
+
+```
+case 'Digit1': {
+  return selectTool(EVENTS_VIEW, 'on');
+}
+case 'Digit2': {
+  return selectTool(EVENTS_VIEW, 'off');
+}
+case 'Digit3': {
+  return selectTool(EVENTS_VIEW, 'flash');
+}
+case 'Digit4': {
+  return selectTool(EVENTS_VIEW, 'fade');
+}
+```
+
+Let's say we want `Shift + A` to trigger the "On" event. Your instinct might be to simply update `Digit1` to `KeyA`:
+
+```
+case 'KeyA': {
+  return selectTool(EVENTS_VIEW, 'on');
+}
+```
+
+That will allow the `A` key to toggle this tool, but remember, we want it to be `Shift + A`, not just `A` on its own!
+
+We need to wrap this code in a _condition_. Update the code so that it reads:
+
+```
+case 'KeyA': {
+  if (ev.shiftKey) {
+    return selectTool(EVENTS_VIEW, 'on');
+  }
+}
+```
+
+Explaining this code-change in depth is beyond the scope of this documentation, but hopefully its meaning is somewhat clear; If the shift key is held, run the code that selects the "On" tool.
+
+There's one last problem we need to tackle, though; it turns out, we _already had_ a keybinding for the `A` key. If we run this code as-is, we'll _overwrite_ some other bindings that exist for this key.
+
+In VS Code, if you type `Ctrl + F`, you'll pull up a little search text field. Enter `KeyA`, and you'll discover that this code exists in the same file:
+
+```
+case 'KeyA': {
+  if (isMetaKeyPressed(ev)) {
+    ev.preventDefault();
+    return toggleSelectAll(EVENTS_VIEW);
+  }
+
+  return selectEventEditMode('place');
+}
+```
+
+The "Meta key" that this code references is the Control key on Windows/Linux, and the Command key on Mac. Essentially, these bindings do two things:
+
+- When `Ctrl+A` is pressed, select all events in the view.
+- When `A` is pressed on its own, switch the edit mode (`A` is for "Add" mode, `S` is for "Select" mode).
+
+We can't have two different `case 'KeyA':` lines - if we do, the second one will overwrite the first, and we won't be able to use these other shortcuts anymore!
+
+We need to consolidate these two cases. Copy the code we wrote, and paste it in the top of this `case`, like so:
+
+```
+case 'KeyA': {
+  if (ev.shiftKey) {
+    return selectTool(EVENTS_VIEW, 'on');
+  }
+
+  if (isMetaKeyPressed(ev)) {
+    ev.preventDefault();
+    return toggleSelectAll(EVENTS_VIEW);
+  }
+
+  return selectEventEditMode('place');
+}
+```
+
+Now this code has 3 conditions:
+
+- If the Shift key is held, select the "On" event
+- If the Ctrl key is held, select all entities
+- If neither of those keys are held, switch the edit mode
+
+---
+
+## Conclusion
+
+If you don't come from a programming background, these steps might be totally inscrutable. If you haven't been able to add custom shortcuts, please know that it's because I did a poor job explaining, not because you did a poor job understanding.
+
+I'm eager to improve these docs, so if you have feedback, please reach out to me on Discord (joshwcomeau) or email (joshwcomeau@gmail.com).

@@ -14,6 +14,7 @@ import ManualPublishing from './pages/ManualDownloadingPublishing';
 import Migrating from './pages/Migrating';
 import Mods from './pages/Mods';
 import FastWalls from './pages/FastWalls';
+import RunningLocally from './pages/RunningLocally';
 import ReleaseNotes from './pages/ReleaseNotes';
 import Privacy from './pages/Privacy';
 import ContentPolicy from './pages/ContentPolicy';
@@ -40,6 +41,7 @@ const Docs = () => {
         <Route path="/docs/migrating" component={Migrating} />
         <Route path="/docs/mods" component={Mods} />
         <Route path="/docs/fast-walls" component={FastWalls} />
+        <Route path="/docs/running-locally" component={RunningLocally} />
         <Route path="/docs/release-notes" component={ReleaseNotes} />
         <Route path="/docs/privacy" component={Privacy} />
         <Route path="/docs/content-policy" component={ContentPolicy} />

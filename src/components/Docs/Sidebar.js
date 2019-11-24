@@ -37,6 +37,7 @@ const Sidebar = () => {
           <NavLink to="/docs/migrating">Migrating from another editor</NavLink>
           <NavLink to="/docs/mods">Mod support</NavLink>
           <NavLink to="/docs/fast-walls">Fast walls</NavLink>
+          <NavLink to="/docs/running-locally">Running locally</NavLink>
         </NavGroup>
         <NavGroup title="Legal">
           <NavLink to="/docs/content-policy">Content policy</NavLink>
