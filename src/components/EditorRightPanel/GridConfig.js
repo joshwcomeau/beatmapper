@@ -100,7 +100,7 @@ const GridConfig = ({
       <Row>
         <TextInput
           type="number"
-          min={0}
+          min={0.1}
           max={4}
           step={0.1}
           label="Cell Width"
@@ -115,7 +115,7 @@ const GridConfig = ({
         <Spacer size={UNIT * 2} />
         <TextInput
           type="number"
-          min={0}
+          min={0.1}
           max={4}
           step={0.1}
           label="Cell Height"
