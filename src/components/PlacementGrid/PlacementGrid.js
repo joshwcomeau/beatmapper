@@ -99,6 +99,10 @@ const PlacementGrid = ({
         );
         const effectiveRowIndex = convertGridRow(rowIndex, numRows, rowHeight);
 
+        // If this is the first move event that creates this tentative block,
+        // delete any pre-existing block in this cell
+        clearCellOfNotes(effectiveRowIndex, effectiveColIndex);
+
         evenMoreTentativeBlock = {
           direction,
           rowIndex: effectiveRowIndex,
@@ -175,7 +179,6 @@ const PlacementGrid = ({
               setHoveredCell={setHoveredCell}
               clickPlacementGrid={clickPlacementGrid}
               createNewObstacle={createNewObstacle}
-              clearCellOfNotes={clearCellOfNotes}
             />
           );
         })
