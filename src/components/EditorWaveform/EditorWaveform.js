@@ -6,7 +6,7 @@ import * as actions from '../../actions';
 import { UNIT } from '../../constants';
 import { getSelectedSong } from '../../reducers/songs.reducer';
 import useBoundingBox from '../../hooks/use-bounding-box.hook';
-import { roundToNearest, throttle } from '../../utils';
+import { roundToNearest } from '../../utils';
 
 import ScrubbableWaveform from '../ScrubbableWaveform';
 import CenteredSpinner from '../CenteredSpinner';

@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import { BLOCK_COLUMN_WIDTH, SONG_OFFSET } from '../../constants';
-import { getColorForItem } from '../../helpers/colors.helpers';
 
 import Block from '../Block';
 

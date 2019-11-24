@@ -7,7 +7,6 @@ import { UNIT, COLORS, EVENT_TRACKS } from '../../constants';
 import { range, normalize, roundToNearest } from '../../utils';
 import { getIsLoading, getSnapTo } from '../../reducers/navigation.reducer';
 import {
-  getZoomLevel,
   getStartAndEndBeat,
   getSelectedEventEditMode,
   getSelectedEventBeat,
@@ -380,4 +379,7 @@ const mapDispatchToProps = {
   commitSelection: actions.commitSelection,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(EventsGrid);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EventsGrid);
