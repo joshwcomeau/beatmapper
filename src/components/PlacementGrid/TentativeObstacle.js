@@ -10,8 +10,8 @@ import { getDefaultObstacleDuration } from '../../reducers/editor.reducer';
 
 const TentativeObstacle = ({
   mouseDownAt,
-  mode,
   color,
+  mode,
   beatDepth,
   defaultObstacleDuration,
   gridRows,

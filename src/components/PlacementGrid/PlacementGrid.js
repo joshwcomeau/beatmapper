@@ -14,6 +14,7 @@ import {
 
 import { getDirectionForDrag } from './PlacementGrid.helpers';
 import TentativeObstacle from './TentativeObstacle';
+import TentativeBlock from './TentativeBlock';
 import GridCell from './GridCell';
 import { getDefaultObstacleDuration } from '../../reducers/editor.reducer';
 
@@ -50,7 +51,16 @@ const PlacementGrid = ({
   //   if I don't use this derived value.
   const [hoveredCell, setHoveredCell] = React.useState(null);
 
+  const [tentativeBlock, setTentativeBlock] = React.useState(null);
+
   React.useEffect(() => {
+    // HACK HACK HACK:
+    // I'm having closure issues, so in addition to the `tentativeBlock`
+    // in state that is rendered for the user, I'm duplicating that data
+    // within this effect under `evenMoreTentativeBlock`. This is hacky
+    // and a bad idea, but it works and I'm lazy.
+    let evenMoreTentativeBlock;
+
     const handleMouseMove = ev => {
       const { rowIndex, colIndex, ...initialPosition } = mouseDownAt;
 
@@ -63,7 +73,12 @@ const PlacementGrid = ({
         y: ev.pageY,
       };
 
-      const direction = getDirectionForDrag(initialPosition, currentPosition);
+      const direction = getDirectionForDrag(
+        initialPosition,
+        currentPosition,
+        mappingMode,
+        ev.metaKey
+      );
 
       if (
         typeof direction === 'number' &&
@@ -83,12 +98,14 @@ const PlacementGrid = ({
         );
         const effectiveRowIndex = convertGridRow(rowIndex, numRows, rowHeight);
 
-        setBlockByDragging(
+        evenMoreTentativeBlock = {
           direction,
-          effectiveRowIndex,
-          effectiveColIndex,
-          selectedTool
-        );
+          rowIndex: effectiveRowIndex,
+          colIndex: effectiveColIndex,
+          selectedTool,
+        };
+
+        setTentativeBlock(evenMoreTentativeBlock);
 
         cachedDirection.current = direction;
       }
@@ -96,6 +113,15 @@ const PlacementGrid = ({
 
     const handleMouseUp = ev => {
       window.requestAnimationFrame(() => {
+        if (evenMoreTentativeBlock) {
+          setBlockByDragging(
+            evenMoreTentativeBlock.direction,
+            evenMoreTentativeBlock.rowIndex,
+            evenMoreTentativeBlock.colIndex,
+            evenMoreTentativeBlock.selectedTool
+          );
+          setTentativeBlock(null);
+        }
         setMouseDownAt(null);
         setMouseOverAt(null);
         setHoveredCell(null);
@@ -151,6 +177,16 @@ const PlacementGrid = ({
             />
           );
         })
+      )}
+
+      {tentativeBlock && (
+        <TentativeBlock
+          song={song}
+          direction={tentativeBlock.direction}
+          rowIndex={tentativeBlock.rowIndex}
+          colIndex={tentativeBlock.colIndex}
+          color={getColorForItem(tentativeBlock.selectedTool, song)}
+        />
       )}
 
       {mouseDownAt && selectedTool === 'obstacle' && (

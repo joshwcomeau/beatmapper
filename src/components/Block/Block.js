@@ -3,8 +3,15 @@ import React from 'react';
 import blockDirectionalUrl from '../../assets/obj/block-directional.obj';
 import blockCenterUrl from '../../assets/obj/block-center.obj';
 import useObject from '../../hooks/use-object.hook';
+import { convertDegreesToRadians } from '../../utils';
 
 const getBlockUrlForDirection = direction => {
+  // If the direction is >=1000, that means it's a MappingExtensions thing.
+  // Must be directional.
+  if (direction >= 1000) {
+    return blockDirectionalUrl;
+  }
+
   switch (direction) {
     case 0:
     case 1:
@@ -25,6 +32,18 @@ const getBlockUrlForDirection = direction => {
 };
 
 const getRotationForDirection = direction => {
+  // If the rotation is >=1000, we're in MappingExtensions land :D
+  // It uses a 1000-1360 system, from down clockwise.
+  // We have some conversions to do, to get an angle in radians.
+  if (direction >= 1000) {
+    // (this formula is a little bonkers, there's probably a simpler way.)
+    // (but it works.)
+    const reorientedAngle = 180 - ((direction + 270) % 360);
+    const angleInRads = convertDegreesToRadians(reorientedAngle);
+
+    return angleInRads;
+  }
+
   // The numbering system used is completely nonsensical:
   //
   //   4  0  5
