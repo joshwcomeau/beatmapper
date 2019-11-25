@@ -83,10 +83,14 @@ const notes = (state = initialState.notes, action) => {
     }
 
     case 'CLEAR_CELL_OF_NOTES': {
-      const { rowIndex, colIndex } = action;
+      const { rowIndex, colIndex, cursorPositionInBeats } = action;
 
       const matchedNoteIndex = state.findIndex(block => {
-        return block._lineIndex === colIndex && block._lineLayer === rowIndex;
+        return (
+          block._lineIndex === colIndex &&
+          block._lineLayer === rowIndex &&
+          block._time === cursorPositionInBeats
+        );
       });
 
       if (matchedNoteIndex === -1) {

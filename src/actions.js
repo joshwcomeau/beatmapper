@@ -266,10 +266,15 @@ export const clickPlacementGrid = (rowIndex, colIndex) => (
 };
 
 export const clearCellOfNotes = (rowIndex, colIndex) => {
-  return {
-    type: 'CLEAR_CELL_OF_NOTES',
-    rowIndex,
-    colIndex,
+  return (dispatch, getState) => {
+    const cursorPositionInBeats = getCursorPositionInBeats(getState());
+
+    dispatch({
+      type: 'CLEAR_CELL_OF_NOTES',
+      rowIndex,
+      colIndex,
+      cursorPositionInBeats,
+    });
   };
 };
 
