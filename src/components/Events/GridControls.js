@@ -12,7 +12,13 @@ import { lock as lockIcon } from 'react-icons-kit/feather/lock';
 import { Tooltip } from 'react-tippy';
 
 import * as actions from '../../actions';
-import { UNIT, EVENTS_VIEW, COLORS } from '../../constants';
+import {
+  UNIT,
+  EVENTS_VIEW,
+  COLORS,
+  ZOOM_LEVEL_MIN,
+  ZOOM_LEVEL_MAX,
+} from '../../constants';
 import { getColorForItem } from '../../helpers/colors.helpers';
 import {
   getSelectedEventEditMode,
@@ -167,10 +173,10 @@ const GridControls = ({
 
       <Right>
         <ControlItem label="Zoom" align="right">
-          <ZoomBtn onClick={zoomOut} disabled={zoomLevel === 1}>
+          <ZoomBtn onClick={zoomOut} disabled={zoomLevel === ZOOM_LEVEL_MIN}>
             <Icon size={14} icon={zoomOutIcon} />
           </ZoomBtn>
-          <ZoomBtn onClick={zoomIn} disabled={zoomLevel === 4}>
+          <ZoomBtn onClick={zoomIn} disabled={zoomLevel === ZOOM_LEVEL_MAX}>
             <Icon size={14} icon={zoomInIcon} />
           </ZoomBtn>
         </ControlItem>

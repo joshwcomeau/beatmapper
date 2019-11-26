@@ -90,10 +90,15 @@ const DEFAULT_MOD_SETTINGS = {
   customColors: {
     isEnabled: false,
     colorLeft: DEFAULT_RED,
+    colorLeftIntensity: 1,
     colorRight: DEFAULT_BLUE,
+    colorRightIntensity: 1,
     envColorLeft: DEFAULT_RED,
+    envColorLeftIntensity: 1,
     envColorRight: DEFAULT_BLUE,
+    envColorRightIntensity: 1,
     obstacleColor: DEFAULT_RED,
+    obstacleColorIntensity: 1,
   },
   mappingExtensions: {
     isEnabled: false,

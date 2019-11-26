@@ -7,7 +7,13 @@ import { combineReducers } from 'redux';
 import { createSelector } from 'reselect';
 import produce from 'immer';
 
-import { NOTES_VIEW, EVENTS_VIEW, BEATS_PER_ZOOM_LEVEL } from '../constants';
+import {
+  NOTES_VIEW,
+  EVENTS_VIEW,
+  BEATS_PER_ZOOM_LEVEL,
+  ZOOM_LEVEL_MIN,
+  ZOOM_LEVEL_MAX,
+} from '../constants';
 import { floorToNearest } from '../utils';
 import { getCursorPositionInBeats } from './navigation.reducer';
 
@@ -123,7 +129,8 @@ function notes(state = initialState.notes, action) {
       };
     }
 
-    case 'RESIZE_OBSTACLE': {
+    case 'RESIZE_OBSTACLE':
+    case 'RESIZE_SELECTED_OBSTACLES': {
       return {
         ...state,
         defaultObstacleDuration: action.newBeatDuration,
@@ -263,7 +270,7 @@ function events(state = initialState.events, action) {
     }
 
     case 'ZOOM_IN': {
-      const newZoomLevel = Math.min(4, state.zoomLevel + 1);
+      const newZoomLevel = Math.min(ZOOM_LEVEL_MAX, state.zoomLevel + 1);
       return {
         ...state,
         zoomLevel: newZoomLevel,
@@ -271,7 +278,7 @@ function events(state = initialState.events, action) {
     }
 
     case 'ZOOM_OUT': {
-      const newZoomLevel = Math.max(1, state.zoomLevel - 1);
+      const newZoomLevel = Math.max(ZOOM_LEVEL_MIN, state.zoomLevel - 1);
       return {
         ...state,
         zoomLevel: newZoomLevel,

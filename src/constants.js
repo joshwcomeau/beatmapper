@@ -187,7 +187,10 @@ export const NOTES_VIEW = 'notes';
 export const EVENTS_VIEW = 'events';
 export const PREVIEW_VIEW = 'preview';
 
-export const BEATS_PER_ZOOM_LEVEL = [null, 32, 16, 8, 4];
+export const BEATS_PER_ZOOM_LEVEL = [null, 32, 16, 8, 4, 2];
+
+export const ZOOM_LEVEL_MIN = 1;
+export const ZOOM_LEVEL_MAX = BEATS_PER_ZOOM_LEVEL.length - 1;
 
 export const EVENT_TRACKS = [
   {

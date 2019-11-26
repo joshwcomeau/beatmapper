@@ -217,11 +217,14 @@ export function createBeatmapContents(
 
   // Annoyingly sometimes we can end up with floating-point issues on
   // lineIndex and lineLayer. Usually I deal with this in the helpers, but
-  // notes don't have a helper yet
+  // notes don't have a helper yet.
+  // Also, now that 'cutDirection' can be 360 degrees, it also needs to be
+  // rounded
   sortedNotes = sortedNotes.map(note => ({
     ...note,
     _lineIndex: Math.round(note._lineIndex),
     _lineLayer: Math.round(note._lineLayer),
+    _cutDirection: Math.round(note._cutDirection),
   }));
 
   // Remove 'selected' property
