@@ -431,9 +431,10 @@ export const convertLegacyArchive = async archive => {
   // Create new difficulty files (eg. Expert.dat)
   const loadedDifficultyFiles = await Promise.all(
     infoDatJson.difficultyLevels.map(async level => {
-      const fileContents = await getFileFromArchive(level.jsonPath).async(
-        'string'
-      );
+      const fileContents = await getFileFromArchive(
+        archive,
+        level.jsonPath
+      ).async('string');
       const fileJson = JSON.parse(fileContents);
 
       const newFileContents = createBeatmapContents(
