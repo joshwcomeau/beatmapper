@@ -116,7 +116,7 @@ export default function navigationReducer(state = initialState, action) {
       return {
         ...state,
         isPlaying,
-        animateBlockMotion: false,
+        animateBlockMotion: !!action.animateJump,
         animateRingMotion: false,
       };
     }

@@ -6,7 +6,7 @@ import {
   SURFACE_HEIGHT,
   SONG_OFFSET,
   BLOCK_COLUMN_WIDTH,
-  getSurfaceDepth,
+  SURFACE_DEPTHS,
 } from '../../constants';
 import { DEFAULT_NUM_ROWS } from '../../helpers/grid.helpers';
 
@@ -99,7 +99,7 @@ const StaticEnvironment = ({ surfaceDepth, includeEdgeStrips }) => {
 
 const mapStateToProps = state => {
   const graphicsLevel = getGraphicsLevel(state);
-  const surfaceDepth = getSurfaceDepth(graphicsLevel);
+  const surfaceDepth = SURFACE_DEPTHS[graphicsLevel];
 
   return {
     surfaceDepth,

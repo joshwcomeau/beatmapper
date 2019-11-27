@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { SONG_OFFSET, getSurfaceDepth } from '../../constants';
+import { SONG_OFFSET, SURFACE_DEPTHS } from '../../constants';
 import { range } from '../../utils';
 import { convertMillisecondsToBeats } from '../../helpers/audio.helpers';
 import {
@@ -20,7 +20,7 @@ const BarMarkers = ({
   beatDepth,
   graphicsLevel,
 }) => {
-  const surfaceDepth = getSurfaceDepth(graphicsLevel);
+  const surfaceDepth = SURFACE_DEPTHS[graphicsLevel];
   const numToRender = surfaceDepth / beatDepth;
 
   const totalNumOfBeats = Math.ceil(convertMillisecondsToBeats(duration, bpm));

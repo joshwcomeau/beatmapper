@@ -61,16 +61,10 @@ export const SURFACE_DEPTH_HIGH = 75;
 export const SURFACE_DEPTH_MED = 55;
 export const SURFACE_DEPTH_LOW = 38;
 
-export const getSurfaceDepth = graphicsLevel => {
-  switch (graphicsLevel) {
-    case 'low':
-      return SURFACE_DEPTH_LOW;
-    default:
-    case 'medium':
-      return SURFACE_DEPTH_MED;
-    case 'high':
-      return SURFACE_DEPTH_HIGH;
-  }
+export const SURFACE_DEPTHS = {
+  low: SURFACE_DEPTH_LOW,
+  medium: SURFACE_DEPTH_MED,
+  high: SURFACE_DEPTH_HIGH,
 };
 
 export const UNIT = 8;

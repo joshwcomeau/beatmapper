@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { SONG_OFFSET, getSurfaceDepth } from '../../constants';
+import { SONG_OFFSET, SURFACE_DEPTHS } from '../../constants';
 import { getGraphicsLevel } from '../../reducers/user.reducer';
 
 import RectAreaLight from '../RectAreaLight';
@@ -35,7 +35,7 @@ const EdgeStrip = ({ x, y, z, width = 0.1, depth, renderAs }) => {
 const mapStateToProps = state => {
   const graphicsLevel = getGraphicsLevel(state);
 
-  const depth = getSurfaceDepth(graphicsLevel);
+  const depth = SURFACE_DEPTHS[graphicsLevel];
 
   const renderAs = graphicsLevel === 'high' ? 'light' : 'plane';
 

@@ -618,10 +618,11 @@ export const nudgeSelection = (direction, view) => (dispatch, getState) => {
   });
 };
 
-export const jumpToBeat = (beatNum, pauseTrack) => ({
+export const jumpToBeat = (beatNum, pauseTrack, animateJump) => ({
   type: 'JUMP_TO_BEAT',
   beatNum,
   pauseTrack,
+  animateJump,
 });
 
 export const seekForwards = view => ({
