@@ -11,6 +11,8 @@ import LabeledCheckbox from '../LabeledCheckbox';
 import Heading from '../Heading';
 import Spacer from '../Spacer';
 import MiniSlider from '../MiniSlider';
+import QuestionTooltip from '../QuestionTooltip';
+import Link from '../Link';
 
 const ColorPicker = React.lazy(() => import('../ColorPicker'));
 
@@ -48,7 +50,15 @@ const CustomColorSettings = ({ song, toggleModForSong, updateModColor }) => {
         checked={isModEnabled}
         onChange={() => toggleModForSong('customColors')}
       >
-        Enable custom colors
+        Enable custom colors{' '}
+        <QuestionTooltip>
+          Override the default red/blue color scheme. Use "overdrive" to produce
+          some neat effects.{' '}
+          <Link forceAnchor to="/docs/mods#custom-colors">
+            Learn more
+          </Link>
+          .
+        </QuestionTooltip>
       </LabeledCheckbox>
 
       {isModEnabled && (
@@ -65,7 +75,7 @@ const CustomColorSettings = ({ song, toggleModForSong, updateModColor }) => {
                 <Spacer size={UNIT * 2} />
                 <Heading size={3}>{TRACK_LABELS[trackId]}</Heading>
                 <Spacer size={UNIT * 3} />
-                <Heading size={4}>Overdrive:</Heading>
+                <Heading size={4}>Overdrive</Heading>
                 <Spacer size={UNIT * 1} />
                 <MiniSlider width={50} height={16} min={1} max={10} value={2} />
               </Cell>

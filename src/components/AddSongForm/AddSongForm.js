@@ -211,7 +211,7 @@ const AddSongForm = ({ createNewSong, currentSongIds, history }) => {
           <Spacer size={UNIT * 8} />
           <Row>
             <Label>
-              Difficulty{' '}
+              Difficulty
               <QuestionTooltip>
                 Select the first difficulty you'd like to work on. You can
                 create additional difficulties later on.
@@ -256,6 +256,8 @@ const Label = styled.div`
   font-size: 16px;
   font-weight: 300;
   color: ${COLORS.gray[100]};
+  display: flex;
+  align-items: center;
 `;
 
 const Difficulties = styled.div`

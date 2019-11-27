@@ -12,7 +12,9 @@ const QuestionTooltip = ({ children, ...delegated }) => {
         html={<HelpWrapper>{children}</HelpWrapper>}
         {...delegated}
       >
-        <Icon size={14} icon={helpCircle} />
+        <IconWrapper>
+          <Icon size={14} icon={helpCircle} />
+        </IconWrapper>
       </Tooltip>
     </Wrapper>
   );
@@ -27,6 +29,11 @@ const Wrapper = styled.div`
 const HelpWrapper = styled.div`
   max-width: 150px;
   line-height: 1.4;
+`;
+
+const IconWrapper = styled.div`
+  opacity: 0.4;
+  padding-left: 0.5rem;
 `;
 
 export default QuestionTooltip;
