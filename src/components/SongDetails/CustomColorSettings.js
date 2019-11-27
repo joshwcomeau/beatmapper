@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import * as actions from '../../actions';
 import { UNIT } from '../../constants';
-import { getSelectedSong } from '../../reducers/songs.reducer';
+import { getCustomColors } from '../../reducers/songs.reducer';
 
 import CenteredSpinner from '../CenteredSpinner';
 import LabeledCheckbox from '../LabeledCheckbox';
@@ -16,7 +16,7 @@ import Link from '../Link';
 
 const ColorPicker = React.lazy(() => import('../ColorPicker'));
 
-const TRACK_IDS = [
+const ELEMENT_IDS = [
   'colorLeft',
   'colorRight',
   'envColorLeft',
@@ -24,7 +24,7 @@ const TRACK_IDS = [
   'obstacleColor',
 ];
 
-const TRACK_LABELS = {
+const ELEMENT_LABELS = {
   colorLeft: 'Left Saber',
   colorRight: 'Right Saber',
   envColorLeft: 'Environment 1',
@@ -32,22 +32,17 @@ const TRACK_LABELS = {
   obstacleColor: 'Obstacles',
 };
 
-const CustomColorSettings = ({ song, toggleModForSong, updateModColor }) => {
-  if (!song || !song.modSettings) {
-    return null;
-  }
-
-  const colors = song.modSettings.customColors;
-
-  const isModEnabled = !!(
-    song.modSettings.customColors && song.modSettings.customColors.isEnabled
-  );
-
+const CustomColorSettings = ({
+  customColors,
+  toggleModForSong,
+  updateModColor,
+  updateModColorIntensity,
+}) => {
   return (
     <Wrapper>
       <LabeledCheckbox
         id="enable-colors"
-        checked={isModEnabled}
+        checked={customColors.isEnabled}
         onChange={() => toggleModForSong('customColors')}
       >
         Enable custom colors{' '}
@@ -61,23 +56,34 @@ const CustomColorSettings = ({ song, toggleModForSong, updateModColor }) => {
         </QuestionTooltip>
       </LabeledCheckbox>
 
-      {isModEnabled && (
+      {customColors.isEnabled && (
         <React.Suspense fallback={<CenteredSpinner />}>
           <Spacer size={UNIT * 4} />
           <Row>
-            {TRACK_IDS.map(trackId => (
-              <Cell key={trackId}>
+            {ELEMENT_IDS.map(elementId => (
+              <Cell key={elementId}>
                 <ColorPicker
-                  colorId={trackId}
-                  color={colors[trackId]}
+                  colorId={elementId}
+                  color={customColors[elementId]}
                   updateColor={updateModColor}
                 />
                 <Spacer size={UNIT * 2} />
-                <Heading size={3}>{TRACK_LABELS[trackId]}</Heading>
+                <Heading size={3}>{ELEMENT_LABELS[elementId]}</Heading>
                 <Spacer size={UNIT * 3} />
                 <Heading size={4}>Overdrive</Heading>
                 <Spacer size={UNIT * 1} />
-                <MiniSlider width={50} height={16} min={1} max={10} value={2} />
+                <MiniSlider
+                  width={50}
+                  height={16}
+                  min={1}
+                  max={10}
+                  step={0.1}
+                  value={customColors[elementId + 'Intensity']}
+                  onChange={ev => {
+                    console.log('change!', ev.target.value);
+                    updateModColorIntensity(elementId, ev.target.value);
+                  }}
+                />
               </Cell>
             ))}
           </Row>
@@ -105,12 +111,13 @@ const Cell = styled.div`
 `;
 
 const mapStateToProps = state => ({
-  song: getSelectedSong(state),
+  customColors: getCustomColors(state),
 });
 
 const mapDispatchToProps = {
   toggleModForSong: actions.toggleModForSong,
   updateModColor: actions.updateModColor,
+  updateModColorIntensity: actions.updateModColorIntensity,
 };
 
 export default connect(

@@ -29,10 +29,15 @@ interface ModSettings {
   customColors: {
     isEnabled: boolean;
     colorLeft: string;
+    colorLeftIntensity: number;
     colorRight: string;
+    colorRightIntensity: number;
     envColorLeft: string;
+    envColorLeftIntensity: number;
     envColorRight: string;
+    envColorRightIntensity: number;
     obstacleColor: string;
+    obstacleColorIntensity: number;
   };
 }
 
@@ -400,6 +405,30 @@ export default function songsReducer(state: State = initialState, action: any) {
       });
     }
 
+    case 'UPDATE_MOD_COLOR_INTENSITY': {
+      const { element, intensity } = action;
+
+      console.log(element, intensity);
+
+      const elementIntensityKey = `${element}Intensity`;
+
+      return produce(state, (draftState: State) => {
+        const song = grabSelectedSong(draftState);
+
+        if (!song) {
+          return;
+        }
+
+        if (!song.modSettings.customColors) {
+          song.modSettings.customColors = DEFAULT_MOD_SETTINGS.customColors;
+        }
+
+        console.log(elementIntensityKey, intensity, song.modSettings);
+        // @ts-ignore
+        song.modSettings.customColors[elementIntensityKey] = intensity;
+      });
+    }
+
     case 'UPDATE_GRID': {
       const { numRows, numCols, colWidth, rowHeight } = action;
 
@@ -586,6 +615,22 @@ export const getEnabledLightshow = createSelector(
   getSelectedSong,
   song => {
     return song.enabledLightshow;
+  }
+);
+
+export const getCustomColors = createSelector(
+  getSelectedSong,
+  song => {
+    let colors = song.modSettings.customColors;
+
+    if (!colors) {
+      return DEFAULT_MOD_SETTINGS.customColors;
+    }
+
+    return {
+      ...DEFAULT_MOD_SETTINGS.customColors,
+      ...colors,
+    };
   }
 );
 

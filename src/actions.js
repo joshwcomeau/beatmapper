@@ -775,7 +775,7 @@ export const updateModColor = (element, color) => ({
   color,
 });
 export const updateModColorIntensity = (element, intensity) => ({
-  type: 'UPDATE_MOD_INTENSITY',
+  type: 'UPDATE_MOD_COLOR_INTENSITY',
   element,
   intensity,
 });
