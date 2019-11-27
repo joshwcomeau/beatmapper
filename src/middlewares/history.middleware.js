@@ -83,6 +83,11 @@ const jumpToEarliestNote = (
 
 const switchEventPagesIfNecessary = (earlierEvents, currentEvents, store) => {
   const relevantEvents = findUniquesWithinArrays(earlierEvents, currentEvents);
+
+  if (relevantEvents.length === 0) {
+    return;
+  }
+
   const { startBeat, endBeat } = getStartAndEndBeat(store.getState());
 
   const someItemsWithinWindow = relevantEvents.some(event => {
@@ -163,6 +168,10 @@ export default function createHistoryMiddleware() {
         const pastEvents = getPastEvents(state);
         const presentEvents = getEvents(state);
 
+        if (pastEvents === null) {
+          return;
+        }
+
         switchEventPagesIfNecessary(pastEvents, presentEvents, store);
 
         next(action);
@@ -175,6 +184,10 @@ export default function createHistoryMiddleware() {
 
         const presentEvents = getEvents(state);
         const futureEvents = getFutureEvents(state);
+
+        if (futureEvents === null) {
+          return;
+        }
 
         switchEventPagesIfNecessary(presentEvents, futureEvents, store);
 

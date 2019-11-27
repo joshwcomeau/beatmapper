@@ -523,6 +523,10 @@ const createHistoryGetter = set =>
 
     const mostRecentSnapshot = snapshots[snapshots.length - 1];
 
+    if (!mostRecentSnapshot) {
+      return null;
+    }
+
     const events = flatten(Object.values(mostRecentSnapshot.tracks));
 
     return events;

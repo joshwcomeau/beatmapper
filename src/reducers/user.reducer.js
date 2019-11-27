@@ -53,7 +53,6 @@ export default function user(state = initialState, action) {
     }
 
     case 'UPDATE_PROCESSING_DELAY': {
-      console.log(action.newDelay);
       return {
         ...state,
         processingDelay: action.newDelay,
