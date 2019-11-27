@@ -24,19 +24,34 @@ const ELEMENT_IDS = [
   'obstacleColor',
 ];
 
-const ELEMENT_LABELS = {
-  colorLeft: 'Left Saber',
-  colorRight: 'Right Saber',
-  envColorLeft: 'Environment 1',
-  envColorRight: 'Environment 2',
-  obstacleColor: 'Obstacles',
+const ELEMENT_DATA = {
+  colorLeft: {
+    label: 'Left Saber',
+    maxValue: 5,
+  },
+  colorRight: {
+    label: 'Right Saber',
+    maxValue: 5,
+  },
+  envColorLeft: {
+    label: 'Environment 1',
+    maxValue: 3,
+  },
+  envColorRight: {
+    label: 'Environment 2',
+    maxValue: 3,
+  },
+  obstacleColor: {
+    label: 'Obstacles',
+    maxValue: 10,
+  },
 };
 
 const CustomColorSettings = ({
   customColors,
   toggleModForSong,
   updateModColor,
-  updateModColorIntensity,
+  updateModColorOverdrive,
 }) => {
   return (
     <Wrapper>
@@ -60,31 +75,40 @@ const CustomColorSettings = ({
         <React.Suspense fallback={<CenteredSpinner />}>
           <Spacer size={UNIT * 4} />
           <Row>
-            {ELEMENT_IDS.map(elementId => (
-              <Cell key={elementId}>
-                <ColorPicker
-                  colorId={elementId}
-                  color={customColors[elementId]}
-                  updateColor={updateModColor}
-                />
-                <Spacer size={UNIT * 2} />
-                <Heading size={3}>{ELEMENT_LABELS[elementId]}</Heading>
-                <Spacer size={UNIT * 3} />
-                <Heading size={4}>Overdrive</Heading>
-                <Spacer size={UNIT * 1} />
-                <MiniSlider
-                  width={50}
-                  height={16}
-                  min={1}
-                  max={10}
-                  step={0.1}
-                  value={customColors[elementId + 'Intensity']}
-                  onChange={ev => {
-                    updateModColorIntensity(elementId, Number(ev.target.value));
-                  }}
-                />
-              </Cell>
-            ))}
+            {ELEMENT_IDS.map(elementId => {
+              const color = customColors[elementId];
+              const overdrive = customColors[elementId + 'Overdrive'];
+
+              return (
+                <Cell key={elementId}>
+                  <ColorPicker
+                    colorId={elementId}
+                    color={color}
+                    updateColor={updateModColor}
+                    overdrive={overdrive}
+                  />
+                  <Spacer size={UNIT * 2} />
+                  <Heading size={3}>{ELEMENT_DATA[elementId].label}</Heading>
+                  <Spacer size={UNIT * 3} />
+                  <Heading size={4}>Overdrive</Heading>
+                  <Spacer size={UNIT * 1} />
+                  <MiniSlider
+                    width={50}
+                    height={16}
+                    min={0}
+                    max={1}
+                    step={0.01}
+                    value={overdrive}
+                    onChange={ev => {
+                      updateModColorOverdrive(
+                        elementId,
+                        Number(ev.target.value)
+                      );
+                    }}
+                  />
+                </Cell>
+              );
+            })}
           </Row>
           <Spacer size={UNIT * 4} />
         </React.Suspense>
@@ -116,7 +140,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   toggleModForSong: actions.toggleModForSong,
   updateModColor: actions.updateModColor,
-  updateModColorIntensity: actions.updateModColorIntensity,
+  updateModColorOverdrive: actions.updateModColorOverdrive,
 };
 
 export default connect(

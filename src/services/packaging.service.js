@@ -156,26 +156,32 @@ export function createInfoContent(song, meta = { version: 2 }) {
     const enabledCustomColors = get(song, 'modSettings.customColors.isEnabled');
     if (enabledCustomColors) {
       const colors = song.modSettings.customColors;
+
       const colorData = {
         _colorLeft: formatColorForMods(
+          'colorLeft',
           colors.colorLeft,
-          colors.colorLeftIntensity
+          colors.colorLeftOverdrive
         ),
         _colorRight: formatColorForMods(
+          'colorRight',
           colors.colorRight,
-          colors.colorRightIntensity
+          colors.colorRightOverdrive
         ),
         _envColorLeft: formatColorForMods(
+          'envColorLeft',
           colors.envColorLeft,
-          colors.envColorLeftIntensity
+          colors.envColorLeftOverdrive
         ),
         _envColorRight: formatColorForMods(
+          'envColorRight',
           colors.envColorRight,
-          colors.envColorRightIntensity
+          colors.envColorRightOverdrive
         ),
         _obstacleColor: formatColorForMods(
+          'obstacleColor',
           colors.obstacleColor,
-          colors.obstacleColorIntensity
+          colors.obstacleColorOverdrive
         ),
       };
 

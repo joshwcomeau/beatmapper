@@ -29,15 +29,15 @@ interface ModSettings {
   customColors: {
     isEnabled: boolean;
     colorLeft: string;
-    colorLeftIntensity: number;
+    colorLeftOverdrive: number;
     colorRight: string;
-    colorRightIntensity: number;
+    colorRightOverdrive: number;
     envColorLeft: string;
-    envColorLeftIntensity: number;
+    envColorLeftOverdrive: number;
     envColorRight: string;
-    envColorRightIntensity: number;
+    envColorRightOverdrive: number;
     obstacleColor: string;
-    obstacleColorIntensity: number;
+    obstacleColorOverdrive: number;
   };
 }
 
@@ -95,15 +95,15 @@ const DEFAULT_MOD_SETTINGS = {
   customColors: {
     isEnabled: false,
     colorLeft: DEFAULT_RED,
-    colorLeftIntensity: 1,
+    colorLeftOverdrive: 0,
     colorRight: DEFAULT_BLUE,
-    colorRightIntensity: 1,
+    colorRightOverdrive: 0,
     envColorLeft: DEFAULT_RED,
-    envColorLeftIntensity: 1,
+    envColorLeftOverdrive: 0,
     envColorRight: DEFAULT_BLUE,
-    envColorRightIntensity: 1,
+    envColorRightOverdrive: 0,
     obstacleColor: DEFAULT_RED,
-    obstacleColorIntensity: 1,
+    obstacleColorOverdrive: 0,
   },
   mappingExtensions: {
     isEnabled: false,
@@ -405,10 +405,10 @@ export default function songsReducer(state: State = initialState, action: any) {
       });
     }
 
-    case 'UPDATE_MOD_COLOR_INTENSITY': {
-      const { element, intensity } = action;
+    case 'UPDATE_MOD_COLOR_OVERDRIVE': {
+      const { element, overdrive } = action;
 
-      const elementIntensityKey = `${element}Intensity`;
+      const elementOverdriveKey = `${element}Overdrive`;
 
       return produce(state, (draftState: State) => {
         const song = grabSelectedSong(draftState);
@@ -422,7 +422,7 @@ export default function songsReducer(state: State = initialState, action: any) {
         }
 
         // @ts-ignore
-        song.modSettings.customColors[elementIntensityKey] = intensity;
+        song.modSettings.customColors[elementOverdriveKey] = overdrive;
       });
     }
 
