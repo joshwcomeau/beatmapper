@@ -195,6 +195,16 @@ export default function createHistoryMiddleware() {
       }
 
       case 'REDO_EVENTS': {
+        const state = store.getState();
+
+        const presentEvents = getEvents(state);
+        const futureEvents = getFutureEvents(state);
+
+        switchEventPagesIfNecessary(presentEvents, futureEvents, store);
+
+        next(action);
+
+        break;
       }
 
       default:
