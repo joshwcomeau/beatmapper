@@ -67,6 +67,7 @@ const ColorPreviewBorder = styled.div`
   border-radius: 50%;
   border: ${BORDER_WIDTH}px solid ${COLORS.blueGray[1000]};
   opacity: 0.25;
+  pointer-events: none;
 `;
 
 const ColorPreviewGlow = styled.div`

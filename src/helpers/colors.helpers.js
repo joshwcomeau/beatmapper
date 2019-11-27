@@ -75,8 +75,8 @@ export const getColorForItem = (item, song) => {
 const OVERDRIVE_MAX_FOR_ELEMENT = {
   colorLeft: 4,
   colorRight: 4,
-  envColorLeft: 3,
-  envColorRight: 3,
+  envColorLeft: 2,
+  envColorRight: 2,
   obstacleColor: 10,
 };
 
