@@ -2,10 +2,10 @@ import { createSelector } from 'reselect';
 import undoable, { includeAction, groupByActionTypes } from 'redux-undo';
 import produce from 'immer';
 
-import { flatten } from '../../utils';
 import { EVENTS_VIEW, EVENT_TRACKS } from '../../constants';
 import { nudgeEvents } from '../../helpers/events.helpers';
 import { getStartAndEndBeat } from '../editor.reducer';
+import { flatten } from '../../utils';
 
 const createInitialState = () => ({
   // Creates a `tracks` mapping where each track ID is given an empty array.
@@ -515,6 +515,25 @@ const filterEventsBeforeBeat = (tracks, trackId, beforeBeat) => {
 export const getTracks = state =>
   state.editorEntities.eventsView.present.tracks;
 
+const getEventsView = state => state.editorEntities.eventsView;
+
+const createHistoryGetter = set =>
+  createSelector(getEventsView, eventsView => {
+    const snapshots = eventsView[set];
+
+    const mostRecentSnapshot = snapshots[snapshots.length - 1];
+
+    const events = flatten(Object.values(mostRecentSnapshot.tracks));
+
+    return events;
+  });
+
+export const getEvents = createSelector(getTracks, tracks =>
+  flatten(Object.values(tracks))
+);
+export const getPastEvents = createHistoryGetter('past');
+export const getFutureEvents = createHistoryGetter('future');
+
 export const makeGetEventsForTrack = trackId =>
   createSelector(
     getStartAndEndBeat,
@@ -538,33 +557,25 @@ export const getEventForTrackAtBeat = (state, trackId, startBeat) => {
 };
 
 export const makeGetInitialTrackLightingColorType = trackId =>
-  createSelector(
-    getStartAndEndBeat,
-    getTracks,
-    ({ startBeat }, tracks) => {
-      const eventsInWindow = filterEventsBeforeBeat(tracks, trackId, startBeat);
-      const lastEvent = eventsInWindow[eventsInWindow.length - 1];
+  createSelector(getStartAndEndBeat, getTracks, ({ startBeat }, tracks) => {
+    const eventsInWindow = filterEventsBeforeBeat(tracks, trackId, startBeat);
+    const lastEvent = eventsInWindow[eventsInWindow.length - 1];
 
-      if (!lastEvent) {
-        return null;
-      }
-
-      const isLastEventOn =
-        lastEvent.type === 'on' || lastEvent.type === 'flash';
-
-      return isLastEventOn ? lastEvent.colorType : null;
+    if (!lastEvent) {
+      return null;
     }
-  );
 
-export const getAllEventsAsArray = createSelector(
-  getTracks,
-  tracks => {
-    const flatEventsArray = flatten(Object.values(tracks));
-    // Sort the array so that events aren't grouped by track, but instead are
-    // wholly chronological
-    return flatEventsArray.sort((a, b) => a.beatNum - b.beatNum);
-  }
-);
+    const isLastEventOn = lastEvent.type === 'on' || lastEvent.type === 'flash';
+
+    return isLastEventOn ? lastEvent.colorType : null;
+  });
+
+export const getAllEventsAsArray = createSelector(getTracks, tracks => {
+  const flatEventsArray = flatten(Object.values(tracks));
+  // Sort the array so that events aren't grouped by track, but instead are
+  // wholly chronological
+  return flatEventsArray.sort((a, b) => a.beatNum - b.beatNum);
+});
 
 export const getSelectedEvents = state => {
   const allEvents = getAllEventsAsArray(state);

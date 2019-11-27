@@ -18,10 +18,18 @@ import {
   getFutureObstacles,
 } from '../reducers/editor-entities.reducer/notes-view.reducer';
 import {
+  getEvents,
+  getPastEvents,
+  getFutureEvents,
+} from '../reducers/editor-entities.reducer/events-view.reducer';
+import { getStartAndEndBeat } from '../reducers/editor.reducer';
+
+import {
   getCursorPositionInBeats,
   getBeatDepth,
 } from '../reducers/navigation.reducer';
 import { getGraphicsLevel } from '../reducers/user.reducer';
+import { findUniquesWithinArrays } from '../utils';
 
 const jumpToEarliestNote = (
   earlierNotes,
@@ -90,13 +98,35 @@ const jumpToEarliestNote = (
       ? earliestEntity._time
       : earliestEntity.beatStart;
 
-  console.log({ earliestEntity, entityTime });
-
   const isNoteVisible = entityTime > closeLimit && entityTime < farLimit;
 
   if (!isNoteVisible) {
     store.dispatch(jumpToBeat(entityTime, true, true));
   }
+};
+
+const switchEventPagesIfNecessary = (earlierEvents, currentEvents, store) => {
+  const relevantEvents = findUniquesWithinArrays(earlierEvents, currentEvents);
+  const { startBeat, endBeat } = getStartAndEndBeat(store.getState());
+
+  const someItemsWithinWindow = relevantEvents.some(event => {
+    return event.beatNum >= startBeat && event.beatNum < endBeat;
+  });
+
+  if (someItemsWithinWindow) {
+    return;
+  }
+
+  const earliestBeatOutOfWindow = relevantEvents.find(event => {
+    return event.beatNum < startBeat || event.beatNum >= endBeat;
+  });
+
+  // Should be impossible
+  if (!earliestBeatOutOfWindow) {
+    return;
+  }
+
+  store.dispatch(jumpToBeat(earliestBeatOutOfWindow.beatNum, true, true));
 };
 
 export default function createHistoryMiddleware() {
@@ -149,6 +179,22 @@ export default function createHistoryMiddleware() {
         next(action);
 
         break;
+      }
+
+      case 'UNDO_EVENTS': {
+        const state = store.getState();
+
+        const pastEvents = getPastEvents(state);
+        const presentEvents = getEvents(state);
+
+        switchEventPagesIfNecessary(pastEvents, presentEvents, store);
+
+        next(action);
+
+        break;
+      }
+
+      case 'REDO_EVENTS': {
       }
 
       default:

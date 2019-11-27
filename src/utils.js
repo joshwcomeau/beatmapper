@@ -189,6 +189,23 @@ export const toggleInArray = (arr, item) =>
 export const mergeUnique = (arr1, arr2) =>
   arr1.concat(arr2.filter(item => arr1.indexOf(item) === -1));
 
+export const findUniquesWithinArrays = (arr1, arr2) => {
+  const uniques = [];
+
+  arr1.forEach(item => {
+    if (!arr2.includes(item)) {
+      uniques.push(item);
+    }
+  });
+  arr2.forEach(item => {
+    if (!arr1.includes(item)) {
+      uniques.push(item);
+    }
+  });
+
+  return uniques;
+};
+
 export const findRight = (arr, predicate) =>
   arr
     .slice()
