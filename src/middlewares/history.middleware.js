@@ -38,43 +38,19 @@ const jumpToEarliestNote = (
   laterObstacles,
   store
 ) => {
-  const notesAboutToBeAdded = earlierNotes.filter(note => {
-    return !laterNotes.find(laterNote => {
-      return note === laterNote;
-    });
-  });
-  const notesAboutToBeRemoved = laterNotes.filter(note => {
-    return !earlierNotes.find(earlierNote => {
-      return note === earlierNote;
-    });
-  });
+  const relevantNotes = findUniquesWithinArrays(earlierNotes, laterNotes);
+  const relevantObstacles = findUniquesWithinArrays(
+    earlierObstacles,
+    laterObstacles
+  );
 
-  const obstaclesAboutToBeAdded = earlierObstacles.filter(obstacle => {
-    return !laterObstacles.find(laterObstacle => {
-      return obstacle === laterObstacle;
-    });
-  });
-  const obstaclesAboutToBeRemoved = laterObstacles.filter(obstacle => {
-    return !earlierObstacles.find(earlierObstacle => {
-      return obstacle === earlierObstacle;
-    });
-  });
-
-  const isTweakingNotes =
-    notesAboutToBeAdded.length || notesAboutToBeRemoved.length;
-  const isTweakingObstacles =
-    obstaclesAboutToBeAdded.length || obstaclesAboutToBeRemoved.length;
-
-  if (!isTweakingNotes && !isTweakingObstacles) {
+  if (relevantNotes.length === 0 && relevantObstacles.length === 0) {
     return;
   }
 
-  const relevantEntities = [
-    notesAboutToBeAdded,
-    notesAboutToBeRemoved,
-    obstaclesAboutToBeAdded,
-    obstaclesAboutToBeRemoved,
-  ].find(entity => entity.length > 0);
+  const relevantEntities = [relevantNotes, relevantObstacles].find(
+    entity => entity.length > 0
+  );
 
   // For now, assume that the first entity is the earliest.
   // Might make sense to sort them, so that if I delete a selected
@@ -98,9 +74,9 @@ const jumpToEarliestNote = (
       ? earliestEntity._time
       : earliestEntity.beatStart;
 
-  const isNoteVisible = entityTime > closeLimit && entityTime < farLimit;
+  const isEntityVisible = entityTime > closeLimit && entityTime < farLimit;
 
-  if (!isNoteVisible) {
+  if (!isEntityVisible) {
     store.dispatch(jumpToBeat(entityTime, true, true));
   }
 };
