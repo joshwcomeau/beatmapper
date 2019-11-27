@@ -408,8 +408,6 @@ export default function songsReducer(state: State = initialState, action: any) {
     case 'UPDATE_MOD_COLOR_INTENSITY': {
       const { element, intensity } = action;
 
-      console.log(element, intensity);
-
       const elementIntensityKey = `${element}Intensity`;
 
       return produce(state, (draftState: State) => {
@@ -423,7 +421,6 @@ export default function songsReducer(state: State = initialState, action: any) {
           song.modSettings.customColors = DEFAULT_MOD_SETTINGS.customColors;
         }
 
-        console.log(elementIntensityKey, intensity, song.modSettings);
         // @ts-ignore
         song.modSettings.customColors[elementIntensityKey] = intensity;
       });

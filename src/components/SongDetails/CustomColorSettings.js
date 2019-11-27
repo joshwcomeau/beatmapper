@@ -80,8 +80,7 @@ const CustomColorSettings = ({
                   step={0.1}
                   value={customColors[elementId + 'Intensity']}
                   onChange={ev => {
-                    console.log('change!', ev.target.value);
-                    updateModColorIntensity(elementId, ev.target.value);
+                    updateModColorIntensity(elementId, Number(ev.target.value));
                   }}
                 />
               </Cell>

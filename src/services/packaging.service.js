@@ -157,11 +157,26 @@ export function createInfoContent(song, meta = { version: 2 }) {
     if (enabledCustomColors) {
       const colors = song.modSettings.customColors;
       const colorData = {
-        _colorLeft: formatColorForMods(colors.colorLeft),
-        _colorRight: formatColorForMods(colors.colorRight),
-        _envColorLeft: formatColorForMods(colors.envColorLeft),
-        _envColorRight: formatColorForMods(colors.envColorRight),
-        _obstacleColor: formatColorForMods(colors.obstacleColor),
+        _colorLeft: formatColorForMods(
+          colors.colorLeft,
+          colors.colorLeftIntensity
+        ),
+        _colorRight: formatColorForMods(
+          colors.colorRight,
+          colors.colorRightIntensity
+        ),
+        _envColorLeft: formatColorForMods(
+          colors.envColorLeft,
+          colors.envColorLeftIntensity
+        ),
+        _envColorRight: formatColorForMods(
+          colors.envColorRight,
+          colors.envColorRightIntensity
+        ),
+        _obstacleColor: formatColorForMods(
+          colors.obstacleColor,
+          colors.obstacleColorIntensity
+        ),
       };
 
       contents._difficultyBeatmapSets.forEach(set => {

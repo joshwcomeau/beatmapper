@@ -71,13 +71,13 @@ export const getColorForItem = (item, song) => {
   }
 };
 
-export const formatColorForMods = hex => {
+export const formatColorForMods = (hex, intensity) => {
   const rgb = Color(hex).rgb().color;
 
   return {
-    r: rgb[0] / 255,
-    g: rgb[1] / 255,
-    b: rgb[2] / 255,
+    r: (rgb[0] / 255) * intensity,
+    g: (rgb[1] / 255) * intensity,
+    b: (rgb[2] / 255) * intensity,
   };
 };
 
