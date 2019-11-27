@@ -10,8 +10,25 @@ import CenteredSpinner from '../CenteredSpinner';
 import LabeledCheckbox from '../LabeledCheckbox';
 import Heading from '../Heading';
 import Spacer from '../Spacer';
+import MiniSlider from '../MiniSlider';
 
 const ColorPicker = React.lazy(() => import('../ColorPicker'));
+
+const TRACK_IDS = [
+  'colorLeft',
+  'colorRight',
+  'envColorLeft',
+  'envColorRight',
+  'obstacleColor',
+];
+
+const TRACK_LABELS = {
+  colorLeft: 'Left Saber',
+  colorRight: 'Right Saber',
+  envColorLeft: 'Environment 1',
+  envColorRight: 'Environment 2',
+  obstacleColor: 'Obstacles',
+};
 
 const CustomColorSettings = ({ song, toggleModForSong, updateModColor }) => {
   if (!song || !song.modSettings) {
@@ -38,51 +55,21 @@ const CustomColorSettings = ({ song, toggleModForSong, updateModColor }) => {
         <React.Suspense fallback={<CenteredSpinner />}>
           <Spacer size={UNIT * 4} />
           <Row>
-            <Cell>
-              <ColorPicker
-                colorId="colorLeft"
-                color={colors.colorLeft}
-                updateColor={updateModColor}
-              />
-              <Spacer size={UNIT * 2} />
-              <Heading size={3}>Left Saber</Heading>
-            </Cell>
-            <Cell>
-              <ColorPicker
-                colorId="colorRight"
-                color={colors.colorRight}
-                updateColor={updateModColor}
-              />
-              <Spacer size={UNIT * 2} />
-              <Heading size={3}>Right Saber</Heading>
-            </Cell>
-            <Cell>
-              <ColorPicker
-                colorId="envColorLeft"
-                color={colors.envColorLeft}
-                updateColor={updateModColor}
-              />
-              <Spacer size={UNIT * 2} />
-              <Heading size={3}>Environment 1</Heading>
-            </Cell>
-            <Cell>
-              <ColorPicker
-                colorId="envColorRight"
-                color={colors.envColorRight}
-                updateColor={updateModColor}
-              />
-              <Spacer size={UNIT * 2} />
-              <Heading size={3}>Environment 2</Heading>
-            </Cell>
-            <Cell>
-              <ColorPicker
-                colorId="obstacleColor"
-                color={colors.obstacleColor}
-                updateColor={updateModColor}
-              />
-              <Spacer size={UNIT * 2} />
-              <Heading size={3}>Obstacles</Heading>
-            </Cell>
+            {TRACK_IDS.map(trackId => (
+              <Cell key={trackId}>
+                <ColorPicker
+                  colorId={trackId}
+                  color={colors[trackId]}
+                  updateColor={updateModColor}
+                />
+                <Spacer size={UNIT * 2} />
+                <Heading size={3}>{TRACK_LABELS[trackId]}</Heading>
+                <Spacer size={UNIT * 3} />
+                <Heading size={4}>Overdrive:</Heading>
+                <Spacer size={UNIT * 1} />
+                <MiniSlider width={50} height={16} min={1} max={10} value={2} />
+              </Cell>
+            ))}
           </Row>
           <Spacer size={UNIT * 4} />
         </React.Suspense>

@@ -774,6 +774,11 @@ export const updateModColor = (element, color) => ({
   element,
   color,
 });
+export const updateModColorIntensity = (element, intensity) => ({
+  type: 'UPDATE_MOD_INTENSITY',
+  element,
+  intensity,
+});
 
 export const updateGrid = (numCols, numRows, colWidth, rowHeight) => ({
   type: 'UPDATE_GRID',

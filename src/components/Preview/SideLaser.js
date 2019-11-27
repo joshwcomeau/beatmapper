@@ -96,7 +96,7 @@ const SideLaser = ({
     return (
       <LaserBeam
         key={index}
-        color={color}
+        color={'rgba(255, 500, 0)'}
         position={position}
         rotation={rotation}
         lastEventId={eventId}
