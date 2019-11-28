@@ -85,7 +85,31 @@ export function createInfoContent(song, meta = { version: 2 }) {
       })),
     };
   } else if (meta.version === 2) {
-    const beatmapSets = [];
+    const beatmapSets = [
+      {
+        _beatmapCharacteristicName: 'Standard',
+        _difficultyBeatmaps: difficulties.map(difficulty => {
+          const difficultyData = {
+            _difficulty: difficulty.id,
+            _difficultyRank: getDifficultyRankForDifficulty(difficulty),
+            _beatmapFilename: `${difficulty.id}.dat`,
+            _noteJumpMovementSpeed: difficulty.noteJumpSpeed,
+            _noteJumpStartBeatOffset: difficulty.startBeatOffset,
+            _customData: {
+              _editorOffset: offset,
+              _requirements: requirements,
+            },
+          };
+
+          if (difficulty.customLabel) {
+            difficultyData._customData._difficultyLabel =
+              difficulty.customLabel;
+          }
+
+          return difficultyData;
+        }),
+      },
+    ];
 
     if (song.enabledLightshow) {
       beatmapSets.push({
@@ -106,29 +130,6 @@ export function createInfoContent(song, meta = { version: 2 }) {
         ],
       });
     }
-
-    beatmapSets.push({
-      _beatmapCharacteristicName: 'Standard',
-      _difficultyBeatmaps: difficulties.map(difficulty => {
-        const difficultyData = {
-          _difficulty: difficulty.id,
-          _difficultyRank: getDifficultyRankForDifficulty(difficulty),
-          _beatmapFilename: `${difficulty.id}.dat`,
-          _noteJumpMovementSpeed: difficulty.noteJumpSpeed,
-          _noteJumpStartBeatOffset: difficulty.startBeatOffset,
-          _customData: {
-            _editorOffset: offset,
-            _requirements: requirements,
-          },
-        };
-
-        if (difficulty.customLabel) {
-          difficultyData._customData._difficultyLabel = difficulty.customLabel;
-        }
-
-        return difficultyData;
-      }),
-    });
 
     contents = {
       _version: '2.0.0',
