@@ -774,6 +774,11 @@ export const updateModColor = (element, color) => ({
   element,
   color,
 });
+export const updateModColorOverdrive = (element, overdrive) => ({
+  type: 'UPDATE_MOD_COLOR_OVERDRIVE',
+  element,
+  overdrive,
+});
 
 export const updateGrid = (numCols, numRows, colWidth, rowHeight) => ({
   type: 'UPDATE_GRID',

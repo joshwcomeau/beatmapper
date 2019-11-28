@@ -29,10 +29,15 @@ interface ModSettings {
   customColors: {
     isEnabled: boolean;
     colorLeft: string;
+    colorLeftOverdrive: number;
     colorRight: string;
+    colorRightOverdrive: number;
     envColorLeft: string;
+    envColorLeftOverdrive: number;
     envColorRight: string;
+    envColorRightOverdrive: number;
     obstacleColor: string;
+    obstacleColorOverdrive: number;
   };
 }
 
@@ -90,15 +95,15 @@ const DEFAULT_MOD_SETTINGS = {
   customColors: {
     isEnabled: false,
     colorLeft: DEFAULT_RED,
-    colorLeftIntensity: 1,
+    colorLeftOverdrive: 0,
     colorRight: DEFAULT_BLUE,
-    colorRightIntensity: 1,
+    colorRightOverdrive: 0,
     envColorLeft: DEFAULT_RED,
-    envColorLeftIntensity: 1,
+    envColorLeftOverdrive: 0,
     envColorRight: DEFAULT_BLUE,
-    envColorRightIntensity: 1,
+    envColorRightOverdrive: 0,
     obstacleColor: DEFAULT_RED,
-    obstacleColorIntensity: 1,
+    obstacleColorOverdrive: 0,
   },
   mappingExtensions: {
     isEnabled: false,
@@ -400,6 +405,27 @@ export default function songsReducer(state: State = initialState, action: any) {
       });
     }
 
+    case 'UPDATE_MOD_COLOR_OVERDRIVE': {
+      const { element, overdrive } = action;
+
+      const elementOverdriveKey = `${element}Overdrive`;
+
+      return produce(state, (draftState: State) => {
+        const song = grabSelectedSong(draftState);
+
+        if (!song) {
+          return;
+        }
+
+        if (!song.modSettings.customColors) {
+          song.modSettings.customColors = DEFAULT_MOD_SETTINGS.customColors;
+        }
+
+        // @ts-ignore
+        song.modSettings.customColors[elementOverdriveKey] = overdrive;
+      });
+    }
+
     case 'UPDATE_GRID': {
       const { numRows, numCols, colWidth, rowHeight } = action;
 
@@ -586,6 +612,22 @@ export const getEnabledLightshow = createSelector(
   getSelectedSong,
   song => {
     return song.enabledLightshow;
+  }
+);
+
+export const getCustomColors = createSelector(
+  getSelectedSong,
+  song => {
+    let colors = song.modSettings.customColors;
+
+    if (!colors) {
+      return DEFAULT_MOD_SETTINGS.customColors;
+    }
+
+    return {
+      ...DEFAULT_MOD_SETTINGS.customColors,
+      ...colors,
+    };
   }
 );
 

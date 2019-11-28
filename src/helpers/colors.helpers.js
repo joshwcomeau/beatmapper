@@ -2,6 +2,7 @@ import get from 'lodash.get';
 import Color from 'color';
 
 import { COLORS } from '../constants';
+import { clamp, normalize } from '../utils';
 
 export const DEFAULT_RED = '#f21212';
 export const DEFAULT_BLUE = '#006cff';
@@ -71,21 +72,46 @@ export const getColorForItem = (item, song) => {
   }
 };
 
-export const formatColorForMods = hex => {
+const OVERDRIVE_MAX_FOR_ELEMENT = {
+  colorLeft: 4,
+  colorRight: 4,
+  envColorLeft: 2,
+  envColorRight: 2,
+  obstacleColor: 10,
+};
+
+export const formatColorForMods = (element, hex, overdrive) => {
+  // For overdrive: every element ranges from 0 (no overdrive) to 1 (full).
+  // Different elements are affected by different amounts, though.
+  // left/right environment colors range from 1 to 3, whereas obstacles range
+  // from 1 to 10.
+  const overdriveMultiple = normalize(
+    overdrive,
+    0,
+    1,
+    1,
+    OVERDRIVE_MAX_FOR_ELEMENT[element]
+  );
+
   const rgb = Color(hex).rgb().color;
 
   return {
-    r: rgb[0] / 255,
-    g: rgb[1] / 255,
-    b: rgb[2] / 255,
+    r: (rgb[0] / 255) * overdriveMultiple,
+    g: (rgb[1] / 255) * overdriveMultiple,
+    b: (rgb[2] / 255) * overdriveMultiple,
   };
 };
 
+// Turn the imported color into a hex string
+// NOTE: This is NOT used for maps re-imported; we use _editorSettings
+// to store the hex values directly. This is done since we lose "overdrive"
+// information when we do it this way :(
+// This is only used when importing maps from other editors.
 export const formatColorFromImport = rgb => {
   const normalizedRgb = [
-    Math.round(rgb.r * 255),
-    Math.round(rgb.g * 255),
-    Math.round(rgb.b * 255),
+    clamp(Math.round(rgb.r * 255), 0, 255),
+    clamp(Math.round(rgb.g * 255), 0, 255),
+    clamp(Math.round(rgb.b * 255), 0, 255),
   ];
 
   return Color(normalizedRgb).hex();

@@ -19,6 +19,8 @@ const Row = styled.div`
 
 const Label = styled.label`
   cursor: pointer;
+  display: flex;
+  align-items: center;
 `;
 
 export default LabeledCheckbox;
