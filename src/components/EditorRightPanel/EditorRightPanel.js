@@ -9,6 +9,7 @@ import {
   getSelectedObstacles,
 } from '../../reducers/editor-entities.reducer/notes-view.reducer';
 import useOnChange from '../../hooks/use-on-change.hook';
+import { getSelectedSong, getMappingMode } from '../../reducers/songs.reducer';
 
 import NoteGrid from '../NoteGrid';
 import ItemGrid from '../ItemGrid';
@@ -17,7 +18,7 @@ import Spacer from '../Spacer';
 import Actions from './Actions';
 import SelectionInfo from './SelectionInfo';
 import GridConfig from './GridConfig';
-import { getSelectedSong } from '../../reducers/songs.reducer';
+import useOnKeydown from '../../hooks/use-on-keydown.hook';
 
 // HACK: This should be a constant somewhere, used to set bottom panel
 // height!
@@ -25,6 +26,7 @@ const bottomPanelHeight = 180;
 
 const EditorRightPanel = ({
   song,
+  mappingMode,
   numOfSelectedBlocks,
   numOfSelectedMines,
   numOfSelectedObstacles,
@@ -41,7 +43,17 @@ const EditorRightPanel = ({
       // switch to the selection panel
       setShowGridConfig(false);
     }
-  }, isAnythingSelected);
+  }, numOfSelectedBlocks + numOfSelectedMines + numOfSelectedObstacles);
+
+  useOnKeydown(
+    'KeyG',
+    () => {
+      if (mappingMode === 'mapping-extensions') {
+        setShowGridConfig(currentVal => !currentVal);
+      }
+    },
+    [mappingMode]
+  );
 
   if (showGridConfig) {
     panelContents = (
@@ -123,6 +135,7 @@ const mapStateToProps = state => {
 
   return {
     song: getSelectedSong(state),
+    mappingMode: getMappingMode(state),
     numOfSelectedBlocks: selectedBlocks.length,
     numOfSelectedMines: selectedMines.length,
     numOfSelectedObstacles: selectedObstacles.length,
