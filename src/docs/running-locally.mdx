@@ -155,6 +155,8 @@ Here's how shortcuts are organized in Beatmapper:
 - Shortcuts exclusive to the "Notes view" are registered in `src/components/NotesEditor/KeyboardShortcuts.js`
 - Shortcuts exclusive to the "Events view" are registered in `src/components/Events/KeyboardShortcuts.js`
 
+These 3 files contain _almost_ all of the keyboard shortcuts. There are some exceptions: for example, moving around in 3D space in the notes view happens in [src/controls.js](https://github.com/joshwcomeau/beatmapper/blob/master/src/controls.js#L30).
+
 > If you're not a Javascript developer, the contents of these files might look pretty intimidating. Happily, we won't be making any major changes; our tweaks for updating keyboard shortcuts will be pretty minimal.
 
 We'll need a text editor to modify these files. In a pinch, you can use Notepad, but I'd recommend using [VS Code](https://code.visualstudio.com/) - it's cross-platform, free, and pretty great.
