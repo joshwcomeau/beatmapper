@@ -8,6 +8,7 @@ import {
   getSelectedMines,
   getSelectedObstacles,
 } from '../../reducers/editor-entities.reducer/notes-view.reducer';
+import useOnChange from '../../hooks/use-on-change.hook';
 
 import NoteGrid from '../NoteGrid';
 import ItemGrid from '../ItemGrid';
@@ -33,6 +34,14 @@ const EditorRightPanel = ({
   let panelContents;
 
   const [showGridConfig, setShowGridConfig] = React.useState(false);
+
+  useOnChange(() => {
+    if (showGridConfig && isAnythingSelected) {
+      // If the user selects something while the grid panel is open,
+      // switch to the selection panel
+      setShowGridConfig(false);
+    }
+  }, isAnythingSelected);
 
   if (showGridConfig) {
     panelContents = (
