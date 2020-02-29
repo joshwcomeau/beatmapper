@@ -24,6 +24,7 @@ import {
   convertEventsToRedux,
   convertEventsToExportableJson,
 } from '../helpers/events.helpers';
+import { convertFileToArrayBuffer } from '../helpers/file.helpers';
 import { convertBookmarksToRedux } from '../helpers/bookmarks.helpers';
 import { clamp, roundToNearest } from '../utils';
 import {
@@ -45,6 +46,7 @@ import {
   getPlaybackRate,
   getCursorPositionInBeats,
 } from '../reducers/navigation.reducer';
+import AudioSample from '../services/audio.service';
 import {
   createBeatmapContents,
   createInfoContent,
@@ -68,7 +70,7 @@ export default function createSongMiddleware() {
 
   const ticker = new Sfx();
 
-  let audioElem;
+  let audioSample;
 
   return store => next => async action => {
     switch (action.type) {
@@ -159,16 +161,12 @@ export default function createSongMiddleware() {
         }
 
         const file = await getFile(song.songFilename);
+        const arrayBuffer = await convertFileToArrayBuffer(file);
 
-        // Create an <audio> element, which is the mechanism we use for
-        // playing the track when the user is editing it, keeping the time,
-        // etc.
-        const fileBlobUrl = URL.createObjectURL(file);
-        audioElem = createHtmlAudioElement(fileBlobUrl);
-        audioElem.volume = volume;
-        audioElem.playbackRate = playbackRate;
+        audioSample = new AudioSample(volume, playbackRate);
+        await audioSample.load(arrayBuffer);
 
-        stopAndRewindAudio(audioElem, song.offset);
+        audioSample.setCurrentTime(song.offset / 1000);
 
         const waveform = await generateWaveformForSongFile(file);
 
@@ -266,7 +264,7 @@ export default function createSongMiddleware() {
       case 'START_PLAYING': {
         next({ type: 'START_PLAYING', timeElapsed: 0 });
 
-        audioElem.play();
+        audioSample.play();
 
         // Keep track of the last beat we saw, so we know which chunk of time
         // the current tick is accessing (by looking at the delta between last
@@ -274,7 +272,7 @@ export default function createSongMiddleware() {
         let lastBeat = null;
 
         function tick() {
-          const currentTime = audioElem.currentTime * 1000;
+          const currentTime = audioSample.getCurrentTime() * 1000;
 
           const state = store.getState();
           const song = getSelectedSong(state);
@@ -311,7 +309,7 @@ export default function createSongMiddleware() {
 
           if (typeof commandeeredCursorPosition === 'number') {
             next(adjustCursorPosition(commandeeredCursorPosition));
-            audioElem.currentTime = commandeeredCursorPosition / 1000;
+            audioSample.setCurrentTime(commandeeredCursorPosition / 1000);
           } else {
             next({
               type: 'TICK',
@@ -346,7 +344,7 @@ export default function createSongMiddleware() {
         // Dispatch this new cursor position, but also seek to this place
         // in the audio, so that it is in sync.
         next(adjustCursorPosition(roundedCursorPosition));
-        audioElem.currentTime = roundedCursorPosition / 1000;
+        audioSample.setCurrentTime(roundedCursorPosition / 1000);
 
         break;
       }
@@ -358,13 +356,15 @@ export default function createSongMiddleware() {
         // We should reload it, so that the audio is properly updated.
         const file = await getFile(action.songFilename);
 
-        // Create an <audio> element, which is the mechanism we use for
-        // playing the track when the user is editing it, keeping the time,
-        // etc.
-        const fileBlobUrl = URL.createObjectURL(file);
+        const arrayBuffer = await convertFileToArrayBuffer(file);
 
-        audioElem.src = fileBlobUrl;
-        stopAndRewindAudio(audioElem, action.offset);
+        audioSample = new AudioSample(
+          audioSample.gain,
+          audioSample.playbackRate
+        );
+        await audioSample.load(arrayBuffer);
+
+        audioSample.setCurrentTime(action.offset / 1000);
 
         const waveform = await generateWaveformForSongFile(file);
         next(reloadWaveform(waveform));
@@ -382,7 +382,7 @@ export default function createSongMiddleware() {
           song.offset;
 
         next(adjustCursorPosition(newCursorPosition));
-        audioElem.currentTime = newCursorPosition / 1000;
+        audioSample.setCurrentTime(newCursorPosition / 1000);
 
         break;
       }
@@ -394,8 +394,8 @@ export default function createSongMiddleware() {
           convertBeatsToMilliseconds(action.start, song.bpm) + song.offset;
 
         next(adjustCursorPosition(newCursorPosition));
-        audioElem.currentTime = newCursorPosition / 1000;
-        audioElem.pause();
+        audioSample.setCurrentTime(newCursorPosition / 1000);
+        audioSample.pause();
 
         next(action);
 
@@ -411,10 +411,10 @@ export default function createSongMiddleware() {
           convertBeatsToMilliseconds(action.beatNum, song.bpm) + song.offset;
 
         next(adjustCursorPosition(newCursorPosition));
-        audioElem.currentTime = newCursorPosition / 1000;
+        audioSample.setCurrentTime(newCursorPosition / 1000);
 
         if (action.pauseTrack) {
-          audioElem.pause();
+          audioSample.pause();
         }
 
         break;
@@ -467,7 +467,7 @@ export default function createSongMiddleware() {
         );
 
         next(adjustCursorPosition(newCursorPosition));
-        audioElem.currentTime = newCursorPosition / 1000;
+        audioSample.setCurrentTime(newCursorPosition / 1000);
 
         break;
       }
@@ -476,7 +476,7 @@ export default function createSongMiddleware() {
         // If the song isn't loaded yet, ignore this action.
         // This can happen if the user starts scrolling before the song has
         // loaded.
-        if (!audioElem) {
+        if (!audioSample) {
           return;
         }
 
@@ -504,7 +504,7 @@ export default function createSongMiddleware() {
           state.navigation.duration
         );
 
-        audioElem.currentTime = newCursorPosition / 1000;
+        audioSample.setCurrentTime(newCursorPosition / 1000);
 
         next(adjustCursorPosition(newCursorPosition));
 
@@ -515,8 +515,8 @@ export default function createSongMiddleware() {
         next(action);
 
         window.cancelAnimationFrame(animationFrameId);
-        audioElem.pause();
-        audioElem.currentTime = 0;
+        audioSample.pause();
+        audioSample.setCurrentTime(0);
         break;
       }
 
@@ -530,7 +530,7 @@ export default function createSongMiddleware() {
         const song = getSelectedSong(state);
 
         window.cancelAnimationFrame(animationFrameId);
-        audioElem.pause();
+        audioSample.pause();
 
         const roundedCursorPosition = snapToNearestBeat(
           state.navigation.cursorPosition,
@@ -541,7 +541,7 @@ export default function createSongMiddleware() {
         // Dispatch this new cursor position, but also seek to this place
         // in the audio, so that it is in sync.
         next(adjustCursorPosition(roundedCursorPosition));
-        audioElem.currentTime = roundedCursorPosition / 1000;
+        audioSample.setCurrentTime(roundedCursorPosition / 1000);
 
         break;
       }
@@ -551,10 +551,10 @@ export default function createSongMiddleware() {
 
         window.cancelAnimationFrame(animationFrameId);
 
-        if (audioElem) {
-          audioElem.pause();
+        if (audioSample) {
+          audioSample.pause();
 
-          stopAndRewindAudio(audioElem, action.offset);
+          stopAndRewindAudio(audioSample, action.offset);
         }
 
         break;
@@ -562,7 +562,7 @@ export default function createSongMiddleware() {
 
       case 'SKIP_TO_START': {
         next(action);
-        audioElem.currentTime = action.offset / 1000;
+        audioSample.setCurrentTime(action.offset / 1000);
         break;
       }
 
@@ -584,20 +584,20 @@ export default function createSongMiddleware() {
           song.offset;
 
         next(adjustCursorPosition(newCursorPosition));
-        audioElem.currentTime = newCursorPosition / 1000;
+        audioSample.setCurrentTime(newCursorPosition / 1000);
 
         break;
       }
 
       case 'UPDATE_VOLUME': {
         next(action);
-        audioElem.volume = action.volume;
+        audioSample.changeVolume(action.volume);
         break;
       }
 
       case 'UPDATE_PLAYBACK_SPEED': {
         next(action);
-        audioElem.playbackRate = action.playbackRate;
+        audioSample.changePlaybackRate(action.playbackRate);
         break;
       }
 

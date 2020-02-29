@@ -17,8 +17,8 @@ import { floorToNearest } from '../utils';
 
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 
-export const stopAndRewindAudio = (audioElem, offset) => {
-  audioElem.currentTime = (offset || 0) / 1000;
+export const stopAndRewindAudio = (audioSample, offset) => {
+  audioSample.setCurrentTime((offset || 0) / 1000);
 };
 
 export const generateWaveformForSongFile = async file => {
