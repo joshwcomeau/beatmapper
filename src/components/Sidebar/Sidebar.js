@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import { home } from 'react-icons-kit/feather/home';
@@ -12,7 +11,6 @@ import { settings } from 'react-icons-kit/feather/settings';
 import { play } from 'react-icons-kit/feather/play';
 
 import { COLORS, UNIT, SIDEBAR_WIDTH } from '../../constants';
-import * as actions from '../../actions';
 
 import SpacedChildren from '../SpacedChildren';
 import Spacer from '../Spacer';
@@ -123,8 +121,4 @@ const Divider = styled.div`
   border-bottom: 1px dotted rgba(255, 255, 255, 0.25);
 `;
 
-const mapDispatchToProps = {
-  leaveEditor: actions.leaveEditor,
-};
-
-export default withRouter(connect(null, mapDispatchToProps)(Sidebar));
+export default withRouter(Sidebar);

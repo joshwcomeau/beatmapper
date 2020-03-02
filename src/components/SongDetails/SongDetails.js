@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { Prompt } from 'react-router';
 
@@ -52,13 +52,15 @@ const ENVIRONMENT_DISPLAY_MAP = {
 };
 
 const SongDetails = ({
-  song,
   stopPlaying,
-  enabledFastWalls,
-  enabledLightshow,
   updateSongDetails,
   togglePropertyForSelectedSong,
 }) => {
+  const dispatch = useDispatch();
+  const song = useSelector(getSelectedSong);
+  const enabledFastWalls = useSelector(getEnabledFastWalls);
+  const enabledLightshow = useSelector(getEnabledLightshow);
+
   const [songData, setSongData] = React.useState(song);
   const [isDirty, setIsDirty] = React.useState(false);
   const [songFile, setSongFile] = React.useState(null);
@@ -88,7 +90,7 @@ const SongDetails = ({
     // In addition to seeming like a reasonable idea, it helps prevent any
     // weirdness around editing the audio file when it's in a non-zero
     // position.
-    stopPlaying(song.offset);
+    dispatch(actions.stopPlaying(song.offset));
 
     if (song.songFilename) {
       getFile(song.songFilename).then(initialSongFile => {
@@ -143,7 +145,7 @@ const SongDetails = ({
     }
 
     // Update our redux state
-    updateSongDetails(song.id, newSongObject);
+    dispatch(actions.updateSongDetails(song.id, newSongObject));
 
     // Back up our latest data!
     await saveInfoDat(
@@ -384,7 +386,9 @@ const SongDetails = ({
         <LabeledCheckbox
           id="enable-lightshow"
           checked={!!enabledLightshow}
-          onChange={() => togglePropertyForSelectedSong('enabledLightshow')}
+          onChange={() =>
+            dispatch(actions.togglePropertyForSelectedSong('enabledLightshow'))
+          }
         >
           Includes "Lightshow" difficulty{' '}
           <QuestionTooltip>
@@ -399,7 +403,9 @@ const SongDetails = ({
         <LabeledCheckbox
           id="enable-fast-walls"
           checked={!!enabledFastWalls}
-          onChange={() => togglePropertyForSelectedSong('enabledFastWalls')}
+          onChange={() =>
+            dispatch(actions.togglePropertyForSelectedSong('enabledFastWalls'))
+          }
         >
           Enable "fast walls"{' '}
           <QuestionTooltip>
@@ -468,21 +474,4 @@ const Center = styled.div`
   justify-content: center;
 `;
 
-const mapStateToProps = state => {
-  return {
-    song: getSelectedSong(state),
-    enabledFastWalls: getEnabledFastWalls(state),
-    enabledLightshow: getEnabledLightshow(state),
-  };
-};
-
-const mapDispatchToProps = {
-  updateSongDetails: actions.updateSongDetails,
-  stopPlaying: actions.stopPlaying,
-  togglePropertyForSelectedSong: actions.togglePropertyForSelectedSong,
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SongDetails);
+export default SongDetails;
