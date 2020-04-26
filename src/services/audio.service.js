@@ -36,7 +36,11 @@ class AudioSample {
 
   changePlaybackRate(playbackRate) {
     this.playbackRate = playbackRate;
-    this.source.playbackRate.value = this.playbackRate;
+
+    // Audio source might not yet be loaded
+    if (this.source) {
+      this.source.playbackRate.value = this.playbackRate;
+    }
   }
 
   load(arrayBuffer) {
