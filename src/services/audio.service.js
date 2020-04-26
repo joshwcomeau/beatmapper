@@ -17,6 +17,9 @@ class AudioSample {
     // we'll store the currentTime position that the audio started playing.
     this.startTime = null;
 
+    // If playback rate changes, we need track when for computation
+    this.playbackRateLastSetAt = null;
+
     // When we pause the song, we might be 55 seconds into its playback.
     // Store the number 55, so that we know where to resume from.
     // This is because there is no native "pause" functionality.
@@ -35,8 +38,23 @@ class AudioSample {
   }
 
   changePlaybackRate(playbackRate) {
+    // Every time that the playback rate changes,
+    // we first need to calculate how much elapsed with the old rate,
+    // offset the start time to compensate, and then start a new segment
+    const rateAdjustedElapsed = this.getRateAdjustedElapsed();
+    const realElapsed = this.context.currentTime - this.playbackRateLastSetAt;
+
+    // We have to shift the playback head pointer backwards or forwards,
+    // to make up for changes in playback rate
+    this.startTime = this.startTime + realElapsed - rateAdjustedElapsed;
+
+    this.playbackRateLastSetAt = this.context.currentTime;
     this.playbackRate = playbackRate;
-    this.source.playbackRate.value = this.playbackRate;
+
+    // Audio source might not yet be loaded
+    if (this.source) {
+      this.source.playbackRate.value = this.playbackRate;
+    }
   }
 
   load(arrayBuffer) {
@@ -58,6 +76,7 @@ class AudioSample {
   play() {
     // Keep track of when we started playing.
     this.startTime = this.context.currentTime - this.startOffset;
+    this.playbackRateLastSetAt = this.context.currentTime;
     this.isPlaying = true;
 
     this.source = this.context.createBufferSource();
@@ -84,7 +103,17 @@ class AudioSample {
   }
 
   getCurrentTime() {
-    return this.context.currentTime - this.startTime;
+    return (
+      this.getRateAdjustedElapsed() +
+      (this.playbackRateLastSetAt - this.startTime)
+    );
+  }
+
+  getRateAdjustedElapsed() {
+    return (
+      (this.context.currentTime - this.playbackRateLastSetAt) *
+      this.playbackRate
+    );
   }
 
   setCurrentTime(time) {
