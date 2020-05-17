@@ -12,6 +12,7 @@ import Paragraph from '../Paragraph';
 const OptionColumn = ({
   icon,
   title,
+  disabled,
   description,
   buttonText,
   handleClick,
@@ -24,7 +25,9 @@ const OptionColumn = ({
       <Spacer size={UNIT * 2} />
       <Description>{description}</Description>
       <Spacer size={UNIT * 4} />
-      <Button onClick={handleClick}>{buttonText}</Button>
+      <Button onClick={handleClick} disabled={disabled}>
+        {buttonText}
+      </Button>
     </Wrapper>
   );
 };

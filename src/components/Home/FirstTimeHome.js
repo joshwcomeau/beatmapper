@@ -6,6 +6,7 @@ import { filePlus } from 'react-icons-kit/feather/filePlus';
 import { download } from 'react-icons-kit/feather/download';
 import { box } from 'react-icons-kit/feather/box';
 
+import * as actions from '../../actions';
 import { COLORS, UNIT } from '../../constants';
 import useWindowDimensions from '../../hooks/use-window-dimensions.hook';
 import { getDemoSong } from '../../reducers/songs.reducer';
@@ -20,8 +21,10 @@ import OptionColumn from './OptionColumn';
 const WRAPPER_MAX_WIDTH = 850;
 const WRAPPER_PADDING = UNIT * 2;
 
-const FirstTimeHome = ({ setModal, demoSong, history }) => {
+const FirstTimeHome = ({ loadDemoMap, setModal, demoSong, history }) => {
   const { width: windowWidth } = useWindowDimensions();
+
+  const [isLoadingDemo, setIsLoadingDemo] = React.useState(false);
 
   const videoWidth = Math.min(WRAPPER_MAX_WIDTH, windowWidth);
 
@@ -54,16 +57,12 @@ const FirstTimeHome = ({ setModal, demoSong, history }) => {
           icon={box}
           title="Try a demo map"
           description="Take the editor for a test-drive with some surprisingly good public-domain dubstep"
-          buttonText="Start editing"
-          status={demoSong ? 'ready' : 'loading'}
+          buttonText={isLoadingDemo ? 'Loading…' : 'Start editing'}
           handleClick={() => {
             if (!demoSong) {
-              return;
+              setIsLoadingDemo(true);
+              loadDemoMap();
             }
-
-            history.push(
-              `/edit/${demoSong.id}/${demoSong.selectedDifficulty}/notes`
-            );
           }}
         />
         <Divider />
@@ -120,8 +119,14 @@ const Divider = styled.div`
   border-left: 1px dotted ${COLORS.blueGray[500]};
 `;
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   demoSong: getDemoSong(state),
 });
 
-export default withRouter(connect(mapStateToProps)(FirstTimeHome));
+const mapDispatchToProps = {
+  loadDemoMap: actions.loadDemoMap,
+};
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(FirstTimeHome)
+);

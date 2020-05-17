@@ -18,6 +18,7 @@ import { MDXProvider } from '@mdx-js/react';
 import { COLORS } from '../../constants';
 
 import BaseLink from '../BaseLink';
+import YoutubeEmbed from '../YoutubeEmbed';
 import HorizontalRule from './HorizontalRule';
 
 const Image = ({ width, caption, ...props }) => (
@@ -51,6 +52,7 @@ const components = {
   subtle: Subtle,
   hr: HorizontalRule,
   pre: Pre,
+  YoutubeEmbed,
 };
 
 const MdxWrapper = ({ children }) => {

@@ -71,6 +71,10 @@ export const updateSongDetails = (songId, songData) => ({
   ...songData,
 });
 
+export const loadDemoMap = () => ({
+  type: 'LOAD_DEMO_MAP',
+});
+
 export const startImportingSong = () => ({
   type: 'START_IMPORTING_SONG',
 });
@@ -79,7 +83,7 @@ export const cancelImportingSong = () => ({
   type: 'CANCEL_IMPORTING_SONG',
 });
 
-export const importExistingSong = songData => ({
+export const importExistingSong = (songData) => ({
   type: 'IMPORT_EXISTING_SONG',
   songData,
   createdAt: Date.now(),
@@ -131,7 +135,7 @@ export const finishLoadingSong = (song, waveformData) => ({
   lastOpenedAt: Date.now(),
 });
 
-export const reloadWaveform = waveformData => ({
+export const reloadWaveform = (waveformData) => ({
   type: 'RELOAD_WAVEFORM',
   waveformData,
 });
@@ -143,7 +147,7 @@ export const startPlaying = () => ({
 export const pausePlaying = () => ({
   type: 'PAUSE_PLAYING',
 });
-export const stopPlaying = offset => ({
+export const stopPlaying = (offset) => ({
   type: 'STOP_PLAYING',
   offset,
 });
@@ -151,7 +155,7 @@ export const togglePlaying = () => ({
   type: 'TOGGLE_PLAYING',
 });
 
-export const cutSelection = view => (dispatch, getState) => {
+export const cutSelection = (view) => (dispatch, getState) => {
   const selection = getSelection(getState(), view);
 
   return dispatch({
@@ -160,7 +164,7 @@ export const cutSelection = view => (dispatch, getState) => {
     data: selection,
   });
 };
-export const copySelection = view => (dispatch, getState) => {
+export const copySelection = (view) => (dispatch, getState) => {
   const selection = getSelection(getState(), view);
 
   return dispatch({
@@ -169,7 +173,7 @@ export const copySelection = view => (dispatch, getState) => {
     data: selection,
   });
 };
-export const pasteSelection = view => (dispatch, getState) => {
+export const pasteSelection = (view) => (dispatch, getState) => {
   const state = getState();
 
   const data = getCopiedData(state);
@@ -189,7 +193,7 @@ export const pasteSelection = view => (dispatch, getState) => {
 
   // Every entity that has an ID (obstacles, events) needs a unique ID, we
   // shouldn't blindly copy it over.
-  const uniqueData = data.map(item => {
+  const uniqueData = data.map((item) => {
     if (typeof item.id === 'undefined') {
       return item;
     }
@@ -208,7 +212,7 @@ export const pasteSelection = view => (dispatch, getState) => {
   });
 };
 
-export const adjustCursorPosition = newCursorPosition => ({
+export const adjustCursorPosition = (newCursorPosition) => ({
   type: 'ADJUST_CURSOR_POSITION',
   newCursorPosition,
 });
@@ -235,7 +239,7 @@ export const createBookmark = (name, view) => (dispatch, getState) => {
   });
 };
 
-export const deleteBookmark = beatNum => ({
+export const deleteBookmark = (beatNum) => ({
   type: 'DELETE_BOOKMARK',
   beatNum,
 });
@@ -304,22 +308,22 @@ export const setBlockByDragging = (
   });
 };
 
-export const zoomWaveform = amount => ({
+export const zoomWaveform = (amount) => ({
   type: 'ZOOM_WAVEFORM',
   amount,
 });
 
-export const scrubWaveform = newOffset => ({
+export const scrubWaveform = (newOffset) => ({
   type: 'SCRUB_WAVEFORM',
   newOffset,
 });
 
-export const scrubEventsHeader = selectedBeat => ({
+export const scrubEventsHeader = (selectedBeat) => ({
   type: 'SCRUB_EVENTS_HEADER',
   selectedBeat,
 });
 
-export const scrollThroughSong = direction => ({
+export const scrollThroughSong = (direction) => ({
   type: 'SCROLL_THROUGH_SONG',
   direction,
 });
@@ -338,7 +342,7 @@ export const skipToEnd = () => ({
   type: 'SKIP_TO_END',
 });
 
-export const changeSnapping = newSnapTo => ({
+export const changeSnapping = (newSnapTo) => ({
   type: 'CHANGE_SNAPPING',
   newSnapTo,
 });
@@ -349,7 +353,7 @@ export const decrementSnapping = () => ({
   type: 'DECREMENT_SNAPPING',
 });
 
-export const selectNoteDirection = direction => ({
+export const selectNoteDirection = (direction) => ({
   type: 'SELECT_NOTE_DIRECTION',
   direction,
 });
@@ -358,11 +362,11 @@ export const selectTool = (view, tool) => ({
   view,
   tool,
 });
-export const selectNextTool = view => ({
+export const selectNextTool = (view) => ({
   type: 'SELECT_NEXT_TOOL',
   view,
 });
-export const selectPreviousTool = view => ({
+export const selectPreviousTool = (view) => ({
   type: 'SELECT_PREVIOUS_TOOL',
   view,
 });
@@ -400,26 +404,26 @@ export const deselectNote = (time, lineLayer, lineIndex) => ({
   lineLayer,
   lineIndex,
 });
-export const selectObstacle = id => ({
+export const selectObstacle = (id) => ({
   type: 'SELECT_OBSTACLE',
   id,
 });
-export const deselectObstacle = id => ({
+export const deselectObstacle = (id) => ({
   type: 'DESELECT_OBSTACLE',
   id,
 });
 
-export const deselectAll = view => ({
+export const deselectAll = (view) => ({
   type: 'DESELECT_ALL',
   view,
 });
 
-export const deselectAllOfType = itemType => ({
+export const deselectAllOfType = (itemType) => ({
   type: 'DESELECT_ALL_OF_TYPE',
   itemType,
 });
 
-export const selectAll = view => (dispatch, getState) => {
+export const selectAll = (view) => (dispatch, getState) => {
   const state = getState();
 
   // For the events view, we don't actually want to select EVERY note. We
@@ -437,7 +441,7 @@ export const selectAll = view => (dispatch, getState) => {
     metadata,
   });
 };
-export const toggleSelectAll = view => (dispatch, getState) => {
+export const toggleSelectAll = (view) => (dispatch, getState) => {
   const state = getState();
 
   let anythingSelected;
@@ -446,14 +450,14 @@ export const toggleSelectAll = view => (dispatch, getState) => {
     const notes = getNotes(state);
     const obstacles = getObstacles(state);
 
-    const anyNotesSelected = notes.some(n => n.selected);
-    const anyObstaclesSelected = obstacles.some(s => s.selected);
+    const anyNotesSelected = notes.some((n) => n.selected);
+    const anyObstaclesSelected = obstacles.some((s) => s.selected);
 
     anythingSelected = anyNotesSelected || anyObstaclesSelected;
   } else if (view === EVENTS_VIEW) {
     const events = getAllEventsAsArray(state);
 
-    anythingSelected = events.some(e => e.selected);
+    anythingSelected = events.some((e) => e.selected);
   }
 
   if (anythingSelected) {
@@ -487,7 +491,7 @@ export const deleteSelectedNotes = () => ({
   type: 'DELETE_SELECTED_NOTES',
 });
 
-export const startManagingNoteSelection = selectionMode => ({
+export const startManagingNoteSelection = (selectionMode) => ({
   type: 'START_MANAGING_NOTE_SELECTION',
   selectionMode,
 });
@@ -495,7 +499,7 @@ export const finishManagingNoteSelection = () => ({
   type: 'FINISH_MANAGING_NOTE_SELECTION',
 });
 
-export const moveMouseAcrossEventsGrid = selectedBeat => ({
+export const moveMouseAcrossEventsGrid = (selectedBeat) => ({
   type: 'MOVE_MOUSE_ACROSS_EVENTS_GRID',
   selectedBeat,
 });
@@ -526,20 +530,20 @@ export const deleteBeatmap = (songId, difficulty) => ({
   difficulty,
 });
 
-export const updatePlaybackSpeed = playbackRate => ({
+export const updatePlaybackSpeed = (playbackRate) => ({
   type: 'UPDATE_PLAYBACK_SPEED',
   playbackRate,
 });
-export const updateBeatDepth = beatDepth => ({
+export const updateBeatDepth = (beatDepth) => ({
   type: 'UPDATE_BEAT_DEPTH',
   beatDepth,
 });
-export const updateVolume = volume => ({
+export const updateVolume = (volume) => ({
   type: 'UPDATE_VOLUME',
   volume,
 });
 
-export const createNewObstacle = obstacle => (dispatch, getState) => {
+export const createNewObstacle = (obstacle) => (dispatch, getState) => {
   const state = getState();
 
   const snapTo = getSnapTo(state);
@@ -560,7 +564,7 @@ export const createNewObstacle = obstacle => (dispatch, getState) => {
   });
 };
 
-export const deleteObstacle = id => ({
+export const deleteObstacle = (id) => ({
   type: 'DELETE_OBSTACLE',
   id,
 });
@@ -571,7 +575,7 @@ export const resizeObstacle = (id, newBeatDuration) => ({
   newBeatDuration,
 });
 
-export const resizeSelectedObstacles = newBeatDuration => ({
+export const resizeSelectedObstacles = (newBeatDuration) => ({
   type: 'RESIZE_SELECTED_OBSTACLES',
   newBeatDuration,
 });
@@ -589,7 +593,7 @@ export const redoEvents = () => ({
   type: 'REDO_EVENTS',
 });
 
-export const deleteSong = songId => ({
+export const deleteSong = (songId) => ({
   type: 'DELETE_SONG',
   songId,
 });
@@ -602,7 +606,7 @@ export const leaveEditor = () => ({
   type: 'LEAVE_EDITOR',
 });
 
-export const swapSelectedNotes = axis => ({
+export const swapSelectedNotes = (axis) => ({
   type: 'SWAP_SELECTED_NOTES',
   axis,
 });
@@ -625,11 +629,11 @@ export const jumpToBeat = (beatNum, pauseTrack, animateJump) => ({
   animateJump,
 });
 
-export const seekForwards = view => ({
+export const seekForwards = (view) => ({
   type: 'SEEK_FORWARDS',
   view,
 });
-export const seekBackwards = view => ({
+export const seekBackwards = (view) => ({
   type: 'SEEK_BACKWARDS',
   view,
 });
@@ -701,9 +705,9 @@ export const switchEventColor = (id, trackId) => ({
   id,
   trackId,
 });
-export const selectEventColor = color => selectColor(EVENTS_VIEW, color);
+export const selectEventColor = (color) => selectColor(EVENTS_VIEW, color);
 
-export const selectEventEditMode = editMode => ({
+export const selectEventEditMode = (editMode) => ({
   type: 'SELECT_EVENT_EDIT_MODE',
   editMode,
 });
@@ -743,16 +747,16 @@ export const togglePreviewLightingInEventsView = () => ({
   type: 'TOGGLE_PREVIEW_LIGHTING_IN_EVENTS_VIEW',
 });
 
-export const tweakEventRowHeight = newHeight => ({
+export const tweakEventRowHeight = (newHeight) => ({
   type: 'TWEAK_EVENT_ROW_HEIGHT',
   newHeight,
 });
-export const tweakEventBackgroundOpacity = newOpacity => ({
+export const tweakEventBackgroundOpacity = (newOpacity) => ({
   type: 'TWEAK_EVENT_BACKGROUND_OPACITY',
   newOpacity,
 });
 
-export const dismissPrompt = promptId => ({
+export const dismissPrompt = (promptId) => ({
   type: 'DISMISS_PROMPT',
   promptId,
 });
@@ -764,7 +768,7 @@ export const toggleLaserLock = () => ({
   type: 'TOGGLE_LASER_LOCK',
 });
 
-export const toggleModForSong = mod => ({
+export const toggleModForSong = (mod) => ({
   type: 'TOGGLE_MOD_FOR_SONG',
   mod,
 });
@@ -792,12 +796,12 @@ export const resetGrid = () => ({
   type: 'RESET_GRID',
 });
 
-export const loadGridPreset = grid => ({
+export const loadGridPreset = (grid) => ({
   type: 'LOAD_GRID_PRESET',
   grid,
 });
 
-export const saveGridPreset = presetSlot => (dispatch, getState) => {
+export const saveGridPreset = (presetSlot) => (dispatch, getState) => {
   const state = getState();
 
   const grid = getGridSize(state);
@@ -809,7 +813,7 @@ export const saveGridPreset = presetSlot => (dispatch, getState) => {
   });
 };
 
-export const deleteGridPreset = presetSlot => ({
+export const deleteGridPreset = (presetSlot) => ({
   type: 'DELETE_GRID_PRESET',
   presetSlot,
 });
@@ -817,17 +821,17 @@ export const deleteGridPreset = presetSlot => ({
 export const toggleFastWallsForSelectedObstacles = () => ({
   type: 'TOGGLE_FAST_WALLS_FOR_SELECTED_OBSTACLES',
 });
-export const togglePropertyForSelectedSong = property => ({
+export const togglePropertyForSelectedSong = (property) => ({
   type: 'TOGGLE_PROPERTY_FOR_SELECTED_SONG',
   property,
 });
 
-export const updateProcessingDelay = newDelay => ({
+export const updateProcessingDelay = (newDelay) => ({
   type: 'UPDATE_PROCESSING_DELAY',
   newDelay,
 });
 
-export const updateGraphicsLevel = newGraphicsLevel => ({
+export const updateGraphicsLevel = (newGraphicsLevel) => ({
   type: 'UPDATE_GRAPHICS_LEVEL',
   newGraphicsLevel,
 });

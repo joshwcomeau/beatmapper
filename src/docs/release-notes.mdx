@@ -15,47 +15,23 @@ Let's tackle these in turn:
 
 In the "Events" view, you can click the toggle in the bottom-left corner to enable background lighting:
 
-import enableLights from './videos/enable-lights.mp4';
-
-<video
-  src={enableLights}
-  autoPlay
-  muted
-  loop
-  controls
-  style={{
-    width: '100%',
-  }}
+<YoutubeEmbed
+  title="Enable lights"
+  src="https://www.youtube.com/embed/ZcMW8v3OIVY"
 />
 
 The sliders beside this toggle allow you to customize the height of each row, and how see-through the event grid is:
 
-import customizeLights from './videos/customize-lights.mp4';
-
-<video
-  src={customizeLights}
-  autoPlay
-  muted
-  loop
-  controls
-  style={{
-    width: '100%',
-  }}
+<YoutubeEmbed
+  title="Customize Lights"
+  src="https://www.youtube.com/embed/ONwndWYNM5M"
 />
 
 In addition to a low-fidelity preview in the background, the **Demo view** features high-fidelity "bloomed" lighting:
 
-import demoBloom from './videos/demo-bloom.mp4';
-
-<video
-  src={demoBloom}
-  autoPlay
-  muted
-  loop
-  controls
-  style={{
-    width: '100%',
-  }}
+<YoutubeEmbed
+  title="Demo view"
+  src="https://www.youtube.com/embed/RgI-BhnURAc"
 />
 
 It's still important to test your map's lighting in-game, but you should have to do it much less often now that you can get a general sense right from the editor :D
