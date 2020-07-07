@@ -48,7 +48,7 @@ export default function createPackagingMiddleware() {
     // in this case.
     if (selectedSong) {
       const difficulty = getDifficulty(state);
-      // Persist the info.dat and the currently-edited difficulty.
+      // Persist the Info.dat and the currently-edited difficulty.
       await saveInfoDat(song.id, infoContent);
       await saveBeatmap(song.id, difficulty, beatmapContent);
 
