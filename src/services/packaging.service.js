@@ -406,7 +406,13 @@ export const zipFiles = (song, songFile, coverArtFile, version) => {
       zip.file(LIGHTSHOW_FILENAME, lightshowFileContents, { binary: false });
     }
 
-    zip.generateAsync({ type: 'blob' }).then(function (blob) {
+    zip.generateAsync({
+      type: 'blob',
+      compression: 'DEFLATE',
+      compressionOptions: {
+        level: 9
+      }
+    }).then(function (blob) {
       const timestamp = formatDate(new Date(), 'YYYYMMDDTHHmm');
       const filename =
         version === 1
