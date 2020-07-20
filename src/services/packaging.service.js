@@ -346,7 +346,7 @@ export const zipFiles = (song, songFile, coverArtFile, version) => {
     if (version === 2) {
       zip.file('song.egg', songFile, { binary: true });
       zip.file('cover.jpg', coverArtFile, { binary: true });
-      zip.file('info.dat', infoContent, { binary: false });
+      zip.file('Info.dat', infoContent, { binary: false });
     } else {
       zip.file('song.ogg', songFile, { binary: true });
       zip.file('cover.jpg', coverArtFile, { binary: true });
@@ -406,7 +406,7 @@ export const zipFiles = (song, songFile, coverArtFile, version) => {
       zip.file(LIGHTSHOW_FILENAME, lightshowFileContents, { binary: false });
     }
 
-    zip.generateAsync({ type: 'blob' }).then(function(blob) {
+    zip.generateAsync({ type: 'blob' }).then(function (blob) {
       const timestamp = formatDate(new Date(), 'YYYYMMDDTHHmm');
       const filename =
         version === 1
@@ -479,7 +479,7 @@ export const convertLegacyArchive = async archive => {
     })
   );
 
-  // Finally, create our new info.dat, and zip it up.
+  // Finally, create our new Info.dat, and zip it up.
   const difficultiesById = loadedDifficultyFiles.reduce((acc, level) => {
     return {
       ...acc,
@@ -500,7 +500,7 @@ export const convertLegacyArchive = async archive => {
   };
 
   const newInfoContent = createInfoContent(fakeSong, { version: 2 });
-  zip.file('info.dat', newInfoContent, { binary: false });
+  zip.file('Info.dat', newInfoContent, { binary: false });
 
   return zip;
 };
@@ -516,8 +516,8 @@ export const processImportedMap = async (zipFile, currentSongIds) => {
   }
 
   // Zipped contents are always treated as binary. We need to convert the
-  // info.dat into something readable
-  const infoDatString = await getFileFromArchive(archive, 'info.dat').async(
+  // Info.dat into something readable
+  const infoDatString = await getFileFromArchive(archive, 'Info.dat').async(
     'string'
   );
   const infoDatJson = JSON.parse(infoDatString);
@@ -534,7 +534,7 @@ export const processImportedMap = async (zipFile, currentSongIds) => {
     }
   }
 
-  // Save the info.dat (Not 100% sure that this is necessary, but better to
+  // Save the Info.dat (Not 100% sure that this is necessary, but better to
   // have and not need)
   const infoFilename = getFilenameForThing(songId, 'info');
   await saveFile(infoFilename, infoDatString);
@@ -629,7 +629,7 @@ export const processImportedMap = async (zipFile, currentSongIds) => {
     realOffset =
       infoDatJson._difficultyBeatmapSets[0]._difficultyBeatmaps[0]._customData
         ._editorOffset || 0;
-  } catch (e) {}
+  } catch (e) { }
 
   const wasCreatedInBeatmapper =
     get(infoDatJson, '_customData._editor') === 'beatmapper';
