@@ -8,7 +8,7 @@ import { getDifficulty } from '../reducers/editor-entities.reducer';
 //
 // The only Redux state persisted is the `songs` reducer; for stuff like
 // what the notes are for the current song, we'll read that from the files
-// saved to disk, stuff like `songName_info.dat` and `songName_Expert.dat`.
+// saved to disk, stuff like `songName_Info.dat` and `songName_Expert.dat`.
 //
 // Whenever redux saves the song list, we should also save all the stuff
 // in the editor-entities reducer by storing them in info files.
