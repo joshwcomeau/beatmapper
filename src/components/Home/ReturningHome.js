@@ -1,7 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 
+import * as actions from '../../actions';
 import { UNIT } from '../../constants';
+import { getDemoSong } from '../../reducers/songs.reducer';
 
 import Button from '../Button';
 import Spacer from '../Spacer';
@@ -10,7 +13,9 @@ import MaxWidthWrapper from '../MaxWidthWrapper';
 import SongsTable from './SongsTable';
 import Heading from '../Heading';
 
-const ReturningHome = ({ songs, isProcessingImport, setModal }) => {
+const ReturningHome = ({ songs, isProcessingImport, loadDemoMap, setModal, demoSong}) => {
+  const [isLoadingDemo, setIsLoadingDemo] = React.useState(false);
+
   return (
     <MaxWidthWrapper>
       <Spacer size={UNIT * 8} />
@@ -35,6 +40,19 @@ const ReturningHome = ({ songs, isProcessingImport, setModal }) => {
             onClick={() => setModal('import-map')}
           >
             Import existing map
+          </Button>
+          <Spacer size={UNIT * 2} />
+          <Button
+            disabled={demoSong}
+            style={{ width: '100%' }}
+            onClick={() => {
+              if (!demoSong) {
+                setIsLoadingDemo(true);
+                loadDemoMap();
+              }
+            }}
+          >
+            {isLoadingDemo ? 'Loading…' : 'Try a demo map'}
           </Button>
         </SideColumn>
       </Row>
@@ -66,4 +84,13 @@ const SideColumn = styled(Column)`
   border-radius: ${UNIT}px;
   min-width: 280px;
 `;
-export default ReturningHome;
+
+const mapStateToProps = (state) => ({
+  demoSong: getDemoSong(state),
+});
+
+const mapDispatchToProps = {
+  loadDemoMap: actions.loadDemoMap,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ReturningHome);
