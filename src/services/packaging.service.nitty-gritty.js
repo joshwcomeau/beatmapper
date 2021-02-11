@@ -9,7 +9,7 @@ export const getFileFromArchive = (archive, filename) => {
 
   const allFilenamesInArchive = Object.keys(archive.files);
   const matchingFilename = allFilenamesInArchive.find(name =>
-    name.includes(filename)
+    name.toLowerCase().includes(filename.toLowerCase())
   );
 
   return archive.files[matchingFilename];
@@ -30,9 +30,9 @@ export const getDifficultyRankForDifficulty = difficulty => {
 export const getArchiveVersion = archive => {
   // We could be importing a v1 or v2 song, we don't know which.
   // For now, I'm going to do the very lazy thing of just assuming based on
-  // the file type; v1 has `info.json` while v2 has `info.dat`
+  // the file type; v1 has `info.json` while v2 has `Info.dat`
   // TODO: More reliable version checking
-  return getFileFromArchive(archive, 'info.dat') ? 2 : 1;
+  return getFileFromArchive(archive, 'Info.dat') ? 2 : 1;
 };
 
 const shiftEntitiesByOffsetInBeats = (entities, offsetInBeats) => {

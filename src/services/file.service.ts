@@ -94,7 +94,7 @@ export const getFilenameForThing = (
     }
 
     case 'info': {
-      return `${songId}_info.dat`;
+      return `${songId}_Info.dat`;
     }
 
     case 'beatmap': {
@@ -137,7 +137,7 @@ export const getBeatmap = (
     } else {
       throw new Error(
         'Expected beatmapFilename to load a string, loaded: ' +
-          typeof beatmapContents
+        typeof beatmapContents
       );
     }
   });
@@ -241,7 +241,7 @@ export const deleteAllSongFiles = async (song: any) => {
    *   - Song file (.ogg)
    *   - Cover art
    *   - All difficulty beatmaps
-   *   - info.dat
+   *   - Info.dat
    */
   const { id, songFilename, coverArtFilename, difficultiesById } = song;
 

@@ -230,7 +230,7 @@ export default function createSongMiddleware() {
         // in the song reducer
         next(action);
 
-        // Pull that updated redux state and save it to our info.dat
+        // Pull that updated redux state and save it to our Info.dat
         const state = store.getState();
         const song = getSongById(state, songId);
 
