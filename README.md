@@ -8,9 +8,11 @@
 
 Beatmapper is a _map editor_ for Beat Saber, a VR rhythm game. It allows you to create your own maps, for use in the game.
 
-### Status: Alpha
+### Status: On hold
 
-Beatmapper is _pre-release / alpha_. It's published and you're welcome to use it, but it is not yet "officially" released. It may be buggy, and many core features are still under development
+Unfortunately, I've had to put Beatmapper on the back burner. I do hope to resume work on this project in the future, but for now, you may wish to use an alternative editor.
+
+At the time of writing (February 2021), I was able to create, test, and publish a map, but I know some folks have had issues, and I don't have the bandwidth to explore them right now. So **please do test that your map works on your headset** before sinking a lot of time and effort into it!
 
 ### Getting started
 
