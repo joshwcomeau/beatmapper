@@ -16,7 +16,7 @@
     "@types/node": "^12.6.2",
     "@types/react": "^16.8.23",
     "@types/react-dom": "^16.8.4",
-    "@types/styled-components": "^4.1.18",
+    "@types/styled-components": "^5.1.7",
     "@types/uuid": "^3.4.5",
     "@typescript-eslint/eslint-plugin": "1.6.0",
     "@typescript-eslint/parser": "1.6.0",
