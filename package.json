@@ -95,7 +95,7 @@
     "style-loader": "0.23.1",
     "styled-components": "^4.3.2",
     "terser-webpack-plugin": "1.2.3",
-    "three": "^0.106.2",
+    "three": "^0.125.0",
     "three-copyshader": "^0.0.1",
     "ts-pnp": "1.1.2",
     "typescript": "^3.5.3",
