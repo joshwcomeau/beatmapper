@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { withRouter } from 'react-router-dom';
 import { filePlus } from 'react-icons-kit/feather/filePlus';
 import { download } from 'react-icons-kit/feather/download';
 import { box } from 'react-icons-kit/feather/box';
@@ -21,7 +20,7 @@ import OptionColumn from './OptionColumn';
 const WRAPPER_MAX_WIDTH = 850;
 const WRAPPER_PADDING = UNIT * 2;
 
-const FirstTimeHome = ({ loadDemoMap, setModal, demoSong, history }) => {
+const FirstTimeHome = ({ loadDemoMap, setModal, demoSong }) => {
   const { width: windowWidth } = useWindowDimensions();
 
   const [isLoadingDemo, setIsLoadingDemo] = React.useState(false);
@@ -127,6 +126,4 @@ const mapDispatchToProps = {
   loadDemoMap: actions.loadDemoMap,
 };
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(FirstTimeHome)
-);
+export default connect(mapStateToProps, mapDispatchToProps)(FirstTimeHome);
