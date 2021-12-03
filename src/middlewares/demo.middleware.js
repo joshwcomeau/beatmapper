@@ -12,7 +12,7 @@ export default () => (store) => (next) => {
   return (action) => {
     next(action);
 
-    alert('Sorry, I had to remove the demo map');
+    console.info('Sorry, I had to remove the demo map');
 
     // if (action.type === 'LOAD_DEMO_MAP') {
     //   // If this is a brand-new user, they won't have the demo song at all
