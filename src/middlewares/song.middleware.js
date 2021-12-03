@@ -13,7 +13,6 @@ import {
   reloadWaveform,
 } from '../actions';
 import {
-  createHtmlAudioElement,
   snapToNearestBeat,
   convertBeatsToMilliseconds,
   convertMillisecondsToBeats,
@@ -72,7 +71,7 @@ export default function createSongMiddleware() {
 
   let audioSample;
 
-  return store => next => async action => {
+  return (store) => (next) => async (action) => {
     switch (action.type) {
       case 'START_LOADING_SONG': {
         next(action);
@@ -131,7 +130,7 @@ export default function createSongMiddleware() {
 
           // Round all notes, so that no floating-point imprecision drift
           // happens
-          unshiftedNotes = unshiftedNotes.map(note => {
+          unshiftedNotes = unshiftedNotes.map((note) => {
             return {
               ...note,
               _time: roundToNearest(note._time, HIGHEST_PRECISION),
@@ -299,13 +298,14 @@ export default function createSongMiddleware() {
           const viewMatch = window.location.pathname.match(/\/(\w+)$/);
           const view = viewMatch ? viewMatch[1] : null;
 
-          const commandeeredCursorPosition = calculateIfPlaybackShouldBeCommandeered(
-            state,
-            currentBeat,
-            lastBeat,
-            processingDelay,
-            view
-          );
+          const commandeeredCursorPosition =
+            calculateIfPlaybackShouldBeCommandeered(
+              state,
+              currentBeat,
+              lastBeat,
+              processingDelay,
+              view
+            );
 
           if (typeof commandeeredCursorPosition === 'number') {
             next(adjustCursorPosition(commandeeredCursorPosition));

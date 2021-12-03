@@ -4,11 +4,11 @@ import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 import { filePlus } from 'react-icons-kit/feather/filePlus';
 import { download } from 'react-icons-kit/feather/download';
-import { box } from 'react-icons-kit/feather/box';
+// import { box } from 'react-icons-kit/feather/box';
 
 import * as actions from '../../actions';
 import { COLORS, UNIT } from '../../constants';
-import useWindowDimensions from '../../hooks/use-window-dimensions.hook';
+// import useWindowDimensions from '../../hooks/use-window-dimensions.hook';
 import { getDemoSong } from '../../reducers/songs.reducer';
 
 import Spacer from '../Spacer';
@@ -21,11 +21,11 @@ const WRAPPER_MAX_WIDTH = 850;
 const WRAPPER_PADDING = UNIT * 2;
 
 const FirstTimeHome = ({ loadDemoMap, setModal, demoSong, history }) => {
-  const { width: windowWidth } = useWindowDimensions();
+  // const { width: windowWidth } = useWindowDimensions();
 
-  const [isLoadingDemo, setIsLoadingDemo] = React.useState(false);
+  // const [isLoadingDemo, setIsLoadingDemo] = React.useState(false);
 
-  const videoWidth = Math.min(WRAPPER_MAX_WIDTH, windowWidth);
+  // const videoWidth = Math.min(WRAPPER_MAX_WIDTH, windowWidth);
 
   return (
     <MainContent>

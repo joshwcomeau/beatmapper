@@ -2,10 +2,9 @@
  * This middleware exists only to load (and possibly manage) the demo song
  * that comes with this app.
  */
-import { importExistingSong } from '../actions';
-import { processImportedMap } from '../services/packaging.service';
-import { getIsNewUser } from '../reducers/user.reducer';
-
+// import { importExistingSong } from '../actions';
+// import { processImportedMap } from '../services/packaging.service';
+// import { getIsNewUser } from '../reducers/user.reducer';
 // import demoFileUrl from '../assets/demo/demo-map.zip';
 
 export default () => (store) => (next) => {
