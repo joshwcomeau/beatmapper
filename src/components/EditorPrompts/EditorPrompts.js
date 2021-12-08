@@ -6,36 +6,33 @@ import { getSeenPrompts } from '../../reducers/user.reducer';
 
 import UnobtrusivePrompt from '../UnobtrusivePrompt';
 import Paragraph from '../Paragraph';
-import Link from '../Link';
-import List from '../List';
-import { InlineIcons, KeyIcon, MetaKey } from '../Docs/ShortcutHelpers';
 
 const PROMPTS = [
   {
     id: 'deprecated',
-    title: 'This editor is deprecated.',
+    title: 'Beatmapper is shutting down',
     contents: () => (
       <>
         <Paragraph>
-          Hey there — so, Beatmapper isn't really maintained anymore, and you're
-          probably better off switching to another editor.
+          Hey there — Just a heads-up, Beatmapper will be shutting down in the
+          weeks ahead. I don't have the time to maintain it, unfortunately.
         </Paragraph>
         <Paragraph>
-          Check out{' '}
+            Check out{' '}
           <a
             href="https://github.com/Caeden117/ChroMapper"
             style={{ color: 'inherit' }}
           >
             ChroMapper
           </a>
-          . It's a free, cross-platform editor which is regularly updated. It
-          supports 90/360 map creation as well!
+          . It's a free, cross-platform community editor. It has tons of great
+          features, like 90/360 map support!
         </Paragraph>
 
         <Paragraph>
-          You're welcome to keep using Beatmapper, but please know that{' '}
-          <strong>you're doing so at your own risk.</strong> It's possible that
-          the maps you create won't work in-game, as the game updates.
+          {/* eslint-ignore-next-line */}
+          It's been a ton of fun creating this editor, thanks for checking it
+          out. 🙂
         </Paragraph>
       </>
     ),
