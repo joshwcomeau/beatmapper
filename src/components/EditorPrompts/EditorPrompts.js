@@ -30,6 +30,10 @@ const PROMPTS = [
         </Paragraph>
 
         <Paragraph>
+          <strong>Please download all of your maps now,</strong> to make sure
+          you don't lose any work!
+        </Paragraph>
+        <Paragraph>
           {/* eslint-ignore-next-line */}
           It's been a ton of fun creating this editor, thanks for checking it
           out. 🙂
