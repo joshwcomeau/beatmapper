@@ -26,7 +26,8 @@ const Footer = () => {
             <ExternalLink href="https://twitter.com/JoshWComeau">
               Josh Comeau
             </ExternalLink>
-            .
+            . Maintained by{' '}
+            <ExternalLink href="https://bsmg.wiki/">BSMG</ExternalLink>.
             <br />
             <Symbol>©</Symbol> 2019-present, All rights reserved.
             <br />
