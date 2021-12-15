@@ -4,12 +4,13 @@ import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 import { filePlus } from 'react-icons-kit/feather/filePlus';
 import { download } from 'react-icons-kit/feather/download';
-// import { box } from 'react-icons-kit/feather/box';
+import { box } from 'react-icons-kit/feather/box';
 
 import * as actions from '../../actions';
 import { COLORS, UNIT } from '../../constants';
-// import useWindowDimensions from '../../hooks/use-window-dimensions.hook';
+import useWindowDimensions from '../../hooks/use-window-dimensions.hook';
 import { getDemoSong } from '../../reducers/songs.reducer';
+import heroVideo from '../../assets/videos/hero-video.mp4';
 
 import Spacer from '../Spacer';
 import Heading from '../Heading';
@@ -21,11 +22,11 @@ const WRAPPER_MAX_WIDTH = 850;
 const WRAPPER_PADDING = UNIT * 2;
 
 const FirstTimeHome = ({ loadDemoMap, setModal, demoSong, history }) => {
-  // const { width: windowWidth } = useWindowDimensions();
+  const { width: windowWidth } = useWindowDimensions();
 
-  // const [isLoadingDemo, setIsLoadingDemo] = React.useState(false);
+  const [isLoadingDemo, setIsLoadingDemo] = React.useState(false);
 
-  // const videoWidth = Math.min(WRAPPER_MAX_WIDTH, windowWidth);
+  const videoWidth = Math.min(WRAPPER_MAX_WIDTH, windowWidth);
 
   return (
     <MainContent>
@@ -34,31 +35,37 @@ const FirstTimeHome = ({ loadDemoMap, setModal, demoSong, history }) => {
           Beatmapper is an unofficial web-based editor for Beat Saber™
         </Title>
         <Spacer size={UNIT * 4} />
-        <div
-          style={{ width: '100%', padding: '75% 0 0 0', position: 'relative' }}
-        >
-          <iframe
-            src="https://player.vimeo.com/video/652869239?h=5b27065edf&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
-            frameborder="0"
-            allow="autoplay; fullscreen; picture-in-picture"
-            allowfullscreen
-            style={{
-              position: 'absolute',
-              top: '0',
-              left: '0',
-              width: '100%',
-              height: '100%',
-            }}
-            title="hero-video.mp4"
-          ></iframe>
-        </div>
-        <script src="https://player.vimeo.com/api/player.js"></script>
+        <video
+          src={heroVideo}
+          autoPlay
+          muted
+          loop
+          controls
+          style={{
+            width: videoWidth,
+            marginLeft: -WRAPPER_PADDING,
+            marginRight: -WRAPPER_PADDING,
+          }}
+        />
 
         <Spacer size={UNIT * 10} />
         <Heading size={2}>Get started now</Heading>
       </Center>
       <Spacer size={UNIT * 6} />
       <Row>
+        <OptionColumn
+          icon={box}
+          title="Try a demo map"
+          description="Take the editor for a test-drive with some surprisingly good public-domain dubstep"
+          buttonText={isLoadingDemo ? 'Loading…' : 'Start editing'}
+          handleClick={() => {
+            if (!demoSong) {
+              setIsLoadingDemo(true);
+              loadDemoMap();
+            }
+          }}
+        />
+        <Divider />
         <OptionColumn
           icon={filePlus}
           title="Create new song"
